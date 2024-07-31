@@ -33,37 +33,7 @@
 
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-
-    <!-- 테이블에 링크 적용하기 -->
-    <style>
-        tr {
-            cursor: pointer;
-        }
-    </style>
-    <script>
-        function rowClick(url) {
-            window.location.href = url;
-        }
-    </script>
-
-    <!-- 출퇴근 전용 CSS -->
-    <style>
-        /* 스위치 체크된 상태의 색상 변경 */
-        .form-switch .form-check-input:checked {
-            background-color: green;
-            border-color: green;
-        }
-        .form-switch .form-check-input {
-            background-color: rgba(0, 0, 0, 0.25);
-            border-color: rgba(0, 0, 0, 0.52);
-        }
-        .form-switch .form-check-input:focus:checked {
-            box-shadow: 0 0 0 0.25rem rgba(0, 128, 0, 0.25); /* 초록색으로 변경 */
-        }
-        .form-switch .form-check-input:focus {
-            box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25); /* 빨간색으로 변경 */
-        }
-    </style>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -1554,9 +1524,13 @@
 </footer>
 <!-- Footer 끝 -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"
-><i class="bi bi-arrow-up-short"></i
-></a>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number">&nbsp;</span>
+</a>
 
 <!-- Vendor JS Files -->
 <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -1627,6 +1601,7 @@
 </script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
 </body>
 </html>

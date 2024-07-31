@@ -1,13 +1,13 @@
-package org.zerock.niceadmin;
+package org.zerock.chain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NiceAdminApplication {
+public class ChainApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NiceAdminApplication.class, args);
+        SpringApplication.run(ChainApplication.class, args);
     }
 
 }

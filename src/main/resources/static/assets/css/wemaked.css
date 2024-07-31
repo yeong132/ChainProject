@@ -1,9 +1,87 @@
 /* 별표 아이콘 스타일 */
-        .star-icon {
-            cursor: pointer;
-        }
+.star-icon {
+    cursor: pointer;
+}
 
 /* 별표 아이콘 색상 설정 */
-        .bi-star-fill {
-            color:     #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+.bi-star-fill {
+    color: #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+}
+
+/* 프로젝트 리스트제목 용 /
+.pj-mt0 {
+margin: 0 0 10px 0 !important;
+}
+/별을 오른쪽으로 옮기고싶다긔..... */
+.right-align-block {
+    margin-left: auto;
+}
+
+/* 메신저 아이콘과 뱃지 */
+.back-to-top-chat {
+    position: fixed;
+    visibility: visible;
+    opacity: 1;
+    right: 20px;
+    bottom: 15px;
+    z-index: 99999;
+    /*background: #41f179;*/
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    transition: all 0.4s;
+}
+
+.back-to-top-chat i {
+    font-size: 30px;
+    color: #fff;
+    line-height: 0;
+}
+
+.back-to-top-chat:hover {
+    background: #eaeaea;
+    color: #fff;
+}
+
+.back-to-top-chat .badge-number {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    transform: translate(50%, -50%);
+    z-index: 1; /* 아이콘보다 앞에 위치하도록 설정 */
+    font-weight: normal;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 50%; /* 원형 배지 */
+}
+
+.back-to-top-chat i {
+    z-index: 0; /* 아이콘이 뒤에 위치하도록 설정 */
+}
+
+/* 메신저 아이콘과 뱃지 끝 */
+
+/* 테이블에 링크 적용하기 */
+tr {
+    cursor: pointer;
+}
+
+/* 출퇴근 전용 CSS */
+/* 스위치 체크된 상태의 색상 변경 */
+.form-switch .form-check-input:checked {
+    background-color: green;
+    border-color: green;
+}
+
+.form-switch .form-check-input {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-color: rgba(0, 0, 0, 0.52);
+}
+
+.form-switch .form-check-input:focus:checked {
+    box-shadow: 0 0 0 0.25rem rgba(0, 128, 0, 0.25); /* 초록색으로 변경 */
+}
+
+.form-switch .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25); /* 빨간색으로 변경 */
 }
