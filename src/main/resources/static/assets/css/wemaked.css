@@ -1,0 +1,9 @@
+/* 별표 아이콘 스타일 */
+        .star-icon {
+            cursor: pointer;
+        }
+
+/* 별표 아이콘 색상 설정 */
+        .bi-star-fill {
+            color:     #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+}
