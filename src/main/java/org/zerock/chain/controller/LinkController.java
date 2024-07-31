@@ -1,4 +1,4 @@
-package org.zerock.niceadmin.controller;
+package org.zerock.chain.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

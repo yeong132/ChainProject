@@ -84,30 +84,30 @@ h6 {
     position: fixed;
     visibility: hidden;
     opacity: 0;
-    right: 15px;
-    bottom: 15px;
+    right: 20px;
+    bottom: 75px;
     z-index: 99999;
-    background: #4154f1;
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
+    background: #4e4e4e;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
     transition: all 0.4s;
 }
 
 .back-to-top i {
-    font-size: 24px;
+    font-size: 30px;
     color: #fff;
     line-height: 0;
 }
 
 .back-to-top:hover {
-    background: #eaeaea;
+    background: rgba(78, 78, 78, 0.29);
     color: #fff;
 }
 
 .back-to-top.active {
     visibility: visible;
-    opacity: 1;
+    opacity: 0.5;
 }
 
 /*--------------------------------------------------------------
@@ -525,6 +525,7 @@ h6 {
 }
 
 .header-nav .badge-number {
+    border-radius: 100%;
     position: absolute;
     inset: -2px -5px auto auto;
     font-weight: normal;
