@@ -1261,14 +1261,14 @@ h6 {
 }
 
 .contact .info-box i {
-    font-size: 38px;
+    font-size: 30px;
     line-height: 0;
-    color: #4154f1;
+    /*color: #4154f1;*/
 }
 
 .contact .info-box h3 {
     font-size: 20px;
-    color: #012970;
+    /*color: #012970;*/
     font-weight: 700;
     margin: 20px 0 10px 0;
 }
