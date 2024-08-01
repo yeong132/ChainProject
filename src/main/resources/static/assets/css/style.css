@@ -729,6 +729,9 @@ h6 {
     padding: 0;
     margin: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .sidebar-nav li {
@@ -869,11 +872,6 @@ h6 {
     background: #f4f4f4;
     padding: 10px 10px 5px 15px;
     border-radius: 4px;
-}
-
-.sidebar-nav .dash{
-    padding: 10px 15px;
-    margin-bottom: 30px;
 }
 
 .sidebar-nav .nav-link span{
