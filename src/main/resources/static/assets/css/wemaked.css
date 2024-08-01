@@ -85,3 +85,20 @@ tr {
 .form-switch .form-check-input:focus {
     box-shadow: 0 0 0 0.25rem rgba(255, 0, 0, 0.25); /* 빨간색으로 변경 */
 }
+
+/* 사이드바 대시보드 CSS */
+.sidebar-nav .dash{
+    padding: 10px 15px;
+    margin-bottom: 30px;
+}
+
+/* 사이드바 고객센터 CSS */
+.sidebar-nav .qna {
+    margin-top: auto;
+}
+
+.sidebar-nav .nav-item .qna {
+    padding: 12.5px 10px 12.5px 15px;
+}
+
+

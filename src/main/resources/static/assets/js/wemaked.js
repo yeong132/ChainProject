@@ -287,3 +287,58 @@ document.addEventListener('DOMContentLoaded', function () {
 function rowClick(url) {
     window.location.href = url;
 }
+
+// Froala Editor 한국어 적용
+var editor = new FroalaEditor('#froala', {
+    language: 'ko',
+});
+
+// 출퇴근 Modal용
+document.addEventListener('DOMContentLoaded', function () {
+    function updateTime(elementId) {
+        const currentTimeElement = document.getElementById(elementId);
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
+    }
+
+    function setupModal(modalId, confirmButtonId, cancelButtonId, message, switchInput, checkedState) {
+        const modalElement = document.getElementById(modalId);
+        const confirmButton = document.getElementById(confirmButtonId);
+        const cancelButton = document.getElementById(cancelButtonId);
+
+        $(modalElement).on('show.bs.modal', function () {
+            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
+        });
+
+        confirmButton.addEventListener('click', function () {
+            switchInput.checked = checkedState;
+            alert(message);
+        });
+
+        cancelButton.addEventListener('click', function () {
+            switchInput.checked = !checkedState;
+        });
+    }
+
+    const switchInput = document.getElementById('flexSwitchCheckDefault');
+    const commuteIcon = document.getElementById('commuteIcon');
+
+    commuteIcon.addEventListener('click', function () {
+        if (switchInput.checked) {
+            $('#attendanceModal').modal('show');
+        } else {
+            $('#leaveworkModal').modal('show');
+        }
+    });
+
+    setupModal('attendanceModal', 'attendanceConfirmButton', 'attendanceCancelButton', '출근되었습니다!', switchInput, true);
+    setupModal('leaveworkModal', 'leaveworkConfirmButton', 'leaveworkCancelButton', '퇴근되었습니다!', switchInput, false);
+
+    setInterval(function () {
+        updateTime('currentTime');
+        updateTime('currentTimes');
+    }, 1000);
+});
