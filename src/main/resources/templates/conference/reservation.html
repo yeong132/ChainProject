@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <title>회의실 예약 페이지</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+
+    <!-- Favicons -->
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+
+    <!-- 폰트 설정  -->
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"/>
+
+    <!-- Vendor CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+
+    <!-- Template Main CSS File -- th:href 사영 !! -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+<body>
+<!-- ======= Header ======= -->
+<header class="header fixed-top d-flex align-items-center" id="header">
+    <div class="d-flex align-items-center justify-content-between">
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="../static/assets/img/logo.png"/>
+            <span class="d-none d-lg-block">CHAIN</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <li class="nav-item dropdown"> <!--알림아이콘-->
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge bg-primary badge-number">4</span> </a
+                ><!-- End Notification Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                    <li class="dropdown-header">
+                        4개의 최신 알림
+                        <a href="user/alarm"><span class="badge rounded-pill bg-primary p-2 ms-2">알림 전체</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <div>
+                            <h4>Atque rerum nesciunt</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>1 hr. ago</p>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="#">Show all notifications</a>
+                    </li>
+                </ul>
+                <!-- End Notification Dropdown Items -->
+            </li>
+            <!-- End Notification Nav -->
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span class="badge bg-success badge-number">3</span> </a
+                ><!-- End Messages Icon  메일 아이콘 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    <li class="dropdown-header">
+                        You have 3 new messages
+                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="message-item">
+                        <a href="#">
+                            <img alt="" class="rounded-circle" src="../static/assets/img/messages-1.jpg"/>
+                            <div>
+                                <h4>Maria Hudson</h4>
+                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                <p>4 hrs. ago</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="dropdown-footer">
+                        <a href="#">Show all messages</a>
+                    </li>
+                </ul>
+                <!-- End Messages Dropdown Items -->
+            </li>
+            <!-- End Messages Nav -->
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img1.jpg"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">K.ZURA</span> </a
+                ><!-- End Profile Iamge Icon -->
+
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박성은</h6>
+                        <span>Web Designer</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이페이지 </span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/setting">
+                            <i class="bi bi-gear"></i>
+                            <span>환경 설정</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/Q&A">
+                            <i class="bi bi-question-circle"></i>
+                            <span>고객센터 </span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <!-- End Profile Dropdown Items -->
+            </li>
+            <!-- End Profile Nav -->
+        </ul>
+    </nav>
+    <!-- End Icons Navigation -->
+</header>
+<!-- ======= Sidebar ======= -->
+<aside class="sidebar" id="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard HONE</span>
+            </a>
+        </li>
+        <!-- End Dashboard Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i>
+                <span>업무</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="work-nav">
+                <li>
+                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                </li>
+                <li>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                </li>
+                <li>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                </li>
+            </ul>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi  bi-people-fill"></i><span>게시판</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
+                <li>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                </li>
+                <li>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                </li>
+                <li>
+                    <a href="/board/식당리스트"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
+                </li>
+                <li>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- -----------------------------------------------------------사이드 바 ------------------------------------------------------ -->
+    </ul>
+</aside>
+<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+<main class="main" id="main">
+    <div class="pagetitle">
+        <h1>회의실 예약하기</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/conference/">Conference</a></li>
+                <li class="breadcrumb-item active">Reservation</li>
+            </ol>
+        </nav>
+    </div>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+    <!------------------------------------------------------------------회의실 예약 현황 ------------------------------------------------------------------------>
+    <section class="section dashboard">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="card info-card customers-card">
+                    <div class="card-body">
+                        <h5 class="card-title">회의실 예약 <span>| </span></h5>
+
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------------------------------------ 우측 예약하기 버튼------------------------------------------------------------------------>
+            <div class="col-lg-3">
+                <div class="info-box card">
+                    <button  class="btn btn-primary" onclick="location.href='/conference/reservation'">예약하기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
+</main>
+<!-- End #main -->
+
+
+<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
+<footer class="footer" id="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong
+    >. All Rights Reserved
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer>
+<!-- End Footer -->
+
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#"
+><i class="bi bi-arrow-up-short"></i
+></a>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
