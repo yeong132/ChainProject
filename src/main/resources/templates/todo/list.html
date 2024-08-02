@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <title>TODO LIST</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+
+    <!-- Favicons -->
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+
+    <!-- link 안에는 th:href 사용! -->
+    <!-- Favicons -->
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+
+    <!-- 폰트 설정  -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
+            <span class="d-none d-lg-block">CHAIN</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <!-- 로고 끝 -->
+
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div> -->
+    <!-- 검색바 끝 -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <!-- <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="bi bi-search"></i>
+              </a>
+            </li> -->
+            <!-- 검색 아이콘 끝 -->
+
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge btn-secondary badge-number">4</span> </a>
+                <!-- 알림창 아이콘 끝 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                    <li class="dropdown-header">
+                        4개의 새 알림이 있습니다
+                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-exclamation-circle text-warning"></i>
+                        <div>
+                            <h4>Lorem Ipsum</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>30 min. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <div>
+                            <h4>Atque rerum nesciunt</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>1 hr. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <div>
+                            <h4>Sit rerum fuga</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>2 hrs. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        <div>
+                            <h4>Dicta reprehenderit</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>4 hrs. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="/user/alarm">모든 알림 표시</a>
+                    </li>
+                </ul>
+                <!-- 알림 드롭다운 목록 끝 -->
+            </li>
+            <!-- 알림 전체 끝 -->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <!-- 환경설정 아이콘 끝 -->
+            </li>
+            <!-- 환경설정 전체 끝 -->
+
+
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+                <!-- 프로필 이미지 항목 끝 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박영민</h6>
+                        <span>사원</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이 페이지</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                            <i class="bi bi-tools"></i>
+                            <span>회사 관리자</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- 프로필 드롭다운 목록 끝 -->
+            </li>
+            <!-- 프로필 전체 끝 -->
+        </ul>
+    </nav>
+    <!-- 상단바 끝 -->
+</header>
+<!-- Header 끝 -->
+
+<!-- Header Modal -->
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                    아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 출퇴근 Modal 끝 -->
+<!-- Header Modal -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item ">
+            <a class="nav-link dash collapsed" href="/">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+        <!-- 대시보드 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>기본 사항</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
+                    <ul>
+                        <li>
+                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
+                        </li>
+                    </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <!-- 기본사항 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i>
+                <span>업무</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/todo/list" class="active"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                </li>
+                <li>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                </li>
+                <li>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 업무 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i>
+                <span>전자결재</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 전자결재 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people-fill"></i>
+                <span>게시판</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                </li>
+                <li>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                </li>
+                <li>
+                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
+                </li>
+                <li>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 게시판 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-week"></i>
+                <span>일정</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 일정 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-envelope"></i>
+                <span>이메일</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/tome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 이메일 사이드바 끝 -->
+
+        <li class="nav-item qna">
+            <a class="nav-link qna collapsed" href="/user/Q&A">
+                <i class="bi bi-question-circle"></i>
+                <span>고객센터</span>
+            </a>
+        </li>
+        <!-- 고객센터 사이드바 끝 -->
+
+    </ul>
+</aside>
+<!-- Sidebar 전체 끝 -->
+<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+<main class="main" id="main">
+    <div class="pagetitle">
+        <h1>TODO LIST</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">HOME</a></li>
+                <li class="breadcrumb-item active">TODO LIST</li>
+            </ol>
+        </nav>
+    </div>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+
+    <!------------------------------------------------------------------중요 리스트 (위젯 1)---------------------------------------------------------------------->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5></h5>
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="starTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="home" aria-selected="true" class="nav-link active"
+                                        data-bs-target="#star-tab-home" data-bs-toggle="tab" id="star-ab" role="tab"
+                                        type="button"> 중요(고정)
+                                </button>
+                            </li>
+                        </ul>
+                        <!--         탭 목록 들        -->
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent"
+                             style="height: 300px">
+                            <!--         탭 내용들        -->
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home"
+                                 role="tabpanel">
+                                <div class="accordion accordion-flush" id="star-group-1">
+                                    <div class="row mb-5 mt-3">
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck1" type="checkbox">
+                                                <div class="activity-content">todo중요1</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck2" type="checkbox">
+                                                <div class="activity-content">todo중요2</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck3" type="checkbox">
+                                                <div class="activity-content">todo중요3</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck4" type="checkbox">
+                                                <div class="activity-content">todo중요4</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck5" type="checkbox">
+                                                <div class="activity-content">todo중요5</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item d-flex">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" id="starCheck6" type="checkbox">
+                                                <div class="activity-content">todo중요6</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5></h5>
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="home" aria-selected="true" class="nav-link active"
+                                        data-bs-target="#bordered-home" data-bs-toggle="tab" id="home-tab" role="tab"
+                                        type="button">전체
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="progg" aria-selected="false" class="nav-link"
+                                        data-bs-target="#bordered-progg" data-bs-toggle="tab" id="progg-tab" role="tab"
+                                        type="button">진행중
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="suss" aria-selected="true" class="nav-link"
+                                        data-bs-target="#bordered-suss" data-bs-toggle="tab" id="suss-tab" role="tab"
+                                        type="button">완료
+                                </button>
+                            </li>
+                        </ul>
+                        <!--         탭 목록 들        -->
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="borderedTabContent"
+                             style="height: 300px">
+                            <!--         탭 내용들        -->
+
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home"
+                                 role="tabpanel">
+                                <div class="accordion accordion-flush" id="faq-group-1">
+                                    <div class="row mb-5 mt-3">
+                                        <!-- 전체 탭 콘텐츠 -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div aria-labelledby="progg-tab" class="tab-pane fade" id="bordered-progg" role="tabpanel">
+                                <div class="row mb-5 mt-3">
+                                    <div class="activity-item d-flex">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" id="proggCheck1" type="checkbox">
+                                            <div class="activity-content">todo 리스트1</div>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item d-flex">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" id="proggCheck2" type="checkbox">
+                                            <div class="activity-content">todo 리스트2</div>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item d-flex">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" id="proggCheck3" type="checkbox">
+                                            <div class="activity-content">todo 리스트3</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div aria-labelledby="suss-tab" class="tab-pane fade" id="bordered-suss" role="tabpanel">
+                                <div class="row mb-5 mt-3">
+                                    <!-- 완료 탭의 리스트 항목들 -->
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-danger" onclick="showConfirmationModal()" type="button">삭제
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--         작성 폼      -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">TODO 등록</h5>
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="validationDefault03">내용</label>
+                                <input class="form-control" id="validationDefault03" required type="text">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="validationDefault04">카테고리</label>
+                                <select class="form-select" id="validationDefault04" required>
+                                    <option disabled selected value="">DB연동필요</option>
+                                    <option>카테고리1</option>
+                                    <option>카테고리2</option>
+                                    <option>카테고리3</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="validationDefault05">작성일</label>
+                                <input class="form-control" id="validationDefault05" type="text" value="해당날짜고정">
+                            </div>
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="invalidCheck1" type="checkbox" value="">
+                                    <label class="form-check-label" for="invalidCheck1">완료도 체크</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="invalidCheck2" type="checkbox" value="">
+                                    <label class="form-check-label" for="invalidCheck2">중요 체크</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">등록</button>
+                                <button class="btn btn-primary" type="submit">취소</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- End #main -->
+
+
+<!------------------------------------------------------------삭제 확인 모달 창 --------------------------------------------------------------------------->
+<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">삭제 확인</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <!--                <button type="button" class="btn btn-danger" onclick="deleteAlerts()">예</button>-->
+                <button class="btn btn-danger" data-bs-dismiss="modal" type="button">예</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
+<footer class="footer" id="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong
+    >. All Rights Reserved
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer>
+<!-- End Footer -->
+
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+
+<script defer>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 진행중 및 중요 탭의 모든 체크박스 요소를 선택합니다.
+        const proggContainer = document.getElementById("bordered-progg").querySelector(".row");
+        const starContainer = document.getElementById("star-tab-home").querySelector(".row");
+        const sussContainer = document.getElementById("bordered-suss").querySelector(".row");
+        const homeContainer = document.getElementById("bordered-home").querySelector(".accordion");
+        const form = document.querySelector("form");
+
+        // 체크박스가 변경될 때 완료 탭으로 이동시키는 함수입니다.
+        function moveToCompletedTab(check) {
+            if (check.checked) {
+                const activityItem = check.closest(".activity-item");
+                sussContainer.appendChild(activityItem);
+                // 전체 탭에서 해당 항목을 삭제합니다.
+                homeContainer.querySelectorAll(".activity-item").forEach(item => {
+                    if (item.querySelector("input").isSameNode(check)) {
+                        item.remove();
+                    }
+                });
+                updateHomeTab(); // 전체 탭 업데이트
+            }
+        }
+
+        // 항목을 완료 탭으로 이동 시 전체 탭을 다시 업데이트하지 않도록 (중복방지)
+        function handleCheckboxChange() {
+            moveToCompletedTab(this);
+        }
+
+        // 전체 탭을 업데이트하는 함수입니다.
+        function updateHomeTab() {
+            homeContainer.innerHTML = ''; // 전체탭 기존 항목 삭제
+            document.querySelectorAll(".activity-item").forEach(item => {
+                const clone = item.cloneNode(true); // 항목 복제
+                clone.querySelector("input").addEventListener("change", handleCheckboxChange); // 이벤트 리스너 추가
+                homeContainer.appendChild(clone); // 전체탭에 항목 추가
+            });
+        }
+
+        // 페이지 로드 시 전체 탭을 초기화합니다.
+        updateHomeTab();
+
+        // 작성폼에서 새로운 TODO를 추가하는 함수입니다.
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // 폼의 기본 동작을 막음
+            const todoText = form.querySelector("#validationDefault03").value; // 입력된 TODO 텍스트 가져오기
+            if (!todoText) return; // 입력값이 없으면 함수 종료
+
+            // 새로운 TODO 항목 생성
+            const newItem = document.createElement("div");
+            newItem.classList.add("activity-item", "d-flex");
+            newItem.innerHTML = `
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox">
+                    <div class="activity-content">${todoText}</div>
+                </div>
+            `;
+            newItem.querySelector("input").addEventListener("change", handleCheckboxChange); // 이벤트 리스너 추가
+
+            // 새로운 항목을 진행중 탭과 전체 탭에 추가합니다.
+            proggContainer.appendChild(newItem);
+            updateHomeTab(); // 전체 탭 업데이트
+            form.reset(); // 폼 초기화
+        });
+
+        // 중요(고정) 탭의 모든 체크박스에 이벤트 리스너 추가
+        document.querySelectorAll("#star-tab-home .form-check-input").forEach(checkbox => {
+            checkbox.addEventListener("change", handleCheckboxChange);
+        });
+
+        // 진행중 탭의 모든 체크박스에 이벤트 리스너 추가
+        document.querySelectorAll("#bordered-progg .form-check-input").forEach(checkbox => {
+            checkbox.addEventListener("change", handleCheckboxChange);
+        });
+    });
+</script>
+
+<!-- 삭제 확인 모달 JS  -->
+<script>
+    function showConfirmationModal() {
+        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
+    }
+
+    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+    function deleteAlerts() {
+        // 알림 삭제 로직 구현
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.remove());
+
+        var confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+        confirmationModal.hide(); // 모달 닫기
+
+        // 모달이 완전히 닫힌 후 페이지 이동
+        confirmationModal._element.addEventListener('hidden.bs.modal', function () {
+            window.location.href = '/todo/list';
+        });
+    }
+</script>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

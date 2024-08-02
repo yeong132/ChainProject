@@ -20,8 +20,8 @@ public class MainController {
         return "chatting"; // templates/chatting.html 파일을 서빙
     }
 
-    @GetMapping("/organization_chart")
+    @GetMapping("/organizationChart")
     public String organization_chart() {
-        return "organization_chart"; // templates/organization_chart.html 파일을 서빙
+        return "organizationChart"; // templates/organizationChart.html 파일을 서빙
     }
 }

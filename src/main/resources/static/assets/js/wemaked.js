@@ -1,3 +1,58 @@
+// Froala Editor 한국어 적용
+var editor = new FroalaEditor('#froala', {
+    language: 'ko',
+});
+
+// 출퇴근 Modal용
+document.addEventListener('DOMContentLoaded', function () {
+    function updateTime(elementId) {
+        const currentTimeElement = document.getElementById(elementId);
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
+    }
+
+    function setupModal(modalId, confirmButtonId, cancelButtonId, message, switchInput, checkedState) {
+        const modalElement = document.getElementById(modalId);
+        const confirmButton = document.getElementById(confirmButtonId);
+        const cancelButton = document.getElementById(cancelButtonId);
+
+        $(modalElement).on('show.bs.modal', function () {
+            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
+        });
+
+        confirmButton.addEventListener('click', function () {
+            switchInput.checked = checkedState;
+            alert(message);
+        });
+
+        cancelButton.addEventListener('click', function () {
+            switchInput.checked = !checkedState;
+        });
+    }
+
+    const switchInput = document.getElementById('flexSwitchCheckDefault');
+    const commuteIcon = document.getElementById('commuteIcon');
+
+    commuteIcon.addEventListener('click', function () {
+        if (switchInput.checked) {
+            $('#attendanceModal').modal('show');
+        } else {
+            $('#leaveworkModal').modal('show');
+        }
+    });
+
+    setupModal('attendanceModal', 'attendanceConfirmButton', 'attendanceCancelButton', '출근되었습니다!', switchInput, true);
+    setupModal('leaveworkModal', 'leaveworkConfirmButton', 'leaveworkCancelButton', '퇴근되었습니다!', switchInput, false);
+
+    setInterval(function () {
+        updateTime('currentTime');
+        updateTime('currentTimes');
+    }, 1000);
+});
+
 // 즐겨찾기
 function toggleStar(element, event) {
     event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되지 않도록 함
@@ -66,6 +121,80 @@ function chatOpenPopup() {
     }
 }
 
+// ---------------------- chatting ----------------------
+
+// 채팅방 생성 모달창 : 모달 관련 변수
+let modal = document.getElementById("chatModal");
+let closeButton = document.getElementById("closeButton");
+let confirmButton = document.getElementById("confirmCreateRoom");
+let selectedEmpName = ""; // 클릭된 직원의 이름을 저장할 변수
+
+// 직원 리스트 클릭 이벤트 추가
+let empItems = document.querySelectorAll(".dep_emps_list li");
+empItems.forEach(item => {
+    item.addEventListener("click", function() {
+        // 선택한 직원의 이름 텍스트를 저장
+        selectedEmpName = this.textContent.trim();
+
+        // 모달 창 열기
+        modal.style.display = "block";
+    });
+});
+
+// 모달 닫기 (x 버튼 클릭 시)
+closeButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+// 모달 닫기 (모달 외부 클릭 시)
+window.onclick = function(e) {
+    if (e.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// 채팅방 생성 확인 버튼 클릭 시
+
+confirmButton.onclick = function() {
+    // 모달 창 닫기
+    modal.style.display = "none";
+
+    // 새로운 채팅방 생성
+    let newChatRoom = document.createElement("div");
+    newChatRoom.className = "chat_room";
+    newChatRoom.dataset.roomId = "new"; // 실제 ID로 변경 필요
+
+    // 채팅방 이미지
+    let roomImg = document.createElement("div");
+    roomImg.className = "room_img";
+    let img = document.createElement("img");
+    img.src = "/assets/img/보노보노.png"; // 기본 이미지 또는 선택된 직원의 프로필 사진으로 변경 가능
+    // TODO: 이후에 서버에서 프로필 이미지를 받아와 img.src를 업데이트
+    // 예시: img.src = `server_endpoint/getProfileImage?name=${selectedEmpName}`;
+    img.alt = "프로필사진";
+    roomImg.appendChild(img);
+
+    // 채팅방 정보
+    let roomInfo = document.createElement("ul");
+    let roomName = document.createElement("li");
+    roomName.className = "room_name";
+    roomName.textContent = selectedEmpName; // 선택한 직원의 이름으로 설정
+    let roomContent = document.createElement("li");
+    roomContent.className = "room_content";
+    roomContent.textContent = "새로운 메시지가 없습니다."; // 초기 상태
+
+    roomInfo.appendChild(roomName);
+    roomInfo.appendChild(roomContent);
+
+    // 새로운 채팅방에 요소 추가
+    newChatRoom.appendChild(roomImg);
+    newChatRoom.appendChild(roomInfo);
+
+    // 채팅방 목록에 추가
+    document.querySelector("#v-pills-chatrooms .chat_list").appendChild(newChatRoom);
+}
+// /end 모달창
+
 // 조직도-부서 누르면 펼침, 닫힘
 document.addEventListener('DOMContentLoaded', function () {
     let orgDep = document.querySelectorAll('.org_dep');
@@ -98,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatHeader = document.getElementById('chatHeader');
     const chatRoomName = document.getElementById('chatRoomName');
     // const chatRoomPersonnel = document.getElementById('chatRoomPersonnel'); // 인원 수 표시
-    const closeButton = document.getElementById('closeButton'); // 채팅방 닫기 버튼
+    const backButton = document.getElementById('backButton'); // 채팅방 닫기 버튼
 
     // 채팅창 관련
     document.querySelectorAll('.chat_room').forEach(room => {
@@ -136,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // 채팅 닫기 버튼 클릭 시
-            closeButton.addEventListener('click', closeChat);
+            backButton.addEventListener('click', closeChat);
 
 
             // ESC 키 눌렀을 때 채팅 닫기
@@ -282,63 +411,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+// ----------------------/end chatting ----------------------
 
 // 테이블에 링크 적용하기
 function rowClick(url) {
     window.location.href = url;
 }
 
-// Froala Editor 한국어 적용
-var editor = new FroalaEditor('#froala', {
-    language: 'ko',
-});
 
-// 출퇴근 Modal용
-document.addEventListener('DOMContentLoaded', function () {
-    function updateTime(elementId) {
-        const currentTimeElement = document.getElementById(elementId);
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
-    }
-
-    function setupModal(modalId, confirmButtonId, cancelButtonId, message, switchInput, checkedState) {
-        const modalElement = document.getElementById(modalId);
-        const confirmButton = document.getElementById(confirmButtonId);
-        const cancelButton = document.getElementById(cancelButtonId);
-
-        $(modalElement).on('show.bs.modal', function () {
-            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
-        });
-
-        confirmButton.addEventListener('click', function () {
-            switchInput.checked = checkedState;
-            alert(message);
-        });
-
-        cancelButton.addEventListener('click', function () {
-            switchInput.checked = !checkedState;
-        });
-    }
-
-    const switchInput = document.getElementById('flexSwitchCheckDefault');
-    const commuteIcon = document.getElementById('commuteIcon');
-
-    commuteIcon.addEventListener('click', function () {
-        if (switchInput.checked) {
-            $('#attendanceModal').modal('show');
-        } else {
-            $('#leaveworkModal').modal('show');
-        }
-    });
-
-    setupModal('attendanceModal', 'attendanceConfirmButton', 'attendanceCancelButton', '출근되었습니다!', switchInput, true);
-    setupModal('leaveworkModal', 'leaveworkConfirmButton', 'leaveworkCancelButton', '퇴근되었습니다!', switchInput, false);
-
-    setInterval(function () {
-        updateTime('currentTime');
-        updateTime('currentTimes');
-    }, 1000);
-});

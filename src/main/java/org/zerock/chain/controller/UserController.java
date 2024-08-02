@@ -34,6 +34,26 @@ public class UserController {
     public String UserQARegister(Model model) {
         return "user/qaRegister";
     }
+    //  고객센터  조회 페이지 (수정불가)
+    @GetMapping("/qaDetail")
+    public String UserQADetail(Model model) {
+        return "user/qaDetail";
+    }
 
 
+    //  로그아웃 페이지
+    @GetMapping("/logout")
+    public String UserLogout(Model model) {return "user/logout";}
+
+    //  로그인 페이지
+    @GetMapping("/login")
+    public String UserLogin(Model model) {
+        return "user/login";
+    }
+
+    //  환경설정 페이지
+    @GetMapping("/alarm")
+    public String UserAlarm(Model model) {
+        return "user/alarm";
+    }
 }

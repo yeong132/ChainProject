@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class BoardController {
 
-    @GetMapping("/식당리스트")
-    public String FodList(Model model) {
-        return "board/식당리스트";
+    @GetMapping("/cafeteria")
+    public String boardCafeteria() {
+        return "board/cafeteria";
     }
 
     @GetMapping("/list")
