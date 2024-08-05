@@ -125,6 +125,17 @@ body {
 }
 /* -----/end 모달창 ------ */
 
+/* 오른쪽 마우스 클릭: 드롭다운 메뉴 */
+.chat_menu_container .dropdown-menu {
+    padding: 0;
+    --bs-dropdown-min-width: 8rem !important;
+}
+
+.chat_menu_container .dropdown-menu .dropdown-item {
+    padding: 5px 0;
+}
+/* /end 오른쪽 마우스 클릭: 드롭다운 메뉴 */
+
 /* 검색 */
 .search {
     display: flex;
@@ -210,6 +221,7 @@ body {
 /* ----------------------- */
 /* 채팅방 목록 관련 */
 .chat_room {
+    position: relative;
     display: flex;
     height: 70px;
     padding: 5px;
@@ -223,6 +235,24 @@ body {
 .chat_room:active, .org_dep:active, .dep_emps_list li:active {
     background-color: #d5ecff;
 }
+
+/* 채팅방 알람 표시 */
+.chat_room .chat_alarm {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    right: 5px;
+    top: 23px;
+    width: auto;
+    padding: 0 7px;
+    border-radius: 10px;
+    z-index: 99;
+    font-size: 13px;
+    background-color: #f16262;
+    color: #fff;
+}
+
 
 .room_img {
     width: 50px;
