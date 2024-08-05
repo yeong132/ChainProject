@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Main</title>
-
     <!-- 부트스트랩 -->
-    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet"/>
-    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet"/>
-    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet"/>
-    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet"/>
-    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet"/>
-    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
     <!-- Template Main CSS File -->
-    <link href="/assets/css/style.css" rel="stylesheet"/>
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <!-- 프로젝트 css -->
-        <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-        <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
-    <!-- catting css -->
-        <link rel="stylesheet" th:href="@{/assets/css/chatting.css}"/>
+    <!--<link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>-->
+
+    <!-- 채팅 css -->
+    <link th:href="@{/assets/css/chatting.css}" rel="stylesheet"/>
 </head>
 <body>
 <div class="chat_container">
@@ -114,6 +112,31 @@
             </div>
             <!-- /end 조직도 -->
 
+            <!-- 오른쪽 마우스 클릭 : 드롭 다운 메뉴 -->
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"><li>
+                <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                    <span>채팅방 이름 설정</span>
+                </a>
+            </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                        <span class="chatroomFavorite">즐겨찾기 등록</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                        <span>채팅방 나가기</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- /end 드롭 다운 메뉴 -->
+
             <!-- 즐겨찾기 목록 -->
             <div class="chat_menu tab-pane" id="v-pills-favorites" role="tabpanel"
                  aria-labelledby="v-pills-favorites-tab">
@@ -124,6 +147,7 @@
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 즐겨찾기 목록">
                     <div class="chat_room"  data-room-id="4">
+                        <span class="chat_alarm">4444</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
@@ -209,6 +233,7 @@
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 목록">
                     <div class="chat_room" data-room-id="1">
+                        <span class="chat_alarm">4444</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
@@ -218,24 +243,27 @@
                         </ul>
                     </div>
                     <div class="chat_room" data-room-id="2">
+                        <span class="chat_alarm">14</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
                         <ul>
-                            <li class="room_name">개발팀 최영민 부장</li>
+                            <li class="room_name">개발팀 최영민 부장님</li>
                             <li class="room_content">옹야~</li>
                         </ul>
                     </div>
                     <div class="chat_room" data-room-id="3">
+                        <span class="chat_alarm">1</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
                         <ul>
-                            <li class="room_name">업무지원팀 김민영 대리</li>
+                            <li class="room_name">업무지원팀 김민영 대리님</li>
                             <li class="room_content">네~</li>
                         </ul>
                     </div>
                     <div class="chat_room" data-room-id="5">
+                        <span class="chat_alarm">144</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
@@ -331,8 +359,11 @@
 
     </div> <!-- /end chat_chatting -->
 </div>
+
+<script src="/assets/js/chatting.js"></script>
+
 <!-- 프로젝트 파일 -->
-<script src="/assets/js/wemaked.js"></script>
+<!--<script src="/assets/js/wemaked.js"></script>-->
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
