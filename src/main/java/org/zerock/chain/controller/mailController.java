@@ -48,9 +48,9 @@ public class mailController {
 
 
     //내게 쓴 메일함
-    @GetMapping("/reicevetome")
+    @GetMapping("/receivetome")
     public String mailReicevetome() {
-        return "mail/reicevetome";
+        return "mail/receivetome";
     }
 
 

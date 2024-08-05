@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/attendance")
+@RequestMapping("/admin/attendance")
 @Log4j2
 public class AttendanceController {
 
-    //근퇴 메인 페이지
-    @GetMapping("/company")
-    public String atDepartment() {return "admin/attendance/company";}
-
-    // 근태 상세 페이지(사원 근태 페이지)
+    //근퇴 상세 페이지
     @GetMapping("/employee")
-    public String atEmployee(){ return "admin/attendance/employee";}
+    public String atDepartment() {return "admin/attendance/employee";}
+
+    // 근태 전체 페이지
+    @GetMapping("/company")
+    public String atEmployee(){ return "admin/attendance/company";}
+
 
 
 

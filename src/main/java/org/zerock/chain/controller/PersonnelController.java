@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/personnel")
+@RequestMapping("/admin/personnel")
 @Log4j2
 public class PersonnelController {
 
 
     // 사원 관리 페이지
-    @GetMapping("/managemant")
+    @GetMapping("/management")
     public String managemant() {
-        return "admin/personnel/managemant";
+        return "admin/personnel/management";
     }
 
 

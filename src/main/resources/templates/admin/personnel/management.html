@@ -5,37 +5,42 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-  <title>회의실 예약 메인</title>
+  <title>사원 통합 관리</title>
   <meta content="" name="description"/>
   <meta content="" name="keywords"/>
 
+  <!-- link 안에는 th:href 사용! -->
   <!-- Favicons -->
-  <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
-  <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+  <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+  <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
   <!-- 폰트 설정  -->
-  <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet"/>
+  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+  <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"
+  />
 
   <!-- Vendor CSS Files -->
-  <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
-  <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+  <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+  <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
-  <!-- Template Main CSS File -- th:href 사영 !! -->
-  <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+  <!-- Template Main CSS File -->
+  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
   <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
+* Template Name: NiceAdmin
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Updated: Apr 20 2024 with Bootstrap v5.3.3
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
   ======================================================== -->
 </head>
 
@@ -67,11 +72,13 @@
         </a>
       </li> -->
       <!-- 검색 아이콘 끝 -->
+
       <li class="nav-item dropdown" id="commuteIcon">
         <div class="from-check form-switch me-3">
           <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
         </div>
       </li>
+      <!-- 출퇴근 아이콘 끝 -->
 
       <li class="nav-item dropdown">
         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -82,7 +89,7 @@
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
           <li class="dropdown-header">
             4개의 새 알림이 있습니다
-            <a href="#"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+            <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
           </li>
           <li>
             <hr class="dropdown-divider"/>
@@ -140,7 +147,7 @@
             <hr class="dropdown-divider"/>
           </li>
           <li class="dropdown-footer">
-            <a href="#">모든 알림 표시</a>
+            <a href="/user/alarm">모든 알림 표시</a>
           </li>
         </ul>
         <!-- 알림 드롭다운 목록 끝 -->
@@ -148,137 +155,19 @@
       <!-- 알림 전체 끝 -->
 
       <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-chat-dots"></i>
-          <span class="badge btn-success badge-number">3</span> </a>
-        <!-- 메세지 아이콘 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-          <li class="dropdown-header">
-            3개의 새 메시지가 있습니다
-            <a href="#"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="message-item">
-            <a href="#">
-              <img src="../static/assets/img/messages-1.jpg" alt="" class="rounded-circle"/>
-              <div>
-                <h4>Maria Hudson</h4>
-                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="message-item">
-            <a href="#">
-              <img src="../static/assets/img/messages-2.jpg" alt="" class="rounded-circle"/>
-              <div>
-                <h4>Anna Nelson</h4>
-                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                <p>6 hrs. ago</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="message-item">
-            <a href="#">
-              <img src="../static/assets/img/messages-3.jpg" alt="" class="rounded-circle"/>
-              <div>
-                <h4>David Muldon</h4>
-                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                <p>8 hrs. ago</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="dropdown-footer">
-            <a href="#">모든 메세지 보기</a>
-          </li>
-        </ul>
-        <!-- 메시지 드롭다운 목록 끝 -->
-      </li>
-      <!-- 메시지 전체 끝 -->
-
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bx bx-layer"></i>
+        <a class="nav-link nav-icon" href="/user/setting">
+          <i class="bi bi-gear"></i>
         </a>
-        <!-- 즐겨찾기 아이콘 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow favorite">
-          <li class="dropdown-header">
-            즐겨찾기
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="favorite-item">
-            <i class="bi bi-diagram-2"></i>
-            <div>
-              <h4>조직도</h4>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="favorite-item" data-bs-toggle="modal" data-bs-target="#commuteModal">
-            <i class="bi bi-door-closed"></i></i>
-            <div>
-              <h4>출퇴근</h4>
-            </div>
-          </li>
-
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="favorite-item">
-            <i class="bi bi-question-circle"></i>
-            <div>
-              <h4>고객센터</h4>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="favorite-item">
-            <i class="bi bi-tools"></i>
-            <div>
-              <h4>관리자</h4>
-            </div>
-          </li>
-
-        </ul>
-        <!-- 즐겨찾기 드롭다운 목록 끝 -->
+        <!-- 환경설정 아이콘 끝 -->
       </li>
-      <!-- 즐겨찾기 전체 끝 -->
+      <!-- 환경설정 전체 끝 -->
 
 
       <li class="nav-item dropdown pe-3">
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a
-        ><!-- 프로필 이미지 항목 끝 -->
+          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+        <!-- 프로필 이미지 항목 끝 -->
 
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
@@ -290,9 +179,9 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="../static/users-profile.html">
+            <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
               <i class="bi bi-person"></i>
-              <span>내 프로필</span>
+              <span>마이 페이지</span>
             </a>
           </li>
           <li>
@@ -300,29 +189,30 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="../static/users-profile.html">
-              <i class="bi bi-gear"></i>
-              <span>환경설정</span>
+            <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+              <i class="bi bi-diagram-2"></i>
+              <span>조직도</span>
             </a>
           </li>
           <li>
             <hr class="dropdown-divider"/>
           </li>
 
-          <!-- <li>
-            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-              <i class="bi bi-question-circle"></i>
-              <span>Need Help?</span>
-            </a>
-          </li>
           <li>
-            <hr class="dropdown-divider" />
-          </li> -->
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="#">
+            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
               <i class="bi bi-power"></i>
               <span>로그아웃</span>
+            </a>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/">
+              <i class="bx bx-walk"></i>
+              <span>사용자 페이지</span>
             </a>
           </li>
         </ul>
@@ -335,27 +225,75 @@
 </header>
 <!-- Header 끝 -->
 
+<!-- Header Modal -->
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">출근</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="modal-body">
+        <div id="currentTime">현재 시간:</div>
+        출근하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+        </button>
+        <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+          아니오
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">퇴근</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="currentTimes">현재 시간:</div>
+        퇴근하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+        </button>
+        <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 출퇴근 Modal 끝 -->
+<!-- Header Modal -->
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link" href="/admin/main">
+      <a class="nav-link dash collapsed" href="/admin/main">
         <i class="bi bi-grid"></i>
-        <span>Dashboard</span>
+        <span>대시보드</span>
       </a>
     </li>
     <!-- End Dashboard Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>인사관리</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+      <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/personnel/managemant"> <i class="bi bi-circle"></i><span>사원관리</span> </a>
+          <a href="/admin/personnel/management" class="active"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
         </li>
         <li>
-          <a href="/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한설정</span> </a>
+          <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
         </li>
 
       </ul>
@@ -363,9 +301,9 @@
     <!-- End Components Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#charts-nav"  href="/attendance/company">
+      <a class="nav-link collapsed" data-bs-target="#charts-nav"  href="/admin/attendance/company">
         <i class="bi bi-bar-chart"></i>
-        <span>근태관리</span>
+        <span>근태 관리</span>
       </a>
     </li>
   </ul>
@@ -375,12 +313,12 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>사원통합관리</h1>
+      <h1>사원 통합 관리</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="admin.html">관리자페이지</a></li>
-          <li class="breadcrumb-item">인사관리</li>
-          <li class="breadcrumb-item active">사원통합관리</li>
+          <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>
+          <li class="breadcrumb-item">Personnel</li>
+          <li class="breadcrumb-item active">Management</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -678,21 +616,34 @@
 
   </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-  </footer><!-- End Footer -->
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+  <div class="copyright">
+    &copy; Copyright <strong><span>CHAIN</span></strong
+  >. All Rights Reserved
+  </div>
+  <div class="credits">
+    <!-- All the links in the footer should remain intact. -->
+    <!-- You can delete the links only if you purchased the pro version. -->
+    <!-- Licensing information: https://bootstrapmade.com/license/ -->
+    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+  </div>
+</footer>
+<!-- Footer 끝 -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+  <i class="bi bi-chat-dots"></i>
+  <span class="badge btn-danger badge-number">&nbsp;</span>
+</a>
+<!-- 채팅창 끝-->
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
