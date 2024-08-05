@@ -4,109 +4,61 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>프로젝트 목록 조회 </title>
+    <title>프로젝트 목록 조회</title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
-    <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
-    <!-- 폰트 설정  -->
-    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <!-- 폰트 설정 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
+    <!-- 즐겨찾기 별 버튼 CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
+
     <!-- Vendor CSS Files -->
-    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
 
     <!-- Template Main CSS File -->
-    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
-
-    <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-    ======================================================== -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
 </head>
 
 <body>
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<!-- Header -->
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="../static/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
-    <!-- 로고 끝 -->
-
-    <!-- <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- 검색바 끝 -->
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <!-- <li class="nav-item d-block d-lg-none">
-              <a class="nav-link nav-icon search-bar-toggle" href="#">
-                <i class="bi bi-search"></i>
-              </a>
-            </li> -->
-            <!-- 검색 아이콘 끝 -->
-
-            <li class="nav-item dropdown" id="commuteIcon">
-                <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                </div>
-            </li>
-            <!-- 출퇴근 아이콘 끝 -->
-
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
+                    <span class="badge bg-primary badge-number">4</span>
+                </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                        4개의 최신 알림
+                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">알림 전체</span></a>
                     </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
+                    <li><hr class="dropdown-divider"/></li>
                     <li class="notification-item">
                         <i class="bi bi-x-circle text-danger"></i>
                         <div>
@@ -115,327 +67,127 @@
                             <p>1 hr. ago</p>
                         </div>
                     </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
+                    <li><hr class="dropdown-divider"/></li>
                     <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
+                        <a href="#">Show all notifications</a>
                     </li>
                 </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
             </li>
-            <!-- 알림 전체 끝 -->
-
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="/user/setting">
-                    <i class="bi bi-gear"></i>
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span class="badge bg-success badge-number">3</span>
                 </a>
-                <!-- 환경설정 아이콘 끝 -->
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                    <li class="dropdown-header">
+                        You have 3 new messages
+                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                    </li>
+                    <li><hr class="dropdown-divider"/></li>
+                    <li class="message-item">
+                        <a href="#">
+                            <img alt="" class="rounded-circle" src="../static/assets/img/messages-1.jpg"/>
+                            <div>
+                                <h4>Maria Hudson</h4>
+                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                <p>4 hrs. ago</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"/></li>
+                    <li class="dropdown-footer">
+                        <a href="#">Show all messages</a>
+                    </li>
+                </ul>
             </li>
-            <!-- 환경설정 전체 끝 -->
-
-
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img1.jpg"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">K.ZURA</span>
+                </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
+                        <h6>박성은</h6>
+                        <span>Web Designer</span>
                     </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
+                    <li><hr class="dropdown-divider"/></li>
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
                             <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
+                            <span>마이페이지</span>
                         </a>
                     </li>
+                    <li><hr class="dropdown-divider"/></li>
                     <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/setting">
+                            <i class="bi bi-gear"></i>
+                            <span>환경 설정</span>
                         </a>
                     </li>
+                    <li><hr class="dropdown-divider"/></li>
                     <li>
-                        <hr class="dropdown-divider"/>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/Q&A">
+                            <i class="bi bi-question-circle"></i>
+                            <span>고객센터</span>
+                        </a>
                     </li>
-
+                    <li><hr class="dropdown-divider"/></li>
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="/user/logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
                     </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
                 </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
             </li>
-            <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
-    <!-- 상단바 끝 -->
 </header>
-<!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
-
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item ">
-            <a class="nav-link dash collapsed" href="/">
+        <li class="nav-item">
+            <a class="nav-link" href="/">
                 <i class="bi bi-grid"></i>
-                <span>대시보드</span>
+                <span>Dashboard HONE</span>
             </a>
         </li>
-        <!-- 대시보드 사이드바 끝 -->
-
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>기본 사항</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-                    <ul>
-                        <li>
-                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-                        </li>
-                    </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
-        <!-- 기본사항 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-clipboard-data"></i>
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
-                </li>
-                <li>
-                    <a href="/project/list" class="active"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-                </li>
-                <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-                </li>
-                <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
-                </li>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="work-nav">
+                <li><a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a></li>
+                <li><a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a></li>
+                <li><a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a></li>
+                <li><a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a></li>
             </ul>
-        </li>
-        <!-- 업무 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-archive"></i>
-                <span>전자결재</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 전자결재 사이드바 끝 -->
-
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-people-fill"></i>
-                <span>게시판</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
+                <i class="bi  bi-people-fill"></i><span>게시판</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
-                </li>
-                <li>
-                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-                </li>
-                <li>
-                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-                </li>
-                <li>
-                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-                </li>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
+                <li><a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a></li>
+                <li><a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a></li>
+                <li><a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a></li>
             </ul>
         </li>
-        <!-- 게시판 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-week"></i>
-                <span>일정</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 일정 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-envelope"></i>
-                <span>이메일</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/tome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 이메일 사이드바 끝 -->
-
-        <li class="nav-item qna">
-            <a class="nav-link qna collapsed" href="/user/Q&A">
-                <i class="bi bi-question-circle"></i>
-                <span>고객센터</span>
-            </a>
-        </li>
-        <!-- 고객센터 사이드바 끝 -->
-
     </ul>
 </aside>
-<!-- Sidebar 전체 끝 -->
-<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+
 <main class="main" id="main">
     <div class="pagetitle">
-        <h1>프로젝트 목록 조회</h1>
+        <h1>프로젝트 목록조회 페이지</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">HOME</a></li>
                 <li class="breadcrumb-item active">Project</li>
             </ol>
         </nav>
     </div>
-
-    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
     <div class="row  gy-6 mb-3">
         <div class="col-xl-2">
@@ -447,98 +199,17 @@
     </div>
 
     <section class="section">
-        <!----------------------------------------------------------------프로젝트 위젯---------------------------------------------------------------------->
         <section class="section contact">
             <div class="row gy-6">
                 <div class="col-lg-12">
-
                     <div class="row">
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
+                        <div class="col-lg-2-5" th:each="project : ${projects}">
+                            <div class="info-box card" th:onclick="'location.href=\'/project/detail/' + ${project.projectNo} + '\''">
                                 <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트1</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
+                                <h3 class="pj-mt0" th:text="${project.projectName}">프로젝트명</h3>
+                                <p th:utext="'참여자: ' + ${project.participants} + '<br>' + ${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">참여자<br>기간</p>
                                 <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 80%">80%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트2</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="10" class="progress-bar" role="progressbar" style="width: 10%">10%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트3</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar"  role="progressbar" style="width: 25%">25%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트4</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" class="progress-bar"role="progressbar" style="width: 40%">40%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트5</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar"role="progressbar" style="width: 50%">50%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트6 </h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="30" class="progress-bar" role="progressbar" style="width: 30%">30%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트7</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="70" class="progress-bar" role="progressbar" style="width: 70%">70%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">프로젝트8</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" class="progress-bar" role="progressbar" style="width: 40%">40%
+                                    <div aria-valuemax="100" aria-valuemin="0" th:aria-valuenow="${project.projectProgress}" class="progress-bar" role="progressbar" th:style="'width: ' + ${project.projectProgress} + '%'">진행도
                                     </div>
                                 </div>
                             </div>
@@ -548,138 +219,41 @@
             </div>
         </section>
 
-        <!--------------------------------------------------------------임시보관 프로젝트 ----------------------------------------------------------------->
         <section class="section contact">
             <div class="row gy-6">
-
                 <div class="col-lg-12" id="TsBox">
-                    <hr >
-                    <h4 class=" mt-5"> 임시 보관 프로젝트 </h4>
+                    <hr>
+                    <h4 class="mt-5">임시 보관 프로젝트</h4>
                     <div class="row">
                         <div class="col-lg-2-5">
                             <div class="info-box card" onclick="location.href='/project/detail'">
                                 <i class="bi bi-star star-icon right-align-block right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
                                 <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
+                                <p>참여자<br>2024/07/01 ~ 2024/09/11</p>
                                 <div class="progress mt-3">
                                     <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2-5">
-                            <div class="info-box card" onclick="location.href='/project/detail'">
-                                <i class="bi bi-star star-icon right-align-block right-align-block" onclick="toggleStar(this, event)"></i>
-                                <h3 class="pj-mt0">무제 프로젝트</h3>
-                                <p>참여자<br>2024/07/01 ~ 2024/09/11 </p>
-                                <div class="progress mt-3">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="80" class="progress-bar" role="progressbar" style="width: 0%">0%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- 추가 프로젝트 항목도 동일하게 반복 -->
                     </div>
                 </div>
             </div>
         </section>
-
-
     </section>
-
-
 </main>
-<!-- End #main -->
 
-<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer" id="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer>
-<!-- Footer 끝 -->
 
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#"><i class="bi bi-arrow-up-short"></i></a>
 
 <!-- 스크롤 이동 JS -->
 <script>
@@ -687,6 +261,8 @@
         document.getElementById('TsBox').scrollIntoView({behavior: 'smooth'});
     });
 </script>
+
+<script src="/assets/js/wemaked.js"></script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -697,12 +273,8 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-<script src="/assets/js/wemaked.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
