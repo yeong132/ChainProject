@@ -1,14 +1,12 @@
-package org.zerock.chain.DTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package org.zerock.chain.dto;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
@@ -25,8 +23,12 @@ public class ProjectDTO {
 
     private String dmpNo;
     private String participants;
+    private String projectContent;
+    private String projectFiles;
 
     // 기본 값 설정
     private boolean projectFavorite = false;
-    private Integer projectProgress = 0;
+
+    private int projectProgress;
+
 }

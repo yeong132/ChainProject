@@ -9,5 +9,4 @@ public class ChainApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChainApplication.class, args);
     }
-
 }
