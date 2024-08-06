@@ -47,9 +47,9 @@ public class ProjectController {
     // 프로젝트 수정 페이지 조회
     @GetMapping("/modify/{projectNo}")
     public String modifyGET(@PathVariable Long projectNo, Model model) {
-        ProjectDTO projectDTO = projectService.getProjectById(projectNo); // 해당 글 번호 목록 유무 확인
+        ProjectDTO projectDTO = projectService.getProjectById(projectNo);
         log.info(projectDTO.toString());
-        model.addAttribute("project", projectDTO); // project라는 이름으로 전달
+        model.addAttribute("project", projectDTO);
         return "project/modify";
     }
 
@@ -63,6 +63,7 @@ public class ProjectController {
         return "redirect:/project/detail/" + projectNo;
     }
 
+    
     //  임시보관 프로젝트 개별 상세  확인 페이지
     @GetMapping("/임시보관detail")
     public String detail2(Model model) {

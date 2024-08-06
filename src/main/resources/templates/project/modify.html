@@ -441,7 +441,7 @@
     <section class="section">
 
         <div class="row">
-            <form id="combinedForm" method="post" th:action="@{/projects/modify}">
+            <form id="combinedForm" method="post" th:action="@{/project/modify/{projectNo}(projectNo=${project.projectNo})}">
                 <input type="hidden" id="projectNo" name="projectNo" th:value="${project.projectNo}">
                 <div class="col-lg-8">
                     <div class="card">
@@ -496,6 +496,7 @@
                                         <input class="form-control" name="projectEndDate" th:value="${project.projectEndDate}" required type="date">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-form-label">즐겨찾기</label>
                                     <div class="col-sm-11">
@@ -503,6 +504,7 @@
                                         <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden"  th:value="${project.projectFavorite}">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-form-label">내용</label>
                                     <div class="col-sm-11">
@@ -560,9 +562,9 @@
             <!---------------------------------------------------------버튼 위젯 ----------------------------------------------------------------->
             <div class="offset-sm-0">
                 <div class="col-sm-5">
-                    <button class="btn btn-primary" type="button" onclick="showModal(event)">저장 </button>
-                    <button  type="button" class="btn btn-primary" onclick="showWarningModal()">목록</button>
-                    <button  type="button" class="btn btn-primary" onclick="showConfirmationModal()">삭제</button>
+                    <button class="btn btn-primary" type="button" onclick="showModal(event)">저장</button>
+                    <button class="btn btn-primary" onclick="location.href='/project/list'" type="button">임시저장</button>
+                    <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
                 </div>
             </div>
 

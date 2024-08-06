@@ -19,16 +19,9 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
-
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -39,18 +32,18 @@ dependencies {
     // MySQL
     implementation 'mysql:mysql-connector-java:8.0.32'
 
-    // lombok
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    /* implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'mysql:mysql-connector-java'*/
+    // JPA and ModelMapper
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
 
-    // thymeleaf layout
+    // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
@@ -62,23 +55,17 @@ dependencies {
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     )
 
-    // ModelMapper
-    implementation 'org.modelmapper:modelmapper:3.1.0'
-
-    // Valid
+    // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // OpenAPI 3
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
-    // 이미지 용량 처리
+    // Thumbnailator
     implementation 'net.coobird:thumbnailator:0.4.16'
 
-    // spring security
+    // Spring Security
     // implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    // Thymeleaf 인증 정보 처리(Thymeleaf에서 스프링 시큐리티 사용하기 위한 라이브러리 설정)
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 }
 
