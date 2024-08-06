@@ -1,11 +1,11 @@
-package org.zerock.chain.Service;
+package org.zerock.chain.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.zerock.chain.DTO.ProjectDTO;
-import org.zerock.chain.Repository.ProjectRepository;
+import org.zerock.chain.dto.ProjectDTO;
+import org.zerock.chain.repository.ProjectRepository;
 import org.zerock.chain.model.Project;
 
 import java.util.List;

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.zerock.chain.DTO.ProjectDTO;
-import org.zerock.chain.Service.ProjectService;
+import org.zerock.chain.dto.ProjectDTO;
+import org.zerock.chain.service.ProjectService;
 
 import java.util.List;
 

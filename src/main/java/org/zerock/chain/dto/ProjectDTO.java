@@ -1,4 +1,4 @@
-package org.zerock.chain.DTO;
+package org.zerock.chain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

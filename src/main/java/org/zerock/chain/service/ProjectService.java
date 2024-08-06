@@ -1,6 +1,6 @@
-package org.zerock.chain.Service;
+package org.zerock.chain.service;
 
-import org.zerock.chain.DTO.ProjectDTO;
+import org.zerock.chain.dto.ProjectDTO;
 
 import java.util.List;
 
