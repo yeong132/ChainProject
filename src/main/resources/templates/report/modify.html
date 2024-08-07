@@ -305,12 +305,12 @@
       <!-- 기본사항 끝 -->
 
       <li class="nav-item">
-        <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+        <a class="nav-link" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-clipboard-data"></i>
           <span>업무</span>
           <i class="bi bi-chevron-down ms-menu"></i>
         </a>
-        <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+        <ul id="report-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
           <li>
             <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
           </li>
@@ -318,7 +318,7 @@
             <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
           </li>
           <li>
-            <a href="/work/list" class="active"> <i class="bi bi-circle"></i><span>업무</span> </a>
+            <a href="/report/list" class="active"> <i class="bi bi-circle"></i><span>업무</span> </a>
           </li>
           <li>
             <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -431,7 +431,7 @@
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/work/list">Work</a></li>
+            <li class="breadcrumb-item"><a href="/report/list">Report</a></li>
             <li class="breadcrumb-item active">Modify</li>
           </ol>
         </nav>
@@ -633,7 +633,7 @@
       var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
       saveModal.hide(); // 모달을 먼저 닫는다
       saveModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-        window.location.href = '/work/detail';
+        window.location.href = '/report/detail';
       });
     }
   </script>
@@ -658,7 +658,7 @@
 
       // 모달이 완전히 닫힌 후 페이지 이동
       confirmationModal._element.addEventListener('hidden.bs.modal', function() {
-        window.location.href = '/work/list';
+        window.location.href = '/report/list';
       });
     }
   </script>
@@ -672,7 +672,7 @@
       var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
       WarningModal.hide(); // 모달을 먼저 닫는다
       WarningModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-        window.location.href = '/work/list';
+        window.location.href = '/report/list';
       });
     }
   </script>

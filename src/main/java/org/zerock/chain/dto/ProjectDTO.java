@@ -1,4 +1,5 @@
 package org.zerock.chain.dto;
+
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
@@ -14,7 +16,7 @@ public class ProjectDTO {
     private Long projectNo;
     private String projectName;
 
-    // 날짜 형식 변환 어노테이션 사용하기
+    // 날짜 형식 변환 어노테이션 사용
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectStartDate;
 
@@ -28,7 +30,11 @@ public class ProjectDTO {
 
     // 기본 값 설정
     private boolean projectFavorite = false;
-
     private int projectProgress;
+    private boolean isTemporary; // 임시 보관 여부
+
+    public void setIsTemporary(boolean isTemporary) {
+        this.isTemporary = isTemporary;
+    }
 
 }

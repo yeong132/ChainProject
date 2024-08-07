@@ -431,7 +431,7 @@
 <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
 <main class="main" id="main">
     <div class="pagetitle">
-        <h1>프로젝트 상세 조회  </h1>
+        <h1 th:text="${project.isTemporary} ? '임시보관 프로젝트' : '프로젝트 상세 조회'"></h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">HOME</a></li>
@@ -449,7 +449,10 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Project</h5>
-                        <!-- General Form Elements -->
+                        <form th:action="@{/project/toggleFavorite}" method="post" style="display: inline;">
+                        <input type="hidden" name="projectNo" th:value="${project.projectNo}"/>
+                        <input type="hidden" name="projectFavorite" th:value="${!project.projectFavorite}"/>
+                    </form>
                         <form>
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="projectName">제목</label>
@@ -458,16 +461,18 @@
                                 </div>
                             </div>
 
+
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="participants">참여자</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 col-form-label" for="participants">참여자</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" readonly type="text" id="participants" th:value="${project.participants}" >
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">참여자</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 col-form-label">참여자</label>
+                                <div class="col-sm-10">
                                     <select aria-label="Default select example" class="form-select" readonly>
                                         <option selected>조직도 연동하기</option>
                                         <option value="1">김선혜</option>
@@ -481,43 +486,47 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="dmpNo">부서</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 col-form-label" for="dmpNo">부서</label>
+                                <div class="col-sm-10">
                                     <input class="form-control" id="dmpNo" readonly type="text" th:value="${project.dmpNo}" >
                                 </div>
                             </div>
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="projectFiles">첨부 파일</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" id="projectFiles" type="file" th:value="${project.projectFiles}" readonly>
+                                <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="projectFiles" type="text" th:value="${project.projectFiles}" readonly>
+                                    <a th:href="@{${project.projectFiles}}" target="_blank">파일 열기</a>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">기간</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 col-form-label">기간</label>
+                                <div class="col-sm-10">
                                     <p th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></p>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">즐겨찾기</label>
-                                <div class="col-sm-11">
-                                    <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this,event)"></i>
-                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden"  th:value="${project.projectFavorite}">
+                                <label class="col-sm-2 col-form-label">즐겨찾기</label>
+                                <div class="col-sm-10">
+                                    <i class="bi star-icon right-align-block" th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" th:value="${project.projectFavorite}">
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="froala">내용</label>
-                                <div class="col-sm-11">
+                                <label class="col-sm-2 col-form-label" for="froala">내용</label>
+                                <div class="col-sm-10">
                                     <textarea name="projectContent" id="froala" readonly th:text="${project.projectContent}"></textarea>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">Disabled</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" disabled type="text" value="Read only / 권한없음 ">
+                                <label class="col-sm-2 col-form-label">Disabled</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" disabled type="text" value="Read only / 수정 권한없음 ">
                                 </div>
                             </div>
                         </form><!-- End General Form Elements -->
@@ -563,6 +572,17 @@
     </div>
 </footer>
 <!-- Footer 끝 -->
+
+<!--즐겨찾기 데이터 값 저장 -->
+<script>
+    function toggleStar(element, event) {
+        event.preventDefault();
+        element.classList.toggle('bi-star-fill');
+        element.classList.toggle('text-warning');
+        var favoriteInput = document.getElementById('projectFavorite');
+        favoriteInput.value = favoriteInput.value === 'true' ? 'false' : 'true';
+    }
+</script>
 
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->

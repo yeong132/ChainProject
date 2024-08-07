@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.zerock.chain.dto.ProjectDTO;
 import org.zerock.chain.dto.ProjectRequestDTO;
 import org.zerock.chain.repository.ProjectRepository;
 import org.zerock.chain.model.Project;
 
+import java.io.File;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,6 +35,14 @@ public class ProjectServiceImpl implements ProjectService {
         return projectNo;
     }
 
+    @Override   // 프로젝트 임시보관 조회
+    public List<ProjectDTO> getTemporaryProjects() {
+        List<Project> projects = projectRepository.findByIsTemporary(true);
+        return projects.stream()
+                .map(project -> modelMapper.map(project, ProjectDTO.class))
+                .collect(Collectors.toList());
+    }
+
     @Override   // 프로젝트 전체 목록 조회 메서드
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
@@ -41,7 +51,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
-    @Override   // 즐겨찾기 업로드
+    @Override   // 즐겨찾기 업데이트
     public void setProjectFavorite(Long projectNo, boolean projectFavorite) {
         Project project = projectRepository.findById(projectNo)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 프로젝트 ID"));
@@ -49,7 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
     }
 
-    @Override // 진행도 그래프 업로드
+    @Override // 진행도 업데이트
     public void updateProjectProgress(Long projectNo, Integer projectProgress) {
         Project project = projectRepository.findById(projectNo)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 프로젝트 ID"));
@@ -71,5 +81,26 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
         modelMapper.map(projectRequestDTO, project);
         projectRepository.save(project);
+    }
+
+    @Override   // 프로젝트 삭제 기능
+    public void deleteProject(Long projectNo) {
+        projectRepository.deleteById(projectNo);
+    }
+
+    @Override   // 첨부파일 저장
+    public String saveFile(MultipartFile file) throws Exception {
+        String uploadDir = "uploads/";
+        String originalFilename = file.getOriginalFilename();
+        String filePath = uploadDir + originalFilename;
+        File destinationFile = new File(filePath);
+
+        //업로드 파일 존재 확인
+        File uploadDirFile = new File(uploadDir);
+        if (!uploadDirFile.exists()) {
+            uploadDirFile.mkdirs();
+        }
+        file.transferTo(destinationFile);
+        return filePath;
     }
 }

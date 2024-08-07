@@ -57,13 +57,15 @@ document.addEventListener('DOMContentLoaded', function () {
 function toggleStar(element, event) {
     event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되지 않도록 함
 
-
+    const projectFavoriteInput = document.getElementById('projectFavorite');
     if (element.classList.contains('bi-star')) {
         element.classList.remove('bi-star');
         element.classList.add('bi-star-fill');
+        projectFavoriteInput.value = "true";
     } else {
         element.classList.remove('bi-star-fill');
         element.classList.add('bi-star');
+        projectFavoriteInput.value = "false";
     }
     // 해당 폼 제출
     element.nextElementSibling.submit();

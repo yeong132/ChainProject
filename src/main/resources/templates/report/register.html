@@ -305,12 +305,12 @@
       <!-- 기본사항 끝 -->
 
       <li class="nav-item">
-        <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+        <a class="nav-link" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-clipboard-data"></i>
           <span>업무</span>
           <i class="bi bi-chevron-down ms-menu"></i>
         </a>
-        <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+        <ul id="report-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
           <li>
             <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
           </li>
@@ -318,7 +318,7 @@
             <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
           </li>
           <li>
-            <a href="/work/list" class="active"> <i class="bi bi-circle"></i><span>업무</span> </a>
+            <a href="/report/list" class="active"> <i class="bi bi-circle"></i><span>업무</span> </a>
           </li>
           <li>
             <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -425,117 +425,217 @@
   </aside>
   <!-- Sidebar 전체 끝 -->
     <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
-    <main id="main" class="main">
-      <div class="pagetitle">
-        <h1>업무 문서 생성 </h1>
-        <nav>
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/work/list">Work</a></li>
-            <li class="breadcrumb-item active">Register</li>
-          </ol>
-        </nav>
-      </div>
-      <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>업무 문서 생성</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/work/list">Work</a></li>
+          <li class="breadcrumb-item active">Register</li>
+        </ol>
+      </nav>
+    </div>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
-      <section class="section ">
-        <div class="row">
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">업무 문서</h5>
 
-
-          <div class="col-lg-12">
-
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">업무 문서</h5>
-
-                <!-- General Form Elements -->
-                <form>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputText">제목</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="프로젝트1">
-                    </div>
+              <!------------------------------------------------------------------문서 선택 체크박스 ------------------------------------------------------------------------>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">문서 종류</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="docType" id="meeting" value="meeting" onclick="updateForm()">
+                    <label class="form-check-label" for="meeting">회의록</label>
                   </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="email" value="바로 나">
-                    </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="docType" id="paper" value="paper" onclick="updateForm()">
+                    <label class="form-check-label" for="paper">보고서</label>
                   </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputEmail">참여자</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="email" value="이지영, 성준혁 외 5인">
-                    </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="docType" id="diary" value="diary" onclick="updateForm()">
+                    <label class="form-check-label" for="diary">업무일지</label>
                   </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label">참여자</label>
-                    <div class="col-sm-11">
-                      <select aria-label="Default select example" class="form-select">
-                        <option selected>조직도 연동하기</option>
-                        <option value="1">김선혜</option>
-                        <option value="2">박성은</option>
-                        <option value="3">신혜리</option>
-                        <option value="3">성준혁</option>
-                        <option value="3">임종하</option>
-                        <option value="3">박영민</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">부서</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="영남인재">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" id="formFile" readonly type="file">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputDate">기간</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="date">
-                    </div>
-                  </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputPassword">내용</label>
-                    <div class="col-sm-11">
-                      <!-- TinyMCE Editor -->
-                      <div id="froala"></div>
-                    </div>
-                  </div>
-
-
-                  <div class="offset-sm-0">
-                    <div class="col-sm-5">
-                      <button  type="button" class="btn btn-primary" onclick="showModal()">저장</button>
-                      <button  type="button" class="btn btn-primary" onclick="location.href='/work/list'">임시저장</button>
-                      <button  type="button" class="btn btn-primary" onclick="showWarningModal()">취소</button>
-                    </div>
-                  </div>
-
-
-                </form><!-- End General Form Elements -->
-
+                </div>
               </div>
-            </div>
 
+              <form id="reportForm" method="post" action="/report/register">
+                <input type="hidden" id="isTemporary" name="isTemporary" value="false">
+                <!------------------------------------------------------------------카테고리 별 문서 1 ------------------------------------------------------------------------>
+                <div id="meetingForm" style="display: none;">
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">제목</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportName" type="text" placeholder="회의록 제목" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" >작성자</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportAuthor" type="text" placeholder="본인 고정" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">참여자</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportParticipants" type="text" placeholder="참석자/직급/부서" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">회의 시간</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="meetingTime" type="text" placeholder="양식 미정" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">회의 장소</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="meetingRoom" type="text" placeholder="회의실" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">첨부 파일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportFiles" type="file">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">작성일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportUploadDate" type="date" placeholder="오늘 날짜 기본" >
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">내용</label>
+                    <div class="col-sm-10">
+                      <textarea name="projectContent" id="froala">
+                                        </textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!--------------------------------------------------------------보고서 ------------------------------------------------------------------------>
+                <div id="paperForm" style="display: none;">
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">제목</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportName" type="text" placeholder="보고서 제목" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">참여자</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportParticipants" type="text" placeholder="참석자/직급/부서" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" >작성자</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportAuthor" type="text" placeholder="본인 고정" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">첨부 파일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportFiles" type="file">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">작성일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportUploadDate" type="date"
+                       placeholder="오늘 날짜 기본" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">내용</label>
+                    <div class="col-sm-10">
+                      <textarea name="projectContent" id="froala">
+                                        </textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!------------------------------------------------------------------업무 일지---------------------------------------------------------------------->
+                <div id="diaryForm" style="display: none;">
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" >제목</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportName" type="text"
+                             placeholder="업무일지" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" >작성자</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportAuthor" placeholder="본인 고정" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">첨부 파일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="formFile" name="reportFiles" type="file">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">작성일</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" name="reportUploadDate" type="date" placeholder="오늘 날짜 기본" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">내용</label>
+                    <div class="col-sm-10">
+                      <textarea name="projectContent" id="froala">
+                                        </textarea>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+                <div class="row">
+                  <div class="offset-sm-0 mt-3">
+                    <div class="col-sm-5">
+                      <button type="button" class="btn btn-primary" onclick="showModal(event)">저장</button>
+                      <button type="button" class="btn btn-primary" onclick="showTempSaveModal(event)">임시저장</button>
+                      <button type="button" class="btn btn-primary" onclick="showWarningModal()">취소</button>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
           </div>
         </div>
-      </section>
-    </main>
-    <!-- End #main -->
+      </div>
+    </section>
+  </main>
+
+  <!-- End #main -->
 
 
-  <!------------------------------------------------------------저장 확인 모달 창 --------------------------------------------------------------------------->
+
+  <!-- 저장 확인 모달 -->
   <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -544,7 +644,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-           저장하시겠습니까 ?
+          저장하시겠습니까?
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger" onclick="saveAlerts()" type="button">예</button>
@@ -554,7 +654,26 @@
     </div>
   </div>
 
-  <!------------------------------------------------------------ 목록 경고 모달 창 --------------------------------------------------------------------------->
+  <!-- 임시저장 확인 모달 -->
+  <div class="modal fade" id="tempSaveModal" tabindex="-1" aria-labelledby="tempSaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tempSaveModalLabel">임시저장 확인</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          임시저장하시겠습니까?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" onclick="submitTempForm()" type="button">예</button>
+          <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 목록 경고 모달 -->
   <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -572,7 +691,6 @@
       </div>
     </div>
   </div>
-
 
   <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
   <!-- ======= Footer ======= -->
@@ -604,37 +722,84 @@
   </a>
   <!-- 채팅창 끝-->
 
-  <!-- 저장 확인 모달 JS  -->
+
+  <!-- 선택에 따라 폼 구성을 업데이트하는 JS 함수 추가 -->
   <script>
-    // 모달을 보여주는 함수
-    function showModal() { // 모달 인스턴스를 생성하고 보여줍니다.
+      function updateForm() {
+      const selectedType = document.querySelector('input[name="docType"]:checked').value;
+
+      document.getElementById('meetingForm').style.display = selectedType === 'meeting' ? 'block' : 'none';
+      document.getElementById('reportForm').style.display = selectedType === 'report' ? 'block' : 'none';
+      document.getElementById('diaryForm').style.display = selectedType === 'diary' ? 'block' : 'none';
+    }
+  </script>
+<!--  모달 js -->
+  <script>
+      function showModal(event) {
+      event.preventDefault(); // 폼 기본 제출 막기
       var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
-      saveModal.show();
+      saveModal.show(); // 저장 확인 모달 표시
     }
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
-    function saveAlerts() {
+
+      function submitForm() {
+      var selectedType = document.querySelector('input[name="docType"]:checked').value;
+      var forms = document.querySelectorAll('#reportForm > div');
+      forms.forEach(form => {
+      if (form.id === selectedType + 'Form') {
+      form.style.display = 'block';
+    } else {
+      form.style.display = 'none';
+    }
+    });
+      document.getElementById('reportForm').submit();
+    }
+
+      function saveAlerts() {
       var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
-      saveModal.hide(); // 모달을 먼저 닫는다
-      // 모달이 완전히 닫힌 후 페이지 이동
-      saveModal._element.addEventListener('hidden.bs.modal', function() {
-        window.location.href = '/work/detail';
-      });
+      saveModal.hide(); // 저장 확인 모달 닫기
+      saveModal._element.addEventListener('hidden.bs.modal', function () {
+      submitForm(); // 모달이 닫힌 후 폼 제출
+    });
     }
-  </script>
-  <!-- 목록 경고 모달 JS  -->
-  <script>
-    function showWarningModal() { // 모달을 보여주는 함수
+
+      function showWarningModal() {
       var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-      WarningModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
-    function WarningAlerts() {
+      WarningModal.show(); // 경고 모달 표시
+    }
+
+      function WarningAlerts() {
       var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
-      WarningModal.hide(); // 모달을 먼저 닫는다
-      WarningModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-        window.location.href = '/work/list';
-      });
+      WarningModal.hide(); // 경고 모달 닫기
+      WarningModal._element.addEventListener('hidden.bs.modal', function () {
+      window.location.href = '/report/list'; // 모달이 닫힌 후 페이지 이동
+    });
+    }
+
+      function showTempSaveModal(event) {
+      event.preventDefault(); // 폼 기본 제출 막기
+      var tempSaveModal = new bootstrap.Modal(document.getElementById('tempSaveModal'));
+      tempSaveModal.show(); // 임시저장 확인 모달 표시
+    }
+
+      function submitTempForm() {
+      document.getElementById('isTemporary').value = "true";
+      submitForm();
+    }
+
+      function updateForm() {
+      var selectedType = document.querySelector('input[name="docType"]:checked').value;
+      var forms = document.querySelectorAll('#reportForm > div');
+      forms.forEach(form => {
+      if (form.id === selectedType + 'Form') {
+      form.style.display = 'block';
+    } else {
+      form.style.display = 'none';
+    }
+    });
     }
   </script>
+
+
 
   <!-- Vendor JS Files -->
   <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

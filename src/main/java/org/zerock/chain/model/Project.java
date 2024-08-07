@@ -39,12 +39,14 @@ public class Project {
     @Column(name = "project_progress")
     private Integer projectProgress = 0;
 
-    @Column( name = "project_content")
+    @Column(name = "project_content")
     private String projectContent;
 
     @Column(name = "project_files")
     private String projectFiles;
 
+    @Column(name = "is_temporary")  // 임시 보관 여부
+    private boolean isTemporary;
 
     public void setProjectFavorite(boolean projectFavorite) {
         this.projectFavorite = projectFavorite;
@@ -52,5 +54,9 @@ public class Project {
 
     public void setProjectProgress(Integer projectProgress) {
         this.projectProgress = projectProgress;
+    }
+
+    public void setIsTemporary(boolean isTemporary) {
+        this.isTemporary = isTemporary;
     }
 }

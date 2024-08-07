@@ -440,6 +440,7 @@
     <section class="section">
         <div class="row">
             <form id="combinedForm" method="post" action="/project/register">
+                <input type="hidden" id="isTemporary" name="isTemporary" value="false">
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-body">
@@ -477,10 +478,11 @@
                                         <input class="form-control" name="dmpNo" placeholder="부서" required type="text">
                                     </div>
                                 </div>
+                                <!-- 첨부 파일 -->
                                 <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">첨부 파일</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" type="file" name="projectFiles">
+                                    <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="projectFiles" type="file" name="projectFiles">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -493,13 +495,15 @@
                                         <input class="form-control" name="projectEndDate" required type="date">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">즐겨찾기</label>
-                                    <div class="col-sm-11">
-                                        <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this,event)"></i>
+                                    <label class="col-sm-2 col-form-label">즐겨찾기</label>
+                                    <div class="col-sm-10">
+                                        <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this, event)"></i>
                                         <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" value="false">
                                     </div>
                                 </div>
+
                                 <div class="row mb-3">
                                     <label class="col-sm-1 col-form-label">내용</label>
                                     <div class="col-sm-11">
@@ -552,7 +556,7 @@
                             <div class="row">
                                 <div class="col-sm-11 offset-sm-1">
                                     <button class="btn btn-primary" type="button" onclick="showModal(event)">저장</button>
-                                    <button class="btn btn-primary" onclick="location.href='/project/detail'" type="button">임시저장</button>
+                                    <button class="btn btn-primary" type="button" onclick="showTempSaveModal(event)">임시저장</button>
                                     <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
                                 </div>
                             </div>
@@ -601,7 +605,24 @@
         </div>
     </div>
 </div>
-
+<!-- 임시저장 확인 모달 -->
+<div class="modal fade" id="tempSaveModal" tabindex="-1" aria-labelledby="tempSaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tempSaveModalLabel">임시 저장 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                임시 저장하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitTempForm()">예</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
@@ -664,21 +685,18 @@
         });
     }
 </script>
-<!-- 즐겨찾기 별 데이터 전송 -->
-<script>
-    function toggleStar(icon, event) {
-        event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되지 않도록 함
 
-        const projectFavoriteInput = document.getElementById('projectFavorite');
-        if (icon.classList.contains('bi-star')) {
-            icon.classList.remove('bi-star');
-            icon.classList.add('bi-star-fill');
-            projectFavoriteInput.value = "true";
-        } else {
-            icon.classList.remove('bi-star-fill');
-            icon.classList.add('bi-star');
-            projectFavoriteInput.value = "false";
-        }
+<!-- 임시저장 모달 JS -->
+<script>
+    function showTempSaveModal(event) {
+        event.preventDefault(); // 폼 기본 제출 막기
+        var tempSaveModal = new bootstrap.Modal(document.getElementById('tempSaveModal'));
+        tempSaveModal.show(); // 임시저장 확인 모달 표시
+    }
+
+    function submitTempForm() {
+        document.getElementById('isTemporary').value = "true";
+        document.getElementById('combinedForm').submit();
     }
 </script>
 
