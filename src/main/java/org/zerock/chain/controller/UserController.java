@@ -23,22 +23,28 @@ public class UserController {
         return "user/setting";
     }
 
-    //  고객센터 페이지
+
+
+    //  고객센터 페이지 조회 (전체목록조회)
     @GetMapping("/Q&A")
     public String UserQAList(Model model) {
         return "user/Q&A";
     }
 
-    //  고객센터  작성 페이지
+    //  고객센터  작성 페이지 (등록)
     @GetMapping("/qaRegister")
     public String UserQARegister(Model model) {
         return "user/qaRegister";
     }
-    //  고객센터  조회 페이지 (수정불가)
+
+    //  고객센터 상세 조회 페이지
+    //  고객센터 상세 조회 페이지 (수정/삭제)
     @GetMapping("/qaDetail")
     public String UserQADetail(Model model) {
         return "user/qaDetail";
     }
+
+
 
 
     //  로그아웃 페이지
