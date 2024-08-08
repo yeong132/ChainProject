@@ -37,4 +37,12 @@ public class ProjectDTO {
         this.isTemporary = isTemporary;
     }
 
+    public void setProjectFavorite(boolean projectFavorite) {
+        this.projectFavorite = projectFavorite;
+    }
+
+    public void setProjectProgress(Integer projectProgress) {
+        this.projectProgress = projectProgress;
+    }
+
 }

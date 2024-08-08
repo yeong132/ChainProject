@@ -23,4 +23,11 @@ public class ProjectRequestDTO {
     public void setIsTemporary(boolean isTemporary) {
         this.isTemporary = isTemporary;
     }
+    public void setProjectFavorite(boolean projectFavorite) {
+        this.projectFavorite = projectFavorite;
+    }
+
+    public void setProjectProgress(Integer projectProgress) {
+        this.projectProgress = projectProgress;
+    }
 }

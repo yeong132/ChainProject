@@ -219,7 +219,7 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-2-5" th:each="project : ${projects}" th:if="${!project.isTemporary}">
-                            <div class="info-box card" onclick="handleCardClick(event)"
+                            <div class="info-box card" style="cursor: pointer" onclick="handleCardClick(event)"
                                  th:data-url="@{'/project/detail/' + ${project.projectNo}}">
                                 <form method="post" th:action="@{/project/toggleFavorite}">
                                     <i class="bi star-icon right-align-block"
@@ -252,7 +252,7 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-2-5" th:each="project : ${temporaryProjects}">
-                            <div class="info-box card" onclick="handleCardClick(event)"
+                            <div class="info-box card" style="cursor: pointer"  onclick="handleCardClick(event)"
                                  th:data-url="@{'/project/detail/' + ${project.projectNo}}">
                                 <form method="post" th:action="@{/project/toggleFavorite}">
                                     <i class="bi star-icon right-align-block"
@@ -262,7 +262,7 @@
                                     <input name="projectFavorite" th:value="${!project.projectFavorite}" type="hidden"/>
                                 </form>
                                 <h3 class="pj-mt0" th:text="${project.projectName}">프로젝트명</h3>
-                                <p th:utext="'참여자: ' + ${project.participants} + '<br>' + ${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">
+                                <p th:utext="${project.participants} + '<br>' + ${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">
                                     참여자<br>기간</p>
                                 <div class="progress mt-3">
                                     <div aria-valuemax="100" aria-valuemin="0" class="progress-bar "

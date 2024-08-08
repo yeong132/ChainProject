@@ -90,10 +90,4 @@ public class ProjectController {
         return "redirect:/project/list";
     }
 
-    //  프로젝트 차트 페이지
-    @GetMapping("/chart")
-    public String charPage(Model model) {
-        return "project/chart";
-    }
-
 }
