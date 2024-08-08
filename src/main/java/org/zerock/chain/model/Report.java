@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reportNo;
+    private Long reportNo;
 
     @Column(name = "report_name", length = 255, nullable = false)
     private String reportName;
@@ -26,11 +27,11 @@ public class Report {
     private String reportContent;
 
     @Column(name = "report_author")
-    private int reportAuthor;
+    private String reportAuthor;
 
     @Column(name = "report_upload_date")
     @Temporal(TemporalType.DATE)
-    private Date reportUploadDate;
+    private LocalDate reportUploadDate;
 
     @Column(name = "report_files")
     private String reportFiles;
@@ -47,4 +48,8 @@ public class Report {
     @Column(name = "meeting_room", columnDefinition = "TEXT")
     private String meetingRoom;
 
+
+    public void setIsTemporary(boolean isTemporary) {
+        this.isTemporary = isTemporary;
+    }
 }
