@@ -298,7 +298,6 @@
                             <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
                         </li>
                     </ul>
-                    </div>
                 </li>
             </ul>
         </li>
@@ -478,16 +477,28 @@
                                                 [[${faq.getFaqName()}]]
                                             </button>
                                         </h2>
+
                                         <div class="accordion-collapse collapse"
                                              data-bs-parent="#faq-group-1"
                                              th:id="'faq-' + ${faq.faqNo}">
                                             <div class="accordion-body">
                                                 <p th:text="${faq.getFaqContent()}"></p>
                                                 <!-- 수정 버튼 -->
-                                                <button type="button" class="btn btn-warning" onclick="openEditModal([[${faq.faqNo}]], '[[${faq.getFaqName()}]]', '[[${faq.getFaqContent()}]]')">수정</button>
+                                                <button
+                                                        class="btn btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        th:attr="data-faq-no=${faq.faqNo}, data-faq-name=${faq.getFaqName()}, data-faq-content=${faq.getFaqContent()}"
+                                                        data-bs-target="#editModal"
+                                                        type="button">
+                                                    수정
+                                                </button>
 
                                                 <!-- 삭제 버튼 -->
-                                                <button type="button" class="btn btn-danger" onclick="openDeleteModal([[${faq.faqNo}]])">삭제</button>
+                                                <button class="btn btn-danger" data-bs-toggle="modal"
+                                                        th:attr="data-faq-no=${faq.faqNo}"
+                                                        th:data-bs-target="'#deleteModal'"
+                                                        type="button">삭제
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -593,53 +604,58 @@
 </div>
 
 <!-- 수정 모달 -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="editModalLabel" class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">FAQ 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="editFaqForm" method="post" th:action="@{/faq/edit}">
+                <form id="editFaqForm" method="post" th:action="@{/user/faq/edit}">
                     <input id="editFaqNo" name="faqNo" type="hidden">
                     <div class="mb-3">
-                        <label for="editFaqTitle" class="form-label">제목</label>
-                        <input type="text" class="form-control" id="editFaqTitle" name="faqName" required>
+                        <label class="form-label" for="editFaqTitle">제목</label>
+                        <input class="form-control" id="editFaqTitle" name="faqName" required type="text">
                     </div>
                     <div class="mb-3">
-                        <label for="editFaqContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="editFaqContent" name="faqContent" rows="4" required></textarea>
+                        <label class="form-label" for="editFaqContent">내용</label>
+                        <textarea class="form-control" id="editFaqContent" name="faqContent" required
+                                  rows="4"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                <button type="button" class="btn btn-primary" onclick="submitEditForm()">예</button>
+                <button class="btn btn-primary" onclick="submitEditForm()" type="button">예</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
             </div>
         </div>
     </div>
 </div>
 
-
 <!-- 삭제 모달 -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="deleteModalLabel" class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 정말 삭제하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                <button type="button" class="btn btn-danger" onclick="submitDeleteForm()">예</button>
+                <!-- 폼 추가 -->
+                <form id="deleteFaqForm" method="post" th:action="@{/user/faq/delete}">
+                    <input id="deleteFaqNo" name="faqNo" type="hidden">
+                    <button class="btn btn-danger" type="submit">예</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- ======= Footer ======= -->
 <footer class="footer" id="footer">
@@ -658,62 +674,98 @@
 <!-- Footer 끝 -->
 
 
-<!-- Scripts -->
+<!--자주묻는 질문 데이터 이동 -->
 <script>
-    // 등록 폼 검증
-    document.getElementById('faqForm').addEventListener('submit', function (event) {
-        var title = document.getElementById('faqTitle').value.trim();
-        var content = document.getElementById('faqContent').value.trim();
+    // 페이지 로드 완료 시 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', function () {
+        const editModal = document.getElementById('editModal');
+        const deleteModal = document.getElementById('deleteModal');
 
-        if (title === '' || content === '') {
-            alert('제목과 내용을 모두 입력해 주세요.');
-            event.preventDefault();  // 폼 제출을 막음
-        }
+        // 편집 모달이 열릴 때, 버튼에서 FAQ 데이터를 가져와 입력 필드에 채움
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const faqNo = button.getAttribute('data-faq-no');
+            const faqName = button.getAttribute('data-faq-name');
+            const faqContent = button.getAttribute('data-faq-content');
+
+            document.getElementById('editFaqNo').value = faqNo;
+            document.getElementById('editFaqTitle').value = faqName;
+            document.getElementById('editFaqContent').value = faqContent;
+        });
+
+        // 삭제 모달이 열릴 때, 버튼에서 FAQ 번호를 가져와 입력 필드에 채움
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const faqNo = button.getAttribute('data-faq-no');
+
+            document.getElementById('deleteFaqNo').value = faqNo;
+        });
     });
-    <script>
-        let selectedFaqNo = null;
 
-        // 수정 모달 열기
-        function openEditModal(faqNo, faqName, faqContent) {
-        selectedFaqNo = faqNo;
+    // 편집 폼 제출 함수
+    function submitEditForm() {
+        document.getElementById('editFaqForm').submit();
+    }
+
+    // 삭제 폼 제출 함수
+    function submitDeleteForm() {
+        document.getElementById('deleteFaqForm').submit();
+    }
+
+
+</script>
+
+<!-- 즐찾 데이터 등록 -->
+<script>
+    // FAQ 데이터를 편집할 때 모달을 여는 함수
+    function openEditModal(faqNo, faqName, faqContent) {
+        // 선택된 FAQ 번호 저장 및 편집 모달에 값 설정
         document.getElementById('editFaqNo').value = faqNo;
         document.getElementById('editFaqTitle').value = faqName;
         document.getElementById('editFaqContent').value = faqContent;
 
+        // 편집 모달 표시
         var editModal = new bootstrap.Modal(document.getElementById('editModal'));
         editModal.show();
     }
 
-        // 수정 폼 제출
-        function submitEditForm() {
+    // 페이지 로드 완료 시 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', function () {
+        const editModal = document.getElementById('editModal');
+        const deleteModal = document.getElementById('deleteModal');
+
+        // 편집 모달이 열릴 때, 버튼에서 FAQ 데이터를 가져와 입력 필드에 채움
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const faqNo = button.getAttribute('data-faq-no');
+            const faqName = button.getAttribute('data-faq-name');
+            const faqContent = button.getAttribute('data-faq-content');
+
+            document.getElementById('editFaqNo').value = faqNo;
+            document.getElementById('editFaqTitle').value = faqName;
+            document.getElementById('editFaqContent').value = faqContent;
+        });
+
+        // 삭제 모달이 열릴 때, 버튼에서 FAQ 번호를 가져와 입력 필드에 채움
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const faqNo = button.getAttribute('data-faq-no');
+
+            document.getElementById('deleteFaqNo').value = faqNo;
+        });
+    });
+
+    // 편집 폼 제출 함수
+    function submitEditForm() {
         document.getElementById('editFaqForm').submit();
     }
 
-        // 삭제 모달 열기
-        function openDeleteModal(faqNo) {
-        selectedFaqNo = faqNo;
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
+    // 삭제 폼 제출 함수
+    function submitDeleteForm() {
+        document.getElementById('deleteFaqForm').submit();
     }
 
-        // 삭제 폼 제출
-        function submitDeleteForm() {
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = '/faq/delete';
-
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'faqNo';
-        input.value = selectedFaqNo;
-
-        form.appendChild(input);
-        document.body.appendChild(form);
-
-        form.submit();
-    }
 </script>
-
 
 
 <!-- 채팅창 및 맨위로 가기 -->
