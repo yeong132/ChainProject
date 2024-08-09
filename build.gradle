@@ -80,6 +80,10 @@ dependencies {
 
     // Thymeleaf 인증 정보 처리(Thymeleaf에서 스프링 시큐리티 사용하기 위한 라이브러리 설정)
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat' // 내장 Tomcat 서버 사용
+    implementation 'org.springframework.boot:spring-boot-starter-json' // JSON 처리 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-logging' // 로깅 라이브러리
 }
 
 tasks.named('test') {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Froala Editor Content Save</title>
+  <!-- Include Froala Editor style from the provided node_modules directory -->
+  <link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Create a div container to initialize Froala Editor -->
+<div id="editor"></div>
+<!-- Create a save button -->
+<button id="save-button">저장</button>
+
+<!-- Include Froala Editor JS file from the provided node_modules directory -->
+<script src="node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script>
+  // Initialize Froala Editor with image upload settings
+  const editorInstance = new FroalaEditor('#editor', {
+    imageUploadURL: 'http://localhost:8080/froala/upload_image',
+    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+    imageUploadParams: {
+      id: 'my_editor'
+    }
+  });
+
+  // Save button event listener
+  document.getElementById('save-button').addEventListener('click', function () {
+    const content = editorInstance.html.get();
+    fetch('http://localhost:8080/content/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content: content })
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data.id) {
+                alert('Content saved successfully!');
+                window.location.href = 'view.html?id=' + data.id; // Redirect to the view page
+              } else {
+                alert('Failed to save content.');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Failed to save content.');
+            });
+  });
+</script>
+</body>
+</html>
