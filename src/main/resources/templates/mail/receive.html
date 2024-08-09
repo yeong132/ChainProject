@@ -549,21 +549,22 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}">
-                                <td>
+                            <tr th:each="message : ${messages}" class="listTb" th:onclick="'rowClick(\'/mail/view?messageId=' + ${message.id} + '\')'">
+                            <td>
                                     <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
+                                        <input type="checkbox" class="form-check-input">
+                                        <i class="bi bi-star star-icon" th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'" onclick="toggleStar(this)"></i>
                                     </div>
                                 </td>
-                                <td class="listTb" th:text="${message.payload.headers[1].value}"
-                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
-                                <td class="listTb" th:text="${message.snippet}"
-                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
-                                <td class="listTb" th:text="${#dates.format(message.internalDate, 'yyyy-MM-dd')}"
-                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
+                                <td th:text="${message.from}">From</td>
+                                <td th:text="${message.subject}">Subject</td>
+                                <td th:text="${message.date}">Date</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}">View</a>
+                                </td>
                             </tr>
                             </tbody>
+
 
                         </table>
                         <!-- 테이블 끝 -->

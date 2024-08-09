@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.zerock.chain.DTO.MessageDTO;
 import org.zerock.chain.Service.GmailService;
 
 import javax.mail.Session;
@@ -69,10 +70,10 @@ public class EmailController {
             if (messageId != null && !messageId.isEmpty()) {
                 log.info("getMessage called with messageId: {}", messageId);
                 Message message = gmailService.getMessage("me", messageId);
-                model.addAttribute("message", message); // 개별 메시지를 모델에 추가합니다.
+                model.addAttribute("message", message); // 개별 메시지를 모델에 추가
             }
         } catch (IOException e) {
-            log.error("Error fetching emails", e); // 오류를 로깅합니다.
+            log.error("Error fetching emails", e); // 오류를 로깅
             model.addAttribute("error", "Error fetching emails: " + e.getMessage());
         }
         return "mail/list"; // "mail/list" 뷰를 반환합니다.
@@ -80,47 +81,37 @@ public class EmailController {
 
     @GetMapping("/list")
     public String listEmails(Model model) {
-        log.info("listEmails called");
         try {
-            List<Message> messages = gmailService.listMessages("me");
-
-            // 각 메시지의 From 헤더를 추출
-            List<String> senders = new ArrayList<>();
-            for (Message message : messages) {
-                if (message.getPayload() != null) {
-                    message.getPayload().getHeaders().stream()
-                            .filter(header -> "From".equalsIgnoreCase(header.getName()))
-                            .findFirst()
-                            .ifPresent(header -> senders.add(header.getValue()));
-                } else {
-                    senders.add("No payload"); // 혹은 다른 기본값을 추가
-                }
-            }
-
-            model.addAttribute("messages", messages); // 메시지 목록을 모델에 추가합니다.
-            model.addAttribute("senders", senders);   // 발신자 목록을 모델에 추가합니다.
+            List<MessageDTO> messages = gmailService.listMessages("me");
+            model.addAttribute("messages", messages);
             model.addAttribute("success", "Emails fetched successfully!");
+
         } catch (IOException e) {
-            log.error("Error fetching emails", e); // 오류를 로깅합니다.
             model.addAttribute("error", "Error fetching emails: " + e.getMessage());
         }
-        return "mail/list"; // "mail/list" 뷰를 반환합니다.
+        return "mail/list";
     }
 
-    // 특정 메시지를 가져와서 상세 페이지에 표시하는 메서드
+
     @GetMapping("/mail/view")
     public String viewEmail(@RequestParam("messageId") String messageId, Model model) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
-            // GmailService를 이용해 특정 메시지를 가져옵니다.
+            // GmailService 이용 특정 메시지를 가져오기
             Message message = gmailService.getMessage("me", messageId);
-            model.addAttribute("message", message); // 개별 메시지를 모델에 추가합니다.
+
+            // "starred" 상태를 모델에 추가
+            boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
+            model.addAttribute("isStarred", isStarred);
+
+            model.addAttribute("message", message); // 개별 메시지를 모델에 추가
         } catch (IOException e) {
-            log.error("Error fetching email", e); // 오류를 로깅합니다.
+            log.error("Error fetching email", e); // 오류를 로깅
             model.addAttribute("error", "Error fetching email: " + e.getMessage());
         }
-        return "mail/view"; // "mail/view" 뷰를 반환합니다.
+        return "mail/view"; // "mail/view" 뷰를 반환
     }
+
 
 
 

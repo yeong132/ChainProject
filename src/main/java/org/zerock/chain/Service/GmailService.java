@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.zerock.chain.DTO.MessageDTO;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -28,10 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 
 @Service  // Spring의 서비스 클래스임을 나타냅니다.
@@ -111,23 +109,41 @@ public class GmailService {
         }
     }
 
-       // listMessages 메서드: 사용자의 메일함에 있는 모든 메시지를 가져옵니다.
-    public List<Message> listMessages(String userId) throws IOException {
-        ListMessagesResponse response = service.users().messages().list(userId).execute();
-        List<Message> messages = new ArrayList<>();
+    // getHeader 메서드를 추가합니다.
+    private Optional<String> getHeader(List<MessagePartHeader> headers, String name) {
+        return headers.stream()
+                .filter(header -> header.getName().equalsIgnoreCase(name))
+                .map(MessagePartHeader::getValue)
+                .findFirst();
+    }
 
-        // 페이지 단위로 메시지를 가져옵니다.
-        while (response.getMessages() != null) {
-            messages.addAll(response.getMessages()); // 현재 페이지의 메시지를 목록에 추가합니다.
-            if (response.getNextPageToken() != null) {
-                String pageToken = response.getNextPageToken(); // 다음 페이지 토큰을 가져옵니다.
-                response = service.users().messages().list(userId).setPageToken(pageToken).execute();
-            } else {
-                break;  // 더 이상 페이지가 없으면 종료합니다.
+    public List<MessageDTO> listMessages(String userId) throws IOException {
+        List<Message> messages = service.users().messages().list(userId).execute().getMessages();
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+
+        for (Message message : messages) {
+            Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
+            MessagePart payload = fullMessage.getPayload();
+
+            if (payload != null) {
+                List<MessagePartHeader> headers = payload.getHeaders();
+
+                MessageDTO messageDTO = new MessageDTO();
+                messageDTO.setId(message.getId());
+                messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+
+                // 추가된 부분: 메일의 "starred" 상태를 확인하여 설정
+                boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
+                messageDTO.setStarred(isStarred); // MessageDTO에 새로 추가된 필드
+
+                messageDTOList.add(messageDTO);
             }
         }
-        return messages;
+        return messageDTOList;
     }
+
 
     // getMessage 메서드: 특정 메시지 ID에 해당하는 메시지를 가져옵니다.
     public Message getMessage(String userId, String messageId) throws IOException {
