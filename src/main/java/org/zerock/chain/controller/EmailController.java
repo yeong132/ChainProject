@@ -1,5 +1,7 @@
 package org.zerock.chain.controller;
 
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.Message;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.Service.GmailService;
 
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 @Log4j2
 @Controller
@@ -70,22 +76,41 @@ public class EmailController {
         }
         return "mail/list"; // "mail/list" 뷰를 반환합니다.
     }
-
-    // POST 요청으로 "/mail/createLabel"에 접근할 때 호출됩니다. 새로운 라벨을 생성합니다.
-    @PostMapping("/createLabel")
-    public String createLabel(
-            @RequestParam("labelName") String labelName, // 요청 파라미터에서 라벨 이름을 받습니다.
-            Model model) {
-        log.info("createLabel called with labelName: {}", labelName);
-        try {
-            // GmailService를 이용해 라벨을 생성합니다.
-            String labelId = gmailService.createLabel("me", labelName);
-            model.addAttribute("success", "Label created successfully with ID: " + labelId);
-        } catch (Exception e) {
-            log.error("Error creating label", e); // 오류를 로깅합니다.
-            model.addAttribute("error", "Error creating label: " + e.getMessage());
-        }
-        return "mail/compose"; // 라벨 생성 후 이메일 작성 페이지로 이동합니다.
+    @GetMapping("/label/create")
+    public String showCreateLabelForm() {
+        return "mail/create_label";
     }
+
+
+    // 라벨 생성
+    @PostMapping("/label/create")
+    public String createLabel(@RequestParam("labelName") String labelName,
+                              @RequestParam("labelType") String labelType,
+                              @RequestParam(value = "messageListVisibility", required = false) String messageListVisibility,
+                              @RequestParam(value = "labelListVisibility", required = false) String labelListVisibility,
+                              Model model) {
+        try {
+            Gmail service = gmailService.getGmailService();
+            Label label = new Label().setName(labelName).setType(labelType);
+
+            if (messageListVisibility != null) {
+                label.setMessageListVisibility(messageListVisibility);
+            }
+
+            if (labelListVisibility != null) {
+                label.setLabelListVisibility(labelListVisibility);
+            }
+
+            Label createdLabel = service.users().labels().create("me", label).execute();
+            model.addAttribute("labelId", createdLabel.getId());
+            model.addAttribute("labelName", createdLabel.getName());
+
+            return "mail/success";
+        } catch (IOException e) {
+            model.addAttribute("error", "Failed to create label: " + e.getMessage());
+            return "mail/create_label";
+        }
+    }
+
 
 }

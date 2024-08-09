@@ -15,11 +15,15 @@ import com.google.api.services.gmail.model.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,6 +38,10 @@ import java.util.Set;
 @Log4j2   // Log4j2를 사용한 로깅을 지원합니다.
 public class GmailService {
     private final Gmail service;
+
+    public GmailService(Gmail service) {
+        this.service = service;
+    }
 
     // GmailService 생성자: Gmail API 서비스 객체를 초기화합니다.
     public GmailService() throws Exception {
@@ -62,6 +70,11 @@ public class GmailService {
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         // 인증 프로세스를 시작하고 사용자 자격 증명을 반환합니다.
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+    }
+
+    // getGmailService 메서드: Gmail 서비스 객체를 반환합니다.
+    public Gmail getGmailService() {
+        return service;
     }
 
     // sendMail 메서드: 지정된 수신자에게 이메일을 보냅니다.
@@ -135,4 +148,6 @@ public class GmailService {
         // 생성된 라벨의 ID를 반환합니다.
         return createdLabel.getId();
     }
+
+
 }
