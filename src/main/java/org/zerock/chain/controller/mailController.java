@@ -54,11 +54,11 @@ public class mailController {
     }
 
 
-    //메일쓰기 작성함
+/*    //메일쓰기 작성함
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
-    }
+    }*/
 
 
     //내게쓰기 작성함
