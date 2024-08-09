@@ -1,54 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Email List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 수신함</title>
 </head>
 <body>
-<h1>Email List</h1>
-<div>
-    <h3 th:if="${success}" th:text="${success}"></h3>
-    <h3 th:if="${error}" th:text="${error}"></h3>
-</div>
-<table>
-    <thead>
-    <tr>
-        <th>Message ID</th>
-        <th>Snippet</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="message : ${messages}">
-        <td><a th:href="@{'/mail/list'(messageId=${message.id})}" th:text="${message.id}"></a></td>
-        <td th:text="${message.snippet}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <h1>이메일 수신함</h1>
 
-<div th:if="${message != null}">
-    <h2>Selected Message</h2>
-    <h3>Message ID: <span th:text="${message.id}"></span></h3>
-    <h3>Snippet:</h3>
-    <p th:text="${message.snippet}"></p>
-    <!-- 추가된 코드: Message 객체의 추가 정보 표시 -->
-    <h3>Thread ID:</h3>
-    <p th:text="${message.threadId}"></p>
-    <h3>Label IDs:</h3>
-    <ul>
-        <li th:each="labelId : ${message.labelIds}" th:text="${labelId}"></li>
-    </ul>
-    <h3>Payload Headers:</h3>
+    <!-- 성공 메시지 -->
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+
+    <!-- 오류 메시지 -->
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- 이메일 리스트 -->
     <table>
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Value</th>
+            <th>Message ID</th>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="header : ${message.payload.headers}">
-            <td th:text="${header.name}"></td>
-            <td th:text="${header.value}"></td>
+        <tr th:each="message : ${messages}">
+            <td th:text="${message.id}">Message ID</td>
+            <td th:if="${message.payload != null and message.payload.headers != null}">
+                <span th:text="${#strings.arrayJoin(#arrays.filter(message.payload.headers, 'name', 'Subject'), ', ').value}">Subject</span>
+            </td>
+            <td th:if="${message.internalDate != null}">
+                <span th:text="${#dates.format(message.internalDate, 'yyyy-MM-dd HH:mm:ss')}">Date</span>
+            </td>
+            <td>
+                <a th:href="@{/mail/view(messageId=${message.id})}">View</a>
+            </td>
         </tr>
         </tbody>
     </table>

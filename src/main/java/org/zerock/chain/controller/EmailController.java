@@ -17,6 +17,7 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,7 +55,7 @@ public class EmailController {
     }
 
 
-    // GET 요청으로 "/mail/list"에 접근할 때 호출됩니다. 이메일 목록을 표시하는 메서드입니다.
+/*    // GET 요청으로 "/mail/list"에 접근할 때 호출됩니다. 이메일 목록을 표시하는 메서드입니다.
     @GetMapping("/list")
     public String listEmails(@RequestParam(value = "messageId", required = false) String messageId, Model model) {
         log.info("listEmails called");
@@ -75,21 +76,52 @@ public class EmailController {
             model.addAttribute("error", "Error fetching emails: " + e.getMessage());
         }
         return "mail/list"; // "mail/list" 뷰를 반환합니다.
+    }*/
+
+    @GetMapping("/list")
+    public String listEmails(Model model) {
+        log.info("listEmails called");
+        try {
+            List<Message> messages = gmailService.listMessages("me");
+
+            // 각 메시지의 From 헤더를 추출
+            List<String> senders = new ArrayList<>();
+            for (Message message : messages) {
+                if (message.getPayload() != null) {
+                    message.getPayload().getHeaders().stream()
+                            .filter(header -> "From".equalsIgnoreCase(header.getName()))
+                            .findFirst()
+                            .ifPresent(header -> senders.add(header.getValue()));
+                } else {
+                    senders.add("No payload"); // 혹은 다른 기본값을 추가
+                }
+            }
+
+            model.addAttribute("messages", messages); // 메시지 목록을 모델에 추가합니다.
+            model.addAttribute("senders", senders);   // 발신자 목록을 모델에 추가합니다.
+            model.addAttribute("success", "Emails fetched successfully!");
+        } catch (IOException e) {
+            log.error("Error fetching emails", e); // 오류를 로깅합니다.
+            model.addAttribute("error", "Error fetching emails: " + e.getMessage());
+        }
+        return "mail/list"; // "mail/list" 뷰를 반환합니다.
     }
 
-/*
-    @GetMapping("/receive")
-    public String listEmails(Model model) {
+    // 특정 메시지를 가져와서 상세 페이지에 표시하는 메서드
+    @GetMapping("/mail/view")
+    public String viewEmail(@RequestParam("messageId") String messageId, Model model) {
+        log.info("viewEmail called with messageId: {}", messageId);
         try {
-            List<Message> messages = gmailService.listMessages("me"); // "me"는 현재 사용자를 나타냅니다.
-            model.addAttribute("messages", messages);
+            // GmailService를 이용해 특정 메시지를 가져옵니다.
+            Message message = gmailService.getMessage("me", messageId);
+            model.addAttribute("message", message); // 개별 메시지를 모델에 추가합니다.
         } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("error", "Failed to fetch emails.");
+            log.error("Error fetching email", e); // 오류를 로깅합니다.
+            model.addAttribute("error", "Error fetching email: " + e.getMessage());
         }
-        return "mail/receive"; // "mail/receive.html" 페이지로 데이터를 전달합니다.
+        return "mail/view"; // "mail/view" 뷰를 반환합니다.
     }
-*/
+
 
 
 
