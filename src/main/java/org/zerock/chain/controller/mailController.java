@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class mailController {
 
-    //메일수신함
+/*    //메일수신함
     @GetMapping("/receive")
     public String mailRecive() {
         return "mail/receive";
-    }
+    }*/
 
     //메일즐겨찾기함
     @GetMapping("highlight")

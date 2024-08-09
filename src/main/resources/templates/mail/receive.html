@@ -549,149 +549,22 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- 테이블 데이터들... -->
-                            <tr>
+                            <tr th:each="message : ${messages}">
                                 <td>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
                                     <div class="checkbox-star-container">
                                         <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
                                         <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
                                     </div>
                                 </td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">Google</td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">보안 경고</td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">2024-07-24</td>
+                                <td class="listTb" th:text="${message.payload.headers[1].value}"
+                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
+                                <td class="listTb" th:text="${message.snippet}"
+                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
+                                <td class="listTb" th:text="${#dates.format(message.internalDate, 'yyyy-MM-dd')}"
+                                    onclick="rowClick('/mail/mailRead?messageId=' + ${message.id})"></td>
                             </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <!-- 더 많은 데이터... -->
                             </tbody>
+
                         </table>
                         <!-- 테이블 끝 -->
 

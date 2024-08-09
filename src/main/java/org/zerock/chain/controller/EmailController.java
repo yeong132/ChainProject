@@ -76,6 +76,24 @@ public class EmailController {
         }
         return "mail/list"; // "mail/list" 뷰를 반환합니다.
     }
+
+/*
+    @GetMapping("/receive")
+    public String listEmails(Model model) {
+        try {
+            List<Message> messages = gmailService.listMessages("me"); // "me"는 현재 사용자를 나타냅니다.
+            model.addAttribute("messages", messages);
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Failed to fetch emails.");
+        }
+        return "mail/receive"; // "mail/receive.html" 페이지로 데이터를 전달합니다.
+    }
+*/
+
+
+
+
     @GetMapping("/label/create")
     public String showCreateLabelForm() {
         return "mail/create_label";
