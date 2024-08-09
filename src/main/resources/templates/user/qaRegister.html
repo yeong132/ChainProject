@@ -440,82 +440,71 @@
 
     <section class="section">
         <div class="row">
-<!---------------------------------------------------------메인 위젯 1 ------------------------------------------------------------------>
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Q&A </h5>
+                        <h5 class="card-title">Q&A</h5>
 
-                        <!-- General Form Elements -->
-                        <form>
+                        <form th:action="@{/user/qna/register}" id="qnaForm" method="post">
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputText">제목</label>
+                                <label class="col-sm-2 col-form-label">카테고리 선택</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control"  type="text" value="">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputEmail">작성자</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control"  type="email" value="본인고정등록">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">카테고리</label>
-                                <div class="col-sm-10">
-                                    <select aria-label="Default select example" class="form-select">
-                                        <option selected>카테고리 연동하기</option>
-                                        <option value="1">시스템오류</option>
-                                        <option value="2">문의</option>
-                                        <option value="3">기타</option>
+                                    <select class="form-select" name="qnaCategory" id="qnaCategorySelect">
+                                        <option value="시스템 오류">시스템 오류</option>
+                                        <option value="일반 문의">일반 문의</option>
+                                        <option value="기타">기타</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputNumber">첨부 파일</label>
+                                <label class="col-sm-2 col-form-label">제목</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" id="formFile" type="file">
+                                    <input class="form-control" name="qnaName" placeholder="문의글 제목" required type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputPassword">내용</label>
+                                <label class="col-sm-2 col-form-label">작성자</label>
                                 <div class="col-sm-10">
-                                    <div id="froala"></div>
+                                    <input class="form-control" name="qnaAuthor" placeholder="본인 고정" required type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Disabled</label>
+                                <label class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" disabled type="text" value="Read only / Disabled">
+                                    <textarea id="froala" name="qnaContent"></textarea>
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaFiles" type="file">
+                                </div>
+                            </div>
+                        </form>
 
-                        </form><!-- End General Form Elements -->
+                        <div class="row">
+                            <div class="col-sm-5 mt-3">
+                                <button class="btn btn-primary" onclick="showModal(event)" type="button">저장</button>
+                                <button class="btn btn-primary" onclick="showWarningModal(event)" type="button">취소</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-<!---------------------------------------------------------버튼 위젯 ----------------------------------------------------------------->
-            <div class="offset-sm-0">
-                <div class="col-sm-5">
-                    <button class="btn btn-primary"  onclick="showModal()"  type="button">저장</button>
-                    <button  type="button" class="btn btn-primary" onclick="showWarningModal()">취소</button>
-                </div>
-            </div>
-
-        </div> <!-- row 끝  -->
+        </div>
     </section>
 </main>
 <!-- End #main -->
 
 
-<!------------------------------------------------------------저장 확인 모달 창 --------------------------------------------------------------------------->
+
+
+
+<!-- 저장 확인 모달 창 -->
 <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -524,7 +513,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                문의글은 수정이 불가합니다. 저장하시겠습니까 ?
+                문의글은 수정이 불가합니다. 저장하시겠습니까?
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" onclick="saveAlerts()" type="button">예</button>
@@ -534,7 +523,7 @@
     </div>
 </div>
 
-<!------------------------------------------------------------ 목록 경고 모달 창 --------------------------------------------------------------------------->
+<!-- 목록 경고 모달 창 -->
 <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -552,7 +541,6 @@
         </div>
     </div>
 </div>
-
 
 
 <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
@@ -587,33 +575,28 @@
 
 <!-- 저장 확인 모달 JS  -->
 <script>
-    // 모달을 보여주는 함수
-    function showModal() { // 모달 인스턴스를 생성하고 보여줍니다.
+    // 저장 모달을 보여주는 함수
+    function showModal(event) {
+        event.preventDefault();  // 기본 폼 제출 막기
         var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
         saveModal.show();
     }
+
     // 모달에서 '예'를 클릭했을 때 호출되는 함수
     function saveAlerts() {
-        var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
-        saveModal.hide(); // 모달을 먼저 닫는다
-        // 모달이 완전히 닫힌 후 페이지 이동
-        saveModal._element.addEventListener('hidden.bs.modal', function() {
-            window.location.href = '/user/qaDetail';
-        });
+        document.getElementById('qnaForm').submit();  // 폼을 제출
     }
-</script>
-<!-- 목록 경고 모달 JS  -->
-<script>
-    function showWarningModal() { // 모달을 보여주는 함수
+
+    // 취소 모달을 보여주는 함수
+    function showWarningModal(event) {
+        event.preventDefault();  // 기본 폼 제출 막기
         var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-        WarningModal.show();}
+        WarningModal.show();
+    }
+
     // 모달에서 '예'를 클릭했을 때 호출되는 함수
     function WarningAlerts() {
-        var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
-        WarningModal.hide(); // 모달을 먼저 닫는다
-        WarningModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-            window.location.href = '/user/Q&A';
-        });
+        window.location.href = '/user/Q&A';  // 취소 시 목록 페이지로 이동
     }
 </script>
 

@@ -5,35 +5,35 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>고객센터</title>
+    <title>문의글 수정 페이지 </title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
-    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
     <!-- 폰트 설정  -->
-    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
     <!-- Vendor CSS Files -->
-    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
-    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -46,10 +46,10 @@
 
 <body>
 <!-- ======= Header ======= -->
-<header class="header fixed-top d-flex align-items-center" id="header">
+<header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a class="logo d-flex align-items-center" href="/">
-            <img alt="" src="/assets/img/logo.png"/>
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -75,13 +75,13 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
                     <span class="badge btn-secondary badge-number">4</span> </a>
                 <!-- 알림창 아이콘 끝 -->
@@ -164,8 +164,8 @@
 
 
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
-                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
                     <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
                 <!-- 프로필 이미지 항목 끝 -->
 
@@ -232,7 +232,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">출근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
 
@@ -241,9 +241,9 @@
                 출근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
                 </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
                     아니오
                 </button>
             </div>
@@ -255,16 +255,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">퇴근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="currentTimes">현재 시간:</div>
                 퇴근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
                 </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
                 </button>
             </div>
         </div>
@@ -274,7 +274,7 @@
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside class="sidebar" id="sidebar">
+<aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item ">
             <a class="nav-link dash collapsed" href="/">
@@ -290,7 +290,7 @@
                 <span>기본 사항</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
+            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
@@ -298,6 +298,7 @@
                             <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
                         </li>
                     </ul>
+                    </div>
                 </li>
             </ul>
         </li>
@@ -309,7 +310,7 @@
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="work-nav">
+            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
@@ -332,7 +333,7 @@
                 <span>전자결재</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
+            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
@@ -349,7 +350,7 @@
                 <span>게시판</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
+            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
@@ -372,7 +373,7 @@
                 <span>일정</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
+            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
                 </li>
@@ -386,7 +387,7 @@
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
+            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
@@ -397,7 +398,7 @@
                     <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/tome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
@@ -426,189 +427,109 @@
 <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
 <main class="main" id="main">
     <div class="pagetitle">
-        <h1>고객센터 </h1>
+        <h1>문의글 수정</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Q&A</li>
+                <li class="breadcrumb-item"><a href="/project/main">HOME</a></li>
+                <li class="breadcrumb-item"><a href="/user/Q&A">Q&A</a></li>
+                <li class="breadcrumb-item active">Modify</li>
             </ol>
         </nav>
     </div>
-    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+<!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
-    <section class="section faq">
+    <section class="section">
         <div class="row">
             <div class="col-lg-12">
-                <div class="mb-3">
-                    <button class="btn btn-primary" onclick="location.href='/user/qna/register'">질문 하기</button>
-                </div>
-
-                <!------------------------------------------------------------------card 시작 ----------------------------------------------------------------------->
                 <div class="card">
                     <div class="card-body">
-                        <h6></h6>
-                        <!------------------------------------------------------------------자주 묻는 질문 탭 -------------------------------------------------------------------->
-                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button aria-controls="home" aria-selected="true" class="nav-link active"
-                                        data-bs-target="#bordered-home" data-bs-toggle="tab" id="home-tab" role="tab"
-                                        type="button">자주 묻는 질문 ☆
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button aria-controls="profile" aria-selected="false" class="nav-link"
-                                        data-bs-target="#bordered-profile" data-bs-toggle="tab" id="profile-tab"
-                                        role="tab" type="button">My 질문목록
-                                </button>
-                            </li>
-                        </ul>
+                        <h5 class="card-title">Q&A</h5>
 
-                        <!------------------------------------------------------------------목록 테이블 탭 -------------------------------------------------------------------->
-                        <div class="tab-content pt-2" id="borderedTabContent">
-                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home" role="tabpanel">
-                                <div class="accordion accordion-flush" id="faq-group-1">
-                                    <div class="accordion-item" th:each="faq : ${faqList}">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed"
-                                                    data-bs-toggle="collapse"
-                                                    th:attr="data-bs-target='#faq-' + ${faq.faqNo}"
-                                                    type="button">
-                                                [[${faq.getFaqName()}]]
-                                            </button>
-                                        </h2>
+                        <form  id="qnaForm" th:action="@{/user/qna/edit/{qnaNo}(qnaNo=${qna.qnaNo})}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}">
 
-                                        <div class="accordion-collapse collapse"
-                                             data-bs-parent="#faq-group-1"
-                                             th:id="'faq-' + ${faq.faqNo}">
-                                            <div class="accordion-body">
-                                                <p th:text="${faq.getFaqContent()}"></p>
-                                                <!-- 수정 버튼 -->
-                                                <button class="btn btn-warning"
-                                                        data-bs-toggle="modal"
-                                                        th:attr="data-faq-no=${faq.faqNo}, data-faq-name=${faq.getFaqName()}, data-faq-content=${faq.getFaqContent()}"
-                                                        data-bs-target="#editModal"
-                                                        type="button">
-                                                    수정
-                                                </button>
-
-                                                <!-- 삭제 버튼 -->
-                                                <button class="btn btn-danger"
-                                                        data-bs-toggle="modal"
-                                                        th:attr="data-faq-no=${faq.faqNo}"
-                                                        th:data-bs-target="'#deleteModal'"
-                                                        type="button">삭제
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button class="btn btn-primary me-2" data-bs-target="#registerModal"
-                                                data-bs-toggle="modal" type="button">등록
-                                        </button>
-                                    </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">카테고리</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" readonly th:value="${qna.qnaCategory}" />
                                 </div>
                             </div>
 
-                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile"
-                                 role="tabpanel">
-                                <table class="table datatable table-hover ">
-                                    <thead>
-                                    <tr>
-                                        <th>번호</th>
-                                        <th>카테고리</th>
-                                        <th>제목</th>
-                                        <th>작성자</th>
-                                        <th>작성일</th>
-                                        <th>답변 여부</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <!-- Q&A 목록을 반복하여 표시 -->
-                                    <tr th:each="qna : ${qnaList}"  th:onclick="|location.href='@{/user/qna/detail/{qnaNo}(qnaNo=${qna.qnaNo})}'|">
-                                        <td th:text="${qna.qnaNo}"></td>
-                                        <td th:text="${qna.qnaCategory}"></td>
-                                        <td th:text="${qna.qnaName}"></td>
-                                        <td th:text="${qna.qnaAuthor}"></td>
-                                        <td th:text="${qna.qnaUploadDate}"></td>
-                                        <td th:text="${qna.qnaStatus}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">제목</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaName"  th:value="${qna.qnaName}" />
+                                </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">작성자</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaAuthor" readonly th:value="${qna.qnaAuthor}"/>
+                                </div>
+                            </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaFiles" type="file" >
+                                </div>
+                            </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">내용</label>
+                                <div class="col-sm-10">
+                                    <textarea id="froala" class="form-control" name="qnaContent"  th:text="${qna.qnaContent}"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">작성일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaUploadDate" readonly th:value="${qna.qnaUploadDate}"/>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="row">
+                            <div class="col-sm-5 mt-3">
+                                <button class="btn btn-primary me-2" onclick="showModal(event)" type="button">저장</button>
+                                <button class="btn btn-secondary me-2" onclick="showWarningModal(event)" type="button">취소</button>
+                                <button class="btn btn-danger me-2" onclick="showDeleteModal(event)" type="button">삭제</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
     </section>
 </main>
 <!-- End #main -->
 
 
-<!-- 등록 모달 -->
-<div aria-hidden="true" aria-labelledby="registerModalLabel" class="modal fade" id="registerModal" tabindex="-1">
+
+
+
+<!------------------------------------------------------------저장 확인 모달 창 --------------------------------------------------------------------------->
+<div aria-hidden="true" aria-labelledby="saveModalLabel" class="modal fade" id="saveModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">FAQ 등록</h5>
+                <h5 class="modal-title" id="saveModalLabel">수정 저장 확인</h5>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="faqForm" method="post" th:action="@{/user/add}">
-                    <div class="mb-3">
-                        <label class="form-label" for="faqTitle">제목</label>
-                        <input class="form-control" id="faqTitle" name="faqName" required type="text">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="faqContent">내용</label>
-                        <textarea class="form-control" id="faqContent" name="faqContent" required rows="4"></textarea>
-                    </div>
-                </form>
+                수정한 내용을 저장하시겠습니까 ?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
-                <button class="btn btn-primary" form="faqForm" type="submit">저장</button>
+                <button class="btn btn-danger" onclick="submitForm()" type="button">예</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- 수정 모달 -->
-<div aria-hidden="true" aria-labelledby="editModalLabel" class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">FAQ 수정</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editFaqForm" method="post" th:action="@{/user/faq/edit}">
-                    <input id="editFaqNo" name="faqNo" type="hidden">
-                    <div class="mb-3">
-                        <label class="form-label" for="editFaqTitle">제목</label>
-                        <input class="form-control" id="editFaqTitle" name="faqName" required type="text">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="editFaqContent">내용</label>
-                        <textarea class="form-control" id="editFaqContent" name="faqContent" required
-                                  rows="4"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" onclick="submitEditForm()" type="button">예</button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 삭제 모달 -->
+<!------------------------------------------------------------삭제 확인 모달 창 --------------------------------------------------------------------------->
 <div aria-hidden="true" aria-labelledby="deleteModalLabel" class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -620,20 +541,35 @@
                 정말 삭제하시겠습니까?
             </div>
             <div class="modal-footer">
-                <!-- 폼 추가 -->
-                <form id="deleteFaqForm" method="post" th:action="@{/user/faq/delete}">
-                    <input id="deleteFaqNo" name="faqNo" type="hidden">
-                    <button class="btn btn-danger" type="submit">예</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
-                </form>
+                <button class="btn btn-danger" onclick="deleteReport()" type="button">예</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------------------------------------------------ 목록 경고 모달 창 --------------------------------------------------------------------------->
+<div aria-hidden="true" aria-labelledby="WarningModalLabel" class="modal fade" id="WarningModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="WarningModalLabel">경고</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                현재 입력한 내용이 저장되지 않을 수 있습니다. 목록으로 돌아가시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="WarningAlerts()" type="button">예</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
             </div>
         </div>
     </div>
 </div>
 
 
+<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
-<footer class="footer" id="footer">
+<footer id="footer" class="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
@@ -648,113 +584,92 @@
 </footer>
 <!-- Footer 끝 -->
 
-
-<!--자주묻는 질문 데이터 이동 -->
-<script>
-    // 페이지 로드 완료 시 이벤트 리스너 등록
-    document.addEventListener('DOMContentLoaded', function () {
-        const editModal = document.getElementById('editModal');
-        const deleteModal = document.getElementById('deleteModal');
-
-        // 편집 모달이 열릴 때, 버튼에서 FAQ 데이터를 가져와 입력 필드에 채움
-        editModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const faqNo = button.getAttribute('data-faq-no');
-            const faqName = button.getAttribute('data-faq-name');
-            const faqContent = button.getAttribute('data-faq-content');
-
-            document.getElementById('editFaqNo').value = faqNo;
-            document.getElementById('editFaqTitle').value = faqName;
-            document.getElementById('editFaqContent').value = faqContent;
-        });
-
-        // 삭제 모달이 열릴 때, 버튼에서 FAQ 번호를 가져와 입력 필드에 채움
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const faqNo = button.getAttribute('data-faq-no');
-
-            document.getElementById('deleteFaqNo').value = faqNo;
-        });
-    });
-
-    // 편집 폼 제출 함수
-    function submitEditForm() {
-        document.getElementById('editFaqForm').submit();
-    }
-
-    // 삭제 폼 제출 함수
-    function submitDeleteForm() {
-        document.getElementById('deleteFaqForm').submit();
-    }
-
-
-</script>
-
-<!-- 즐찾 데이터 등록 -->
-<script>
-    // FAQ 데이터를 편집할 때 모달을 여는 함수
-    function openEditModal(faqNo, faqName, faqContent) {
-        // 선택된 FAQ 번호 저장 및 편집 모달에 값 설정
-        document.getElementById('editFaqNo').value = faqNo;
-        document.getElementById('editFaqTitle').value = faqName;
-        document.getElementById('editFaqContent').value = faqContent;
-
-        // 편집 모달 표시
-        var editModal = new bootstrap.Modal(document.getElementById('editModal'));
-        editModal.show();
-    }
-
-    // 페이지 로드 완료 시 이벤트 리스너 등록
-    document.addEventListener('DOMContentLoaded', function () {
-        const editModal = document.getElementById('editModal');
-        const deleteModal = document.getElementById('deleteModal');
-
-        // 편집 모달이 열릴 때, 버튼에서 FAQ 데이터를 가져와 입력 필드에 채움
-        editModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const faqNo = button.getAttribute('data-faq-no');
-            const faqName = button.getAttribute('data-faq-name');
-            const faqContent = button.getAttribute('data-faq-content');
-
-            document.getElementById('editFaqNo').value = faqNo;
-            document.getElementById('editFaqTitle').value = faqName;
-            document.getElementById('editFaqContent').value = faqContent;
-        });
-
-        // 삭제 모달이 열릴 때, 버튼에서 FAQ 번호를 가져와 입력 필드에 채움
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const faqNo = button.getAttribute('data-faq-no');
-
-            document.getElementById('deleteFaqNo').value = faqNo;
-        });
-    });
-
-    // 편집 폼 제출 함수
-    function submitEditForm() {
-        document.getElementById('editFaqForm').submit();
-    }
-
-    // 삭제 폼 제출 함수
-    function submitDeleteForm() {
-        document.getElementById('deleteFaqForm').submit();
-    }
-
-</script>
-
-
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
-<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
 <!-- 채팅창 끝-->
+
+
+<script>
+    // Froala Editor 초기화
+    $(document).ready(function() {
+        new FroalaEditor('#froala', {
+            language: 'ko',
+            heightMin: 300,
+            events: {
+                // Froala Editor가 초기화될 때 호출됩니다.
+                'initialized': function () {
+                    // textarea의 값을 Froala Editor에 설정합니다.
+                    this.html.set($('#froala').text());
+                },
+                // Froala Editor의 내용이 변경될 때 호출됩니다.
+                'contentChanged': function () {
+                    // Froala Editor의 내용을 textarea에 설정합니다.
+                    $('#froala').val(this.html.get());
+                }
+            }
+        });
+    });
+
+    // 저장 확인 모달 표시 함수
+    function showModal(event) {
+        event.preventDefault();
+        var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
+        saveModal.show();
+    }
+
+    // 폼 제출 함수
+    function submitForm() {
+        document.getElementById('qnaForm').submit();  // 폼을 제출
+    }
+
+
+
+    // 삭제 확인 모달 표시 함수
+    function showDeleteModal(event) {
+        event.preventDefault();
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+
+    // 삭제 함수
+    function deleteReport() {
+        const qnaNo = document.querySelector('input[name="qnaNo"]').value; // qnaNo로 수정
+        fetch(`/user/qna/delete/${qnaNo}`, {  // URL을 Q&A 삭제 경로로 수정
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/user/Q&A'; // 삭제 후 목록 페이지로 이동
+            } else {
+                alert('삭제에 실패했습니다.');
+            }
+        }).catch(error => {
+            alert('삭제 중 오류가 발생했습니다: ' + error.message);
+        });
+    }
+
+    // 취소 모달을 보여주는 함수
+    function showWarningModal(event) {
+        event.preventDefault();  // 기본 폼 제출 막기
+        var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
+        WarningModal.show();
+    }
+
+    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+    function WarningAlerts() {
+        window.location.href = '/user/Q&A';  // 취소 시 목록 페이지로 이동
+    }
+
+</script>
+
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -765,8 +680,8 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
-<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>

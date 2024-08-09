@@ -53,7 +53,7 @@ public class ReportServiceImpl implements ReportService {
         return modelMapper.map(report, ReportDTO.class);
     }
 
-    // 수정 등록
+    @Override // 수정 등록
     public void updateReport(Long reportNo, ReportRequestDTO reportRequestDTO) {
         Optional<Report> result = reportRepository.findById(reportNo);
         Report report = result.orElseThrow();
@@ -61,7 +61,7 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.save(report);
     }
 
-    @Override
+    @Override   // 첨부파일 저장
     public String saveFile(MultipartFile file) throws Exception {
         String uploadDir = "uploads/";
         String originalFilename = file.getOriginalFilename();

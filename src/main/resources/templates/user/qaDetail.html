@@ -427,7 +427,7 @@
 <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
 <main class="main" id="main">
     <div class="pagetitle">
-        <h1>문의글 상세조회</h1>
+        <h1>문의글 조회</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -440,75 +440,68 @@
 
     <section class="section">
         <div class="row">
-<!---------------------------------------------------------메인 위젯 1 ------------------------------------------------------------------>
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Q&A </h5>
+                        <h5 class="card-title">Q&A</h5>
 
-                        <!-- General Form Elements -->
+                        <!-- Read-Only Form Elements -->
                         <form>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputText">제목</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control"  readonly type="text" value="">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputEmail">작성자</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" readonly type="email" value="본인고정등록">
-                                </div>
-                            </div>
-
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">카테고리</label>
                                 <div class="col-sm-10">
-                                    <select aria-label="Default select example" class="form-select">
-                                        <option selected>카테고리 연동하기</option>
-                                        <option value="1">시스템오류</option>
-                                        <option value="2">문의</option>
-                                        <option value="3">기타</option>
-                                    </select>
+                                    <input type="text" class="form-control" readonly th:value="${qna.qnaCategory}" />
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="inputNumber">첨부 파일</label>
+                                <label class="col-sm-2 col-form-label">제목</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" id="formFile" type="file">
+                                    <input class="form-control" name="qnaName" readonly th:value="${qna.qnaName}" />
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" readonly for="inputPassword">내용</label>
+                                <label class="col-sm-2 col-form-label">작성자</label>
                                 <div class="col-sm-10">
-                                    <div id="froala"></div>
+                                    <input class="form-control" name="qnaAuthor" readonly th:value="${qna.qnaAuthor}"/>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Disabled</label>
+                                <label class="col-sm-2 col-form-label">첨부 파일</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" disabled type="text" value="Read only / Disabled">
+                                    <input class="form-control" name="qnaFiles" type="file" th:value="${qna.qnaFiles}" >
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">내용</label>
+                                <div class="col-sm-10">
+                                    <textarea id="froala" class="form-control" name="qnaContent" readonly  th:text="${qna.qnaContent}"></textarea>
+                                </div>
+                            </div>
 
-                        </form><!-- End General Form Elements -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">작성일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="qnaUploadDate" readonly th:value="${qna.qnaUploadDate}"/>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="offset-sm-0">
+                            <div class="col-sm-12 text-end">
+                                <button class="btn btn-primary" th:onclick="'location.href=\'/user/qna/edit/' + ${qna.qnaNo} + '\''" type="button">수정</button>
+                                <button class="btn btn-primary" onclick="location.href='/user/Q&A'" type="button">목록</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
-<!---------------------------------------------------------버튼 위젯 ----------------------------------------------------------------->
-            <div class="offset-sm-0">
-                <div class="col-sm-5">
-                    <button class="btn btn-primary" onclick="location.href='/user/Q&A'" type="button">목록</button>
-                </div>
-            </div>
-
-        </div> <!-- row 끝  -->
+        </div>
     </section>
 </main>
 <!-- End #main -->
