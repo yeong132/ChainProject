@@ -1,13 +1,11 @@
 package org.zerock.chain.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -23,6 +21,8 @@ public class TodoRequestDTO {
     private LocalDateTime todoCreatedDate;
 
     public String getFormattedTodoCreatedDate() {
-        return this.todoCreatedDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return this.todoCreatedDate != null ? this.todoCreatedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) : "";
     }
-}
+
+    }
+

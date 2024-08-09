@@ -1,7 +1,6 @@
 package org.zerock.chain.dto;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +23,7 @@ public class TodoDTO {
     private LocalDateTime todoCreatedDate;
 
     public String getFormattedTodoCreatedDate() {
-        return this.todoCreatedDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return this.todoCreatedDate != null ? this.todoCreatedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) : "";
     }
 
 }
