@@ -276,11 +276,9 @@ body {
 }
 
 /* --------채팅방 대화창--------- */
-.chat_chatting {
+.chat_chatting_container {
     background-color: #d5ecff;
     flex: 1; /* 남은 공간 모두 차지 */
-    display: flex;
-    flex-direction: column;
     overflow-y: hidden;
 }
 
@@ -293,21 +291,24 @@ body {
 }
 
 /* 방 선택 전까지 가림 */
-.chat_header, .chat_content, .chat_input{
+.chat_chatting {
     display: none;
+}
+
+.chat_chatting.active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* 채팅 헤드 영역 스타일 */
 .chat_header {
+    display: flex;
     align-items: center;
     background-color: #fff;
     border-bottom: 1px solid #f4f4f4;
     height: 42px;
     padding: 5px;
-}
-
-.chat_header.active, .chat_input.active {
-    display: flex;
 }
 
 .chat_header span {
@@ -327,19 +328,18 @@ body {
     margin: 0 4px;
 }
 
-.chat_header .bi-star-fill {
+.chat_header .bi-star-fill{
     color: #ffd700;
 }
 
-/* 채팅 내용 */
+/* 채팅 대화 영역 */
 .chat_content {
+    display:flex;
+    flex-direction:column;
     background-color: #d5ecff;
     overflow-y: auto;
     flex: 1;
-}
-
-.chat_content.active {
-    display:block;
+    height: 100%;
 }
 
 /* 채팅 말풍선 */
@@ -366,13 +366,14 @@ body {
 }
 
 /* 채팅 입력 칸 */
-.chat_input.active{
+.chat_input_container {
+    display: flex;
     padding: 5px;
     background-color: #fff;
     height: 65px;
 }
 
-.chat_input textarea {
+.chat_input_container textarea {
     flex: 1;
     padding: 5px;
     border: none;
@@ -385,7 +386,7 @@ body {
 }
 
 /* 대화창 전송 버튼 */
-.chat_input button {
+.chat_input_container .send_button {
     background-color: #4b93cd;
     color: white;
     width: 50px; /* 버튼의 너비를 고정 */

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,11 +15,11 @@
     <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <!-- 프로젝트 css -->
-    <!--<link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>-->
 
-    <!-- 채팅 css -->
+    <!-- 메신저 css & 소켓 연결 js -->
     <link th:href="@{/assets/css/chatting.css}" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <div class="chat_container">
@@ -129,7 +130,7 @@
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-                <li>
+                <li id="chatRoomExit">
                     <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
                         <span>채팅방 나가기</span>
                     </a>
@@ -152,7 +153,7 @@
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
                         <ul>
-                            <li class="room_name">즐찾방1먁</li>
+                            <li class="room_name">즐찾방1</li>
                             <li class="room_content">내용1</li>
                         </ul>
                     </div>
@@ -232,7 +233,7 @@
                 </div>
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 목록">
-                    <div class="chat_room" data-room-id="1">
+                    <div class="chat_room" data-room-id="1"> <!--// ${message.chatRoomNo}?? -->
                         <span class="chat_alarm">4444</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
@@ -242,129 +243,44 @@
                             <li class="room_content">내용1</li>
                         </ul>
                     </div>
-                    <div class="chat_room" data-room-id="2">
-                        <span class="chat_alarm">14</span>
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">개발팀 최영민 부장님</li>
-                            <li class="room_content">옹야~</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room" data-room-id="3">
-                        <span class="chat_alarm">1</span>
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">업무지원팀 김민영 대리님</li>
-                            <li class="room_content">네~</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room" data-room-id="5">
-                        <span class="chat_alarm">144</span>
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방4먁</li>
-                            <li class="room_content">내용4</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room" data-room-id="6">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방5</li>
-                            <li class="room_content">내용5</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room" data-room-id="7">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방6</li>
-                            <li class="room_content">내용6</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room" data-room-id="8">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방7</li>
-                            <li class="room_content">내용7</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /end 채팅방 목록 -->
+                </div> <!-- /end chat_list -->
+            </div> <!-- /end 채팅방 목록 -->
         </div>
     </div>
     <!--   ------------------------------------------------------- -->
     <!-- 채팅방 영역 -->
-    <div class="chat_chatting">
+    <div class="chat_chatting_container">
         <!-- 방 선택하기 전, 화면 표시 -->
         <span class="info_text">대화하실 방을 선택해주세요.</span>
 
-        <!-- 채팅 헤드 영역 -->
-        <div id="chatHeader" class="chat_header">
-            <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
-            <span id="chatRoomName">Chat Room</span> <!-- 채팅방 이름 -->
-            <span id="chatRoomPersonnel">1</span> <!-- 채팅방 인원 수 -->
-            <button id="favoriteButton"><i class="bi bi-star"></i></button> <!-- 즐겨찾기 버튼 -->
-        </div>
+        <div class="chat_chatting" id="chatChatting">
 
-        <!-- 채팅 대화 영역 -->
-        <div id="chatRoom1" class="chat_content">
-            <div class="chat_num chat_to">ㅁㅇ리나 김미김미김미김미김믹밈미살앙에 이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙리ㅜㄴㅇ리물ㄴㅁ</div>
-            <div class="chat_num chat_from">ㅁㅇ리나이리라으라으라능라ㅣㅇ무나이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙ㄴㅇ리물ㄴㅁ</div>
-            <div class="chat_num chat_to">ㅁㅇ리나이울ㄴ람우린울눙리ㅜㄴㅇ리물ㄴㅁ</div>
-            <div class="chat_num chat_to">ㅁㅇ리나이라으물ㄴㅁ</div>
-            <div class="chat_num chat_to">ㅁ2</div>
-            <div class="chat_num chat_from">ㅇㄹㄴㄹㄴㄹ</div>
-            <div class="chat_num chat_from">ㅁ</div>
-            <div class="chat_num chat_from">ㅁ</div>
-            <div class="chat_num chat_to">ㅁ</div>
-            <div class="chat_num chat_to">ㅁ</div>
-            <div class="chat_num chat_from">4ㅁ</div>
-        </div>
-        <div id="chatRoom2" class="chat_content">
-            <div class="chat_num chat_to">부장님 혹시 내일 연차 사용 가능할까요?</div>
-            <div class="chat_num chat_from">옹야~</div>
-            <div class="chat_num chat_to">넵 감사합니다. 지금 결재 올리도록 하겠습니다.</div>
-            <div class="chat_num chat_from">옹야~</div>
-        </div>
-        <div id="chatRoom3" class="chat_content">
-            <p class="chat_num chat_to">대리님 결재 부탁드리겠습니다.</p>
-            <p class="chat_num chat_from">네~</p>
-        </div>
-        <div id="chatRoom4" class="chat_content">
-            <p class="chat_num chat_to">먁먁</p>
-            <p class="chat_num chat_from">네~</p>
-        </div>
-        <div id="chatRoom5" class="chat_content">
-            <p class="chat_num chat_to">대리님 결재 부탁드리겠습니다.</p>
-            <p class="chat_num chat_from">먀먁</p>
-        </div>
+            <!-- 채팅 헤드 영역 -->
+            <div id="chatHeader" class="chat_header">
+                <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
+                <span id="chatRoomName">Chat Room</span> <!-- 채팅방 이름 -->
+                <span id="chatRoomPersonnel">1</span> <!-- 채팅방 인원 수 -->
+                <button id="favoriteButton"><i class="bi bi-star"></i></button> <!-- 즐겨찾기 버튼 -->
+            </div>
 
-        <!-- 채팅 입력 영역 -->
-        <div class="chat_input">
-            <textarea id="chatInput"></textarea>
-            <button class="send_button" id="sendButton">전송</button>
-        </div>
+            <!-- 채팅 대화 영역 -->
+            <div id="chatRoom1" class="chat_content"> <!--■■■■■ id값 불러오게 수정 ${message.chatRoomNo}?? ■■■■■-->
+                <p class="chat_num chat_to">ㅁㅇ리나 김미김미김미김미김믹밈미살앙에 이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙리ㅜㄴㅇ리물ㄴㅁ</p>
+                <p class="chat_num chat_from">ㅁㅇ리나이리라으라으라능라ㅣㅇ무나이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙ㄴㅇ리물ㄴㅁ</p>
+                <p class="chat_num chat_to">ㄹㄹ</p>
+            </div>
 
-    </div> <!-- /end chat_chatting -->
+            <!-- 채팅 입력 영역 -->
+            <div class="chat_input_container">
+                <textarea id="chatInput"></textarea>
+                <button class="send_button" id="sendButton">전송</button>
+            </div>
+        </div><!-- /end chat_chatting -->
+    </div>
 </div>
 
+<!-- 메신저 js -->
 <script src="/assets/js/chatting.js"></script>
-
-<!-- 프로젝트 파일 -->
-<!--<script src="/assets/js/wemaked.js"></script>-->
-
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
