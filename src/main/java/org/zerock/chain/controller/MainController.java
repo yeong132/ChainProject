@@ -25,6 +25,5 @@ public class MainController {
         return "organizationChart"; // templates/organizationChart.html 파일을 서빙
     }
 
-    @GetMapping("/widgetTest")
-    public String widgetTest() {return "widgetTest";}
+
 }
