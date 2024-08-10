@@ -448,39 +448,54 @@
                     <div class="card-body">
                         <h5 class="card-title">공지사항</h5>
 
-                        <form>
+                        <form  action="/notice/register" id="noticeForm" method="post">
+                            <input id="noticePinned" name="noticePinned" type="hidden" value="false">
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputText">제목</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control"  type="text" value="공지사항">
+                                <label class="col-sm-2 col-form-label">고정</label>
+                                <div class="col-sm-10">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="noticePinnedNo" name="noticePinned" type="radio" value="false" checked>
+                                        <label class="form-check-label" for="noticePinnedNo">고정 안함</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="noticePinnedYes" name="noticePinned" type="radio" value="true">
+                                        <label class="form-check-label" for="noticePinnedYes">고정</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-control" type="date" name="noticeCreatedDate" placeholder="기간 지정" style="width: auto; display: inline-block;">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">제목</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="noticeName" placeholder="공지사항 제목" required type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control"  type="email" value="관리자">
+                                <label class="col-sm-2 col-form-label">작성자</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="noticeAuthor" placeholder="관리자 연동" required type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" id="formFile"  type="file">
+                                <label class="col-sm-2 col-form-label">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="formFile" name="noticeFiles" type="file">
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputDate">기간</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control"  type="date">
-                                </div>
-                            </div>
+
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputPassword">내용</label>
-                                <div class="col-sm-11">
-                                    <div id="froala"></div>
+                                <label class="col-sm-2 col-form-label">내용</label>
+                                <div class="col-sm-10">
+                                    <div id="froala" th:name="noticeContent"></div>
                                 </div>
                             </div>
 
