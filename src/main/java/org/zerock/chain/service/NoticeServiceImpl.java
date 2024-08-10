@@ -16,11 +16,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class NoticeServiceImpl implements NoticeService {
 
-    @Autowired
-    private NoticeRepository noticeRepository;
+    private final NoticeRepository noticeRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public NoticeServiceImpl(NoticeRepository noticeRepository, ModelMapper modelMapper) {
+        this.noticeRepository = noticeRepository;
+        this.modelMapper = modelMapper;
+    }
 
     // 공지사항 전체 목록 조회
     @Override
