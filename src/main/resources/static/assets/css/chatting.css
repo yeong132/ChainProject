@@ -276,11 +276,17 @@ body {
 }
 
 /* --------채팅방 대화창--------- */
+<<<<<<< HEAD
 .chat_chatting {
     background-color: #d5ecff;
     flex: 1; /* 남은 공간 모두 차지 */
     display: flex;
     flex-direction: column;
+=======
+.chat_chatting_container {
+    background-color: #d5ecff;
+    flex: 1; /* 남은 공간 모두 차지 */
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     overflow-y: hidden;
 }
 
@@ -293,12 +299,28 @@ body {
 }
 
 /* 방 선택 전까지 가림 */
+<<<<<<< HEAD
 .chat_header, .chat_content, .chat_input{
     display: none;
 }
 
 /* 채팅 헤드 영역 스타일 */
 .chat_header {
+=======
+.chat_chatting {
+    display: none;
+}
+
+.chat_chatting.active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 채팅 헤드 영역 스타일 */
+.chat_header {
+    display: flex;
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     align-items: center;
     background-color: #fff;
     border-bottom: 1px solid #f4f4f4;
@@ -306,10 +328,13 @@ body {
     padding: 5px;
 }
 
+<<<<<<< HEAD
 .chat_header.active, .chat_input.active {
     display: flex;
 }
 
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 .chat_header span {
     margin: 0 4px;
 }
@@ -327,6 +352,7 @@ body {
     margin: 0 4px;
 }
 
+<<<<<<< HEAD
 .chat_header .bi-star-fill {
     color: #ffd700;
 }
@@ -340,6 +366,20 @@ body {
 
 .chat_content.active {
     display:block;
+=======
+.chat_header .bi-star-fill{
+    color: #ffd700;
+}
+
+/* 채팅 대화 영역 */
+.chat_content {
+    display:flex;
+    flex-direction:column;
+    background-color: #d5ecff;
+    overflow-y: auto;
+    flex: 1;
+    height: 100%;
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 }
 
 /* 채팅 말풍선 */
@@ -366,13 +406,22 @@ body {
 }
 
 /* 채팅 입력 칸 */
+<<<<<<< HEAD
 .chat_input.active{
+=======
+.chat_input_container {
+    display: flex;
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     padding: 5px;
     background-color: #fff;
     height: 65px;
 }
 
+<<<<<<< HEAD
 .chat_input textarea {
+=======
+.chat_input_container textarea {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     flex: 1;
     padding: 5px;
     border: none;
@@ -385,7 +434,11 @@ body {
 }
 
 /* 대화창 전송 버튼 */
+<<<<<<< HEAD
 .chat_input button {
+=======
+.chat_input_container .send_button {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     background-color: #4b93cd;
     color: white;
     width: 50px; /* 버튼의 너비를 고정 */

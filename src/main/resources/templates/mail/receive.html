@@ -36,6 +36,8 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
+<<<<<<< HEAD
+=======
         /* 검색 입력란 컨테이너 스타일 */
         .card-title {
             display: flex;
@@ -67,6 +69,7 @@
             font-style: italic; /* 자리 표시자 텍스트를 이탤릭체로 설정 */
         }
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         /* 드롭다운 메뉴 스타일 */
         .dropdown-menu {
             min-width: 8rem; /* 최소 너비 설정 */
@@ -514,11 +517,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
+<<<<<<< HEAD
+=======
                             <h5 class="card-title">전체 메일</h5>
                             <!-- 검색 입력란 -->
                             <div class="search-bar">
                                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
                             </div>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
@@ -542,6 +548,33 @@
                                         </div>
                                     </div>
                                 </th>
+<<<<<<< HEAD
+                                <th>From</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="message : ${messages}" class="listTb"
+                                th:data-message-id="${message.id}"
+                                onclick="rowClick(this)">
+                                <td>
+                                    <div class="checkbox-star-container">
+                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
+                                        <i class="bi bi-star star-icon"
+                                           th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'"
+                                           onclick="toggleStar(this, event)">
+                                        </i>
+                                    </div>
+                                </td>
+                                <td th:text="${message.from}">From</td>
+                                <td th:text="${message.subject}">Subject</td>
+                                <td th:text="${message.date}">Date</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- 테이블 끝 -->
+=======
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -695,11 +728,16 @@
                         </table>
                         <!-- 테이블 끝 -->
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                     </div>
                 </div>
             </div>
         </div>
     </section>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </main>
 
 <!-- ======= Footer ======= -->
@@ -748,6 +786,39 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<<<<<<< HEAD
+<script>
+    function rowClick(element) {
+        const messageId = element.getAttribute('data-message-id');
+        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
+    }
+
+
+
+    function toggleStar(element, event) {
+        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+        if (element.classList.contains('bi-star')) {
+            element.classList.remove('bi-star');
+            element.classList.add('bi-star-fill');
+        } else {
+            element.classList.remove('bi-star-fill');
+            element.classList.add('bi-star');
+        }
+    }
+
+    // 메시지 행 클릭 시 이동하는 함수
+    function handleCardClick(event) {
+        // 체크박스나 별표 아이콘을 클릭한 경우, 이벤트 전파를 막고 함수를 종료합니다.
+        if (event.target.closest('input[type="checkbox"], i.star-icon')) {
+            event.stopPropagation();
+            return;
+        }
+
+        // 그 외의 경우는 카드 전체를 클릭한 것으로 처리합니다.
+        var url = event.currentTarget.getAttribute('data-url');
+        window.location.href = url;
+    }
+=======
 <!-- 마우스 커서 효과 -->
 <script>
     function rowClick(url) {
@@ -795,6 +866,7 @@
             }
         });
     });
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 
     // 전체 선택 체크박스 기능 구현
     document.getElementById('selectAll').addEventListener('change', function () {
@@ -821,6 +893,8 @@
         document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
     });
 
+<<<<<<< HEAD
+=======
     // 별표 토글 기능 구현
     function toggleStar(element) {
         if (element.classList.contains('bi-star')) {
@@ -832,6 +906,7 @@
         }
     }
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     // 별표 드롭다운 메뉴와 연동
     document.getElementById('markAsStarredBtn').addEventListener('click', function () {
         const stars = document.querySelectorAll('#dataTable .star-icon');
@@ -856,6 +931,19 @@
             }
         });
     });
+<<<<<<< HEAD
+
+    // 체크박스 클릭 시 이벤트 전파 방지 및 선택/해제 기능 구현
+    document.querySelectorAll('.checkbox-star-container input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('click', function(event) {
+            event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+        });
+    });
+
 </script>
+
+=======
+</script>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </body>
 </html>
