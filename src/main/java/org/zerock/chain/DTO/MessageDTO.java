@@ -3,12 +3,12 @@ package org.zerock.chain.DTO;
 public class MessageDTO {
     private String id;
     private String from;
-    private String to;  // To 필드 추가
+    private String to;
     private String subject;
     private String date;
-    private boolean starred;  // starred 필드 추가
+    private boolean starred;
 
-    // Getter, Setter
+
     public String getId() {
         return id;
     }

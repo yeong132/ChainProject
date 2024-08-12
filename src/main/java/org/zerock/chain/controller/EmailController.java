@@ -26,62 +26,38 @@ import java.util.Properties;
 
 @Log4j2
 @Controller
-@RequestMapping("/mail")   // "/mail" 경로 하위에 있는 요청들을 처리합니다.
+@RequestMapping("/mail")   // "/mail" 경로 하위에 있는 요청들을 처리.
 public class EmailController {
 
-    @Autowired  // GmailService를 자동으로 주입받습니다.
+    @Autowired  // GmailService를 자동으로 주입받음.
     private GmailService gmailService;
 
-    // GET 요청으로 "/mail/compose"에 접근할 때 호출됩니다. 이메일 작성 페이지로 이동합니다.
+
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
     }
 
-    // POST 요청으로 "/mail/send"에 접근할 때 호출됩니다. 이메일을 보내는 메서드입니다.
+    // 이메일을 발송하는 메서드 추가
     @PostMapping("/send")
     public String sendEmail(
-            @RequestParam("recipientEmail") String recipientEmail,  // 요청 파라미터에서 수신자 이메일을 받습니다.
-            @RequestParam("subject") String subject,   // 요청 파라미터에서 이메일 제목을 받습니다.
-            @RequestParam("message") String message,  // 요청 파라미터에서 이메일 본문을 받습니다.
+            @RequestParam("recipientEmail") String recipientEmail,  // 수신자 이메일을 받기.
+            @RequestParam("subject") String subject,   //이메일 제목을 받기.
+            @RequestParam("message") String message,  // 이메일 본문을 받기.
             Model model) {
         log.info("sendEmail called with recipient: {}, subject: {}", recipientEmail, subject);
         try {
-            // GmailService를 이용해 이메일을 보냅니다.
             gmailService.sendMail(recipientEmail, subject, message);
             model.addAttribute("success", "Email sent successfully!");
         } catch (Exception e) {
-            log.error("Error sending email", e); // 오류를 로깅합니다.
+            log.error("Error sending email", e); // 오류를 로깅.
             model.addAttribute("error", "Error sending email: " + e.getMessage());
         }
-        return "mail/compose"; // 다시 이메일 작성 페이지로 이동합니다.
+        return "mail/compose";
     }
 
 
-/*    // GET 요청으로 "/mail/list"에 접근할 때 호출됩니다. 이메일 목록을 표시하는 메서드입니다.
-    @GetMapping("/list")
-    public String listEmails(@RequestParam(value = "messageId", required = false) String messageId, Model model) {
-        log.info("listEmails called");
-        try {
-            // GmailService를 이용해 이메일 목록을 가져옵니다.
-            List<Message> messages = gmailService.listMessages("me");
-            model.addAttribute("messages", messages); // 메시지 목록을 모델에 추가합니다.
-            model.addAttribute("success", "Emails fetched successfully!");
-
-            // 특정 메시지 ID가 제공된 경우 해당 메시지를 가져와 모델에 추가합니다.
-            if (messageId != null && !messageId.isEmpty()) {
-                log.info("getMessage called with messageId: {}", messageId);
-                Message message = gmailService.getMessage("me", messageId);
-                model.addAttribute("message", message); // 개별 메시지를 모델에 추가
-            }
-        } catch (IOException e) {
-            log.error("Error fetching emails", e); // 오류를 로깅
-            model.addAttribute("error", "Error fetching emails: " + e.getMessage());
-        }
-        return "mail/list"; // "mail/list" 뷰를 반환합니다.
-    }*/
-
-    // GET 요청으로 "/mail/list"에 접근할 때 호출됩니다. 이메일 목록을 표시하는 메서드입니다.
+    //이메일 목록을 표시하는 메서드 추가
     @GetMapping("/receive")
     public String listEmails(Model model) {
         try {
@@ -89,18 +65,17 @@ public class EmailController {
             model.addAttribute("messages", messages);
             model.addAttribute("success", "Emails fetched successfully!");
         } catch (IOException e) {
-            log.error("Error fetching emails", e); // 오류를 로깅합니다.
+            log.error("Error fetching emails", e); // 오류를 로깅.
             model.addAttribute("error", "Error fetching emails: " + e.getMessage());
         }
-        return "mail/receive"; // "mail/receive" 뷰를 반환합니다.
+        return "mail/receive";
     }
 
-
+    //이메일의 본문(상세 내용)을 보여주는 메서드 추가
     @GetMapping("/view")
     public String viewEmail(@RequestParam("messageId") String messageId, Model model) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
-            // GmailService 이용 특정 메시지를 가져오기
             Message message = gmailService.getMessage("me", messageId);
 
             // 메시지의 헤더 정보 추출
@@ -132,13 +107,13 @@ public class EmailController {
 
 
 
-    /*// GET 요청으로 "/label/create"에 접근할 때 라벨 생성 폼을 표시하는 메서드입니다.
+    /*// 라벨 생성 폼을 표시하는 메서드.
     @GetMapping("/label/create")
     public String showCreateLabelForm() {
         return "mail/create_label";
     }
 
-    // POST 요청으로 "/label/create"에 접근할 때 호출됩니다. 라벨을 생성하는 메서드입니다.
+    // 라벨을 생성하는 메서드.
     @PostMapping("/label/create")
     public String createLabel(@RequestParam("labelName") String labelName,
                               @RequestParam("labelType") String labelType,
@@ -146,7 +121,7 @@ public class EmailController {
                               @RequestParam(value = "labelListVisibility", required = false) String labelListVisibility,
                               Model model) {
         try {
-            // GmailService를 이용해 라벨을 생성합니다.
+            // GmailService를 이용해 라벨을 생성.
             String labelId = gmailService.createLabel("me", labelName);
             model.addAttribute("labelId", labelId);
             model.addAttribute("labelName", labelName);
@@ -158,12 +133,11 @@ public class EmailController {
         }
     }*/
 
-    // 추가: 보낸 메시지함을 표시하는 메서드
+    // 보낸 메시지함을 표시하는 메서드
     @GetMapping("/send")
     public String listSentEmails(Model model) {
         log.info("listSentEmails called");
         try {
-            // GmailService를 이용해 보낸 이메일 목록을 가져옵니다.
             List<MessageDTO> sentMessages = gmailService.listSentMessages("me");
             model.addAttribute("messages", sentMessages);
             model.addAttribute("success", "Sent emails fetched successfully!");
@@ -171,7 +145,7 @@ public class EmailController {
             log.error("Error fetching sent emails", e);
             model.addAttribute("error", "Error fetching sent emails: " + e.getMessage());
         }
-        return "mail/send"; // "mail/send" 뷰를 반환합니다.
+        return "mail/send";
     }
 
     // 메시지를 휴지통으로 이동시키는 메서드 추가
