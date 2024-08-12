@@ -24,6 +24,4 @@ public class MainController {
     public String organization_chart() {
         return "organizationChart"; // templates/organizationChart.html 파일을 서빙
     }
-
-
 }
