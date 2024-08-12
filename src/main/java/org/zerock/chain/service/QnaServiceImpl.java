@@ -66,4 +66,10 @@ public class QnaServiceImpl implements QnaService {
         // Q&A 삭제
         qnaRepository.deleteById(qnaNo);
     }
+
+    // 답변상태 업데이트
+    @Override
+    public void updateQnaStatus(Long qnaNo, boolean qnaStatus) {
+
+    }
 }

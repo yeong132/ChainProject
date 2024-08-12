@@ -478,16 +478,14 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" id="froala" name="qnaContent" readonly
-                                              th:text="${qna.qnaContent}"></textarea>
+                                    <textarea class="form-control" id="froala" name="qnaContent" readonly th:text="${qna.qnaContent}"></textarea>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">작성일</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" name="qnaUploadDate" readonly
-                                           th:value="${qna.qnaUploadDate}"/>
+                                    <input class="form-control" name="qnaUploadDate" readonly th:value="${qna.qnaUploadDate}"/>
                                 </div>
                             </div>
 
@@ -516,7 +514,8 @@
                             <!-- 댓글 작성 버튼 영역 -->
                             <div class="col-sm-12 text-end">
                                 <!-- qnaStatus가 true인 경우 댓글 작성 버튼만 보이도록 설정 -->
-                                <button class="btn btn-success mt-3" data-bs-target="#commentModal" data-bs-toggle="modal"
+                                <button class="btn btn-success mt-3" data-bs-target="#commentModal"
+                                        data-bs-toggle="modal"
                                         th:if="${!qna.qnaStatus}">
                                     댓글 작성
                                 </button>
@@ -526,8 +525,10 @@
                             <div th:if="${qna.qnaStatus}">
                                 <!-- 댓글 리스트 -->
                                 <div th:each="comment : ${comments}">
-                                    <form>
-                                        <input type="hidden" name="commentNo" th:value="${comment.commentNo}" />
+                                    <form id="commentForm${comment.commentNo}" th:action="@{/comment/delete/{commentNo}(commentNo=${comment.commentNo})}" method="post">
+                                        <input name="qnaNo" type="hidden" th:value="${qna.qnaNo}" />
+
+                                        <!-- 댓글 상세 내용 -->
                                         <div class="row mb-3">
                                             <label class="col-sm-1 col-form-label">제목</label>
                                             <div class="col-sm-11">
@@ -552,32 +553,29 @@
                                                 <input class="form-control" readonly th:value="${comment.commentCreatedDate}" type="text">
                                             </div>
                                         </div>
+
+                                        <!-- 댓글 수정/삭제 버튼 -->
+                                        <div class="col-sm-12 text-end">
+                                            <button class="btn btn-primary mt-3"
+                                                    type="button"
+                                                    onclick="showEditCommentModal('[[${comment.commentNo}]]', '[[${comment.commentName}]]', '[[${comment.commentContent}]]')">
+                                                댓글 수정
+                                            </button>
+
+                                            <!-- 삭제 버튼을 사용하여 폼 제출 -->
+                                            <button class="btn btn-danger mt-3" type="submit">
+                                                삭제
+                                            </button>
+                                        </div>
                                     </form>
-
-                                    <!-- 댓글 수정/삭제 버튼 -->
-                                    <div class="col-sm-12 text-end">
-                                        <!-- 댓글 수정 버튼: 모달 창 호출 -->
-                                        <button class="btn btn-primary mt-3"
-                                                onclick="showEditCommentModal('[[${comment.commentNo}]]', '[[${comment.commentName}]]', '[[${comment.commentContent}]]')">
-                                            댓글 수정
-                                        </button>
-
-                                        <!-- 댓글 삭제 버튼: 모달 창 호출 -->
-                                        <button class="btn btn-danger mt-3"
-                                                onclick="showDeleteCommentModal('[[${comment.commentNo}]]')">
-                                            삭제
-                                        </button>
-                                    </div>
-
                                 </div>
                             </div>
+                            <!-- 댓글 영역 끝 -->
 
-                            </div>
+
                         </div>
                     </div>
-                <!-- 댓글 영역 끝 -->
-
-
+                </div>
             </div>
         </div>
     </section>
@@ -594,7 +592,7 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="commentForm" method="post" th:action="@{/comments/qna/{qnaNo}/add(qnaNo=${qna.qnaNo})}">
+                <form id="commentRegiserForm" method="post" th:action="@{/comment/qna/{qnaNo}/add(qnaNo=${qna.qnaNo})}">
                     <div class="mb-3">
                         <label class="form-label" for="commentAuthor">작성자</label>
                         <input class="form-control" id="commentAuthor" name="commentAuthor" required type="text">
@@ -619,27 +617,28 @@
 </div>
 
 <!-- 댓글 수정 모달 -->
-<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="editCommentModalLabel" class="modal fade" id="editCommentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCommentModalLabel">댓글 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <form id="editCommentForm">
-                    <input type="hidden" id="editCommentNo" name="commentNo">
+                    <input id="editCommentNo" name="commentNo" type="hidden">
                     <div class="mb-3">
                         <label class="form-label" for="editCommentName">제목</label>
-                        <input type="text" class="form-control" id="editCommentName" name="commentName" required>
+                        <input class="form-control" id="editCommentName" name="commentName" required type="text">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="editCommentContent">내용</label>
-                        <textarea class="form-control" id="editCommentContent" name="commentContent" rows="3" required></textarea>
+                        <textarea class="form-control" id="editCommentContent" name="commentContent" required
+                                  rows="3"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        <button type="button" class="btn btn-primary" onclick="submitEditCommentForm()">저장</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
+                        <button class="btn btn-primary" onclick="submitEditCommentForm()" type="button">저장</button>
                     </div>
                 </form>
             </div>
@@ -647,8 +646,8 @@
     </div>
 </div>
 
-<!-- 삭제 확인 모달 -->
-<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+<!-- 댓글 삭제 확인 모달 -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -657,10 +656,12 @@
             </div>
             <div class="modal-body">
                 해당 답변을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                <!-- commentNo를 저장하기 위한 hidden input -->
+                <input type="hidden" name="commentNo" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" id="deleteCommentButton" class="btn btn-danger" onclick="deleteComment()">삭제</button>
+                <button type="button" class="btn btn-danger" onclick="deleteComment()">삭제</button>
             </div>
         </div>
     </div>
@@ -682,7 +683,6 @@
     </div>
 </footer>
 <!-- Footer 끝 -->
-
 
 
 <script>
@@ -720,33 +720,32 @@
         });
     }
 
-
-    // 댓글 삭제 모달 열기 함수
-    function showDeleteCommentModal(commentNo) {
-        // 모달 열기 전에 삭제 확인
-        document.getElementById('deleteCommentButton').setAttribute('onclick', `deleteComment(${commentNo})`);
-        new bootstrap.Modal(document.getElementById('deleteCommentModal')).show();
+    // 삭제 모달 열기 함수
+    function showConfirmationModal(commentNo) {
+        // 모달을 열기 전에 삭제할 commentNo를 숨겨진 input 필드에 설정
+        document.querySelector('input[name="commentNo"]').value = commentNo;
+        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
     }
 
     // 댓글 삭제 함수
-    function deleteComment(commentNo) {
-        fetch(`/comments/${commentNo}`, {
-            method: 'DELETE'
+    function deleteComment() {
+        const commentNo = document.querySelector('input[name="commentNo"]').value;
+
+        fetch(`/comments/delete/${commentNo}`, {
+            method: 'POST'
         }).then(response => {
             if (response.ok) {
-                alert('댓글이 삭제되었습니다.');
-                location.reload();
+                window.location.href = '/comments/list';
             } else {
-                alert('댓글 삭제에 실패했습니다.');
+                alert('댓글 삭제에 실패했습니다. 상태 코드: ' + response.status);
             }
         }).catch(error => {
             alert('댓글 삭제 중 오류가 발생했습니다: ' + error.message);
         });
     }
+
 </script>
-
-
-
 
 
 <!-- 채팅창 및 맨위로 가기 -->

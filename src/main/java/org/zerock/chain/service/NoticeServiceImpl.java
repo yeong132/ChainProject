@@ -63,9 +63,6 @@ public class NoticeServiceImpl implements NoticeService {
     // 공지사항 삭제
     @Override
     public void deleteNotice(Long noticeNo) {
-        if (!noticeRepository.existsById(noticeNo)) {
-            throw new RuntimeException("Notice not found with id: " + noticeNo);
-        }
         noticeRepository.deleteById(noticeNo);
     }
 }

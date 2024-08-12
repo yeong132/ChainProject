@@ -69,6 +69,7 @@ public class NoticeController {
     @PostMapping("/delete/{noticeNo}")
     public String deleteNotice(@PathVariable("noticeNo") Long noticeNo) {
         noticeService.deleteNotice(noticeNo);
+
         return "redirect:/notice/list";
     }
 

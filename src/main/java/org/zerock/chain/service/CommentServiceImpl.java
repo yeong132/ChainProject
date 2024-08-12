@@ -72,7 +72,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-
     @Override  // 특정 댓글 번호에 해당하는 댓글을 삭제
     public void deleteComment(Long commentNo) {
         commentRepository.deleteById(commentNo);
