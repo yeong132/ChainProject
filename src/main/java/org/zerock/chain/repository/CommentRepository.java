@@ -2,6 +2,7 @@ package org.zerock.chain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.zerock.chain.model.Comment;
+import org.zerock.chain.model.Qna;
 
 import java.util.List;
 
@@ -15,4 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // Q&A 번호를 기준으로 모든 댓글 삭제
     void deleteByCommentQnaQnaNo(Long qnaNo);
+
+    // QnA 객체에 해당하는 댓글 개수를 세는 메서드
+    int countByCommentQna(Qna commentQna);
 }

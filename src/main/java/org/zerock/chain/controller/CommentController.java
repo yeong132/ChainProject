@@ -71,11 +71,15 @@ public class CommentController {
     public String deleteComment(@PathVariable("commentNo") Long commentNo, @RequestParam Long qnaNo) {
         commentService.deleteComment(commentNo);
 
-        // 댓글 삭제 후 해당 QnA의 댓글 여부를 0으로 설정
-        qnaService.updateQnaStatus(qnaNo, false);
+        // QnA에 남아있는 댓글이 있는지 확인
+        boolean hasComments = commentService.qnaHasComments(qnaNo);
+
+        // 댓글이 없으면 QnA의 상태를 0으로 업데이트
+        if (!hasComments) {
+            qnaService.updateQnaStatus(qnaNo, false);
+        }
 
         return "redirect:/user/qna/detail/" + qnaNo;
     }
-
 
 }

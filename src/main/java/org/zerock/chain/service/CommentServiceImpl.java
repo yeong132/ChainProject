@@ -71,14 +71,31 @@ public class CommentServiceImpl implements CommentService {
         return modelMapper.map(updatedComment, CommentDTO.class);
     }
 
-
-    @Override  // 특정 댓글 번호에 해당하는 댓글을 삭제
+    @Override
     public void deleteComment(Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        // 댓글 삭제
         commentRepository.deleteById(commentNo);
+
+        // 삭제 후 해당 QnA의 댓글 여부를 확인하여 업데이트
+        Qna qna = comment.getCommentQna();
+        boolean hasComments = commentRepository.countByCommentQna(qna) > 0;
+        qna.setQnaStatus(hasComments);
+        qnaRepository.save(qna);
     }
 
     @Override  // 특정 QnA 번호에 해당하는 모든 댓글을 삭제
     public void deleteCommentsByQnaNo(Long qnaNo) {
         commentRepository.deleteByCommentQnaQnaNo(qnaNo);
     }
+
+    @Override
+    public boolean qnaHasComments(Long qnaNo) {
+        Qna qna = qnaRepository.findById(qnaNo).orElseThrow(() -> new IllegalArgumentException("Invalid QnA ID"));
+        return commentRepository.countByCommentQna(qna) > 0;
+    }
+
+
 }

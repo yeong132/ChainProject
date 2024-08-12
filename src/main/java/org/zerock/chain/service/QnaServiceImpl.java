@@ -70,6 +70,10 @@ public class QnaServiceImpl implements QnaService {
     // 답변상태 업데이트
     @Override
     public void updateQnaStatus(Long qnaNo, boolean qnaStatus) {
-
+        // QnA의 상태를 업데이트하는 로직
+        Qna qna = qnaRepository.findById(qnaNo)
+                .orElseThrow(() -> new RuntimeException("QnA not found with id " + qnaNo));
+        qna.setQnaStatus(qnaStatus);
+        qnaRepository.save(qna);
     }
 }
