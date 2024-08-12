@@ -21,11 +21,17 @@ public class QProject extends EntityPathBase<Project> {
 
     public final StringPath dmpNo = createString("dmpNo");
 
+    public final BooleanPath isTemporary = createBoolean("isTemporary");
+
     public final StringPath participants = createString("participants");
+
+    public final StringPath projectContent = createString("projectContent");
 
     public final DatePath<java.time.LocalDate> projectEndDate = createDate("projectEndDate", java.time.LocalDate.class);
 
     public final BooleanPath projectFavorite = createBoolean("projectFavorite");
+
+    public final StringPath projectFiles = createString("projectFiles");
 
     public final StringPath projectName = createString("projectName");
 
