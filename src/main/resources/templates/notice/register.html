@@ -449,7 +449,7 @@
                         <h5 class="card-title">공지사항</h5>
 
                         <form  action="/notice/register" id="noticeForm" method="post">
-                            <input id="noticePinned" name="noticePinned" type="hidden" value="false">
+<!--                            <input id="noticePinned" name="noticePinned" type="hidden" value="false">-->
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">고정</label>
@@ -495,7 +495,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <div id="froala" th:name="noticeContent"></div>
+                                    <textarea id="froala" name="noticeContent"></textarea>
                                 </div>
                             </div>
 
@@ -591,26 +591,25 @@
 </a>
 <!-- 채팅창 끝-->
 
-<!-- 저장 확인 모달 JS  -->
 <script>
-    function showModal() { // 모달을 보여주는 함수
+    // 저장 확인 모달을 보여주는 함수
+    function showModal() {
         var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
-        saveModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
-    function saveAlerts() {
-        var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
-        saveModal.hide(); // 모달을 먼저 닫는다
-        saveModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-            window.location.href = '/notice/detail';
-        });
+        saveModal.show();
     }
-</script>
-<!-- 목록 경고 모달 JS  -->
-<script>
-    function showWarningModal() { // 모달을 보여주는 함수
+
+    // 저장 모달에서 '예'를 클릭했을 때 호출되는 함수로 폼을 제출
+    function saveAlerts() {
+        document.getElementById('noticeForm').submit();
+    }
+
+    // 목록 경고 모달을 보여주는 함수
+    function showWarningModal() {
         var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-        WarningModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+        WarningModal.show();
+    }
+
+    // 경고 모달에서 '예'를 클릭했을 때 호출되는 함수로 모달을 닫고 목록으로 이동
     function WarningAlerts() {
         var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
         WarningModal.hide(); // 모달을 먼저 닫는다
@@ -619,6 +618,7 @@
         });
     }
 </script>
+
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

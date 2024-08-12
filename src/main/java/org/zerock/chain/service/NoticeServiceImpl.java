@@ -1,7 +1,6 @@
 package org.zerock.chain.service;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.dto.NoticeDTO;
@@ -45,8 +44,10 @@ public class NoticeServiceImpl implements NoticeService {
     public NoticeDTO createNotice(NoticeRequestDTO noticeRequestDTO) {
         Notice notice = modelMapper.map(noticeRequestDTO, Notice.class);
         notice = noticeRepository.save(notice);
-        return modelMapper.map(notice, NoticeDTO.class);
+        NoticeDTO noticeDTO = modelMapper.map(notice, NoticeDTO.class);
+        return noticeDTO;
     }
+
 
     // 기존 공지사항 수정
     @Override

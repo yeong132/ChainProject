@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.chain.dto.NoticeDTO;
 import org.zerock.chain.dto.NoticeRequestDTO;
 import org.zerock.chain.service.NoticeService;
 
@@ -41,13 +42,14 @@ public class NoticeController {
 
     // 새 공지사항 생성
     @PostMapping("/register")
-    public String createNotice(@Valid @ModelAttribute NoticeRequestDTO noticeRequestDTO, BindingResult result) {
+    public String createNotice(@Valid @ModelAttribute NoticeRequestDTO noticeRequestDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "notice/register";
+            return "notice/register";  // 입력값에 에러가 있을 경우 등록 페이지로 돌아감
         }
-        noticeService.createNotice(noticeRequestDTO);
-        return "redirect:/notice/list";
+        NoticeDTO createdNotice = noticeService.createNotice(noticeRequestDTO);
+        return "redirect:/notice/detail/" + createdNotice.getNoticeNo();  // 성공적으로 생성된 경우 상세 페이지로 리디렉션
     }
+
 
     // 공지사항 수정 페이지 표시
     @GetMapping("/modify/{noticeNo}")
@@ -69,5 +71,6 @@ public class NoticeController {
         noticeService.deleteNotice(noticeNo);
         return "redirect:/notice/list";
     }
+
 
 }

@@ -76,7 +76,6 @@ public class ProjectController {
     @GetMapping("/register")
     public void registerGET() {
     }
-
     // 새 프로젝트 등록 처리 (C ---> S 요청 ---> S는 R에게 요청 insert )  // 프로젝트 진행도 및 등록 처리
     @PostMapping("/register")
     public String registerAndProgress(@Valid @ModelAttribute ProjectDTO projectDTO, BindingResult bindingResult, Model model, @RequestParam("isTemporary") boolean isTemporary) {
