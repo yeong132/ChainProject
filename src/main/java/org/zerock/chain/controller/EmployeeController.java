@@ -1,17 +1,18 @@
 package org.zerock.chain.controller;
 
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.zerock.chain.dto.EmployeeDTO;
 import org.zerock.chain.service.EmployeeService;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
+
 
     private final EmployeeService employeeService;
 
@@ -19,50 +20,10 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        List<EmployeeDTO> employees = employeeService.getAllEmployees();
-        return ResponseEntity.ok(employees);
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
-        EmployeeDTO employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
-    }
+    @GetMapping("/{empNo}")
+    public EmployeeDTO getEmployee(@PathVariable Long empNo) {
+        return employeeService.getEmployeeById(empNo);
 
-    @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
-        return ResponseEntity.ok(updatedEmployee);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String departmentName,
-            @RequestParam(required = false) String rankName) {
-        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
-        return ResponseEntity.ok(employees);
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
-            @RequestParam int page,
-            @RequestParam int size) {
-        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
-        return ResponseEntity.ok(employeePage);
     }
 }
