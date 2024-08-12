@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/chart")
 @Log4j2
-public class chartController {
+public class ChartController {
 
     //  차트 페이지
     @GetMapping("/main")

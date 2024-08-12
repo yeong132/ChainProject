@@ -21,12 +21,14 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
+
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ModelMapper modelMapper;
 
     @Override   // 프로젝트 생성 등록 메서드
+
     public Long register(ProjectDTO projectDTO) {
         log.info("projectDTO ==" + projectDTO);
         Project project = modelMapper.map(projectDTO, Project.class);
@@ -44,6 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override   // 프로젝트 전체 목록 조회 메서드
+
     public List<ProjectDTO> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
         return projects.stream()
@@ -104,3 +107,4 @@ public class ProjectServiceImpl implements ProjectService {
         return filePath;
     }
 }
+

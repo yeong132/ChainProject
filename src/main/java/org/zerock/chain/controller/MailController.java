@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/mail")
 @Log4j2
-public class mailController {
+public class MailController {
 
     //메일수신함
     @GetMapping("/receive")
