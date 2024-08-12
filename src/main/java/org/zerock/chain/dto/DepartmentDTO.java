@@ -1,12 +1,18 @@
 package org.zerock.chain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DepartmentDTO {
 
-    private int dmp_no; // 부서 번호
-    private String dmp_name; // 부서명
+    private Long dmpNo;        // 부서 고유 번호
+    private String dmpName;    // 부서명
+
 }
+

@@ -1,21 +1,24 @@
 package org.zerock.chain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @Table(name = "department")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Department {
 
-    // Getters and Setters
     @Id
-    private int dmp_no; // 부서 번호
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dmp_no")
+    private Long dmpNo;
 
-    private String dmp_name; // 부서명
-
+    @Column(name = "dmp_name", nullable = false, length = 100)
+    private String dmpName;
 }

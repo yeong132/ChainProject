@@ -1,41 +1,38 @@
 package org.zerock.chain.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.zerock.chain.dto.RankDTO;
-import org.zerock.chain.service.RankService;
+import org.zerock.chain.repository.RankRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+// RankController.java
 @RestController
-@RequestMapping("/ranks")
+@RequestMapping("/api/ranks")
 public class RankController {
 
-    @Autowired
-    private RankService rankService;
+    private final RankRepository rankRepository;
+
+    public RankController(RankRepository rankRepository) {
+        this.rankRepository = rankRepository;
+    }
 
     @GetMapping
-    public List<RankDTO> getAllRanks() {
-        return rankService.getAllRanks();
-    }
-
-    @GetMapping("/{rankNo}")
-    public RankDTO getRankById(@PathVariable int rankNo) {
-        return rankService.getRankById(rankNo);
-    }
-
-    @PostMapping
-    public RankDTO createRank(@RequestBody RankDTO rankDTO) {
-        return rankService.createRank(rankDTO);
-    }
-
-    @PutMapping("/{rankNo}")
-    public RankDTO updateRank(@PathVariable int rankNo, @RequestBody RankDTO rankDTO) {
-        return rankService.updateRank(rankNo, rankDTO);
-    }
-
-    @DeleteMapping("/{rankNo}")
-    public void deleteRank(@PathVariable int rankNo) {
-        rankService.deleteRank(rankNo);
+    public ResponseEntity<List<RankDTO>> getAllRanks() {
+        List<RankDTO> rankDTOs = rankRepository.findAll().stream()
+                .map(rank -> {
+                    RankDTO dto = new RankDTO();
+                    dto.setRankNo(rank.getRankNo());
+                    dto.setRankName(rank.getRankName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(rankDTOs);
     }
 }
+

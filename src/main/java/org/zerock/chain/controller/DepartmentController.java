@@ -1,42 +1,76 @@
 package org.zerock.chain.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.zerock.chain.entity.Department;
 import org.zerock.chain.dto.DepartmentDTO;
-import org.zerock.chain.service.DepartmentService;
+import org.zerock.chain.repository.DepartmentRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+// DepartmentController.java
 @RestController
-@RequestMapping("/departments")
+@RequestMapping("/api/departments")
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentService departmentService;
+    private final DepartmentRepository departmentRepository;
+
+    public DepartmentController(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }
 
     @GetMapping
-    public List<DepartmentDTO> getAllDepartments() {
-        return departmentService.getAllDepartments();
+    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
+        List<DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
+                .map(department -> {
+                    DepartmentDTO dto = new DepartmentDTO();
+                    dto.setDmpNo(department.getDmpNo());
+                    dto.setDmpName(department.getDmpName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(departmentDTOs);
     }
-
-//    @GetMapping("/{dmpNo}")
-//    public DepartmentDTO getDepartmentById(@PathVariable int dmpNo) {
-//        return departmentService.getDepartmentById(dmpNo);
-//    }
 
     @PostMapping
-    public DepartmentDTO createDepartment(@RequestBody DepartmentDTO departmentDTO) {
-        return departmentService.createDepartment(departmentDTO);
+    public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO departmentDTO) {
+        Department department = new Department();
+        department.setDmpName(departmentDTO.getDmpName());
+        Department savedDepartment = departmentRepository.save(department);
+
+        DepartmentDTO savedDepartmentDTO = new DepartmentDTO();
+        savedDepartmentDTO.setDmpNo(savedDepartment.getDmpNo());
+        savedDepartmentDTO.setDmpName(savedDepartment.getDmpName());
+
+        return new ResponseEntity<>(savedDepartmentDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{dmpNo}")
-    public DepartmentDTO updateDepartment(@PathVariable int dmpNo, @RequestBody DepartmentDTO departmentDTO) {
-        return departmentService.updateDepartment(dmpNo, departmentDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentDTO> updateDepartment(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
+        return departmentRepository.findById(id)
+                .map(department -> {
+                    department.setDmpName(departmentDTO.getDmpName());
+                    Department updatedDepartment = departmentRepository.save(department);
+
+                    DepartmentDTO updatedDepartmentDTO = new DepartmentDTO();
+                    updatedDepartmentDTO.setDmpNo(updatedDepartment.getDmpNo());
+                    updatedDepartmentDTO.setDmpName(updatedDepartment.getDmpName());
+
+                    return ResponseEntity.ok(updatedDepartmentDTO);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{dmpNo}")
-    public void deleteDepartment(@PathVariable int dmpNo) {
-        departmentService.deleteDepartment(dmpNo);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
+        if (departmentRepository.existsById(id)) {
+            departmentRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
