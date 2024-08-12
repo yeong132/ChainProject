@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting</title>
+    <!-- 부트스트랩 -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+
+    <!-- 메신저 css & 소켓 연결 js -->
+    <link th:href="@{/assets/css/chatting.css}" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div class="chat_container">
+
+    <!-- 왼쪽 메뉴 바 -->
+    <div class="d-flex">
+        <div class="chat_left_bar" id="v-pills-tab" role="tablist"
+             aria-orientation="vertical">
+            <!-- 조직도 버튼 -->
+            <button class="menu_icon nav-link" id="v-pills-organization-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-organization" type="button" role="tab"
+                    aria-controls="v-pills-organization" aria-selected="false"><i class="bi bi-diagram-2-fill"></i>
+            </button>
+            <!-- 즐겨찾기 버튼 -->
+            <button class="menu_icon nav-link" id="v-pills-favorites-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-favorites" type="button" role="tab"
+                    aria-controls="v-pills-favorites" aria-selected="false"><i class="bi bi-star-fill"></i>
+            </button>
+            <!-- 채팅방 버튼 -->
+            <button class="menu_icon nav-link active" id="v-pills-chatrooms-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-chatrooms" type="button" role="tab"
+                    aria-controls="v-pills-chatrooms" aria-selected="true"><i class="bi bi-chat-dots-fill"></i>
+            </button>
+        </div>
+
+        <!-- 조직도/즐겨찾기/채팅방 목록 -->
+        <div class="chat_menu_container tab-content" id="v-pills-tabContent">
+            <!-- 채팅방 생성 모달 창 -->
+            <div id="chatModal" class="chat_modal">
+                <div class="modal_content">
+                    <span id="closeButton">&times;</span>
+                    <p>새 채팅방을 생성하시겠습니까?</p>
+                    <button id="confirmCreateRoom">확인</button>
+                </div>
+            </div>
+            <!-- 조직도 -->
+            <div class="chat_menu tab-pane" id="v-pills-organization" role="tabpanel"
+                 aria-labelledby="v-pills-organization-tab">
+                <!-- 검색 -->
+                <div class="search">
+                    <input type="text" id="searchInputOrg" placeholder=" 검색">
+                </div>
+                <!-- 조직도 목록 -->
+                <div class="chat_list" alt="조직도 목록">
+                    <!-- 조직도 전체 네비 -->
+                    <ul class="org_dep_list">
+                        <th:block th:each="entry : ${departmentMap}">
+                        <li>
+                            <a class="org_dep" href="#">
+                                <i class="bi bi-chevron-right"></i>
+                                <span th:text="${entry.key}">부서명</span> <!-- 부서 이름 -->
+                            </a>
+                            <ul class="dep_emps_list">
+                                <th:block th:each="employee : ${entry.value}">
+                                <a href="#">
+                                    <li th:text="${employee.rankName} + ' ' + ${employee.lastName} + ${employee.firstName}">직급 성 이름</li>
+                                </a>
+                                </th:block>
+                            </ul>
+                        </li>
+                        </th:block>
+                    </ul>
+                    <!-- /end 조직도 전체 네비 -->
+                </div>
+            </div>
+            <!-- /end 조직도 -->
+
+            <!-- 오른쪽 마우스 클릭 : 드롭 다운 메뉴 -->
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"><li>
+                <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                    <span>채팅방 이름 설정</span>
+                </a>
+            </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                        <span class="chatroomFavorite">즐겨찾기 등록</span>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li id="chatRoomExit">
+                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+                        <span>채팅방 나가기</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- /end 드롭 다운 메뉴 -->
+
+            <!-- 즐겨찾기 목록 -->
+            <div class="chat_menu tab-pane" id="v-pills-favorites" role="tabpanel"
+                 aria-labelledby="v-pills-favorites-tab">
+                <!-- 검색 -->
+                <div class="search">
+                    <input type="text" id="searchInputFavorRoom" placeholder=" 검색">
+                </div>
+                <!-- 방 목록 -->
+                <div class="chat_list" alt="채팅방 즐겨찾기 목록">
+                    <div class="chat_room"  data-room-id="4">
+                        <span class="chat_alarm">4444</span>
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">즐찾방1</li>
+                            <li class="room_content">내용1</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">즐찾방2</li>
+                            <li class="room_content">내용2</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">즐찾방3</li>
+                            <li class="room_content">내용3</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">방4</li>
+                            <li class="room_content">내용4</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">방5</li>
+                            <li class="room_content">내용5</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">방6</li>
+                            <li class="room_content">내용6</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">방7</li>
+                            <li class="room_content">내용7</li>
+                        </ul>
+                    </div>
+                    <div class="chat_room">
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">방8</li>
+                            <li class="room_content">내용8</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /end 즐겨찾기 목록 -->
+
+            <!-- 채팅방 목록 -->
+            <div class="chat_menu tab-pane show active" id="v-pills-chatrooms" role="tabpanel"
+                 aria-labelledby="v-pills-chatrooms-tab">
+                <!-- 검색 -->
+                <div class="search">
+                    <input type="text" id="searchInputChatRoom" placeholder=" 검색">
+                </div>
+                <!-- 방 목록 -->
+                <div class="chat_list" alt="채팅방 목록">
+                    <div class="chat_room" data-room-id="1"> <!--// ${message.chatRoomNo}?? -->
+                        <span class="chat_alarm">4444</span>
+                        <div class="room_img">
+                            <img src="/assets/img/보노보노.png" alt="프로필사진">
+                        </div>
+                        <ul>
+                            <li class="room_name">테스트</li>
+                            <li class="room_content">내용1</li>
+                        </ul>
+                    </div>
+                </div> <!-- /end chat_list -->
+            </div> <!-- /end 채팅방 목록 -->
+        </div>
+    </div>
+    <!--   ------------------------------------------------------- -->
+    <!-- 채팅방 영역 -->
+    <div class="chat_chatting_container">
+        <!-- 방 선택하기 전, 화면 표시 -->
+        <span class="info_text">대화하실 방을 선택해주세요.</span>
+        <div class="chat_chatting" id="chatChatting">
+
+            <!-- 채팅 헤드 영역 -->
+            <div id="chatHeader" class="chat_header">
+                <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
+                <span id="chatRoomName">Chat Room</span> <!-- 채팅방 이름 -->
+                <span id="chatRoomPersonnel">1</span> <!-- 채팅방 인원 수 -->
+                <button id="favoriteButton"><i class="bi bi-star"></i></button> <!-- 즐겨찾기 버튼 -->
+            </div>
+
+            <!-- 채팅 대화 영역 -->
+            <div id="chatRoom1" class="chat_content"> <!--■■■■■ id값 불러오게 수정 ${message.chatRoomNo}?? ■■■■■-->
+                <p class="chat_num chat_to">ㅁㅇ리나 김미김미김미김미김믹밈미살앙에 이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙리ㅜㄴㅇ리물ㄴㅁ</p>
+                <p class="chat_num chat_from">ㅁㅇ리나이리라으라으라능라ㅣㅇ무나이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙ㄴㅇ리물ㄴㅁ</p>
+                <p class="chat_num chat_to">ㄹㄹ</p>
+            </div>
+
+            <!-- 채팅 입력 영역 -->
+            <div class="chat_input_container">
+                <textarea id="chatInput"></textarea>
+                <button class="send_button" id="sendButton">전송</button>
+            </div>
+        </div><!-- /end chat_chatting -->
+    </div>
+</div>
+
+<!-- 메신저 js -->
+<script src="/assets/js/chatting.js"></script>
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Content</title>
+</head>
+<body>
+<div id="content"></div>
+
+<script>
+    // Get the content ID from the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const contentId = urlParams.get('id');
+
+    if (!contentId) {
+        document.getElementById('content').innerHTML = 'Content ID is missing in the URL.';
+    } else {
+        // Fetch the content from the server
+        fetch('http://localhost:8080/content/get/' + contentId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    document.getElementById('content').innerHTML = data.content;
+                } else {
+                    alert('Failed to load content: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load content.');
+            });
+    }
+</script>
+</body>
+</html>
