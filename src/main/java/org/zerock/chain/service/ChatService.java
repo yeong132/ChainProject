@@ -27,8 +27,8 @@ public class ChatService {
         this.modelMapper = modelMapper;
     }
 
+    // 사원 접속 처리
     public List<ChatRoomDTO> getChatRoomsByEmpNo(Long empNo) {
-        // 채팅방 리스트 반환 로직 구현
         // 예: 특정 empNo로 채팅방 리스트를 가져오는 쿼리 실행
         List<ChatRoom> chatRooms = chatRoomRepository.findByEmpNo(empNo);
 

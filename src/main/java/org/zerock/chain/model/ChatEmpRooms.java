@@ -26,7 +26,4 @@ public class ChatEmpRooms {
     @ManyToOne
     @JoinColumn(name = "emp_no")
     private Employee employee;
-
-    @Column(name = "chat_join_date")
-    private LocalDateTime chatJoinDate;
 }

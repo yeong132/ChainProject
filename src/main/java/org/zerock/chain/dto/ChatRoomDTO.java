@@ -15,25 +15,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRoomDTO {
-    // 방 타입: 일반(COMMON), 즐겨찾기(FAVORITES)
-//    public enum RoomType{
-//        COMMON, FAVORITES;
-//    }
-
     private Long chatRoomNo; // 채팅방 번호
     private String roomName; // 채팅방 이름
-    private String roomType;  // COMMON or FAVORITES
-//    private RoomType roomType; //  방 타입
+    private boolean roomType;
     private LocalDateTime recentActiveTime; // 최근 활동 시간
     private Integer unreadCount;  // 읽지 않은 메시지 수
-
-//    private HashMap<String, String> empList = new HashMap<>(); // ■■■■ 수정 필요? db가 없어서 이걸로 들고온다했던듯
-//
-//    public ChatRoomDTO create(String roomName){
-//        ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-//        chatRoomDTO.chatRoomNo = chatRoomNo;
-//        chatRoomDTO.roomName = roomName;
-//
-//        return chatRoomDTO;
-//    }
 }

@@ -24,7 +24,7 @@ public class ChatRoom {
     private String roomName;
 
     @Column(name = "room_type")
-    private String roomType;  // COMMON or FAVORITES
+    private boolean roomType;  // 0: 일반 / 1: 즐겨찾기
 
     @Column(name = "recent_active_time")
     private LocalDateTime recentActiveTime;
