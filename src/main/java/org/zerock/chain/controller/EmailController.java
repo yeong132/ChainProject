@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.DTO.MessageDTO;
 import org.zerock.chain.Service.GmailService;
 import com.google.api.services.gmail.model.MessagePartHeader;
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -157,4 +157,44 @@ public class EmailController {
             return "mail/create_label";
         }
     }*/
+
+    // 추가: 보낸 메시지함을 표시하는 메서드
+    @GetMapping("/send")
+    public String listSentEmails(Model model) {
+        log.info("listSentEmails called");
+        try {
+            // GmailService를 이용해 보낸 이메일 목록을 가져옵니다.
+            List<MessageDTO> sentMessages = gmailService.listSentMessages("me");
+            model.addAttribute("messages", sentMessages);
+            model.addAttribute("success", "Sent emails fetched successfully!");
+        } catch (IOException e) {
+            log.error("Error fetching sent emails", e);
+            model.addAttribute("error", "Error fetching sent emails: " + e.getMessage());
+        }
+        return "mail/send"; // "mail/send" 뷰를 반환합니다.
+    }
+
+    // 메시지를 휴지통으로 이동시키는 메서드 추가
+    @PostMapping("/trash/{messageId}")
+    public String moveToTrash(@PathVariable String messageId, Model model) {
+        try {
+            gmailService.moveToTrash("me", messageId);
+            model.addAttribute("success", "Email moved to trash successfully!");
+        } catch (IOException e) {
+            model.addAttribute("error", "Failed to move email to trash: " + e.getMessage());
+        }
+        return "redirect:/mail/trash"; // 휴지통 페이지로 리다이렉트
+    }
+
+    // 휴지통에 있는 메시지 목록을 보여주는 메서드
+    @GetMapping("/trash")
+    public String listTrashEmails(Model model) {
+        try {
+            List<MessageDTO> messages = gmailService.listTrashMessages("me");
+            model.addAttribute("messages", messages);
+        } catch (IOException e) {
+            model.addAttribute("error", "Failed to retrieve trash emails: " + e.getMessage());
+        }
+        return "mail/trash";
+    }
 }

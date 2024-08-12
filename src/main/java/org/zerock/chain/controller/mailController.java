@@ -28,11 +28,11 @@ public class mailController {
         return "mail/important";
     }
 
-    //메일발신함
+/*    //메일발신함
     @GetMapping("/send")
     public String mailSend() {
         return "mail/send";
-    }
+    }*/
 
     //메일임시보관함
     @GetMapping("/temporaryStorage")
@@ -40,11 +40,11 @@ public class mailController {
         return "mail/temporaryStorage";
     }
 
-    //메일 휴지통
+/*    //메일 휴지통
     @GetMapping("/trash")
     public String mailTrash() {
         return "mail/trash";
-    }
+    }*/
 
 
     //내게 쓴 메일함
@@ -72,6 +72,7 @@ public class mailController {
     public String mailComplete() {
         return "mail/complete";
     }
+
     //메일 파일 읽기
     @GetMapping("/mailRead")
     public String mailRead() {

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.*;
+import com.google.api.services.gmail.model.ModifyMessageRequest;
 
 
 @Service  // Spring의 서비스 클래스임을 나타냅니다.
@@ -186,4 +187,76 @@ public class GmailService {
         // 생성된 라벨의 ID를 반환합니다.
         return createdLabel.getId();
     }
+
+    public List<MessageDTO> listSentMessages(String userId) throws IOException {
+        List<Message> messages = service.users().messages().list(userId)
+                .setLabelIds(Collections.singletonList("SENT"))  // SENT 라벨이 있는 메시지 필터링
+                .execute()
+                .getMessages();
+
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+
+        for (Message message : messages) {
+            Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
+            MessagePart payload = fullMessage.getPayload();
+
+            if (payload != null) {
+                List<MessagePartHeader> headers = payload.getHeaders();
+
+                MessageDTO messageDTO = new MessageDTO();
+                messageDTO.setId(message.getId());
+                messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));  // 수신자 추가
+                messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+
+                boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
+                messageDTO.setStarred(isStarred);
+
+                // 디버깅용 로그 출력
+                log.info("MessageDTO created: {}", messageDTO);
+
+                messageDTOList.add(messageDTO);
+            }
+        }
+        return messageDTOList;
+    }
+
+    // 휴지통으로 이동하는 메서드 추가
+    public void moveToTrash(String userId, String messageId) throws IOException {
+        ModifyMessageRequest mods = new ModifyMessageRequest().setRemoveLabelIds(List.of("INBOX")).setAddLabelIds(List.of("TRASH"));
+        service.users().messages().modify(userId, messageId, mods).execute();
+    }
+
+    // 휴지통의 메시지 목록을 가져오는 메서드
+    public List<MessageDTO> listTrashMessages(String userId) throws IOException {
+        List<Message> messages = service.users().messages().list(userId)
+                .setLabelIds(Collections.singletonList("TRASH"))
+                .execute().getMessages();
+
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+
+        for (Message message : messages) {
+            Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
+            MessagePart payload = fullMessage.getPayload();
+
+            if (payload != null) {
+                List<MessagePartHeader> headers = payload.getHeaders();
+
+                MessageDTO messageDTO = new MessageDTO();
+                messageDTO.setId(message.getId());
+                messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
+                messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+
+                boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
+                messageDTO.setStarred(isStarred);
+
+                messageDTOList.add(messageDTO);
+            }
+        }
+        return messageDTOList;
+    }
+
 }
