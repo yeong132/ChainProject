@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.DTO.MessageDTO;
 import org.zerock.chain.Service.GmailService;
+import com.google.api.services.gmail.model.MessagePartHeader;
+
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -79,51 +81,64 @@ public class EmailController {
         return "mail/list"; // "mail/list" 뷰를 반환합니다.
     }*/
 
-    @GetMapping("/list")
+    // GET 요청으로 "/mail/list"에 접근할 때 호출됩니다. 이메일 목록을 표시하는 메서드입니다.
+    @GetMapping("/receive")
     public String listEmails(Model model) {
         try {
             List<MessageDTO> messages = gmailService.listMessages("me");
             model.addAttribute("messages", messages);
             model.addAttribute("success", "Emails fetched successfully!");
-
         } catch (IOException e) {
+            log.error("Error fetching emails", e); // 오류를 로깅합니다.
             model.addAttribute("error", "Error fetching emails: " + e.getMessage());
         }
-        return "mail/list";
+        return "mail/receive"; // "mail/receive" 뷰를 반환합니다.
     }
 
 
-    @GetMapping("/mail/view")
+    @GetMapping("/view")
     public String viewEmail(@RequestParam("messageId") String messageId, Model model) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
             // GmailService 이용 특정 메시지를 가져오기
             Message message = gmailService.getMessage("me", messageId);
 
-            // "starred" 상태를 모델에 추가
-            boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
-            model.addAttribute("isStarred", isStarred);
+            // 메시지의 헤더 정보 추출
+            List<MessagePartHeader> headers = message.getPayload().getHeaders();
+            String subject = gmailService.getHeader(headers, "Subject").orElse("No Subject");
 
-            model.addAttribute("message", message); // 개별 메시지를 모델에 추가
+            // 메시지 DTO 생성
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setId(messageId);
+            messageDTO.setSubject(subject);
+            messageDTO.setFrom(gmailService.getHeader(headers, "From").orElse("Unknown"));
+            messageDTO.setTo(gmailService.getHeader(headers, "To").orElse("Unknown Recipient")); // To 필드 추가
+            messageDTO.setDate(gmailService.getHeader(headers, "Date").orElse("Unknown Date"));
+
+            // 메시지 본문 가져오기
+            String messageContent = gmailService.getMessageContent("me", messageId);
+
+            // 모델에 messageDTO 객체 추가
+            model.addAttribute("message", messageDTO);
+            model.addAttribute("messageContent", messageContent);
+
         } catch (IOException e) {
-            log.error("Error fetching email", e); // 오류를 로깅
+            log.error("Error fetching email", e);
             model.addAttribute("error", "Error fetching email: " + e.getMessage());
+            return "error";
         }
-        return "mail/view"; // "mail/view" 뷰를 반환
+        return "mail/mailRead";
     }
 
 
 
-
-
-
+    /*// GET 요청으로 "/label/create"에 접근할 때 라벨 생성 폼을 표시하는 메서드입니다.
     @GetMapping("/label/create")
     public String showCreateLabelForm() {
         return "mail/create_label";
     }
 
-
-    // 라벨 생성
+    // POST 요청으로 "/label/create"에 접근할 때 호출됩니다. 라벨을 생성하는 메서드입니다.
     @PostMapping("/label/create")
     public String createLabel(@RequestParam("labelName") String labelName,
                               @RequestParam("labelType") String labelType,
@@ -131,27 +146,15 @@ public class EmailController {
                               @RequestParam(value = "labelListVisibility", required = false) String labelListVisibility,
                               Model model) {
         try {
-            Gmail service = gmailService.getGmailService();
-            Label label = new Label().setName(labelName).setType(labelType);
-
-            if (messageListVisibility != null) {
-                label.setMessageListVisibility(messageListVisibility);
-            }
-
-            if (labelListVisibility != null) {
-                label.setLabelListVisibility(labelListVisibility);
-            }
-
-            Label createdLabel = service.users().labels().create("me", label).execute();
-            model.addAttribute("labelId", createdLabel.getId());
-            model.addAttribute("labelName", createdLabel.getName());
-
+            // GmailService를 이용해 라벨을 생성합니다.
+            String labelId = gmailService.createLabel("me", labelName);
+            model.addAttribute("labelId", labelId);
+            model.addAttribute("labelName", labelName);
             return "mail/success";
         } catch (IOException e) {
+            log.error("Error creating label", e); // 오류를 로깅
             model.addAttribute("error", "Failed to create label: " + e.getMessage());
             return "mail/create_label";
         }
-    }
-
-
+    }*/
 }

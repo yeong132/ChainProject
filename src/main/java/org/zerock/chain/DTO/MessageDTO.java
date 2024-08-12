@@ -3,6 +3,7 @@ package org.zerock.chain.DTO;
 public class MessageDTO {
     private String id;
     private String from;
+    private String to;  // To 필드 추가
     private String subject;
     private String date;
     private boolean starred;  // starred 필드 추가
@@ -22,6 +23,14 @@ public class MessageDTO {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+    public String getTo() {  // To 필드를 위한 getter 메서드
+        return to;
+    }
+
+    public void setTo(String to) {  // To 필드를 위한 setter 메서드
+        this.to = to;
     }
 
     public String getSubject() {

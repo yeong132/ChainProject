@@ -1,5 +1,6 @@
 package org.zerock.chain.Service;
 
+import java.nio.charset.StandardCharsets;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -109,14 +110,15 @@ public class GmailService {
         }
     }
 
-    // getHeader 메서드를 추가합니다.
-    private Optional<String> getHeader(List<MessagePartHeader> headers, String name) {
+    public Optional<String> getHeader(List<MessagePartHeader> headers, String name) {
         return headers.stream()
                 .filter(header -> header.getName().equalsIgnoreCase(name))
                 .map(MessagePartHeader::getValue)
                 .findFirst();
     }
 
+
+    // 메시지 리스트를 가져오는 메서드
     public List<MessageDTO> listMessages(String userId) throws IOException {
         List<Message> messages = service.users().messages().list(userId).execute().getMessages();
         List<MessageDTO> messageDTOList = new ArrayList<>();
@@ -134,9 +136,8 @@ public class GmailService {
                 messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
                 messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
 
-                // 추가된 부분: 메일의 "starred" 상태를 확인하여 설정
                 boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
-                messageDTO.setStarred(isStarred); // MessageDTO에 새로 추가된 필드
+                messageDTO.setStarred(isStarred);
 
                 messageDTOList.add(messageDTO);
             }
@@ -144,14 +145,35 @@ public class GmailService {
         return messageDTOList;
     }
 
-
-    // getMessage 메서드: 특정 메시지 ID에 해당하는 메시지를 가져옵니다.
+    // 특정 메시지를 가져오는 메서드
     public Message getMessage(String userId, String messageId) throws IOException {
-        // Gmail API를 사용하여 메시지를 가져옵니다.
-        Message message = service.users().messages().get(userId, messageId).execute();
-        // 필요한 경우, message.getPayload() 등을 이용해 추가 정보를 추출할 수 있습니다.
-        return message;
+        return service.users().messages().get(userId, messageId).execute();
     }
+
+    // 메시지 본문을 가져오는 메서드
+    public String getMessageContent(String userId, String messageId) throws IOException {
+        Message message = getMessage(userId, messageId);
+        MessagePart payload = message.getPayload();
+        StringBuilder body = new StringBuilder();
+
+        if (payload != null) {
+            List<MessagePart> parts = payload.getParts();
+            if (parts != null) {
+                for (MessagePart part : parts) {
+                    if (part.getMimeType().equals("text/plain")) {
+                        body.append(new String(Base64.decodeBase64(part.getBody().getData()), StandardCharsets.UTF_8));
+                    } else if (part.getMimeType().equals("text/html")) {
+                        body.append(new String(Base64.decodeBase64(part.getBody().getData()), StandardCharsets.UTF_8));
+                    }
+                }
+            } else if (payload.getBody().getData() != null) {
+                body.append(new String(Base64.decodeBase64(payload.getBody().getData()), StandardCharsets.UTF_8));
+            }
+        }
+
+        return body.toString();
+    }
+
 
     // createLabel 메서드: Gmail API를 사용하여 라벨을 생성합니다.
     public String createLabel(String userId, String labelName) throws IOException {
@@ -164,6 +186,4 @@ public class GmailService {
         // 생성된 라벨의 ID를 반환합니다.
         return createdLabel.getId();
     }
-
-
 }

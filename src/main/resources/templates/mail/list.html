@@ -513,12 +513,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb" th:attr="onclick=|rowClick('/mail/view?messageId=' + '${message.id}')|">
-
+                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}" th:onclick="|rowClick(this)|">
                                 <td>
                                     <div class="checkbox-star-container">
                                         <input type="checkbox" class="form-check-input">
-                                        <i class="bi bi-star star-icon" th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'" onclick="toggleStar(this)"></i>
+                                        <i class="bi bi-star star-icon" th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'" onclick="toggleStar(this, event)"></i>
                                     </div>
                                 </td>
                                 <td th:text="${message.from}">From</td>
@@ -528,6 +527,9 @@
                                     <a th:href="@{/mail/view(messageId=${message.id})}">View</a>
                                 </td>
                             </tr>
+
+
+
                             </tbody>
                         </table>
                         <!-- 테이블 끝 -->
@@ -590,6 +592,26 @@
     function rowClick(url) {
         window.location.href = url
     }
+</script>
+
+<script>
+    function rowClick(element) {
+        const messageId = element.getAttribute("data-message-id");
+        window.location.href = '/mail/view?messageId=' + messageId;
+    }
+
+    function toggleStar(element, event) {
+        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+        if (element.classList.contains('bi-star')) {
+            element.classList.remove('bi-star');
+            element.classList.add('bi-star-fill');
+        } else {
+            element.classList.remove('bi-star-fill');
+            element.classList.add('bi-star');
+        }
+    }
+
+
 </script>
 
 <script>
