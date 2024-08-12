@@ -6,4 +6,5 @@ import org.zerock.chain.model.Department;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
+
 }

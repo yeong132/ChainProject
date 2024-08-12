@@ -560,7 +560,7 @@
                             </div>
                         </div>
                     </div>-->
-                <!-- 집에 가고싶음? 카드 끝 -->
+                    <!-- 집에 가고싶음? 카드 끝 -->
                 </div>
 
                 <!-- 주간 일정 카드 -->
@@ -574,20 +574,47 @@
                                     <table class="custom-table" style="width: 100%">
                                         <thead>
                                         <tr>
+                                            <th class="sunday">일</th>
                                             <th>월</th>
                                             <th>화</th>
                                             <th>수</th>
                                             <th>목</th>
                                             <th>금</th>
+                                            <th class="saturday">토</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td class="monday">월요병 견디며 일하기</td>
-                                            <td class="tuesday">화병을 참으며 일하기</td>
-                                            <td class="wednesday">수박을 먹으며 일하기</td>
-                                            <td class="thursday">목소리 높이며 일하기</td>
-                                            <td class="friday">금전을 위하여 일하기</td>
+                                            <td class="sunday">11</td>
+                                            <td><span class="today">12</span></td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                            <td class="saturday">17</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="2">
+                                                <div class="meeting">주간 회의</div>
+                                            </td>
+                                            <td>
+                                                <div class="deadline">[마감]결재문서 제출asdfasdfasdfasdf</div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <div class="deadline">[마감]회의보고서 제출asdfasdfasdfasdf</div>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -598,23 +625,72 @@
                                 .custom-table {
                                     width: 100%;
                                     border-collapse: collapse;
+                                    border: 1px solid #ddd;
+                                    table-layout: fixed;
+                                }
+
+                                .custom-table tbody {
+                                    border: 1px solid #ddd;
                                 }
 
                                 .custom-table th, .custom-table td {
-                                    border: 1px solid #ddd;
                                     font-size: 14px;
-                                    margin-left: 1px;
+                                    padding: 5px;
+                                    min-width: 100px;
                                 }
 
                                 .custom-table th {
-                                    background-color: #f8f9fa;
-                                    color: #333;
                                     font-weight: bold;
                                     text-transform: uppercase;
+                                    /*border-bottom: 1px solid #ddd;*/
                                 }
 
                                 .custom-table td {
+                                    width: 14.28%;
+                                    border-left: 1px solid #ddd;
+                                    border-right: 1px solid #ddd;
                                     vertical-align: middle;
+                                }
+
+                                .custom-table .meeting {
+                                    background-color: #ff687c;
+
+                                }
+
+                                .custom-table .deadline {
+                                    background-color: #05bc9d;
+                                }
+
+                                .custom-table .today {
+                                    background-color: #007bff;
+                                    border-radius: 50%;
+                                    color: white;
+                                    width: 24px;
+                                    height: 24px;
+                                    display: inline-block; /* 원 모양을 inline-block으로 설정 */
+                                    line-height: 24px; /* 숫자를 원의 가운데로 정렬 */
+                                    text-align: center; /* 텍스트를 가운데 정렬 */
+                                    vertical-align: middle; /* 테이블 셀 내에서 수직 중앙 정렬 */
+                                }
+
+                                .custom-table .sunday {
+                                    color: red;
+                                }
+
+                                .custom-table .saturday {
+                                    color: blue;
+                                }
+
+                                .custom-table .meeting,
+                                .custom-table .deadline {
+                                    white-space: nowrap;       /* 텍스트를 한 줄로 유지 */
+                                    overflow: hidden;          /* 넘치는 텍스트를 숨김 */
+                                    text-overflow: ellipsis;   /* 넘치는 텍스트의 끝을 "..."으로 표시 */
+                                    max-width: 100%;           /* 필요한 경우 max-width를 지정하여 텍스트 길이 제한 */
+                                    display: block;            /* 블록 요소로 설정하여 너비 제한 적용 */
+                                    padding: 3px;
+                                    color: white;
+                                    border-radius: 4px;
                                 }
                             </style>
                         </div>
@@ -692,21 +768,29 @@
                 <div class="list-group-item" data-id="lineChart">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Line Chart</h5>
+                            <h5 class="card-title">월별 출입량</h5>
                             <canvas id="lineChart" style="max-height: 400px;"></canvas>
                             <script>
                                 document.addEventListener("DOMContentLoaded", () => {
                                     new Chart(document.querySelector('#lineChart'), {
                                         type: 'line',
                                         data: {
-                                            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                                            labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월'],
                                             datasets: [{
-                                                label: 'Line Chart',
+                                                label: '수출량',
                                                 data: [65, 59, 80, 81, 56, 55, 40],
                                                 fill: false,
                                                 borderColor: 'rgb(75, 192, 192)',
                                                 tension: 0.1
-                                            }]
+                                            },
+                                                {
+                                                    label: '수입량',
+                                                    data: [45, 65, 23, 85, 78, 48, 29],
+                                                    fill: false,
+                                                    borderColor: 'rgb(180, 63, 63)',
+                                                    tension: 0.1
+                                                }
+                                            ]
                                         },
                                         options: {
                                             scales: {

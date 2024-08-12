@@ -20,3 +20,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             "ORDER BY d.dmpName, r.rankName")
     List<EmployeeDTO> findOrganization();
 }
+

@@ -3,12 +3,10 @@ package org.zerock.chain.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "project")
@@ -24,10 +22,10 @@ public class Project {
     private String projectName;
 
     @Column(name = "project_start_date")
-    private LocalDate  projectStartDate;
+    private LocalDate projectStartDate;
 
     @Column(name = "project_end_date")
-    private LocalDate  projectEndDate;
+    private LocalDate projectEndDate;
 
     @Column(length = 100, name = "dmp_no")
     private String dmpNo;
@@ -35,10 +33,30 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String participants;
 
-    @Column(name = "project_favorite")
-    private Boolean projectFavorite;
+    @Column(name = "project_favorite", nullable = false)
+    private boolean projectFavorite = false;
 
     @Column(name = "project_progress")
-    private Integer projectProgress;
+    private Integer projectProgress = 0;
 
+    @Column(name = "project_content")
+    private String projectContent;
+
+    @Column(name = "project_files")
+    private String projectFiles;
+
+    @Column(name = "is_temporary")  // 임시 보관 여부
+    private boolean isTemporary;
+
+    public void setProjectFavorite(boolean projectFavorite) {
+        this.projectFavorite = projectFavorite;
+    }
+
+    public void setProjectProgress(Integer projectProgress) {
+        this.projectProgress = projectProgress;
+    }
+
+    public void setIsTemporary(boolean isTemporary) {
+        this.isTemporary = isTemporary;
+    }
 }
