@@ -1,6 +1,7 @@
 package org.zerock.chain.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -14,6 +15,6 @@ public class QnaRequestDTO {
     private String qnaContent;
     private String qnaCategory;
     private boolean qnaStatus; //  답변여부
-    private String qnaFiles;
+    private MultipartFile qnaFiles;
 
 }

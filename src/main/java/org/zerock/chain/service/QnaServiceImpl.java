@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.zerock.chain.dto.QnaDTO;
 import org.zerock.chain.dto.QnaRequestDTO;
 import org.zerock.chain.model.Qna;
+import org.zerock.chain.repository.CommentRepository;
 import org.zerock.chain.repository.QnaRepository;
 
 import java.util.List;
@@ -20,8 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QnaServiceImpl implements QnaService {
 
-    private final ModelMapper modelMapper; // ModelMapper를 주입받습니다.
-    private final QnaRepository qnaRepository; // QnaRepository를 주입받습니다.
+    private final ModelMapper modelMapper;
+    private final QnaRepository qnaRepository;
+    private final CommentRepository commentRepository;
 
     @Override   // 문의글 전체 조회
     public List<QnaDTO> getAllQnas() {
@@ -53,8 +55,15 @@ public class QnaServiceImpl implements QnaService {
         return modelMapper.map(qna, QnaDTO.class); // 수정된 부분 반환
     }
 
-    @Override   // 문의글 삭제
+
+     // 문의글 삭제
+    @Override
+    @Transactional
     public void deleteQna(Long qnaNo) {
+        // Q&A에 연관된 댓글 삭제
+        commentRepository.deleteByCommentQnaQnaNo(qnaNo);
+
+        // Q&A 삭제
         qnaRepository.deleteById(qnaNo);
     }
 }

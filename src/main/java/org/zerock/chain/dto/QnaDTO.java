@@ -1,6 +1,7 @@
 package org.zerock.chain.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ public class QnaDTO {
     private String qnaContent;
     private String qnaCategory;
     private boolean qnaStatus; //  답변여부
-    private String qnaFiles;
+    private MultipartFile qnaFiles;
     private LocalDateTime qnaUploadDate;
 
 }

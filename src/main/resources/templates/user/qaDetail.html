@@ -11,29 +11,29 @@
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
     <!-- 폰트 설정  -->
-    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
     <!-- Vendor CSS Files -->
-    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -46,10 +46,10 @@
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -75,13 +75,13 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell"></i>
                     <span class="badge btn-secondary badge-number">4</span> </a>
                 <!-- 알림창 아이콘 끝 -->
@@ -164,8 +164,8 @@
 
 
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
                     <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
                 <!-- 프로필 이미지 항목 끝 -->
 
@@ -232,7 +232,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
 
 
@@ -241,9 +241,9 @@
                 출근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
                     아니오
                 </button>
             </div>
@@ -255,16 +255,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <div id="currentTimes">현재 시간:</div>
                 퇴근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
                 </button>
             </div>
         </div>
@@ -274,7 +274,7 @@
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<aside class="sidebar" id="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item ">
             <a class="nav-link dash collapsed" href="/">
@@ -290,7 +290,7 @@
                 <span>기본 사항</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
@@ -310,7 +310,7 @@
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="work-nav">
                 <li>
                     <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
@@ -333,7 +333,7 @@
                 <span>전자결재</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
@@ -350,7 +350,7 @@
                 <span>게시판</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
                 <li>
                     <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
@@ -373,7 +373,7 @@
                 <span>일정</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
                 </li>
@@ -387,7 +387,7 @@
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
                 <li>
                     <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
@@ -436,7 +436,7 @@
             </ol>
         </nav>
     </div>
-<!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
     <section class="section">
         <div class="row">
@@ -450,14 +450,14 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">카테고리</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" readonly th:value="${qna.qnaCategory}" />
+                                    <input class="form-control" readonly th:value="${qna.qnaCategory}" type="text"/>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">제목</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" name="qnaName" readonly th:value="${qna.qnaName}" />
+                                    <input class="form-control" name="qnaName" readonly th:value="${qna.qnaName}"/>
                                 </div>
                             </div>
 
@@ -471,21 +471,23 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">첨부 파일</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" name="qnaFiles" type="file" th:value="${qna.qnaFiles}" >
+                                    <input class="form-control" name="qnaFiles" th:value="${qna.qnaFiles}" type="file">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea id="froala" class="form-control" name="qnaContent" readonly  th:text="${qna.qnaContent}"></textarea>
+                                    <textarea class="form-control" id="froala" name="qnaContent" readonly
+                                              th:text="${qna.qnaContent}"></textarea>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">작성일</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" name="qnaUploadDate" readonly th:value="${qna.qnaUploadDate}"/>
+                                    <input class="form-control" name="qnaUploadDate" readonly
+                                           th:value="${qna.qnaUploadDate}"/>
                                 </div>
                             </div>
 
@@ -493,13 +495,89 @@
 
                         <div class="offset-sm-0">
                             <div class="col-sm-12 text-end">
-                                <button class="btn btn-primary" th:onclick="'location.href=\'/user/qna/edit/' + ${qna.qnaNo} + '\''" type="button">수정</button>
-                                <button class="btn btn-primary" onclick="location.href='/user/Q&A'" type="button">목록</button>
+                                <button class="btn btn-primary"
+                                        th:onclick="'location.href=\'/user/qna/edit/' + ${qna.qnaNo} + '\''"
+                                        type="button">수정
+                                </button>
+                                <button class="btn btn-primary" onclick="location.href='/user/Q&A'" type="button">목록
+                                </button>
                             </div>
                         </div>
 
                     </div>
                 </div>
+
+                <!-- 댓글 영역 시작 -->
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">답변</h5>
+
+                            <!-- 댓글 작성 버튼 영역 -->
+                            <div class="col-sm-12 text-end">
+                                <!-- qnaStatus가 true인 경우 댓글 작성 버튼만 보이도록 설정 -->
+                                <button class="btn btn-success mt-3" data-bs-target="#commentModal" data-bs-toggle="modal"
+                                        th:if="${!qna.qnaStatus}">
+                                    댓글 작성
+                                </button>
+                            </div>
+
+                            <!-- 댓글 리스트 & 댓글 수정, 삭제 버튼 영역 -->
+                            <div th:if="${qna.qnaStatus}">
+                                <!-- 댓글 리스트 -->
+                                <div th:each="comment : ${comments}">
+                                    <form>
+                                        <input type="hidden" name="commentNo" th:value="${comment.commentNo}" />
+                                        <div class="row mb-3">
+                                            <label class="col-sm-1 col-form-label">제목</label>
+                                            <div class="col-sm-11">
+                                                <input class="form-control" readonly th:value="${comment.commentName}" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-1 col-form-label">내용</label>
+                                            <div class="col-sm-11">
+                                                <textarea class="form-control" readonly rows="3" th:text="${comment.commentContent}"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-1 col-form-label">작성자</label>
+                                            <div class="col-sm-11">
+                                                <input class="form-control" readonly th:value="${comment.commentAuthor}" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-1 col-form-label">작성일</label>
+                                            <div class="col-sm-11">
+                                                <input class="form-control" readonly th:value="${comment.commentCreatedDate}" type="text">
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <!-- 댓글 수정/삭제 버튼 -->
+                                    <div class="col-sm-12 text-end">
+                                        <!-- 댓글 수정 버튼: 모달 창 호출 -->
+                                        <button class="btn btn-primary mt-3"
+                                                onclick="showEditCommentModal('[[${comment.commentNo}]]', '[[${comment.commentName}]]', '[[${comment.commentContent}]]')">
+                                            댓글 수정
+                                        </button>
+
+                                        <!-- 댓글 삭제 버튼: 모달 창 호출 -->
+                                        <button class="btn btn-danger mt-3"
+                                                onclick="showDeleteCommentModal('[[${comment.commentNo}]]')">
+                                            삭제
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                <!-- 댓글 영역 끝 -->
+
+
             </div>
         </div>
     </section>
@@ -507,13 +585,90 @@
 <!-- End #main -->
 
 
+<!-- 댓글 작성 모달 -->
+<div aria-hidden="true" aria-labelledby="commentModalLabel" class="modal fade" id="commentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentModalLabel">댓글 작성</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="commentForm" method="post" th:action="@{/comments/qna/{qnaNo}/add(qnaNo=${qna.qnaNo})}">
+                    <div class="mb-3">
+                        <label class="form-label" for="commentAuthor">작성자</label>
+                        <input class="form-control" id="commentAuthor" name="commentAuthor" required type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="commentName">제목</label>
+                        <input class="form-control" id="commentName" name="commentName" required type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="commentContent">내용</label>
+                        <textarea class="form-control" id="commentContent" name="commentContent" required
+                                  rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
+                        <button class="btn btn-primary" type="submit">댓글 등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- 댓글 수정 모달 -->
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCommentModalLabel">댓글 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCommentForm">
+                    <input type="hidden" id="editCommentNo" name="commentNo">
+                    <div class="mb-3">
+                        <label class="form-label" for="editCommentName">제목</label>
+                        <input type="text" class="form-control" id="editCommentName" name="commentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="editCommentContent">내용</label>
+                        <textarea class="form-control" id="editCommentContent" name="commentContent" rows="3" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" onclick="submitEditCommentForm()">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-
+<!-- 삭제 확인 모달 -->
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCommentModalLabel">댓글 삭제</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                해당 답변을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" id="deleteCommentButton" class="btn btn-danger" onclick="deleteComment()">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer" id="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
@@ -528,14 +683,80 @@
 </footer>
 <!-- Footer 끝 -->
 
+
+
+<script>
+    // 댓글 수정 모달 열기 함수
+    function showEditCommentModal(commentNo, commentName, commentContent) {
+        document.getElementById('editCommentNo').value = commentNo;
+        document.getElementById('editCommentName').value = commentName;
+        document.getElementById('editCommentContent').value = commentContent;
+        new bootstrap.Modal(document.getElementById('editCommentModal')).show();
+    }
+
+    // 댓글 수정 폼 제출 함수
+    function submitEditCommentForm() {
+        const commentNo = document.getElementById('editCommentNo').value;
+        const commentData = {
+            commentName: document.getElementById('editCommentName').value,
+            commentContent: document.getElementById('editCommentContent').value
+        };
+
+        fetch(`/comments/${commentNo}/edit`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentData)
+        }).then(response => {
+            if (response.ok) {
+                alert('댓글이 수정되었습니다.');
+                location.reload();
+            } else {
+                alert('댓글 수정에 실패했습니다.');
+            }
+        }).catch(error => {
+            alert('댓글 수정 중 오류가 발생했습니다: ' + error.message);
+        });
+    }
+
+
+    // 댓글 삭제 모달 열기 함수
+    function showDeleteCommentModal(commentNo) {
+        // 모달 열기 전에 삭제 확인
+        document.getElementById('deleteCommentButton').setAttribute('onclick', `deleteComment(${commentNo})`);
+        new bootstrap.Modal(document.getElementById('deleteCommentModal')).show();
+    }
+
+    // 댓글 삭제 함수
+    function deleteComment(commentNo) {
+        fetch(`/comments/${commentNo}`, {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                alert('댓글이 삭제되었습니다.');
+                location.reload();
+            } else {
+                alert('댓글 삭제에 실패했습니다.');
+            }
+        }).catch(error => {
+            alert('댓글 삭제 중 오류가 발생했습니다: ' + error.message);
+        });
+    }
+</script>
+
+
+
+
+
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
     <i class="bi bi-arrow-up-short"></i>
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
@@ -550,8 +771,8 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
+<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>

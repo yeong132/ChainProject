@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.chain.dto.CommentDTO;
 import org.zerock.chain.dto.FavoriteQnaDTO;
 import org.zerock.chain.dto.FavoriteQnaRequestDTO;
 import org.zerock.chain.dto.QnaDTO;
 import org.zerock.chain.dto.QnaRequestDTO;
+import org.zerock.chain.service.CommentService;
 import org.zerock.chain.service.FavoriteQnaService;
 import org.zerock.chain.service.QnaService;
 
@@ -21,11 +23,23 @@ public class UserController {
 
     private final FavoriteQnaService favoriteQnaService;
     private final QnaService qnaService;
+    private final CommentService commentService; // CommentService 추가
 
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService) {
         this.favoriteQnaService = favoriteQnaService;
         this.qnaService = qnaService;
+        this.commentService = commentService; // CommentService 주입
+    }
+
+    // Q&A 상세 페이지 조회
+    @GetMapping("/qna/detail/{qnaNo}")
+    public String detailQna(@PathVariable Long qnaNo, Model model) {
+        QnaDTO qna = qnaService.getQnaById(qnaNo);
+        List<CommentDTO> comments = commentService.getCommentsByQnaNo(qnaNo); // 댓글 조회
+        model.addAttribute("qna", qna);
+        model.addAttribute("comments", comments); // 댓글 리스트 추가
+        return "user/qaDetail"; // Q&A 상세 페이지로 이동
     }
 
     // 마이페이지로 이동
@@ -75,15 +89,6 @@ public class UserController {
         return "redirect:/user/Q&A"; // 삭제 후 Q&A 페이지로 리다이렉트
     }
 
-    /// Q&A 상세 페이지 조회
-    @GetMapping("/qna/detail/{qnaNo}")
-    public String detailQna(@PathVariable Long qnaNo, Model model) {
-        QnaDTO qna = qnaService.getQnaById(qnaNo);
-        model.addAttribute("qna", qna);
-        return "user/qaDetail"; // Q&A 상세 페이지로 이동
-    }
-
-
     // Q&A 질문 등록 페이지로 이동
     @GetMapping("/qna/register")
     public String showQnaRegisterPage(Model model) {
@@ -97,7 +102,6 @@ public class UserController {
         QnaDTO createdQna = qnaService.createQna(qnaRequestDTO);
         return "redirect:/user/qna/detail/" + createdQna.getQnaNo(); // 등록 후 해당 Q&A 상세 페이지로 리다이렉트
     }
-
 
     // Q&A 수정 페이지로 이동 (수정 조회)
     @GetMapping("/qna/edit/{qnaNo}")

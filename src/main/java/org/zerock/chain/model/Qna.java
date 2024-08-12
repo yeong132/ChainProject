@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,6 +23,10 @@ public class Qna {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qna_no")
     private Long qnaNo; // 질문아이디,번호
+
+    // Qna와 Comment 간의 관계 설정
+    @OneToMany(mappedBy = "commentQna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "qna_name")
     private String qnaName; // 제목
@@ -48,8 +54,20 @@ public class Qna {
         this.qnaUploadDate = LocalDateTime.now();
     }
 
-    public void setqnaStatus(boolean qnaStatus) {
+    public void setQnaStatus(boolean qnaStatus) {
         this.qnaStatus = qnaStatus;
+    }
+
+    // 댓글 추가 메서드
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setCommentQna(this);
+    }
+
+    // 댓글 제거 메서드
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setCommentQna(null);
     }
 
 }

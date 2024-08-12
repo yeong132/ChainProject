@@ -1,9 +1,11 @@
 package org.zerock.chain.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.dto.NoticeRequestDTO;
 import org.zerock.chain.service.NoticeService;
@@ -39,7 +41,10 @@ public class NoticeController {
 
     // 새 공지사항 생성
     @PostMapping("/register")
-    public String createNotice(@ModelAttribute NoticeRequestDTO noticeRequestDTO) {
+    public String createNotice(@Valid @ModelAttribute NoticeRequestDTO noticeRequestDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            return "notice/register";
+        }
         noticeService.createNotice(noticeRequestDTO);
         return "redirect:/notice/list";
     }
