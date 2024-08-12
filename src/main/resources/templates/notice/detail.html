@@ -448,49 +448,65 @@
                     <div class="card-body">
                         <h5 class="card-title">공자사항</h5>
 
-                        <!-- General Form Elements -->
                         <form>
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputText">제목</label>
+                                <label class="col-sm-2 col-form-label">고정</label>
+                                <div class="col-sm-10">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="noticePinnedNo" name="noticePinned" type="radio" value="false" th:checked="${!notice.noticePinned}">
+                                        <label class="form-check-label" for="noticePinnedNo">고정 안함</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="noticePinnedYes" name="noticePinned" type="radio" value="true" th:checked="${notice.noticePinned}">
+                                        <label class="form-check-label" for="noticePinnedYes">고정</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-control" type="date" placeholder="기간 지정" style="width: auto; display: inline-block;"  th:value="${notice.noticePinnedDate}">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <label class="col-sm-1 col-form-label">제목</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text" value="공지사항">
+                                    <input class="form-control" readonly type="text"  th:value="${notice.noticeName}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
+                                <label class="col-sm-1 col-form-label" >작성자</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="email" value="관리자">
+                                    <input class="form-control" readonly type="text"   th:value="${notice.noticeAuthor}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
+                                <label class="col-sm-1 col-form-label" >첨부 파일</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" id="formFile" readonly type="file">
+                                    <input class="form-control" id="formFile" readonly type="file" th:value="${notice.noticeFiles}">
+
+                                    <div th:if="${notice.noticeFiles != null}">
+                                        <p>첨부된 파일:
+                                            <a th:href="@{${notice.noticeFiles}}" th:text="${notice.noticeFiles}" download></a>
+                                        </p>
+                                    </div>
+
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputDate">기간</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" readonly type="date">
-                                </div>
-                            </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputPassword">내용</label>
+                                <label class="col-sm-1 col-form-label" >내용</label>
                                 <div class="col-sm-11">
-                                    <!-- TinyMCE Editor -->
-                                    <div id="froala"></div>
-                                </div>
+                                    <textarea id="froala" class="form-control" readonly th:text="${notice.noticeContent}"></textarea>
                             </div>
 
 
                             <div class="offset-sm-0">
                                 <div class="col-sm-5">
-                                    <button class="btn btn-primary" onclick="location.href='/notice/modify'"
-                                            type="button">수정(히든)
+                                    <button class="btn btn-primary"  th:onclick="'location.href=\'/notice/modify/' + ${notice.noticeNo} + '\''"  type="button">수정(히든)
                                     </button>
                                     <button class="btn btn-primary" onclick="location.href='/notice/list'"
                                             type="button">목록
@@ -499,8 +515,9 @@
                                 </div>
                             </div>
 
-
-                        </form><!-- End General Form Elements -->
+                            </div>
+                        </form>
+                        <!-- End General Form Elements -->
 
                     </div>
                 </div>
