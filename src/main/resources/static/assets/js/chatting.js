@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 // --------------------------------소켓 연결--------------------------------
 let stompClient = null;
 let activeChatRoomNo = null;
@@ -157,6 +159,7 @@ function openChatRoom(roomElement) {
 
 // ---------------------------/end 소켓 연결--------------------------------
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 //------  오른쪽 마우스 클릭 관련 이벤트 -------
 document.addEventListener('DOMContentLoaded', function () {
     // 기본 오른쪽 클릭 드롭다운 메뉴 막기
@@ -173,6 +176,14 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             // 기존의 모든 드롭다운 메뉴를 숨김
+<<<<<<< HEAD
+            document.querySelectorAll('.chat_menu_container .dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+
+            // 커스텀 드롭다운 메뉴 선택
+            let dropdownMenu = document.querySelector('.chat_menu_container .dropdown-menu');
+=======
             hideDropdownMenu();
 
             // 현재 클릭된 채팅방을 선택 상태로 설정
@@ -184,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // 커스텀 드롭다운 메뉴 선택
             let dropdownMenu = document.querySelector('.chat_menu_container .dropdown-menu');
             let chatRoomExit = document.getElementById("chatRoomExit");
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 
             // 드롭다운 메뉴 표시
             dropdownMenu.style.display = 'block';
@@ -191,13 +203,23 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdownMenu.style.top = `${event.pageY}px`;
 
             // 현재 채팅방의 즐겨찾기 상태에 따라 텍스트 변경
+<<<<<<< HEAD
+            let favoriteMenuItem = dropdownMenu.querySelector('.dropdown-item .chatroomFavorite');
+=======
             let favoriteMenuItem = dropdownMenu.querySelector('.chatroomFavorite');
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
             if (chatRoom.dataset.favorite === 'true') {
                 favoriteMenuItem.textContent = '즐겨찾기 해제';
             } else {
                 favoriteMenuItem.textContent = '즐겨찾기 등록';
             }
 
+<<<<<<< HEAD
+            // 드롭다운 메뉴 외부 클릭 시 메뉴 닫기
+            document.addEventListener('click', function hideDropdownMenu() {
+                dropdownMenu.style.display = 'none';
+                document.removeEventListener('click', hideDropdownMenu);
+=======
             // 채팅방 나가기
             chatRoomExit.addEventListener('click', function(){
                 disconnect();
@@ -209,11 +231,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     hideDropdownMenu();
                     document.removeEventListener('click', hideDropdownMenuListener);
                 }
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
             });
         });
     });
 
     // 즐겨찾기 등록/해제 클릭 이벤트 처리
+<<<<<<< HEAD
+    document.querySelector('.chat_menu_container .dropdown-menu .dropdown-item').addEventListener('click', function() {
+        // 현재 선택된 채팅방 요소를 찾기 위한 로직
+        let currentChatRoom = document.querySelector('.chat_menu_container .chat_menu .chat_list .chat_room[data-selected="true"]');
+
+        if (currentChatRoom) {
+            // 즐겨찾기 상태 토글
+            if (currentChatRoom.dataset.favorite === 'true') {
+                currentChatRoom.dataset.favorite = 'false';
+            } else {
+                currentChatRoom.dataset.favorite = 'true';
+            }
+=======
     document.querySelector('.chat_menu_container .dropdown-menu .chatroomFavorite').addEventListener('click', function() {
         // 현재 선택된 채팅방 요소 찾기
         let currentChatRoom = document.querySelector('.chat_room[data-selected="true"]');
@@ -233,10 +269,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // TODO: 여기서 서버로 즐겨찾기 상태를 전송하여 저장
             // sendFavoriteStatusToServer(currentChatRoom.dataset.roomId, !isFavorite);
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         }
     });
 });
 
+<<<<<<< HEAD
+=======
 // 드룹다운 메뉴 숨김
 function hideDropdownMenu() {
     let dropDownMenu = document.querySelector('.chat_menu_container .dropdown-menu');
@@ -265,6 +304,7 @@ function hideDropdownMenu() {
 //     });
 // }
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 // ------------- 채팅방 생성 모달창 -----------------
 // 모달 관련 변수
 let chatModal = document.getElementById("chatModal"); // 채팅방 생성 모달창
@@ -273,6 +313,10 @@ let confirmButton = document.getElementById("confirmCreateRoom"); // 모달창 �
 let selectedEmpName = ""; // 클릭된 직원의 이름을 저장할 변수
 
 // 채팅 관련 변수
+<<<<<<< HEAD
+let chatChatting = document.querySelector(".chat_content.active"); // chatRoom${id} .chat_content.active
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 let chatHeader = document.getElementById("chatHeader");
 let chatRoomName = document.getElementById("chatRoomName");
 let chatContent = document.querySelector(".chat_content");
@@ -393,6 +437,122 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+<<<<<<< HEAD
+// 특정 채팅방 선택 시, 오른쪽에 채팅방 출력
+document.addEventListener('DOMContentLoaded', function () {
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+    const chatInputContainer = document.querySelector('.chat_input');
+    // const chatHeader = document.getElementById('chatHeader');
+    // const chatRoomName = document.getElementById('chatRoomName');
+    // const chatRoomPersonnel = document.getElementById('chatRoomPersonnel'); // 인원 수 표시
+    const backButton = document.getElementById('backButton'); // 채팅방 닫기 버튼
+
+    // 채팅창 관련
+    document.querySelectorAll('.chat_room').forEach(room => {
+        room.addEventListener('dblclick', function () {
+            // 모든 채팅 내용을 숨김
+            document.querySelectorAll('.chat_content').forEach(chat => {
+                chat.classList.remove('active');
+            });
+
+            // 선택된 채팅방 내용 표시
+            const chatRoomId = `#chatRoom${this.dataset.roomId}`;
+            const selectedChatRoom = document.querySelector(chatRoomId);
+            selectedChatRoom.classList.add('active');
+
+            // 안내 문구 숨기기
+            document.querySelector('.info_text').style.display = 'none';
+
+            // 채팅 입력칸 표시
+            chatInputContainer.classList.add('active');
+
+            // 채팅 헤드 영역 업데이트 및 표시
+            chatRoomName.textContent = this.querySelector('.room_name').textContent;
+            // chatRoomPersonnel.textContent = `${Math.floor(Math.random() * 100)}`; // 예시: 랜덤 인원 수
+            chatHeader.classList.add('active');
+
+            // 채팅창 스크롤을 맨 밑으로 이동
+            selectedChatRoom.scrollTop = selectedChatRoom.scrollHeight;
+
+            // 채팅 닫기 함수
+            const closeChat = () => {
+                chatHeader.classList.remove('active');
+                selectedChatRoom.classList.remove('active');
+                chatInputContainer.classList.remove('active');
+                document.querySelector('.info_text').style.display = 'flex';
+            };
+
+            // 채팅 닫기 버튼 클릭 시
+            backButton.addEventListener('click', closeChat);
+
+
+            // ESC 키 눌렀을 때 채팅 닫기
+            document.addEventListener('keydown', function escListener(event) {
+                if (event.key === 'Escape') {
+                    closeChat();
+                    // ESC 키 이벤트 리스너 제거 (메모리 누수 방지)
+                    document.removeEventListener('keydown', escListener);
+                }
+            });
+        });
+    });
+
+    // 채팅창 전송버튼: 초기 상태에서 버튼을 비활성화
+    sendButton.classList.add('disabled');
+    sendButton.disabled = true; // 버튼 비활성화
+
+    // 채팅창 전송버튼: 입력값 변경 시 버튼 활성화/비활성화 처리
+    chatInput.addEventListener('input', function () {
+        if (chatInput.value.trim() === '') {
+            // 입력값이 없을 때
+            sendButton.classList.add('disabled');
+            sendButton.disabled = true; // 버튼 비활성화
+        } else {
+            // 입력값이 있을 때
+            sendButton.classList.remove('disabled');
+            sendButton.disabled = false; // 버튼 활성화
+        }
+    });
+
+    // 채팅 입력 후 전송
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // 새 채팅 전송 시, 말풍선 추가
+    function sendMessage() {
+        const activeChat = document.querySelector('.chat_content.active');
+        if (activeChat) {
+            const message = chatInput.value.trim();
+            if (message) {
+                const messageNew = document.createElement('p');
+                messageNew.textContent = message;
+                messageNew.className = 'chat_num chat_to';
+                activeChat.appendChild(messageNew);
+                chatInput.value = '';
+
+                // 마지막 메시지를 room_content에 업데이트
+                if (activeRoomContentElement) {
+                    activeRoomContentElement.textContent = message;
+                }
+
+                // 메시지 전송 후 버튼 비활성화
+                sendButton.classList.add('disabled');
+
+                // 새 메시지가 추가된 후 스크롤을 맨 밑으로 이동
+                activeChat.scrollTop = activeChat.scrollHeight;
+            }
+        }
+    }
+});
+
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 // 채팅창에서 즐찾 버튼 on/off
 document.addEventListener('DOMContentLoaded', function () {
     const favoriteButton = document.getElementById('favoriteButton');
