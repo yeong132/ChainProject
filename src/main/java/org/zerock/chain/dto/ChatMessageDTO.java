@@ -1,6 +1,7 @@
 package org.zerock.chain.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +12,7 @@ import java.time.LocalDateTime;
 // 작성 시간도 함께 전송
 // 클라이언트에서는 JSON 형태로 메시지와 시간을 보내면 이를 다른 사용자에게 보여주는 형식으로 구현하기 위해 gson 사용
 @Data
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
-//@AllArgsConstructor
-//@Builder
-//@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDTO {

@@ -102,6 +102,9 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
     // ?
     implementation group: 'org.webjars.npm', name: 'axios', version: '1.7.2'
+    //
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
 }
 
 tasks.named('test') {

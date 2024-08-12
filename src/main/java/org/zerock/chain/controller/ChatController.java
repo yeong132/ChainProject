@@ -1,24 +1,32 @@
 package org.zerock.chain.controller;
 
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.chain.dto.ChatMessageDTO;
 import org.zerock.chain.dto.ChatRoomDTO;
+import org.zerock.chain.dto.EmployeeDTO;
 import org.zerock.chain.service.ChatService;
+import org.zerock.chain.service.EmployeeService;
 
 import java.util.List;
+import java.util.Map;
 
 // RequestMapping 어노테이션과 상당히 유사
 // "/hello" 경로로 메시지가 날아오면 greeting 메소드가 실행되어 Greeting 객체가 반환됨
 // Greeting 객체는 @SendTo 어노테이션에 매핑되어있는 "/topic/greeings"를 구독하고 있는 모든 구독자들에게 메시지를 전달한다.
+@Log4j2
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
+
     private final ChatService chatService;
 
     @MessageMapping("/chat.sendMessage")
@@ -47,7 +55,6 @@ public class ChatController {
     public List<ChatMessageDTO> getMessages(@PathVariable Long chatRoomNo) {
         return chatService.getMessagesByChatRoomNo(chatRoomNo);
     }
-
 
     // 입장, 퇴장, 채팅에 관한 메소드들
     // 채팅: 이름과 보낸 시각이 같이 출력

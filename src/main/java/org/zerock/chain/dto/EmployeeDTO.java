@@ -1,10 +1,16 @@
 package org.zerock.chain.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeDTO {
     private Long empNo; // 사원 번호
     private String lastName; // 성

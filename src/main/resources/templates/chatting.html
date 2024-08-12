@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Main</title>
+    <title>Chatting</title>
     <!-- 부트스트랩 -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
     <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
@@ -66,47 +66,21 @@
                 <div class="chat_list" alt="조직도 목록">
                     <!-- 조직도 전체 네비 -->
                     <ul class="org_dep_list">
-                        <!-- 부서1 -->
+                        <th:block th:each="entry : ${departmentMap}">
                         <li>
                             <a class="org_dep" href="#">
                                 <i class="bi bi-chevron-right"></i>
-                                개발</a>
+                                <span th:text="${entry.key}">부서명</span> <!-- 부서 이름 -->
+                            </a>
                             <ul class="dep_emps_list">
-                                <a href="#"><li>부장 최영민</li></a>
-                                <a href="#"><li>과장 신혜리</li></a>
-                                <a href="#"><li>대리 류이슬</li></a>
-                                <a href="#"><li>대리 김선혜</li></a>
-                                <a href="#"><li>사원 류현진</li></a>
-                                <a href="#"><li>사원 정예진</li></a>
-                                <a href="#"><li>사원 한바다</li></a>
-                                <a href="#"><li>사원 김서아</li></a>
+                                <th:block th:each="employee : ${entry.value}">
+                                <a href="#">
+                                    <li th:text="${employee.rankName} + ' ' + ${employee.lastName} + ${employee.firstName}">직급 성 이름</li>
+                                </a>
+                                </th:block>
                             </ul>
                         </li>
-                        <!-- 부서2 -->
-                        <li>
-                            <a class="org_dep" href="#">
-                                <i class="bi bi-chevron-right"></i>마케팅</a>
-                            <ul class="dep_emps_list">
-                                <a href="#"><li>부장 박성호</li></a>
-                                <a href="#"><li>과장 김동현</li></a>
-                                <a href="#"><li>대리 한동민</li></a>
-                                <a href="#"><li>사원 이상혁</li></a>
-                                <a href="#"><li>사원 이지영</li></a>
-                            </ul>
-                        </li>
-                        <!-- 부서3 -->
-                        <li>
-                            <a class="org_dep" href="#">
-                                <i class="bi bi-chevron-right"></i>
-                                업무지원</a>
-                            <ul class="dep_emps_list">
-                                <a href="#"><li>부장 김희재</li></a>
-                                <a href="#"><li>과장 박철수</li></a>
-                                <a href="#"><li>대리 김민재</li></a>
-                                <a href="#"><li>대리 김민영</li></a>
-                                <a href="#"><li>사원 이나리</li></a>
-                            </ul>
-                        </li>
+                        </th:block>
                     </ul>
                     <!-- /end 조직도 전체 네비 -->
                 </div>
@@ -252,7 +226,6 @@
     <div class="chat_chatting_container">
         <!-- 방 선택하기 전, 화면 표시 -->
         <span class="info_text">대화하실 방을 선택해주세요.</span>
-
         <div class="chat_chatting" id="chatChatting">
 
             <!-- 채팅 헤드 영역 -->

@@ -15,15 +15,15 @@ public class MainController {
         return "example"; // templates/example.html 파일을 서빙
     }
 
-    @GetMapping("/chatting")
-    public String chatMain() {
-        return "chatting"; // templates/chatting.html 파일을 서빙
-    }
-
-    @GetMapping("/chatting/ws") // 웹소켓
-    public String chatWebSocket() {
-        return "chatting";
-    }
+//    @GetMapping("/chatting")
+//    public String chatMain() {
+//        return "chatting"; // templates/chatting.html 파일을 서빙
+//    }
+//
+//    @GetMapping("/chatting/ws") // 웹소켓
+//    public String chatWebSocket() {
+//        return "chatting";
+//    }
 
     @GetMapping("/organizationChart")
     public String organization_chart() {
