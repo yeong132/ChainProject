@@ -1,15 +1,74 @@
+// Froala Editor 한국어 적용
+var editor = new FroalaEditor('#froala', {
+    language: 'ko',
+});
+
+// 출퇴근 Modal용
+document.addEventListener('DOMContentLoaded', function () {
+    function updateTime(elementId) {
+        const currentTimeElement = document.getElementById(elementId);
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
+    }
+
+    function setupModal(modalId, confirmButtonId, cancelButtonId, message, switchInput, checkedState) {
+        const modalElement = document.getElementById(modalId);
+        const confirmButton = document.getElementById(confirmButtonId);
+        const cancelButton = document.getElementById(cancelButtonId);
+
+        $(modalElement).on('show.bs.modal', function () {
+            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
+        });
+
+        confirmButton.addEventListener('click', function () {
+            switchInput.checked = checkedState;
+            alert(message);
+        });
+
+        cancelButton.addEventListener('click', function () {
+            switchInput.checked = !checkedState;
+        });
+    }
+
+    const switchInput = document.getElementById('flexSwitchCheckDefault');
+    const commuteIcon = document.getElementById('commuteIcon');
+
+    commuteIcon.addEventListener('click', function () {
+        if (switchInput.checked) {
+            $('#attendanceModal').modal('show');
+        } else {
+            $('#leaveworkModal').modal('show');
+        }
+    });
+
+    setupModal('attendanceModal', 'attendanceConfirmButton', 'attendanceCancelButton', '출근되었습니다!', switchInput, true);
+    setupModal('leaveworkModal', 'leaveworkConfirmButton', 'leaveworkCancelButton', '퇴근되었습니다!', switchInput, false);
+
+    setInterval(function () {
+        updateTime('currentTime');
+        updateTime('currentTimes');
+    }, 1000);
+});
+
 // 즐겨찾기
 function toggleStar(element, event) {
     event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되지 않도록 함
 
-
+    const projectFavoriteInput = document.getElementById('projectFavorite');
     if (element.classList.contains('bi-star')) {
         element.classList.remove('bi-star');
         element.classList.add('bi-star-fill');
+        projectFavoriteInput.value = "true";
     } else {
         element.classList.remove('bi-star-fill');
         element.classList.add('bi-star');
+        projectFavoriteInput.value = "false";
     }
+    // 해당 폼 제출
+    element.nextElementSibling.submit();
 }
 
 // 저장 확인용 알림
@@ -17,31 +76,31 @@ function showSuccessAlert() {
     alert('저장되었습니다.');
 }
 
-// 체크박스 진행도가 차는 자스-
-function updateProgress() {// 모든 체크박스를 선택
-    let checkboxes = document.querySelectorAll('.form-check-input');
-
-    // 프로그레스 바 요소 선택
-    let progressBar = document.getElementById('progress-bar');
-    // 총 진행률 초기화
-    let totalProgress = 0;
-    // 각 체크박스를 반복하며 체크된 항목의 value 값을 더함
-    checkboxes.forEach(function (checkbox) {
-        if (checkbox.checked) {
-            // 체크된 체크박스의 value 값을 가져와서 숫자로 변환하여 totalProgress에 더함
-            console.log('Checkbox value:', checkbox.value);
-            totalProgress += Number(checkbox.getAttribute('value')); // value 속성 명시적으로 가져오기
-        }
+//  그래프 저장 자스
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const data = myChart.data.datasets[0].data;
+            const index = Array.from(checkboxes).indexOf(checkbox);
+            data[index] = checkbox.checked ? parseInt(checkbox.value) : 0;
+            myChart.update();
+        });
     });
-    // 콘솔에 총 진행률 출력
-    console.log('총 진행률:', totalProgress);
-    // 프로그레스 바의 너비를 총 진행률 값으로 설정
+});
+
+// 체크박스 진행도가 차는 자스-
+function updateProgress() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const totalProgress = Array.from(checkboxes).reduce((acc, checkbox) => acc + parseInt(checkbox.value), 0);
+    const progressBar = document.getElementById('progress-bar');
     progressBar.style.width = totalProgress + '%';
-    // 프로그레스 바의 aria-valuenow 속성을 총 진행률 값으로 설정
     progressBar.setAttribute('aria-valuenow', totalProgress);
-    // 프로그레스 바의 텍스트를 총 진행률 값으로 설정
-    progressBar.innerText = totalProgress + '%';
+    progressBar.textContent = totalProgress + '%';
+    // 숨겨진 입력 필드를 총 진행률 값으로 업데이트
+    document.getElementById('projectProgress').value = totalProgress;
 }
+
 
 // <button onClick="chatOpenPopup()">메신저</button>
 
@@ -65,6 +124,80 @@ function chatOpenPopup() {
         }
     }
 }
+
+// ---------------------- chatting ----------------------
+
+// 채팅방 생성 모달창 : 모달 관련 변수
+let modal = document.getElementById("chatModal");
+let closeButton = document.getElementById("closeButton");
+let confirmButton = document.getElementById("confirmCreateRoom");
+let selectedEmpName = ""; // 클릭된 직원의 이름을 저장할 변수
+
+// 직원 리스트 클릭 이벤트 추가
+let empItems = document.querySelectorAll(".dep_emps_list li");
+empItems.forEach(item => {
+    item.addEventListener("click", function() {
+        // 선택한 직원의 이름 텍스트를 저장
+        selectedEmpName = this.textContent.trim();
+
+        // 모달 창 열기
+        modal.style.display = "block";
+    });
+});
+
+// 모달 닫기 (x 버튼 클릭 시)
+closeButton.onclick = function() {
+    modal.style.display = "none";
+}
+
+// 모달 닫기 (모달 외부 클릭 시)
+window.onclick = function(e) {
+    if (e.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// 채팅방 생성 확인 버튼 클릭 시
+
+confirmButton.onclick = function() {
+    // 모달 창 닫기
+    modal.style.display = "none";
+
+    // 새로운 채팅방 생성
+    let newChatRoom = document.createElement("div");
+    newChatRoom.className = "chat_room";
+    newChatRoom.dataset.roomId = "new"; // 실제 ID로 변경 필요
+
+    // 채팅방 이미지
+    let roomImg = document.createElement("div");
+    roomImg.className = "room_img";
+    let img = document.createElement("img");
+    img.src = "/assets/img/보노보노.png"; // 기본 이미지 또는 선택된 직원의 프로필 사진으로 변경 가능
+    // TODO: 이후에 서버에서 프로필 이미지를 받아와 img.src를 업데이트
+    // 예시: img.src = `server_endpoint/getProfileImage?name=${selectedEmpName}`;
+    img.alt = "프로필사진";
+    roomImg.appendChild(img);
+
+    // 채팅방 정보
+    let roomInfo = document.createElement("ul");
+    let roomName = document.createElement("li");
+    roomName.className = "room_name";
+    roomName.textContent = selectedEmpName; // 선택한 직원의 이름으로 설정
+    let roomContent = document.createElement("li");
+    roomContent.className = "room_content";
+    roomContent.textContent = "새로운 메시지가 없습니다."; // 초기 상태
+
+    roomInfo.appendChild(roomName);
+    roomInfo.appendChild(roomContent);
+
+    // 새로운 채팅방에 요소 추가
+    newChatRoom.appendChild(roomImg);
+    newChatRoom.appendChild(roomInfo);
+
+    // 채팅방 목록에 추가
+    document.querySelector("#v-pills-chatrooms .chat_list").appendChild(newChatRoom);
+}
+// /end 모달창
 
 // 조직도-부서 누르면 펼침, 닫힘
 document.addEventListener('DOMContentLoaded', function () {
@@ -98,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatHeader = document.getElementById('chatHeader');
     const chatRoomName = document.getElementById('chatRoomName');
     // const chatRoomPersonnel = document.getElementById('chatRoomPersonnel'); // 인원 수 표시
-    const closeButton = document.getElementById('closeButton'); // 채팅방 닫기 버튼
+    const backButton = document.getElementById('backButton'); // 채팅방 닫기 버튼
 
     // 채팅창 관련
     document.querySelectorAll('.chat_room').forEach(room => {
@@ -136,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // 채팅 닫기 버튼 클릭 시
-            closeButton.addEventListener('click', closeChat);
+            backButton.addEventListener('click', closeChat);
 
 
             // ESC 키 눌렀을 때 채팅 닫기
@@ -282,8 +415,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+// ----------------------/end chatting ----------------------
 
 // 테이블에 링크 적용하기
 function rowClick(url) {
     window.location.href = url;
 }
+
+

@@ -14,4 +14,14 @@ public class MainController {
     public String example() {
         return "example"; // templates/example.html 파일을 서빙
     }
+
+    @GetMapping("/chatting")
+    public String chatMain() {
+        return "chatting"; // templates/chatting.html 파일을 서빙
+    }
+
+    @GetMapping("/organizationChart")
+    public String organization_chart() {
+        return "organizationChart"; // templates/organizationChart.html 파일을 서빙
+    }
 }
