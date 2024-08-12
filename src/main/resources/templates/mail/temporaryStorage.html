@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>전체 메일함</title>
+    <title>임시보관함</title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
+    <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon"/>
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"/>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
-    <!-- 구글 폰트 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- 폰트 설정  -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet"/>
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet"/>
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet"/>
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet"/>
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet"/>
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet"/>
-    <link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet"/>
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
         /* 검색 입력란 컨테이너 스타일 */
@@ -94,7 +99,7 @@
 
         /* 별표 아이콘 색상 설정 */
         .bi-star-fill {
-            color: #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+            color: 	#ffd700 /* 별표 아이콘을 노란색으로 설정 */
         }
     </style>
 </head>
@@ -103,13 +108,21 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="indexExample.html" class="logo d-flex align-items-center">
-            <img src="assets/img/logo.png" alt=""/>
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <!-- 로고 끝 -->
+
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div> -->
+    <!-- 검색바 끝 -->
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
@@ -120,6 +133,13 @@
             </li> -->
             <!-- 검색 아이콘 끝 -->
 
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
+
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                     <i class="bi bi-bell"></i>
@@ -129,7 +149,7 @@
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
                         4개의 새 알림이 있습니다
-                        <a href="#"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
                     </li>
                     <li>
                         <hr class="dropdown-divider"/>
@@ -187,7 +207,7 @@
                         <hr class="dropdown-divider"/>
                     </li>
                     <li class="dropdown-footer">
-                        <a href="#">모든 알림 표시</a>
+                        <a href="/user/alarm">모든 알림 표시</a>
                     </li>
                 </ul>
                 <!-- 알림 드롭다운 목록 끝 -->
@@ -195,135 +215,19 @@
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-chat-dots"></i>
-                    <span class="badge btn-success badge-number">3</span> </a>
-                <!-- 메세지 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                    <li class="dropdown-header">
-                        3개의 새 메시지가 있습니다
-                        <a href="#"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle"/>
-                            <div>
-                                <h4>Maria Hudson</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>4 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle"/>
-                            <div>
-                                <h4>Anna Nelson</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>6 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="message-item">
-                        <a href="#">
-                            <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle"/>
-                            <div>
-                                <h4>David Muldon</h4>
-                                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                                <p>8 hrs. ago</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="dropdown-footer">
-                        <a href="#">모든 메세지 보기</a>
-                    </li>
-                </ul>
-                <!-- 메시지 드롭다운 목록 끝 -->
-            </li>
-            <!-- 메시지 전체 끝 -->
-
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bx bx-layer"></i>
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
                 </a>
-                <!-- 즐겨찾기 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow favorite">
-                    <li class="dropdown-header">
-                        즐겨찾기
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="favorite-item">
-                        <i class="bi bi-diagram-2"></i>
-                        <div>
-                            <h4>조직도</h4>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="favorite-item">
-                        <i class="bi bi-door-closed"></i></i>
-                        <div>
-                            <h4>출퇴근</h4>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="favorite-item">
-                        <i class="bi bi-question-circle"></i>
-                        <div>
-                            <h4>고객센터</h4>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="favorite-item">
-                        <i class="bi bi-tools"></i>
-                        <div>
-                            <h4>관리자</h4>
-                        </div>
-                    </li>
-
-                </ul>
-                <!-- 즐겨찾기 드롭다운 목록 끝 -->
+                <!-- 환경설정 아이콘 끝 -->
             </li>
-            <!-- 즐겨찾기 전체 끝 -->
+            <!-- 환경설정 전체 끝 -->
+
 
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a
-                ><!-- 프로필 이미지 항목 끝 -->
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+                <!-- 프로필 이미지 항목 끝 -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
@@ -335,9 +239,9 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
                             <i class="bi bi-person"></i>
-                            <span>내 프로필</span>
+                            <span>마이 페이지</span>
                         </a>
                     </li>
                     <li>
@@ -345,29 +249,30 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                            <i class="bi bi-gear"></i>
-                            <span>환경설정</span>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
                         </a>
                     </li>
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
 
-                    <!-- <li>
-                      <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                        <i class="bi bi-question-circle"></i>
-                        <span>Need Help?</span>
-                      </a>
-                    </li>
                     <li>
-                      <hr class="dropdown-divider" />
-                    </li> -->
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                            <i class="bi bi-tools"></i>
+                            <span>회사 관리자</span>
                         </a>
                     </li>
                 </ul>
@@ -380,11 +285,59 @@
 </header>
 <!-- Header 끝 -->
 
+<!-- Header Modal -->
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                    아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 출퇴근 Modal 끝 -->
+<!-- Header Modal -->
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link dash" href="indexExample.html">
+        <li class="nav-item ">
+            <a class="nav-link dash collapsed" href="/">
                 <i class="bi bi-grid"></i>
                 <span>대시보드</span>
             </a>
@@ -402,7 +355,7 @@
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
                         <li>
-                            <a href="/indexExample.html"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
+                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
                         </li>
                     </ul>
                     </div>
@@ -419,13 +372,16 @@
             </a>
             <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
                 </li>
             </ul>
         </li>
@@ -439,19 +395,10 @@
             </a>
             <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
                 <li>
-                    <a href="#"> < i class="bi bi-circle"></i><span>요청 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>반려 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>완료 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
                 </li>
             </ul>
         </li>
@@ -465,16 +412,16 @@
             </a>
             <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
                 </li>
                 <li>
-                    <a href="#"> < i class="bi bi-circle"></i><span>구내식당</span> </a>
+                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
                 </li>
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>회의실</span> </a>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
                 </li>
             </ul>
         </li>
@@ -495,36 +442,44 @@
         <!-- 일정 사이드바 끝 -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-envelope"></i>
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="receive.html"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
                 <li>
-                    <a href="highlight.html"> <i class="bi bi-circle"></i><span>즐겨찾기함</span> </a>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
                 </li>
                 <li>
-                    <a href="important.html"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="reiceve_tome.html"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="temporaryStorage.html"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/temporaryStorage" class="active"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
-                    <a href="send.html"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
                 </li>
                 <li>
-                    <a href="trash.html"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
                 </li>
             </ul>
         </li>
         <!-- 이메일 사이드바 끝 -->
+
+        <li class="nav-item qna">
+            <a class="nav-link qna collapsed" href="/user/Q&A">
+                <i class="bi bi-question-circle"></i>
+                <span>고객센터</span>
+            </a>
+        </li>
+        <!-- 고객센터 사이드바 끝 -->
 
     </ul>
 </aside>
@@ -532,18 +487,18 @@
 <!-- 메인 몸통 -->
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1 class="mb-3">전체 메일함</h1>
+        <h1>임시보관함</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">홈화면</a></li>
-                <li class="breadcrumb-item">이메일</li>
-                <li class="breadcrumb-item active">전체 메일함</li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
+                <li class="breadcrumb-item active">Temporary Storage</li>
             </ol>
         </nav>
         <div class="offset-sm-0">
             <div class="col-sm-3">
-                <button class="btn btn-primary" onclick="location.href='compose.html'" type="button">메일 쓰기</button>
-                <button class="btn btn-primary" onclick="location.href='compose_tome.html'" type="button">내게 쓰기</button>
+                <button class="btn btn-primary" onclick="location.href='/mail/compose'" type="button">메일 쓰기</button>
+                <button class="btn btn-primary" onclick="location.href='/mail/composetome'" type="button">내게 쓰기</button>
             </div>
         </div>
     </div>
@@ -561,16 +516,14 @@
                             </div>
                         </div>
                         <!-- Table with stripped rows -->
-                        <table class="table datatable" id="dataTable">
+                        <table class="table table-hover datatable" id="dataTable">
                             <thead>
                             <tr id="title-name">
                                 <th>
                                     <div class="custom-checkbox-dropdown">
                                         <input type="checkbox" id="selectAll">
                                         <div class="dropdown ms-2">
-                                            <button class="btn btn-light dropdown-toggle p-0" type="button"
-                                                    id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-light dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 ▼
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -745,27 +698,48 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>프로젝트 이름</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>CHAIN</span></strong
+    >. All Rights Reserved
     </div>
     <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer>
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
+<!-- Footer 끝 -->
+
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number">&nbsp;</span>
+</a>
+<!-- 채팅창 끝-->
 
 <!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- 검색 기능을 위한 JavaScript 코드 -->
 <script>
@@ -773,7 +747,7 @@
      * 검색 입력란의 'input' 이벤트 리스너
      * 사용자가 검색 입력란에 입력할 때마다 호출됩니다.
      */
-    document.getElementById('searchInput').addEventListener('input', function () {
+    document.getElementById('searchInput').addEventListener('input', function() {
         // 사용자가 입력한 검색어를 소문자로 변환하여 filter 변수에 저장합니다.
         const filter = this.value.toLowerCase();
 
@@ -809,7 +783,7 @@
     });
 
     // 전체 선택 체크박스 기능 구현
-    document.getElementById('selectAll').addEventListener('change', function () {
+    document.getElementById('selectAll').addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
@@ -817,7 +791,7 @@
     });
 
     // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
-    document.getElementById('selectAllBtn').addEventListener('click', function () {
+    document.getElementById('selectAllBtn').addEventListener('click', function() {
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
@@ -825,7 +799,7 @@
         document.getElementById('selectAll').checked = true; // 드롭다운 옆 체크박스도 체크
     });
 
-    document.getElementById('deselectAllBtn').addEventListener('click', function () {
+    document.getElementById('deselectAllBtn').addEventListener('click', function() {
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
@@ -845,7 +819,7 @@
     }
 
     // 별표 드롭다운 메뉴와 연동
-    document.getElementById('markAsStarredBtn').addEventListener('click', function () {
+    document.getElementById('markAsStarredBtn').addEventListener('click', function() {
         const stars = document.querySelectorAll('#dataTable .star-icon');
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         stars.forEach((star, index) => {
@@ -857,7 +831,7 @@
         });
     });
 
-    document.getElementById('unmarkAsStarredBtn').addEventListener('click', function () {
+    document.getElementById('unmarkAsStarredBtn').addEventListener('click', function() {
         const stars = document.querySelectorAll('#dataTable .star-icon');
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         stars.forEach((star, index) => {

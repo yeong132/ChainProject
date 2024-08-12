@@ -304,7 +304,8 @@ h6 {
 
 .accordion-flush .accordion-button:not(.collapsed) {
     box-shadow: none;
-    color: #4154f1;
+    color: #000000;
+    font-weight: bold;
 }
 
 .accordion-flush .accordion-body {
@@ -729,6 +730,9 @@ h6 {
     padding: 0;
     margin: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .sidebar-nav li {
@@ -871,11 +875,6 @@ h6 {
     border-radius: 4px;
 }
 
-.sidebar-nav .dash{
-    padding: 10px 15px;
-    margin-bottom: 30px;
-}
-
 .sidebar-nav .nav-link span{
     margin-right: auto;
 }
@@ -943,7 +942,7 @@ h6 {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
-    color: #1e1e1e;
+    color: #2e2e2e;
 }
 
 .sidebar-nav .nav-content a.active i {

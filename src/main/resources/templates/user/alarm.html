@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+    <title>알림</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+
+    <!-- link 안에는 th:href 사용! -->
+    <!-- Favicons -->
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+
+    <!-- 폰트 설정  -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
+            <span class="d-none d-lg-block">CHAIN</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <!-- 로고 끝 -->
+
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div> -->
+    <!-- 검색바 끝 -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <!-- <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="bi bi-search"></i>
+              </a>
+            </li> -->
+            <!-- 검색 아이콘 끝 -->
+
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge btn-secondary badge-number">4</span> </a>
+                <!-- 알림창 아이콘 끝 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                    <li class="dropdown-header">
+                        4개의 새 알림이 있습니다
+                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-exclamation-circle text-warning"></i>
+                        <div>
+                            <h4>Lorem Ipsum</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>30 min. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <div>
+                            <h4>Atque rerum nesciunt</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>1 hr. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <div>
+                            <h4>Sit rerum fuga</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>2 hrs. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        <div>
+                            <h4>Dicta reprehenderit</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>4 hrs. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="/user/alarm">모든 알림 표시</a>
+                    </li>
+                </ul>
+                <!-- 알림 드롭다운 목록 끝 -->
+            </li>
+            <!-- 알림 전체 끝 -->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <!-- 환경설정 아이콘 끝 -->
+            </li>
+            <!-- 환경설정 전체 끝 -->
+
+
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+                <!-- 프로필 이미지 항목 끝 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박영민</h6>
+                        <span>사원</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이 페이지</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                            <i class="bi bi-tools"></i>
+                            <span>회사 관리자</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- 프로필 드롭다운 목록 끝 -->
+            </li>
+            <!-- 프로필 전체 끝 -->
+        </ul>
+    </nav>
+    <!-- 상단바 끝 -->
+</header>
+<!-- Header 끝 -->
+
+<!-- Header Modal -->
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                    아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 출퇴근 Modal 끝 -->
+<!-- Header Modal -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item ">
+            <a class="nav-link dash collapsed" href="/">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+        <!-- 대시보드 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>기본 사항</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
+                    <ul>
+                        <li>
+                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
+                        </li>
+                    </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <!-- 기본사항 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i>
+                <span>업무</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                </li>
+                <li>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                </li>
+                <li>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 업무 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i>
+                <span>전자결재</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 전자결재 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people-fill"></i>
+                <span>게시판</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                </li>
+                <li>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                </li>
+                <li>
+                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
+                </li>
+                <li>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 게시판 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-week"></i>
+                <span>일정</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 일정 사이드바 끝 -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-envelope"></i>
+                <span>이메일</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/tome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 이메일 사이드바 끝 -->
+
+        <li class="nav-item qna">
+            <a class="nav-link qna collapsed" href="/user/Q&A">
+                <i class="bi bi-question-circle"></i>
+                <span>고객센터</span>
+            </a>
+        </li>
+        <!-- 고객센터 사이드바 끝 -->
+
+    </ul>
+</aside>
+<!-- Sidebar 전체 끝 -->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>알림</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Alarm</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- 페이지 제목 끝 -->
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+
+    <section class="section faq">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <!--  showConfirmationModal :  전체삭제 모달 창 연결  -->
+                    <button class="btn btn-danger" onclick="showConfirmationModal()">전체 삭제</button>
+                </div>
+<!-----------------------------------------------------------------card 시작 ----------------------------------------------------------------------->
+                <div class="card">
+                    <div class="card-body">
+                        <h6></h6>
+
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">ALL</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="project-tab" data-bs-toggle="tab" data-bs-target="#project" type="button" role="tab" aria-controls="project" aria-selected="false">프로젝트</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">전자결제</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="notice-tab" data-bs-toggle="tab" data-bs-target="#notice" type="button" role="tab" aria-controls="notice" aria-selected="false">공지사항</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab" aria-controls="schedule" aria-selected="false">일정</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="false">계정</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab" aria-controls="system" aria-selected="false">시스템</button>
+                            </li>
+                        </ul>
+<!--------------------------------------------------------------- 탭  목록 ----------------------------------------------------------------------------->
+                        <div class="tab-content pt-2" id="borderedTabContent">
+                            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    색상 조금 더 연한 회색으로 변경하기. 너무 어둡다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    알림창 전체적으로 어두워서 변경 필요 ~
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 프로젝트 알림  목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="project" role="tabpanel" aria-labelledby="project-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    프로젝트 "이지영 업그레이드 기획"를 "임종하"님이 수정하였습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    프로젝트 "이지영 업그레이드 기획"이 완료되었습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    프로젝트 "이지영 업그레이드 기획"를 "박성은"님이 수정하였습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    프로젝트 "이지영 업그레이드 기획"를 "성준혁"님이 수정하였습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    프로젝트 "이지영 업그레이드 기획"를 "이지영"님이 수정하였습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    프로젝트 "지구정복 2028년"의 기한이 2일 남았습니다.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 전자결제 알림 목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    A simple success alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 공지사항 알림  목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="notice" role="tabpanel" aria-labelledby="notice-tab">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 일정 알림 목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    A simple success alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 계정 알림 목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    A simple success alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    A simple secondary alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    A simple danger alert—check it out!
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                            <!------------------------------------------------------------------ 시스템알림  목록 ----------------------------------------------------------------------------->
+                            <div class="tab-pane fade" id="system" role="tabpanel" aria-labelledby="system-tab">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">업데이트</h4>
+                                    <p>2024년 8월 1일 (2:00AM ~ 4:00AM) 업데이트 예정</p>
+                                    <hr>
+                                    <p class="mb-0">업데이트 중에는 접속/이용이 불가한 점, 양해 부탁드립니다.</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">업데이트 완료</h4>
+                                    <p>2024년 5월 23일 (2:00AM ~ 4:00AM) 업데이트 예정</p>
+                                    <hr>
+                                    <p class="mb-0">업데이트가 완료되었습니다 : ) </p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">시스템 경고</h4>
+                                    <p>로드 중, 종료시 데이터가 손실 될 수 있습니다.</p>
+                                    <hr>
+                                    <p class="mb-0">시스템 경고</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">오류 안내</h4>
+                                    <p>전자결제 페이지 오류 발생</p>
+                                    <hr>
+                                    <p class="mb-0">오류 안내</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">업데이트</h4>
+                                    <p>2024년 8월 1일 (2:00AM ~ 4:00AM) 업데이트 예정</p>
+                                    <hr>
+                                    <p class="mb-0">업데이트 중에는 접속/이용이 불가한 점, 양해 부탁드립니다.</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    <h4 class="alert-heading">업데이트</h4>
+                                    <p>2024년 8월 1일 (2:00AM ~ 4:00AM) 업데이트 예정</p>
+                                    <hr>
+                                    <p class="mb-0">업데이트 중에는 접속/이용이 불가한 점, 양해 부탁드립니다.</p>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+            </div>
+
+        </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main><!-- End #main -->
+
+<!------------------------------------------------------------ 삭제 모달 창 --------------------------------------------------------------------------->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">삭제 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 삭제하시겠습니까 ?
+                ( 페이지 내 모든 알림이 삭제됩니다. )
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteAlerts()">예</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">아니요</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>CHAIN</span></strong
+    >. All Rights Reserved
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer>
+<!-- Footer 끝 -->
+
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number">&nbsp;</span>
+</a>
+<!-- 채팅창 끝-->
+
+<!--알림 전체 삭제 버튼 -->
+<script>
+    // 모달을 보여주는 함수
+    function showConfirmationModal() { // 모달 인스턴스를 생성하고 보여줍니다.
+        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
+    }
+
+    // 모든 알림을 삭제하는 함수
+    function deleteAllAlerts() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => { alert.remove();});
+        console.log('알림이 삭제되었습니다.');
+    }
+
+    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+    function deleteAlerts() {
+        deleteAllAlerts(); // 알림 삭제 함수 호출
+        var confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+        confirmationModal.hide(); // 모달 닫기
+    }
+</script>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
