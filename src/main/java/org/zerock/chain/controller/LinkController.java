@@ -9,7 +9,7 @@ public class LinkController {
     // 실제 사이트를 만들 때 필요한 것들
 
     // index.html
-    @GetMapping("/")
+    @GetMapping("/index")
     public String home() {
         return "index"; // templates 폴더의 index.html 파일을 반환
     }

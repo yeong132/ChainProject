@@ -1,4 +1,4 @@
-package org.zerock.chain.Service;
+package org.zerock.chain.service;
 
 import java.nio.charset.StandardCharsets;
 import com.google.api.client.auth.oauth2.Credential;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.zerock.chain.DTO.MessageDTO;
+import org.zerock.chain.dto.MessageDTO;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;

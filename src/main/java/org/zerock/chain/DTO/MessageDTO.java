@@ -1,4 +1,4 @@
-package org.zerock.chain.DTO;
+package org.zerock.chain.dto;
 
 public class MessageDTO {
     private String id;
