@@ -318,7 +318,7 @@
             <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
           </li>
           <li>
-            <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+            <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
           </li>
           <li>
             <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -427,7 +427,7 @@
     <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
     <main id="main" class="main">
       <div class="pagetitle">
-        <h1>경조사 게시판 생성 </h1>
+        <h1>경조사 게시판 생성</h1>
         <nav>
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -449,56 +449,56 @@
                 <h5 class="card-title">경조사 게시글 작성</h5>
 
                 <!-- General Form Elements -->
-                <form>
+                <form action="/board/register" id="boardForm" method="post">
+<!--                  <input name="boardFiles" th:value="${board.boardFiles}" type="hidden">-->
+
+
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputText">제목</label>
+                    <label class="col-sm-1 col-form-label" >제목</label>
                     <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="프로젝트1">
+                      <input class="form-control" name="boardName" type="text"placeholder="제목" required>
                     </div>
                   </div>
 
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="email" value="본인 고정">
-                    </div>
-                  </div>
 
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label">카테고리</label>
                     <div class="col-sm-11">
-                      <select aria-label="Default select example" class="form-select">
-                        <option selected>카테고리 연동하기</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                      <select aria-label="Default select example" class="form-select" name="boardCategory" required >
+                        <option value="" disabled selected>카테고리</option>
+                        <option value="결혼식">결혼식</option>
+                        <option value="장례식">장례식</option>
+                        <option value="기타">기타</option>
                       </select>
                     </div>
                   </div>
 
+
+
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">위치</label>
+                    <label class="col-sm-1 col-form-label" >작성자</label>
                     <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="지도API 연동 필요">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" id="formFile" readonly type="file">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputDate">날짜</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="date">
+                      <input class="form-control"  name="boardAuthor" type="text"placeholder="본인고정" required>
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputPassword">내용</label>
+                    <label class="col-sm-1 col-form-label" >위치</label>
                     <div class="col-sm-11">
-                      <div id="froala"></div>
+                      <input class="form-control" name="boardLocation" type="text" placeholder="지도api" >
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-1 col-form-label">첨부 파일</label>
+                    <div class="col-sm-11">
+                      <input class="form-control" id="formFile" type="file" name="boardFiles">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-1 col-form-label" >내용</label>
+                    <div class="col-sm-11">
+                      <textarea id="froala" name="boardContent"></textarea>
                     </div>
                   </div>
 
@@ -512,10 +512,8 @@
 
 
                 </form><!-- End General Form Elements -->
-
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -595,24 +593,24 @@
 
   <!-- 저장 확인 모달 JS  -->
   <script>
-    function showModal() { // 모달을 보여주는 함수
+    // 저장 확인 모달을 보여주는 함수
+    function showModal() {
       var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
-      saveModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
-    function saveAlerts() {
-      var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
-      saveModal.hide(); // 모달을 먼저 닫는다
-      saveModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-        window.location.href = '/board/detail';
-      });
+      saveModal.show();
     }
-  </script>
-  <!-- 목록 경고 모달 JS  -->
-  <script>
-    function showWarningModal() { // 모달을 보여주는 함수
+
+    // 저장 모달에서 '예'를 클릭했을 때 호출되는 함수로 폼을 제출
+    function saveAlerts() {
+      document.getElementById('boardForm').submit();
+    }
+
+    // 목록 경고 모달을 보여주는 함수
+    function showWarningModal() {
       var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-      WarningModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+      WarningModal.show();
+    }
+
+    // 경고 모달에서 '예'를 클릭했을 때 호출되는 함수로 모달을 닫고 목록으로 이동
     function WarningAlerts() {
       var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
       WarningModal.hide(); // 모달을 먼저 닫는다

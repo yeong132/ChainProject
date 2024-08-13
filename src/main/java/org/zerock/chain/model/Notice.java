@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notice")
@@ -30,7 +29,7 @@ public class Notice {
     private Boolean noticePinned = false;
 
     @Column(name = "notice_created_date")
-    private LocalDateTime noticeCreatedDate = LocalDateTime.now();
+    private LocalDate noticeCreatedDate = LocalDate.now();
 
     @Column(name = "notice_files")
     private String noticeFiles;

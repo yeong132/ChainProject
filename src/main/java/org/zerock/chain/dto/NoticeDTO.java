@@ -12,7 +12,7 @@ public class NoticeDTO {
     private String noticeName;
     private String noticeContent;
     private Boolean noticePinned;
-    private LocalDateTime noticeCreatedDate;
+    private LocalDate noticeCreatedDate;
     private String noticeFiles;
     private String noticeAuthor;
     private LocalDate noticePinnedDate;
