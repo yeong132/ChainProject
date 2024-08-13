@@ -36,40 +36,6 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
-<<<<<<< HEAD
-=======
-        /* 검색 입력란 컨테이너 스타일 */
-        .card-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-bar {
-            display: flex; /* 컨테이너를 flexbox로 설정하여 내부 요소의 정렬을 쉽게 함 */
-            justify-content: flex-end; /* 컨테이너 안의 요소들을 오른쪽으로 정렬 */
-            align-items: center; /* 컨테이너 안의 요소들을 세로축 중앙에 정렬 */
-            margin-left: auto; /* 검색창을 오른쪽으로 정렬 */
-        }
-
-        /* 검색 입력란 스타일 */
-        .search-bar input[type="text"] {
-            width: 200px; /* 입력란의 너비를 200픽셀로 설정 */
-            padding: 5px; /* 입력란 내부의 내용과 테두리 사이에 5픽셀의 공간을 추가 */
-            font-size: 14px; /* 입력란 텍스트의 폰트 크기를 14픽셀로 설정 */
-            border: 1px solid #666; /* 입력란의 테두리를 1픽셀 두께의 짙은 회색(#666)으로 설정 */
-            border-radius: 4px; /* 입력란의 테두리에 4픽셀의 둥근 모서리를 추가 */
-            height: 38px; /* 입력란의 높이를 38픽셀로 설정 */
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 입력란에 약간의 그림자를 추가 (x축 0픽셀, y축 1픽셀, 흐림 반경 2픽셀, 그림자 색상은 검정색의 10% 투명도) */
-        }
-
-        /* 검색 입력란의 자리 표시자 텍스트 스타일 */
-        .search-bar input[type="text"]::placeholder {
-            color: #aaa; /* 자리 표시자 텍스트의 색상을 밝은 회색(#aaa)으로 설정 */
-            font-style: italic; /* 자리 표시자 텍스트를 이탤릭체로 설정 */
-        }
-
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         /* 드롭다운 메뉴 스타일 */
         .dropdown-menu {
             min-width: 8rem; /* 최소 너비 설정 */
@@ -517,14 +483,6 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
-<<<<<<< HEAD
-=======
-                            <h5 class="card-title">전체 메일</h5>
-                            <!-- 검색 입력란 -->
-                            <div class="search-bar">
-                                <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                            </div>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
@@ -548,7 +506,6 @@
                                         </div>
                                     </div>
                                 </th>
-<<<<<<< HEAD
                                 <th>From</th>
                                 <th>Subject</th>
                                 <th>Date</th>
@@ -574,170 +531,11 @@
                             </tbody>
                         </table>
                         <!-- 테이블 끝 -->
-=======
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <!-- 테이블 데이터들... -->
-                            <tr>
-                                <td>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">Google</td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">보안 경고</td>
-                                <td class="listTb" onclick="rowClick('/mail/mailRead')">2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <!-- 체크박스와 별표 아이콘을 가깝게 배치하기 위한 컨테이너 -->
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <!-- 별표 아이콘 -->
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Google</td>
-                                <td>보안 경고</td>
-                                <td>2024-07-24</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>Naver</td>
-                                <td>이메일 인증번호 보냅니다</td>
-                                <td>2024-07-27</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox">
-                                        <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                    </div>
-                                </th>
-                                <td>이지영</td>
-                                <td>박성호 보고싶다</td>
-                                <td>2024-07-28</td>
-                            </tr>
-                            <!-- 더 많은 데이터... -->
-                            </tbody>
-                        </table>
-                        <!-- 테이블 끝 -->
-
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                     </div>
                 </div>
             </div>
         </div>
     </section>
-<<<<<<< HEAD
-
-=======
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </main>
 
 <!-- ======= Footer ======= -->
@@ -786,7 +584,6 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<<<<<<< HEAD
 <script>
     function rowClick(element) {
         const messageId = element.getAttribute('data-message-id');
@@ -818,55 +615,6 @@
         var url = event.currentTarget.getAttribute('data-url');
         window.location.href = url;
     }
-=======
-<!-- 마우스 커서 효과 -->
-<script>
-    function rowClick(url) {
-        window.location.href = url
-    }
-</script>
-
-<!-- 검색 기능을 위한 JavaScript 코드 -->
-<script>
-    /**
-     * 검색 입력란의 'input' 이벤트 리스너
-     * 사용자가 검색 입력란에 입력할 때마다 호출됩니다.
-     */
-    document.getElementById('searchInput').addEventListener('input', function () {
-        // 사용자가 입력한 검색어를 소문자로 변환하여 filter 변수에 저장합니다.
-        const filter = this.value.toLowerCase();
-
-        // 테이블의 모든 행(#dataTable tbody tr)을 선택하여 rows 변수에 저장합니다.
-        const rows = document.querySelectorAll('#dataTable tbody tr');
-
-        // 각 행을 순회하며 검색어와 일치하는지 확인합니다.
-        rows.forEach(row => {
-            // 행의 모든 셀(td 요소들)을 선택하여 cells 변수에 저장합니다.
-            const cells = row.querySelectorAll('td');
-
-            // 현재 행이 검색어와 일치하는지 여부를 나타내는 match 변수를 false로 초기화합니다.
-            let match = false;
-
-            // 각 셀을 순회하며 검색어와 일치하는지 확인합니다.
-            cells.forEach(cell => {
-                // 셀의 텍스트 내용을 소문자로 변환하고, 검색어(filter)를 포함하는지 확인합니다.
-                if (cell.textContent.toLowerCase().includes(filter)) {
-                    // 검색어를 포함하는 셀이 있으면 match 변수를 true로 설정합니다.
-                    match = true;
-                }
-            });
-
-            // 검색어와 일치하는 셀이 있는 경우 행을 표시하고, 그렇지 않으면 숨깁니다.
-            if (match) {
-                // 검색어와 일치하는 셀이 있는 경우, 행을 표시합니다.
-                row.style.display = '';
-            } else {
-                // 검색어와 일치하는 셀이 없는 경우, 행을 숨깁니다.
-                row.style.display = 'none';
-            }
-        });
-    });
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 
     // 전체 선택 체크박스 기능 구현
     document.getElementById('selectAll').addEventListener('change', function () {
@@ -893,20 +641,6 @@
         document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
     });
 
-<<<<<<< HEAD
-=======
-    // 별표 토글 기능 구현
-    function toggleStar(element) {
-        if (element.classList.contains('bi-star')) {
-            element.classList.remove('bi-star');
-            element.classList.add('bi-star-fill');
-        } else {
-            element.classList.remove('bi-star-fill');
-            element.classList.add('bi-star');
-        }
-    }
-
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     // 별표 드롭다운 메뉴와 연동
     document.getElementById('markAsStarredBtn').addEventListener('click', function () {
         const stars = document.querySelectorAll('#dataTable .star-icon');
@@ -931,7 +665,6 @@
             }
         });
     });
-<<<<<<< HEAD
 
     // 체크박스 클릭 시 이벤트 전파 방지 및 선택/해제 기능 구현
     document.querySelectorAll('.checkbox-star-container input[type="checkbox"]').forEach(checkbox => {
@@ -942,8 +675,5 @@
 
 </script>
 
-=======
-</script>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </body>
 </html>
