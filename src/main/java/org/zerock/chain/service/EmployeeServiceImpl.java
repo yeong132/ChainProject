@@ -7,15 +7,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.dto.EmployeeDTO;
-import org.zerock.chain.entity.Department;
-import org.zerock.chain.entity.Employee;
-import org.zerock.chain.entity.Rank;
+import org.zerock.chain.model.Department;
+import org.zerock.chain.model.EmpRank;
+import org.zerock.chain.model.Employee;
 import org.zerock.chain.repository.DepartmentRepository;
 import org.zerock.chain.repository.EmployeeRepository;
 import org.zerock.chain.repository.RankRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -32,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.rankRepository = rankRepository;
     }
 
+//   사원 목록 전체 조회
     @Override
     public List<EmployeeDTO> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
@@ -50,6 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = convertToEntity(employeeDTO);
         employee.setHireDate(LocalDate.now());
         Employee savedEmployee = employeeRepository.save(employee);
+
         return convertToDTO(savedEmployee);
     }
 
@@ -63,20 +66,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setPhoneNum(employeeDTO.getPhoneNum());
         existingEmployee.setBirthDate(employeeDTO.getBirthDate());
         existingEmployee.setAddr(employeeDTO.getAddr());
-        existingEmployee.setEmail(employeeDTO.getEmail());
+//        existingEmployee.setEmail(employeeDTO.getEmail());
         existingEmployee.setLastDate(employeeDTO.getLastDate());
 
-        Department department = departmentRepository.findById(employeeDTO.getDepartmentId())
+        Department department = departmentRepository.findById(employeeDTO.getDepartmentNo())
                 .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
         existingEmployee.setDepartment(department);
 
-        Rank rank = rankRepository.findById(employeeDTO.getRankId())
+         EmpRank rank = rankRepository.findById(employeeDTO.getRankNo())
                 .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
         existingEmployee.setRank(rank);
 
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
         return convertToDTO(updatedEmployee);
     }
+
 
     @Override
     public void deleteEmployee(Long empNo) {
@@ -104,15 +108,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setPhoneNum(employee.getPhoneNum());
         dto.setBirthDate(employee.getBirthDate());
         dto.setAddr(employee.getAddr());
-        dto.setEmail(employee.getEmail());
+//        dto.setEmail(employee.getEmail());
         dto.setHireDate(employee.getHireDate());
         dto.setLastDate(employee.getLastDate());
-        dto.setDepartmentId(employee.getDepartment().getDmpNo());
-        dto.setDepartmentName(employee.getDepartment().getDmpName());
-        dto.setRankId(employee.getRank().getRankNo());
+        dto.setDepartmentNo(employee.getDepartment().getDmpNo());
+        dto.setDmpName(employee.getDepartment().getDmpName());
+        dto.setRankNo(employee.getRank().getRankNo());
         dto.setRankName(employee.getRank().getRankName());
         return dto;
     }
+
 
     private Employee convertToEntity(EmployeeDTO dto) {
         Employee employee = new Employee();
@@ -121,17 +126,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPhoneNum(dto.getPhoneNum());
         employee.setBirthDate(dto.getBirthDate());
         employee.setAddr(dto.getAddr());
-        employee.setEmail(dto.getEmail());
+//        employee.setEmail(dto.getEmail());
 
-        if(dto.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(dto.getDepartmentId())
+        if(dto.getDepartmentNo() != null) {
+            Department department = departmentRepository.findById(dto.getDepartmentNo())
                     .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
             employee.setDepartment(department);
         }
 
-        if(dto.getRankId() != null) {
-            Rank rank = rankRepository.findById(dto.getRankId())
-                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
+        if(dto.getRankNo() != null) {
+            EmpRank rank = rankRepository.findById(dto.getRankNo()).orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
             employee.setRank(rank);
         }
 

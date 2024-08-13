@@ -2,6 +2,7 @@ package org.zerock.chain.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,9 @@ public class ChatPageController {
     private EmployeeService employeeService;
 
     @GetMapping("/chatting")
-    public String chatMain(Model model) {
-        // 부서별 직원 정보(조직도)
-        Map<String, List<EmployeeDTO>> departmentMap = employeeService.getOrganization();
-        model.addAttribute("departmentMap", departmentMap);
-
+    public String getAllEmployees(Model model) {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        model.addAttribute("employees", employees);
         return "chatting"; // templates/chatting.html 파일을 서빙
     }
 
@@ -32,5 +31,6 @@ public class ChatPageController {
     public String chatWebSocket() {
         return "chatting";
     }
+
 
 }

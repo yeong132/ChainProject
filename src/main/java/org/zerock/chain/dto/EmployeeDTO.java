@@ -22,6 +22,8 @@ public class EmployeeDTO {
     private LocalDate lastDate; // 퇴사일
     private LocalDate birthDate; // 생일
     private String addr; // 주소
+    private Long departmentNo; // 부서 번호
+    private Long rankNo; // 직급 번호
     private String rankName;  // 직급명
     private String dmpName;   // 부서명
 }

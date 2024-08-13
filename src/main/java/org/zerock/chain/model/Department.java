@@ -15,8 +15,9 @@ import lombok.NoArgsConstructor;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dmp_no")
     private Long dmpNo;
 
-    @Column(name = "dmp_name")
+    @Column(name = "dmp_name", nullable = false)
     private String dmpName;
 }

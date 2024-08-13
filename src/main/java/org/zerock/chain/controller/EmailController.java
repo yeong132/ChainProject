@@ -11,18 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.zerock.chain.DTO.MessageDTO;
-import org.zerock.chain.Service.GmailService;
+import org.zerock.chain.service.GmailService;
 import com.google.api.services.gmail.model.MessagePartHeader;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Log4j2
 @Controller
@@ -31,6 +25,7 @@ public class EmailController {
 
     @Autowired  // GmailService를 자동으로 주입받음.
     private GmailService gmailService;
+
 
 
     @GetMapping("/compose")
@@ -61,7 +56,7 @@ public class EmailController {
     @GetMapping("/receive")
     public String listEmails(Model model) {
         try {
-            List<MessageDTO> messages = gmailService.listMessages("me");
+            List<org.zerock.chain.dto.MessageDTO> messages = gmailService.listMessages("me");
             model.addAttribute("messages", messages);
             model.addAttribute("success", "Emails fetched successfully!");
         } catch (IOException e) {
@@ -82,19 +77,19 @@ public class EmailController {
             List<MessagePartHeader> headers = message.getPayload().getHeaders();
             String subject = gmailService.getHeader(headers, "Subject").orElse("No Subject");
 
-            // 메시지 DTO 생성
-            MessageDTO messageDTO = new MessageDTO();
-            messageDTO.setId(messageId);
-            messageDTO.setSubject(subject);
-            messageDTO.setFrom(gmailService.getHeader(headers, "From").orElse("Unknown"));
-            messageDTO.setTo(gmailService.getHeader(headers, "To").orElse("Unknown Recipient")); // To 필드 추가
-            messageDTO.setDate(gmailService.getHeader(headers, "Date").orElse("Unknown Date"));
+            // 메시지 dto 생성
+            org.zerock.chain.dto.MessageDTO messagedto = new org.zerock.chain.dto.MessageDTO();
+            messagedto.setId(messageId);
+            messagedto.setSubject(subject);
+            messagedto.setFrom(gmailService.getHeader(headers, "From").orElse("Unknown"));
+            messagedto.setTo(gmailService.getHeader(headers, "To").orElse("Unknown Recipient")); // To 필드 추가
+            messagedto.setDate(gmailService.getHeader(headers, "Date").orElse("Unknown Date"));
 
             // 메시지 본문 가져오기
             String messageContent = gmailService.getMessageContent("me", messageId);
 
-            // 모델에 messageDTO 객체 추가
-            model.addAttribute("message", messageDTO);
+            // 모델에 messagedto 객체 추가
+            model.addAttribute("message", messagedto);
             model.addAttribute("messageContent", messageContent);
 
         } catch (IOException e) {
@@ -138,7 +133,7 @@ public class EmailController {
     public String listSentEmails(Model model) {
         log.info("listSentEmails called");
         try {
-            List<MessageDTO> sentMessages = gmailService.listSentMessages("me");
+            List<org.zerock.chain.dto.MessageDTO> sentMessages = gmailService.listSentMessages("me");
             model.addAttribute("messages", sentMessages);
             model.addAttribute("success", "Sent emails fetched successfully!");
         } catch (IOException e) {
@@ -164,7 +159,7 @@ public class EmailController {
     @GetMapping("/trash")
     public String listTrashEmails(Model model) {
         try {
-            List<MessageDTO> messages = gmailService.listTrashMessages("me");
+            List<org.zerock.chain.dto.MessageDTO> messages = gmailService.listTrashMessages("me");
             model.addAttribute("messages", messages);
         } catch (IOException e) {
             model.addAttribute("error", "Failed to retrieve trash emails: " + e.getMessage());

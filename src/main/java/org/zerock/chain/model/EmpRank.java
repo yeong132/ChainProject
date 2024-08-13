@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class EmpRank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rank_no")
     private Long rankNo;
 
     @Column(name = "rank_name")

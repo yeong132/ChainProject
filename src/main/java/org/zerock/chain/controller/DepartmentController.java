@@ -1,8 +1,8 @@
 package org.zerock.chain.controller;
 
 
-import org.zerock.chain.entity.Department;
 import org.zerock.chain.dto.DepartmentDTO;
+import org.zerock.chain.model.Department;
 import org.zerock.chain.repository.DepartmentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

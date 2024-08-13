@@ -17,6 +17,7 @@ import java.time.LocalDate;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "emp_no")
     private Long empNo;
 
     @Column(name = "last_name")
@@ -46,11 +47,11 @@ public class Employee {
     @Column(name = "addr")
     private String addr;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rank_no")
     private EmpRank rank;  // 직급
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dmp_no")
     private Department department;  // 부서
 }
