@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
     List<ChatMessage> findByChatRoom_ChatRoomNo(Long chatRoomNo);
-
-    // 채팅 메시지 관련 쿼리 메소드
 }

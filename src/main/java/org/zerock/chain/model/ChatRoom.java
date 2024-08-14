@@ -1,10 +1,7 @@
 package org.zerock.chain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +20,7 @@ public class ChatRoom {
     @Column(name = "room_name")
     private String roomName;
 
-    @Column(name = "room_type")
+    @Column(name = "room_type", nullable = false)
     private boolean roomType;  // 0: 일반 / 1: 즐겨찾기
 
     @Column(name = "recent_active_time")
@@ -32,4 +29,7 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom")
     private List<ChatMessage> messages;
 
+    public boolean getRoomType() {
+        return roomType;
+    }
 }

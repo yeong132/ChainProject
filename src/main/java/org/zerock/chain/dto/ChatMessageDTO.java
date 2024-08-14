@@ -16,17 +16,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDTO {
-    // 메시지 타입: 입장(ENTER), 채팅(TALK), 퇴장(EXIT)
-    // 메시지 타입에 따라 동작하는 구조를 달리함
-    // 입장(ENTER) / 퇴장(EXIT) : 방 입장/퇴장 알림 이벤트 처리
-    // 채팅(TALK) : 해당 채팅방에 들어와있는 모든 사원에게 전달
-//    public enum MessageType {
-//        ENTER, TALK, EXIT
-//    }
-//    private MessageType messageType; // 메시지 타입
-
-//    @Id
-//    @Column
     private Long chatNo; // 메시지 번호
     private Long chatRoomNo; // 채팅방 번호
     private Long empNo; // 채팅을 보낸 사원 번호

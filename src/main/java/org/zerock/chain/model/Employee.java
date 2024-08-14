@@ -29,9 +29,6 @@ public class Employee {
     @Column(name = "phone_num")
     private String phoneNum;
 
-//    @Column(name = "email")
-//    private String email;
-
     @Column(name = "profile_img")
     private String profileImg;
 

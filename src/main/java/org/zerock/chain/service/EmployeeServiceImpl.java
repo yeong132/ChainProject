@@ -15,9 +15,11 @@ import org.zerock.chain.repository.EmployeeRepository;
 import org.zerock.chain.repository.RankRepository;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
 
 
 @Service
@@ -140,5 +142,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return employee;
+    }
+
+    // 채팅 조직도: 부서를 기준으로 사원 및 직급 불러오는 메서드
+    @Override
+    public Map<String, List<EmployeeDTO>> getAllEmployeesGroupedByDepartment() {
+        List<Employee> employees = employeeRepository.findAll();
+
+        // 부서 번호를 기준으로 오름차순 정렬 후 그룹화
+        return employees.stream()
+                .sorted(Comparator.comparing(emp -> emp.getDepartment().getDmpNo())) // dmpNo로 정렬
+                .collect(Collectors.groupingBy(
+                        emp -> emp.getDepartment().getDmpName(), // 부서명으로 그룹화
+                        LinkedHashMap::new, // 순서를 유지하기 위해 LinkedHashMap 사용
+                        Collectors.mapping(this::convertToDTO,
+                                Collectors.toList())))
+                .entrySet().stream()
+                .peek(entry -> entry.setValue(
+                        entry.getValue().stream()
+                                .sorted(Comparator.comparing(EmployeeDTO::getRankNo)) // rankNo로 정렬
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
     }
 }

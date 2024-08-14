@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.zerock.chain.dto.EmployeeDTO;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface EmployeeService {
@@ -21,6 +22,8 @@ public interface EmployeeService {
     void deleteEmployee(Long empNo);
     List<EmployeeDTO> searchEmployees(String name, String departmentName, String rankName);
     Page<EmployeeDTO> getEmployeesPaged(int page, int size);
+
+    Map<String, List<EmployeeDTO>> getAllEmployeesGroupedByDepartment();
 }
 
 

@@ -18,12 +18,10 @@
 
     <!-- 메신저 css & 소켓 연결 js -->
     <link th:href="@{/assets/css/chatting.css}" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
-<div class="chat_container">
 
+<div class="chat_container">
     <!-- 왼쪽 메뉴 바 -->
     <div class="d-flex">
         <div class="chat_left_bar" id="v-pills-tab" role="tablist"
@@ -122,7 +120,7 @@
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 즐겨찾기 목록">
                     <div class="chat_room"  data-room-id="4">
-                        <span class="chat_alarm">4444</span>
+                        <span class="chat_alarm">41</span>
                         <div class="room_img">
                             <img src="/assets/img/보노보노.png" alt="프로필사진">
                         </div>
@@ -207,27 +205,30 @@
                 </div>
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 목록">
-                    <div class="chat_room" data-room-id="1"> <!--// ${message.chatRoomNo}?? -->
-                        <span class="chat_alarm">4444</span>
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">테스트</li>
-                            <li class="room_content">내용1</li>
-                        </ul>
-                    </div>
+
+<!--                    <div class="chat_room" data-room-id="2">-->
+<!--                        <span class="chat_alarm">4444</span>-->
+<!--                        <div class="room_img">-->
+<!--                            <img src="/assets/img/보노보노.png" alt="프로필사진">-->
+<!--                        </div>-->
+<!--                        <ul>-->
+<!--                            <li class="room_name">김부장</li>-->
+<!--                            <li class="room_content">ㄹㄹee</li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+
                 </div> <!-- /end chat_list -->
             </div> <!-- /end 채팅방 목록 -->
         </div>
     </div>
-    <!--   ------------------------------------------------------- -->
+
     <!-- 채팅방 영역 -->
     <div class="chat_chatting_container">
         <!-- 방 선택하기 전, 화면 표시 -->
-        <span class="info_text">대화하실 방을 선택해주세요.</span>
+        <span class="info_text" id="infoText">
+            대화하실 방을 선택해주세요.
+        </span>
         <div class="chat_chatting" id="chatChatting">
-
             <!-- 채팅 헤드 영역 -->
             <div id="chatHeader" class="chat_header">
                 <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
@@ -237,14 +238,14 @@
             </div>
 
             <!-- 채팅 대화 영역 -->
-            <div id="chatRoom1" class="chat_content"> <!--■■■■■ id값 불러오게 수정 ${message.chatRoomNo}?? ■■■■■-->
-                <p class="chat_num chat_to">ㅁㅇ리나 김미김미김미김미김믹밈미살앙에 이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙리ㅜㄴㅇ리물ㄴㅁ</p>
-                <p class="chat_num chat_from">ㅁㅇ리나이리라으라으라능라ㅣㅇ무나이ㅜ라ㅣㅁ우라이누라우라울ㄴ람우린울눙ㄴㅇ리물ㄴㅁ</p>
-                <p class="chat_num chat_to">ㄹㄹ</p>
-            </div>
+<!--            <div id="chatRoom2" class="chat_content">-->
+<!--                <p class="chat_num chat_to">ㅁㅇ리나 김미김미김미김미김믹밈미살리ㅜㄴㅇ리물ㄴㅁ</p>-->
+<!--                <p class="chat_num chat_from">ㅁㅇ리라우라울ㄴ람우린울눙ㄴㅇ리물ㄴㅁ</p>-->
+<!--                <p class="chat_num chat_to">흐엥..나모태...</p>-->
+<!--            </div>-->
 
             <!-- 채팅 입력 영역 -->
-            <div class="chat_input_container">
+            <div class="chat_input_container" id="messageForm">
                 <textarea id="chatInput"></textarea>
                 <button class="send_button" id="sendButton">전송</button>
             </div>
@@ -253,6 +254,8 @@
 </div>
 
 <!-- 메신저 js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/assets/js/chatting.js"></script>
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
