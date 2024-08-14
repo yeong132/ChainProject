@@ -439,9 +439,7 @@
     <!----------------------------------------------------------------페이지 별 타이틀 ---------------------------------------------------------------------->
 
     <section class="section">
-
-        <div class="row">
-            <form enctype="multipart/form-data" id="combinedForm" method="post"
+            <form class="row" enctype="multipart/form-data" id="combinedForm" method="post"
                   th:action="@{/project/modify/{projectNo}(projectNo=${project.projectNo})}">
                 <input id="projectNo" name="projectNo" th:value="${project.projectNo}" type="hidden">
                 <input id="isTemporary" name="isTemporary" th:value="${project.isTemporary}" type="hidden">
@@ -592,10 +590,6 @@
                         </button>
                         </div>
                     </div>
-
-
-
-        </div> <!-- row 끝  -->
     </section>
 </main>
 <!-- End #main -->

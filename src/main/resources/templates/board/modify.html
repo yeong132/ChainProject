@@ -620,6 +620,26 @@
 
   <!-- 수정 삭제 목록 모달 -->
   <script>
+    // Froala Editor 초기화
+    $(document).ready(function() {
+      new FroalaEditor('#froala', {
+        language: 'ko',
+        heightMin: 300,
+        events: {
+          // Froala Editor가 초기화될 때 호출됩니다.
+          'initialized': function () {
+            // textarea의 값을 Froala Editor에 설정합니다.
+            this.html.set($('#froala').text());
+          },
+          // Froala Editor의 내용이 변경될 때 호출됩니다.
+          'contentChanged': function () {
+            // Froala Editor의 내용을 textarea에 설정합니다.
+            $('#froala').val(this.html.get());
+          }
+        }
+      });
+    });
+
     // 수정 모달
     function showModal() {
       var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
