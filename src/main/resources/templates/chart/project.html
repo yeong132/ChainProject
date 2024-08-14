@@ -474,7 +474,7 @@
         </div>
       </div>
       <!-- 월별 진행 현황 차트 -->
-      <div class="col-lg-12">
+      <div class="col-lg-6">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Project -- 월별 진행 현황</h5>
@@ -489,8 +489,6 @@
       </div>
     </div>
   </section>
-
-
 
 
 </main>
@@ -568,43 +566,49 @@
 
     // 차트를 업데이트하는 함수
     function updateChart(progressData) {
-      const seriesData = [
-        progressData[20],  // 20%에 해당하는 프로젝트 개수
-        progressData[40],  // 40%에 해당하는 프로젝트 개수
-        progressData[60],  // 60%에 해당하는 프로젝트 개수
-        progressData[80],  // 80%에 해당하는 프로젝트 개수
-        progressData[100]  // 100%에 해당하는 프로젝트 개수
-      ];
+
+      const totalProjects = Object.values(progressData).reduce((a, b) => a + b, 0);  // 전체 프로젝트 수 계산
+
+      const seriesData = totalProjects > 0 ? [
+        (progressData[20] / totalProjects) * 100,  // 20% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
+        (progressData[40] / totalProjects) * 100,  // 40% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
+        (progressData[60] / totalProjects) * 100,  // 60% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
+        (progressData[80] / totalProjects) * 100,  // 80% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
+        (progressData[100] / totalProjects) * 100  // 100% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
+      ] : [0, 0, 0, 0, 0];  // 프로젝트가 없을 때 0으로 처리
 
       const chart = new ApexCharts(document.querySelector("#radialBarChart"), {
         series: seriesData,  // 각 퍼센트에 해당하는 프로젝트 개수를 시리즈 데이터로 설정
         chart: {
           height: 350,
-          type: 'radialBar',
-          toolbar: {
-            show: true
-          }
+          type: 'donut',  // 차트 타입을 도넛 차트로 설정
         },
+        labels: ['20%', '40%', '60%', '80%', '100%'],  // 각 퍼센트의 레이블
         plotOptions: {
-          radialBar: {
-            dataLabels: {
-              name: {
-                fontSize: '22px',
-              },
-              value: {
-                fontSize: '16px',
-              },
-              total: {
+          pie: {
+            donut: {
+              size: '65%',
+              labels: {
                 show: true,
-                label: 'Total',
-                formatter: function () {
-                  return seriesData.reduce((a, b) => a + b, 0);  // 총합을 계산하여 표시
+                total: {
+                  show: true,
+                  label: 'Total',
+                  formatter: function () {
+                    return totalProjects;  // 총 프로젝트 수를 표시
+                  }
                 }
               }
             }
           }
         },
-        labels: ['20%', '40%', '60%', '80%', '100%'],  // 각 퍼센트의 레이블
+        dataLabels: {
+          dropShadow: {
+            enabled: false
+          }
+        },
+        legend: {
+          position: 'bottom'
+        }
       });
 
       chart.render();  // 차트 렌더링
@@ -630,6 +634,7 @@
     }
   });
 </script>
+
 
 
 
