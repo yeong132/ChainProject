@@ -447,6 +447,46 @@
         <input type="hidden" class="projectEndDate" th:each="project : ${projects}" th:value="${project.projectEndDate}" />
       </div>
 
+      <!-- 월별 진행 현황 차트 -->
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Project -- 월별 진행 현황</h5>
+            <!-- 월 선택 -->
+            <select id="monthSelector" class="form-select mb-3">
+            </select>
+            <!-- Radial Bar Chart -->
+            <div id="radialBarChart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 연간 진행 현황 차트 -->
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Project -- 연간 진행 현황</h5>
+            <!-- 연도 선택 -->
+            <select id="yearSelector" class="form-select mb-3">
+            </select>
+            <!-- Radial Bar Chart -->
+            <div id="annualRadialBarChart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 완료/ 미완료 진행 현황 차트 -->
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Project --완료/ 미완료 현황</h5>
+            <!-- 가로 바 차트를 표시할 div 추가 -->
+            <div id="completionBarChart"></div>
+          </div>
+        </div>
+      </div>
+
+
       <!-- 프로젝트 목록을 보여주는 테이블 -->
       <div class="col-lg-12">
         <div class="card">
@@ -473,20 +513,7 @@
           </div>
         </div>
       </div>
-      <!-- 월별 진행 현황 차트 -->
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Project -- 월별 진행 현황</h5>
-            <!-- 월 선택 -->
-            <select id="monthSelector" class="form-select mb-3">
-              <option value="">Select Month</option>
-            </select>
-            <!-- Radial Bar Chart -->
-            <div id="radialBarChart"></div>
-          </div>
-        </div>
-      </div>
+
     </div>
   </section>
 
@@ -513,7 +540,7 @@
 </footer>
 <!-- Footer 끝 -->
 
-<!--차트 계산 -->
+<!-- 연간, 월간 차트 계산 -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const projectNames = document.querySelectorAll('.projectName');
@@ -521,119 +548,256 @@
     const projectStartDates = document.querySelectorAll('.projectStartDate');
     const projectEndDates = document.querySelectorAll('.projectEndDate');
 
-    // 데이터를 배열로 변환하여 사용
     const projects = Array.from(projectNames).map((input, index) => ({
-      projectName: input.value,  // 프로젝트 이름
-      projectProgress: parseInt(projectProgresses[index].value, 10),  // 프로젝트 진행도
-      projectStartDate: projectStartDates[index].value,  // 프로젝트 시작일
-      projectEndDate: projectEndDates[index].value,  // 프로젝트 종료일
+      projectName: input.value,
+      projectProgress: parseInt(projectProgresses[index].value, 10),
+      projectStartDate: new Date(projectStartDates[index].value),
+      projectEndDate: new Date(projectEndDates[index].value),
     }));
 
-    console.log(projects);
-
-    // 프로젝트 데이터를 월별로 그룹화하는 함수
     function groupProjectsByMonth(projects) {
       const monthGroups = {};
 
       projects.forEach(project => {
-        const startDate = new Date(project.projectStartDate);
+        const startDate = project.projectStartDate;
         const monthKey = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`;
 
         if (!monthGroups[monthKey]) {
-          monthGroups[monthKey] = { 20: 0, 40: 0, 60: 0, 80: 0, 100: 0 };
+          monthGroups[monthKey] = { total: 0, 20: 0, 40: 0, 60: 0, 80: 0, 100: 0 };
         }
 
         const progress = project.projectProgress;
         const progressKey = [20, 40, 60, 80, 100].find(p => p >= progress);
         if (progressKey) {
           monthGroups[monthKey][progressKey]++;
+          monthGroups[monthKey].total++; // 전체 프로젝트 수 증가
         }
       });
 
       return monthGroups;
     }
 
-    // 월 선택 셀렉터에 옵션을 추가하는 함수
-    function populateMonthSelector(monthGroups) {
-      const monthSelector = document.getElementById('monthSelector');
-      Object.keys(monthGroups).forEach(month => {
-        const option = document.createElement('option');
-        option.value = month;
-        option.textContent = month;
-        monthSelector.appendChild(option);
+    function groupProjectsByYear(projects) {
+      const yearGroups = {};
+
+      projects.forEach(project => {
+        const startDate = project.projectStartDate;
+        const yearKey = startDate.getFullYear().toString();
+
+        if (!yearGroups[yearKey]) {
+          yearGroups[yearKey] = { total: 0, 20: 0, 40: 0, 60: 0, 80: 0, 100: 0 };
+        }
+
+        const progress = project.projectProgress;
+        const progressKey = [20, 40, 60, 80, 100].find(p => p >= progress);
+        if (progressKey) {
+          yearGroups[yearKey][progressKey]++;
+          yearGroups[yearKey].total++; // 전체 프로젝트 수 증가
+        }
       });
+
+      return yearGroups;
     }
 
-    // 차트를 업데이트하는 함수
-    function updateChart(progressData) {
+    let monthChart, yearChart;
 
-      const totalProjects = Object.values(progressData).reduce((a, b) => a + b, 0);  // 전체 프로젝트 수 계산
-
-      const seriesData = totalProjects > 0 ? [
-        (progressData[20] / totalProjects) * 100,  // 20% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
-        (progressData[40] / totalProjects) * 100,  // 40% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
-        (progressData[60] / totalProjects) * 100,  // 60% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
-        (progressData[80] / totalProjects) * 100,  // 80% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
-        (progressData[100] / totalProjects) * 100  // 100% 구간의 프로젝트 수를 전체 프로젝트 수로 나눈 퍼센트
-      ] : [0, 0, 0, 0, 0];  // 프로젝트가 없을 때 0으로 처리
-
-      const chart = new ApexCharts(document.querySelector("#radialBarChart"), {
-        series: seriesData,  // 각 퍼센트에 해당하는 프로젝트 개수를 시리즈 데이터로 설정
-        chart: {
-          height: 350,
-          type: 'donut',  // 차트 타입을 도넛 차트로 설정
-        },
-        labels: ['20%', '40%', '60%', '80%', '100%'],  // 각 퍼센트의 레이블
-        plotOptions: {
-          pie: {
-            donut: {
-              size: '65%',
-              labels: {
-                show: true,
-                total: {
+    function renderOrUpdateChart(chart, chartElementId, seriesData, totalProjects) {
+      if (chart) {
+        chart.updateSeries(seriesData);
+      } else {
+        chart = new ApexCharts(document.querySelector(`#${chartElementId}`), {
+          series: seriesData,
+          chart: {
+            height: 350,
+            type: 'donut',
+          },
+          labels: ['20%', '40%', '60%', '80%', '100%'],
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '65%',
+                labels: {
                   show: true,
-                  label: 'Total',
-                  formatter: function () {
-                    return totalProjects;  // 총 프로젝트 수를 표시
+                  total: {
+                    show: true,
+                    label: 'Total',
+                    formatter: function () {
+                      return totalProjects;
+                    }
                   }
                 }
               }
             }
+          },
+          dataLabels: {
+            formatter: function (val, opts) {
+              const label = opts.w.globals.labels[opts.seriesIndex].replace('%', '');
+              const count = seriesData[opts.seriesIndex];
+              return `${Math.round(val)}% - ${count}건`;
+            },
+            dropShadow: {
+              enabled: false
+            }
+          },
+          legend: {
+            position: 'bottom'
           }
-        },
-        dataLabels: {
-          dropShadow: {
-            enabled: false
-          }
-        },
-        legend: {
-          position: 'bottom'
-        }
-      });
-
-      chart.render();  // 차트 렌더링
+        });
+        chart.render();
+      }
+      return chart;
     }
 
-    // 월별로 그룹화된 데이터를 가져옴
-    const monthGroups = groupProjectsByMonth(projects);
-    populateMonthSelector(monthGroups);  // 셀렉터에 월 옵션 추가
+    function updateMonthChart(selectedMonth) {
+      const progressData = monthGroups[selectedMonth];
+      const totalProjects = progressData.total;
+      const seriesData = totalProjects > 0 ? [
+        Math.round((progressData[20] / totalProjects) * 100),
+        Math.round((progressData[40] / totalProjects) * 100),
+        Math.round((progressData[60] / totalProjects) * 100),
+        Math.round((progressData[80] / totalProjects) * 100),
+        Math.round((progressData[100] / totalProjects) * 100)
+      ] : [0, 0, 0, 0, 0];
 
-    const monthSelector = document.getElementById('monthSelector');
-    monthSelector.addEventListener('change', function () {
+      monthChart = renderOrUpdateChart(monthChart, 'radialBarChart', seriesData, totalProjects);
+    }
+
+    function updateYearChart(selectedYear) {
+      const progressData = yearGroups[selectedYear];
+      const totalProjects = progressData.total;
+      const seriesData = totalProjects > 0 ? [
+        Math.round((progressData[20] / totalProjects) * 100),
+        Math.round((progressData[40] / totalProjects) * 100),
+        Math.round((progressData[60] / totalProjects) * 100),
+        Math.round((progressData[80] / totalProjects) * 100),
+        Math.round((progressData[100] / totalProjects) * 100)
+      ] : [0, 0, 0, 0, 0];
+
+      yearChart = renderOrUpdateChart(yearChart, 'annualRadialBarChart', seriesData, totalProjects);
+    }
+
+    const monthGroups = groupProjectsByMonth(projects);
+    const yearGroups = groupProjectsByYear(projects);
+
+    function populateSelector(selectorId, groups) {
+      const selector = document.getElementById(selectorId);
+      Object.keys(groups).sort((a, b) => new Date(b) - new Date(a)).forEach(key => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = key;
+        selector.appendChild(option);
+      });
+    }
+
+    populateSelector('monthSelector', monthGroups);
+    populateSelector('yearSelector', yearGroups);
+
+    function initializeChart() {
+      const latestMonth = document.getElementById('monthSelector').value;
+      const latestYear = document.getElementById('yearSelector').value;
+
+      if (latestMonth && monthGroups[latestMonth]) {
+        updateMonthChart(latestMonth);
+      }
+
+      if (latestYear && yearGroups[latestYear]) {
+        updateYearChart(latestYear);
+      }
+    }
+
+    document.getElementById('monthSelector').addEventListener('change', function() {
       const selectedMonth = this.value;
-      if (monthGroups[selectedMonth]) {
-        updateChart(monthGroups[selectedMonth]);  // 선택된 월에 따라 차트 업데이트
+      if (selectedMonth && monthGroups[selectedMonth]) {
+        updateMonthChart(selectedMonth);
+        updateCompletionChartForSelectedMonth(selectedMonth);  // 선택된 월 기준으로 완료/미완료 차트 업데이트
       }
     });
 
-    // 기본으로 가장 최근 달을 선택하고 차트를 그리기
-    const latestMonth = Object.keys(monthGroups).pop();
-    monthSelector.value = latestMonth;
-    if (latestMonth) {
-      updateChart(monthGroups[latestMonth]);  // 최신 월 데이터로 차트 초기화
-    }
+    document.getElementById('yearSelector').addEventListener('change', function() {
+      const selectedYear = this.value;
+      if (selectedYear && yearGroups[selectedYear]) {
+        updateYearChart(selectedYear);
+      }
+    });
+
+    initializeChart();
   });
+
+  // =============================================================================================//
+  // 선택한 월 기준으로 프로젝트를 완료/미완료로 그룹화하는 함수
+  function groupProjectsByCompletionForSelectedMonth(projects, selectedMonth) {
+    const completionGroups = { completed: 0, notCompleted: 0 };
+
+    projects.forEach(project => {
+      const monthKey = `${project.projectStartDate.getFullYear()}-${String(project.projectStartDate.getMonth() + 1).padStart(2, '0')}`;
+      if (monthKey === selectedMonth) {
+        if (project.projectProgress === 100) {
+          completionGroups.completed++;  // 완료된 프로젝트 수 증가
+        } else {
+          completionGroups.notCompleted++;  // 미완료된 프로젝트 수 증가
+        }
+      }
+    });
+
+    return completionGroups;
+  }
+
+  // 완료/미완료 현황 차트 생성 함수
+  function renderCompletionBarChart(completionGroups) {
+    const completionData = [completionGroups.completed, completionGroups.notCompleted];
+
+    const options = {
+      series: [{
+        data: completionData
+      }],
+      chart: {
+        type: 'bar',
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: '50%'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: ['Completed', 'Not Completed'],
+      },
+      colors: ['#28a745', '#dc3545'],  // 색상 설정 (완료: 초록, 미완료: 빨강)
+      legend: {
+        show: false
+      }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#completionBarChart"), options);
+    chart.render();
+  }
+
+  // 프로젝트 데이터를 월별로 그룹화하여 선택된 월의 데이터를 가져옴
+  function updateCompletionChartForSelectedMonth(selectedMonth) {
+    const completionGroups = groupProjectsByCompletionForSelectedMonth(projects, selectedMonth);
+    renderCompletionBarChart(completionGroups);
+  }
+
+  // 초기 실행 시 최신 월로 차트 업데이트
+  document.getElementById('monthSelector').addEventListener('change', function() {
+    const selectedMonth = this.value;
+    updateCompletionChartForSelectedMonth(selectedMonth);
+  });
+
+  initializeChart();
 </script>
+
+
+
+
+
+
+
+
 
 
 

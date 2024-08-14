@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ChartRequestDTO {
 
+    private Long chartNo;          // 차트 번호
     private String chartName;      // 차트 이름
     private String chartContent; // 차트 내용
     private LocalDate chartStartDate; // 시작일

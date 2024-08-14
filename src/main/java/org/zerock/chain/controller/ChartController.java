@@ -45,41 +45,34 @@ public class ChartController {
         return "chart/OKR";
     }
 
-
     // 차트 생성 등록
     @PostMapping("/create")
     public String createChart(ChartRequestDTO chartRequestDTO) {
-        // chartProgress가 null이거나 빈 문자열인 경우 기본값 0을 설정
-        if (chartRequestDTO.getChartProgress() == null || chartRequestDTO.getChartProgress().isEmpty()) {
-            chartRequestDTO.setChartProgress("0");
-        }
-        // ChartService를 통해 차트를 생성
         chartService.createChart(chartRequestDTO);
         log.info("Chart created with name: {}", chartRequestDTO.getChartName());
-        // 저장 후 OKR 페이지로 리다이렉트
         return "redirect:/chart/OKR";
     }
 
-    // 차트 상세 정보 조회
+
+    // 차트 상세 정보 조회 및 수정 모달 표시
     @GetMapping("/detail/{chartNo}")
     @ResponseBody
-    public ResponseEntity<ChartDTO> getChartDetail(@PathVariable Long chartNo) {
-        ChartDTO chart = chartService.getChartById(chartNo);
-        return ResponseEntity.ok(chart);
+    public ChartDTO getChartDetail(@PathVariable Long chartNo) {
+        // JSON 데이터를 반환하여 클라이언트에서 AJAX로 처리
+        return chartService.getChartById(chartNo);
     }
 
     // 차트 수정 등록
-    @PostMapping("/update/{chartNo}")
-    public ResponseEntity<Void> updateChart(@PathVariable Long chartNo, @RequestBody ChartRequestDTO chartRequestDTO) {
-        chartService.updateChart(chartNo, chartRequestDTO);
-        return ResponseEntity.ok().build();
+    @PostMapping("/update")
+    public String updateChart(ChartRequestDTO chartRequestDTO) {
+        chartService.updateChart(chartRequestDTO.getChartNo(), chartRequestDTO);
+        return "redirect:/chart/OKR";
     }
 
-    @GetMapping("/project")
-    public String showProjectCharts(Model model) {
-        List<ProjectDTO> projects = projectService.getAllProjects();
-        model.addAttribute("projects", projects);
-        return "chart/project"; // 이 템플릿 파일로 이동합니다.
+    // 차트 삭제
+    @PostMapping("/delete")
+    public String deleteChart(@RequestParam Long chartNo) {
+        chartService.deleteChart(chartNo);
+        return "redirect:/chart/OKR";
     }
-
 }
