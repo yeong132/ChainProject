@@ -1,6 +1,7 @@
 package org.zerock.chain.service;
 
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.model.Department;
@@ -13,6 +14,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+    private final ModelMapper mapper = new ModelMapper();
 
     @Override
     public List<Department> getAllDepartments() {

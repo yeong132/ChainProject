@@ -10,6 +10,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.5'
 }
 
+apply plugin: 'io.spring.dependency-management' // webSocket
+
 group = 'org.zerock'
 version = '0.0.1-SNAPSHOT'
 
@@ -47,6 +49,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
+    //Gmail API
+    implementation 'com.google.api-client:google-api-client:2.0.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.34.1'
+    implementation 'com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0'
+
+    //javaX Mail
+    implementation 'javax.mail:mail:1.4.7'
+
+
     // QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
     annotationProcessor  (
@@ -71,6 +82,25 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-tomcat' // 내장 Tomcat 서버 사용
     implementation 'org.springframework.boot:spring-boot-starter-json' // JSON 처리 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-logging' // 로깅 라이브러리
+
+    /* 메신저 라이브러리*/
+    // webSocket 의존성 라이브러리 추가
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // ?
+    implementation 'org.webjars:webjars-locator-core'
+    // ?
+    implementation group: 'org.webjars.bower', name: 'bootstrap', version: '5.3.3'
+    // 소켓 클라이언트
+    implementation group: 'org.webjars', name: 'sockjs-client', version: '1.5.1'
+    // Stomp
+    implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.4'
+    // Gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    // ?
+    implementation group: 'org.webjars.npm', name: 'axios', version: '1.7.2'
+    //
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
 }
 
 tasks.named('test') {

@@ -509,11 +509,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
+<<<<<<< HEAD
+=======
                             <h5 class="card-title">전체 메일</h5>
                             <!-- 검색 입력란 -->
                             <div class="search-bar">
                                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
                             </div>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
@@ -523,7 +526,13 @@
                                     <div class="custom-checkbox-dropdown">
                                         <input type="checkbox" id="selectAll">
                                         <div class="dropdown ms-2">
+<<<<<<< HEAD
+                                            <button class="btn btn-light dropdown-toggle p-0" type="button"
+                                                    id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+=======
                                             <button class="btn btn-light dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                                                 ▼
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -535,6 +544,39 @@
                                         </div>
                                     </div>
                                 </th>
+<<<<<<< HEAD
+                                <th>To</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 발신 메일 리스트 데이터 바인딩 -->
+                            <tr th:each="message : ${messages}" class="listTb"
+                                th:data-message-id="${message.id}"
+                                onclick="rowClick(this)">
+                                <td>
+                                    <div class="checkbox-star-container">
+                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
+                                        <i class="bi bi-star star-icon"
+                                           th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'"
+                                           onclick="toggleStar(this, event)">
+                                        </i>
+                                    </div>
+                                </td>
+                                <td th:text="${message.to}">To</td>
+                                <td th:text="${message.subject}">Subject</td>
+                                <td th:text="${message.date}">Date</td>
+                            </tr>
+
+                            <!-- 메시지가 없을 경우 -->
+                            <tr th:if="${messages.empty}">
+                                <td colspan="4">No sent emails found.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- 테이블 끝 -->
+=======
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -688,11 +730,16 @@
                         </table>
                         <!-- 테이블 끝 -->
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                     </div>
                 </div>
             </div>
         </div>
     </section>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </main>
 
 <!-- ======= Footer ======= -->
@@ -741,6 +788,16 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<<<<<<< HEAD
+<script>
+    function rowClick(element) {
+        const messageId = element.getAttribute('data-message-id');
+        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
+    }
+
+    function toggleStar(element, event) {
+        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+=======
 <!-- 검색 기능을 위한 JavaScript 코드 -->
 <script>
     /**
@@ -809,6 +866,7 @@
 
     // 별표 토글 기능 구현
     function toggleStar(element) {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         if (element.classList.contains('bi-star')) {
             element.classList.remove('bi-star');
             element.classList.add('bi-star-fill');
@@ -818,8 +876,38 @@
         }
     }
 
+<<<<<<< HEAD
+    // 전체 선택 체크박스 기능 구현
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
+    document.getElementById('selectAllBtn').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        document.getElementById('selectAll').checked = true; // 드롭다운 옆 체크박스도 체크
+    });
+
+    document.getElementById('deselectAllBtn').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
+    });
+
+    // 별표 드롭다운 메뉴와 연동
+    document.getElementById('markAsStarredBtn').addEventListener('click', function () {
+=======
     // 별표 드롭다운 메뉴와 연동
     document.getElementById('markAsStarredBtn').addEventListener('click', function() {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         const stars = document.querySelectorAll('#dataTable .star-icon');
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         stars.forEach((star, index) => {
@@ -831,7 +919,11 @@
         });
     });
 
+<<<<<<< HEAD
+    document.getElementById('unmarkAsStarredBtn').addEventListener('click', function () {
+=======
     document.getElementById('unmarkAsStarredBtn').addEventListener('click', function() {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         const stars = document.querySelectorAll('#dataTable .star-icon');
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         stars.forEach((star, index) => {
@@ -842,6 +934,21 @@
             }
         });
     });
+<<<<<<< HEAD
+
+    // 체크박스 클릭 시 이벤트 전파 방지 및 선택/해제 기능 구현
+    document.querySelectorAll('.checkbox-star-container input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('click', function(event) {
+            event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+        });
+    });
+
+</script>
+
+</body>
+</html>
+=======
 </script>
 </body>
 </html>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6

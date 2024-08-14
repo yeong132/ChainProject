@@ -35,6 +35,9 @@
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
+<<<<<<< HEAD
+    <style>
+=======
     <!-- =======================================================
   * Template Name: NiceAdmin
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -74,6 +77,7 @@
             font-style: italic; /* 자리 표시자 텍스트를 이탤릭체로 설정 */
         }
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         /* 드롭다운 메뉴 스타일 */
         .dropdown-menu {
             min-width: 8rem; /* 최소 너비 설정 */
@@ -89,11 +93,14 @@
             margin-right: 5px;
         }
 
+<<<<<<< HEAD
+=======
         /* 별표 아이콘 스타일 */
         .star-icon {
             cursor: pointer;
         }
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         /* 체크박스와 별표 아이콘을 가깝게 배치하기 위한 스타일 */
         .checkbox-star-container {
             display: flex; /* flexbox를 사용하여 요소를 가로로 배치 */
@@ -101,8 +108,19 @@
         }
 
         .checkbox-star-container input[type="checkbox"] {
+<<<<<<< HEAD
+            margin-right: 15px; /* 체크박스와 별표 사이의 간격을 설정 */
+        }
+
+        /* 마우스커서 표시 */
+        .listTb {
+            cursor: pointer;
+        }
+
+=======
             margin-right: 20px; /* 체크박스와 별표 사이의 간격을 설정 */
         }
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     </style>
 </head>
 
@@ -118,6 +136,10 @@
     </div>
     <!-- 로고 끝 -->
 
+<<<<<<< HEAD
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+=======
     <!-- <div class="search-bar">
       <form class="search-form d-flex align-items-center" method="POST" action="#">
         <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
@@ -225,6 +247,7 @@
             <!-- 환경설정 전체 끝 -->
 
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
@@ -287,6 +310,8 @@
 </header>
 <!-- Header 끝 -->
 
+<<<<<<< HEAD
+=======
 <!-- Header Modal -->
 <!-- 출퇴근 Modal -->
 <div class="modal fade" id="attendanceModal" tabindex="-1">
@@ -335,6 +360,7 @@
 <!-- 출퇴근 Modal 끝 -->
 <!-- Header Modal -->
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -486,6 +512,10 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 <!-- 메인 몸통 -->
 <main id="main" class="main">
     <div class="pagetitle">
@@ -493,7 +523,10 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
+<<<<<<< HEAD
+=======
                 <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                 <li class="breadcrumb-item active">Trash</li>
             </ol>
         </nav>
@@ -511,11 +544,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
+<<<<<<< HEAD
+=======
                             <h5 class="card-title">전체 메일</h5>
                             <!-- 검색 입력란 -->
                             <div class="search-bar">
                                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
                             </div>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
@@ -525,7 +561,13 @@
                                     <div class="custom-checkbox-dropdown">
                                         <input type="checkbox" id="selectAll">
                                         <div class="dropdown ms-2">
+<<<<<<< HEAD
+                                            <button class="btn btn-light dropdown-toggle p-0" type="button"
+                                                    id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+=======
                                             <button class="btn btn-light dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                                                 ▼
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -535,6 +577,30 @@
                                         </div>
                                     </div>
                                 </th>
+<<<<<<< HEAD
+                                <th>From</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="message : ${messages}" class="listTb"
+                                th:data-message-id="${message.id}"
+                                onclick="rowClick(this)">
+                                <td>
+                                    <div class="checkbox-star-container">
+                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </div>
+                                </td>
+                                <td th:text="${message.from}">From</td>
+                                <td th:text="${message.subject}">Subject</td>
+                                <td th:text="${message.date}">Date</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- 테이블 끝 -->
+=======
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -561,11 +627,16 @@
                         </table>
                         <!-- 테이블 끝 -->
 
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                     </div>
                 </div>
             </div>
         </div>
     </section>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </main>
 
 <!-- ======= Footer ======= -->
@@ -614,6 +685,27 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<<<<<<< HEAD
+<script>
+    function rowClick(element) {
+        const messageId = element.getAttribute('data-message-id');
+        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
+    }
+
+    function toggleStar(element, event) {
+        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+        if (element.classList.contains('bi-star')) {
+            element.classList.remove('bi-star');
+            element.classList.add('bi-star-fill');
+        } else {
+            element.classList.remove('bi-star-fill');
+            element.classList.add('bi-star');
+        }
+    }
+
+    // 전체 선택 체크박스 기능 구현
+    document.getElementById('selectAll').addEventListener('change', function () {
+=======
 <!-- 검색 기능을 위한 JavaScript 코드 -->
 <script>
     /**
@@ -657,6 +749,7 @@
 
     // 전체 선택 체크박스 기능 구현
     document.getElementById('selectAll').addEventListener('change', function() {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
@@ -664,7 +757,11 @@
     });
 
     // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
+<<<<<<< HEAD
+    document.getElementById('selectAllBtn').addEventListener('click', function () {
+=======
     document.getElementById('selectAllBtn').addEventListener('click', function() {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
@@ -672,15 +769,24 @@
         document.getElementById('selectAll').checked = true; // 드롭다운 옆 체크박스도 체크
     });
 
+<<<<<<< HEAD
+    document.getElementById('deselectAllBtn').addEventListener('click', function () {
+=======
     document.getElementById('deselectAllBtn').addEventListener('click', function() {
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
         document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
     });
+<<<<<<< HEAD
+</script>
+
+=======
 
 
 </script>
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 </body>
 </html>

@@ -1,30 +1,29 @@
 package org.zerock.chain.dto;
 
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDTO {
-
-    private Long empNo;
-    private String firstName;
-    private String lastName;
-    private String phoneNum;
-    private LocalDate birthDate;
-    private String addr;
-    private String email;
-    private LocalDate hireDate;
-    private LocalDate lastDate;
-    private Long departmentId;
-    private Long rankId;
-    private String departmentName;
-    private String rankName;
+    private Long empNo; // 사원 번호
+    private String lastName; // 성
+    private String firstName; // 이름
+    private String phoneNum; // 휴대번호
+//    private String email; // 없앨 예정
+    private String profileImg; // 프로필 사진
+    private LocalDate hireDate; // 입사일
+    private LocalDate lastDate; // 퇴사일
+    private LocalDate birthDate; // 생일
+    private String addr; // 주소
+    private Long departmentNo; // 부서 번호
+    private Long rankNo; // 직급 번호
+    private String rankName;  // 직급명
+    private String dmpName;   // 부서명
 }

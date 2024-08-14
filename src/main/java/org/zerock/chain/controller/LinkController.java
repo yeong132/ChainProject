@@ -8,11 +8,11 @@ public class LinkController {
 
     // 실제 사이트를 만들 때 필요한 것들
 
-    // example.html
-    /*@GetMapping("/")
+    // index.html
+    @GetMapping("/index")
     public String home() {
-        return "example"; // templates 폴더의 example.html 파일을 반환
-    }*/
+        return "index"; // templates 폴더의 index.html 파일을 반환
+    }
 
     // 참고용 사이트(사이트 완전 제작 후 삭제)
 
@@ -26,5 +26,6 @@ public class LinkController {
     public String getComponentsAccordion() {
         return "components-accordion"; // templates 폴더의 components-accordian.html 파일을 반환
     }
+
 }
 
