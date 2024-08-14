@@ -2,7 +2,7 @@ package org.zerock.chain.repository;
 
 
 
-import org.zerock.chain.entity.Employee;
+import org.zerock.chain.model.Employee;
 
 import java.util.List;
 

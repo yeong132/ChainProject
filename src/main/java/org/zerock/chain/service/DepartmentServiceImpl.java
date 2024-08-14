@@ -3,7 +3,7 @@ package org.zerock.chain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.zerock.chain.entity.Department;
+import org.zerock.chain.model.Department;
 import org.zerock.chain.repository.DepartmentRepository;
 
 import java.util.List;

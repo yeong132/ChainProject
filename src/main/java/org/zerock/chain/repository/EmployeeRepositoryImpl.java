@@ -5,9 +5,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
-import org.zerock.chain.entity.Department;
-import org.zerock.chain.entity.Employee;
-import org.zerock.chain.entity.Rank;
+import org.zerock.chain.model.Department;
+import org.zerock.chain.model.Employee;
+import org.zerock.chain.model.Rank;
 
 import java.util.ArrayList;
 import java.util.List;

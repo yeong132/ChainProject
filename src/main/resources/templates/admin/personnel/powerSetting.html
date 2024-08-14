@@ -314,9 +314,9 @@
       <h1>권한 관리</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>
-          <li class="breadcrumb-item">Personnel</li>
-          <li class="breadcrumb-item active">Power Setting</li>
+          <li class="breadcrumb-item"><a href="/admin/main">관리자페이지</a></li>
+          <li class="breadcrumb-item">인사관리</li>
+          <li class="breadcrumb-item active">권한관리</li>
         </ol>
       </nav>
     </div>
@@ -326,7 +326,7 @@
     <section class="section dashboard">
       <div class="row">
         <!-- Left side columns -->
-        <div class="col-lg-8">
+        <div class="col-lg-12">
           <div class="row">
             <!-- 회의실 권한 인원 -->
             <div class="col-xxl-4 col-md-6">
@@ -345,14 +345,13 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title"><b>회의실 권한</b></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>145</h6>
+                      <h6><a href="/admin/personnel/powerSetting">사원권한</a></h6>
                     </div>
                   </div>
                 </div>
@@ -377,14 +376,14 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title"><b>전자결제 권한</b> <span>| This Month</span></h5>
+<!--                  <h5 class="card-title"><b>직급 권한 </b> <span>| This Month</span></h5>-->
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>$3,264</h6>
+                      <h6><a href="/admin/personnel/RanksRole">직급 권한</a></h6>
                       <span class="text-success small pt-1 fw-bold">8%</span>
                       <span class="text-muted small pt-2 ps-1">increase</span>
                     </div>
@@ -411,7 +410,7 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title"><b> 게시판 권한 </b> <span>| This Year</span></h5>
+                  <h5 class="card-title"><b>권한 추가 </b> <span>| This Year</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -436,286 +435,293 @@
     </section>
             <!-- End Sales Card -->
 
+<!--    <div class="card">-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">Pills Tabs</h5>-->
+
+<!--        &lt;!&ndash; Pills Tabs &ndash;&gt;-->
+<!--        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">-->
+<!--          <li class="nav-item" role="presentation">-->
+<!--            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Home</button>-->
+<!--          </li>-->
+
+<!--          <li class="nav-item" role="presentation">-->
+<!--            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>-->
+<!--          </li>-->
+
+<!--          <li class="nav-item" role="presentation">-->
+<!--            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>-->
+<!--          </li>-->
+
+<!--        </ul>-->
+
+<!--        <div class="tab-content pt-2" id="myTabContent">-->
+<!--          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="home-tab">-->
+<!--            Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.-->
+<!--          </div>-->
+<!--          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="profile-tab">-->
+<!--            Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure eos quia. Accusantium distinctio omnis et atque fugiat. Itaque doloremque aliquid sint quasi quia distinctio similique. Voluptate nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.-->
+<!--          </div>-->
+<!--          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="contact-tab">-->
+<!--            Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.-->
+<!--          </div>-->
+<!--        </div>-->
+        <!-- End Pills Tabs -->
+
+<!--      </div>-->
+<!--    </div>-->
+
+
 
     <section class="section">
-      <div class="row">
-        <div class="col-lg-15">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="card-title">
-                <a  href="#"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">권한등록</a>
-              </h3>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+<!--            <h3 class="card-title">-->
+<!--              <button href="#" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">사원등록</button>-->
+<!--            </h3>-->
 
-              <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                <tr>
-                  <th>사원번호</th>
-                  <th>이름</th>
-                  <th>부서</th>
-                  <th>직급</th>
-                  <th>회의실</th>
-                  <th>전자결제</th>
-                  <th>게시판</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>123123</td>
-                  <td>종하</td>
-                  <td>행정</td>
-                  <td>부장</td>
-                  <td>가능</td>
-                  <td>가능</td>
-                  <td>불가능</td>
-                  <th class="icon">
-                    <button href="#" class="btn badge rounded-pill bg-secondary" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">수정</button>
+            <ul class="nav nav-pills mb-3 " id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Home</button>
+              </li>
 
-                  </th>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
+              </li>
 
-                </tr>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</button>
+              </li>
+
+            </ul>
 
 
 
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-              <!--              모달창 -->
-              <div class="modal fade" id="modalDialogScrollable" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title"><b>권한 수정</b></h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Profile Edit Form -->
-                      <form>
-                        <div class="row mb-3">
-                          <div class="col-md-8 col-lg-9">
-                            <img src="assets/img/profile-img.jpg" alt="Profile">
-                            <div class="pt-2">
-                              <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                              <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
-                            </div>
-                          </div>
-                        </div>
+            <!-- Employee Table -->
+            <div class="col-lg-12">
+            <table class="table datatable-selector " data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+              <thead>
+              <tr>
+                <th>사원번호</th>
+                <th>이름</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th>수정</th>
+                <th>삭제</th>
+              </tr>
+              </thead>
+              <tbody id="employeeTableBody">
+              </tbody>
+            </table>
+            </div>
 
-                        <div class="row mb-3">
-                          <label for="fullName" class="col-md-4 col-lg-3 col-form-label">이름</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
-                          </div>
-                        </div>
-
-                        <div class="row mb-3">
-                          <label for="about" class="col-md-4 col-lg-3 col-form-label">부서</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="about" type="text" class="form-control" id="about" value="Lueilwitz, Wisoky and Leuschke">
-                          </div>
-                        </div>
-
-                        <div class="row mb-3">
-                          <label for="company" class="col-md-4 col-lg-3 col-form-label">직급</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                          </div>
-                        </div>
-
-                        <div class="row mb-3">
-                          <label for="Job" class="col-md-4 col-lg-3 col-form-label">전화번호</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
-                          </div>
-                        </div>
-
-
-
-                        <div class="row mb-3">
-                          <label  class="col-md-4 col-lg-3 col-form-label">권한</label>
-                          <div class="col-md-8 col-lg-9">
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="first-flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="first-flexSwitchCheckChecked">회의실</label>
-                            </div>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="2flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="2flexSwitchCheckChecked">전자결제</label>
-                            </div>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="3flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="3flexSwitchCheckChecked">게시판</label>
-                            </div>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="4flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="4flexSwitchCheckChecked">프로젝트(준비중)</label>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="row mb-3">
-                          <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
-                          </div>
-                        </div>
-
-                        <div class="row mb-3">
-                          <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
-                          </div>
-                        </div>
-
-
-
-
-
-
-                      </form><!-- End Profile Edit Form -->
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">저장</button>
-                      <button type="button" class="btn btn-primary">삭제</button>
-                    </div>
+            <!-- Employee Registration Modal -->
+            <div class="modal fade" id="modalDialogScrollable" tabindex="-1">
+              <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">사원 등록 페이지</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                </div>
-              </div><!-- End Modal Dialog Scrollable-->
-
-
-
-
-<!--              권한 등록 버튼 모달 -->
-              <div class="modal fade" id="ExtralargeModal" tabindex="-1">
-                <div class="modal-dialog modal-xl">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title"><b>사원종합리스트</b></h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Profile Edit Form -->
-                      <!-- Table with stripped rows -->
-                      <table class="table datatable">
-                        <thead>
-                        <tr>
-                          <th>사원번호</th>
-                          <th>이름</th>
-                          <th>부서</th>
-                          <th>직급</th>
-                          <th>회의실</th>
-                          <th>전자결제</th>
-                          <th>게시판</th>
-                          <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                          <td>123123</td>
-                          <td>종하</td>
-                          <td>행정</td>
-                          <td>부장</td>
-                          <td>가능</td>
-                          <td>가능</td>
-                          <td>불가능</td>
-                          <th class="icon">
-                            <i class="bi bi-box-arrow-in-down-left" data-bs-toggle="modal" data-bs-target="#basicModal"></i>
-                          </th>
-
-                        </tr>
-
-
-
-                        </tbody>
-                      </table>
-<!-- End Profile Edit Form -->
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    </div>
-                  </div>
-                </div>
-              </div><!-- End Modal Dialog Scrollable-->
-
-<!--              권한 추가 모달-->
-              <div class="modal fade" id="basicModal" tabindex="-1">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title"><b>권한 추가</b></h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Profile Edit Form -->
-                      <form>
-                        <div class="row mb-3">
-                          <div class="col-md-8 col-lg-9">
-                            <img src="assets/img/profile-img.jpg" alt="Profile">
-                            <div class="pt-2">
-                              <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                              <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
-                            </div>
-                          </div>
+                  <div class="modal-body">
+                    <form id="employeeForm">
+                      <div class="row mb-3">
+                        <label for="last_name" class="col-md-4 col-lg-3 col-form-label">성</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="last_name" type="text" class="form-control" id="last_name" placeholder="예: 홍" required>
                         </div>
-
-                        <div class="row mb-3">
-                          <label for="fullName" class="col-md-4 col-lg-3 col-form-label">이름</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
-                          </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="first_name" class="col-md-4 col-lg-3 col-form-label">이름</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="first_name" type="text" class="form-control" id="first_name" placeholder="예: 길동" required>
                         </div>
-
-                        <div class="row mb-3">
-                          <label for="about" class="col-md-4 col-lg-3 col-form-label">부서</label>
-                          <div class="col-md-8 col-lg-9">
-                            <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
-                          </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="department" class="col-md-4 col-lg-3 col-form-label">부서</label>
+                        <div class="col-md-8 col-lg-9">
+                          <select name="department" class="form-select" id="department" required></select>
                         </div>
-
-                        <div class="row mb-3">
-                          <label for="company" class="col-md-4 col-lg-3 col-form-label">직급</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                          </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="rank" class="col-md-4 col-lg-3 col-form-label">직급</label>
+                        <div class="col-md-8 col-lg-9">
+                          <select name="rank" class="form-select" id="rank" required></select>
                         </div>
-
-
-                        <div class="row mb-3">
-                          <label  class="col-md-4 col-lg-3 col-form-label">권한</label>
-                          <div class="col-md-8 col-lg-9">
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="first-flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="first-flexSwitchCheckChecked">전자결제</label>
-                            </div>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="2flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="2flexSwitchCheckChecked">게시판</label>
-                            </div>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="3flexSwitchCheckChecked" checked>
-                              <label class="form-check-label" for="3flexSwitchCheckChecked">회의실</label>
-                            </div>
-                          </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="phone_num" class="col-md-4 col-lg-3 col-form-label">전화번호</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="phone_num" type="text" class="form-control" id="phone_num" placeholder="예: 010-1234-5678" required>
                         </div>
-                      </form><!-- End Profile Edit Form -->
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                      <button type="button" class="btn btn-primary">저장</button>
-                    </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="email" class="col-md-4 col-lg-3 col-form-label">메일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="email" type="email" class="form-control" id="email" placeholder="예: example@example.com" required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="birth_date" class="col-md-4 col-lg-3 col-form-label">생일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="birth_date" type="text" class="form-control" id="birth_date" placeholder="예: 1990-01-01" required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="addr" class="col-md-4 col-lg-3 col-form-label">주소</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="addr" type="text" class="form-control" id="addr" placeholder="예: 서울특별시 강남구" required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="hire_date" class="col-md-4 col-lg-3 col-form-label">입사일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="hire_date" type="text" class="form-control" id="hire_date" placeholder="예: 2022-01-01" required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="last_date" class="col-md-4 col-lg-3 col-form-label">퇴사일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="last_date" type="text" class="form-control" id="last_date" placeholder="예: 2023-01-01">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary" id="submitEmployeeForm">생성</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
-
             </div>
-          </div>
-        </div>
-      </div>
+            <!-- End Employee Registration Modal -->
 
-    </section>
+            <!-- Employee Edit Modal -->
+            <div class="modal fade" id="editEmployeeModal" tabindex="-1">
+              <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">사원 개인 페이지</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="editEmployeeForm">
+                      <div class="row mb-3">
+                        <label for="edit_emp_no" class="col-md-4 col-lg-3 col-form-label">사원번호</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_emp_no" type="text" class="form-control" id="edit_emp_no">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_last_name" class="col-md-4 col-lg-3 col-form-label">성</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_last_name" type="text" class="form-control" id="edit_last_name">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_first_name" class="col-md-4 col-lg-3 col-form-label">이름</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_first_name" type="text" class="form-control" id="edit_first_name">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_department" class="col-md-4 col-lg-3 col-form-label">부서</label>
+                        <div class="col-md-8 col-lg-9">
+                          <select name="edit_department" class="form-select" id="edit_department"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_rank" class="col-md-4 col-lg-3 col-form-label">직급</label>
+                        <div class="col-md-8 col-lg-9">
+                          <select name="edit_rank" class="form-select" id="edit_rank"></select>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_phone_num" class="col-md-4 col-lg-3 col-form-label">전화번호</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_phone_num" type="text" class="form-control" id="edit_phone_num">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_email" class="col-md-4 col-lg-3 col-form-label">메일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_email" type="email" class="form-control" id="edit_email">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_birth_date" class="col-md-4 col-lg-3 col-form-label">생일</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_birth_date" type="date" class="form-control" id="edit_birth_date">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <label for="edit_addr" class="col-md-4 col-lg-3 col-form-label">주소</label>
+                        <div class="col-md-8 col-lg-9">
+                          <input name="edit_addr" type="text" class="form-control" id="edit_addr">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="submitEditEmployeeForm">수정</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Employee Edit Modal -->
 
+            <!-- Department Management Modal -->
+            <div class="modal fade" id="manageDepartmentsModal" tabindex="-1" role="dialog" aria-labelledby="manageDepartmentsModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="manageDepartmentsModalLabel">부서 관리</h5>
+                  </div>
+                  <div class="modal-body">
+                    <button href="#" id="addDepartmentBtn" class="btn btn-primary mb-3">부서 추가</button>
+                    <ul id="departmentList" class="list-group">
+                      <!-- 부서 목록이 여기에 표시됩니다 -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Department Management Modal -->
+
+            <!-- Department Form Modal -->
+            <div class="modal fade" id="departmentFormModal" tabindex="-1" role="dialog" aria-labelledby="departmentFormModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="departmentFormModalLabel">부서 추가/수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="departmentForm">
+                      <input type="hidden" id="departmentId">
+                      <div class="form-group">
+                        <label for="departmentNameInput">부서 이름</label>
+                        <input type="text" class="form-control" id="departmentNameInput" required>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" id="saveDepartmentBtn">저장</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Department Form Modal -->
+
+          </div><!-- End Card Body -->
+        </div><!-- End Card -->
+      </div><!-- End Col -->
+    </div><!-- End Row -->
+  </section>
   </main><!-- End #main -->
 
 
@@ -764,5 +770,141 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+    // Load department and rank data
+    function loadDepartmentsAndRanks() {
+      $.getJSON('/api/departments', function (departments) {
+        const departmentSelect = $('#department, #edit_department');
+        departmentSelect.empty();
+        departments.forEach(department => {
+          departmentSelect.append(new Option(department.dmpName, department.dmpNo));
+        });
+      });
+
+      $.getJSON('/api/ranks', function (ranks) {
+        const rankSelect = $('#rank, #edit_rank');
+        rankSelect.empty();
+        ranks.forEach(rank => {
+          rankSelect.append(new Option(rank.rankName, rank.rankNo));
+        });
+      });
+    }
+
+    // Load employees
+    function loadEmployees() {
+    $.getJSON('/api/employees/all', function(employees) {
+    const tableBody = $('#employeeTableBody');
+    tableBody.empty();
+    employees.forEach(employee => {
+    tableBody.append(`
+            <tr>
+              <td>${employee.empNo}</td>
+              <td>${employee.lastName} ${employee.firstName}</td>
+              <td>${employee.departmentName || 'N/A'}</td>
+              <td>${employee.rankName || 'N/A'}</td>
+              <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
+              <td><button class="btn btn-danger delete-btn" data-id="${employee.empNo}">삭제</button></td>
+            </tr>
+          `);
+  });
+  });
+  }
+
+    // Save employee
+    $('#submitEmployeeForm').on('click', function() {
+    const employeeData = {
+    firstName: $('#first_name').val(),
+    lastName: $('#last_name').val(),
+    departmentId: $('#department').val(),
+    rankId: $('#rank').val(),
+  };
+
+    $.ajax({
+    url: '/api/employees',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(employeeData),
+    success: function() {
+    alert('사원이 성공적으로 등록되었습니다!');
+    $('#modalDialogScrollable').modal('hide');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 등록에 실패했습니다.');
+  }
+  });
+  });
+
+    // Edit employee
+    $('#employeeTableBody').on('click', '.edit-btn', function() {
+    const empNo = $(this).data('id');
+    $.getJSON(`/api/employees/${empNo}`, function(employee) {
+    $('#edit_emp_no').val(employee.empNo);
+    $('#edit_first_name').val(employee.firstName);
+    $('#edit_last_name').val(employee.lastName);
+    $('#edit_phone_num').val(employee.phoneNum);
+    $('#edit_email').val(employee.email);
+    $('#edit_birth_date').val(employee.birthDate);
+    $('#edit_addr').val(employee.addr);
+    $('#edit_department').val(employee.departmentId);
+    $('#edit_rank').val(employee.rankId);
+    $('#editEmployeeModal').modal('show');
+  });
+  });
+
+    $('#submitEditEmployeeForm').on('click', function() {
+    const empNo = $('#edit_emp_no').val();
+    const employeeData = {
+    firstName: $('#edit_first_name').val(),
+    lastName: $('#edit_last_name').val(),
+    departmentId: $('#edit_department').val(),
+    rankId: $('#edit_rank').val(),
+    phoneNum: $('#edit_phone_num').val(),
+    email: $('#edit_email').val(),
+    birthDate: $('#edit_birth_date').val(),
+    addr: $('#edit_addr').val()
+  };
+
+    $.ajax({
+    url: `/api/employees/${empNo}`,
+    method: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(employeeData),
+    success: function() {
+    alert('사원이 성공적으로 수정되었습니다!');
+    $('#editEmployeeModal').modal('hide');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 수정에 실패했습니다.');
+  }
+  });
+  });
+
+    // Delete employee
+    $('#employeeTableBody').on('click', '.delete-btn', function() {
+    const empNo = $(this).data('id');
+    if (confirm('정말로 이 사원을 삭제하시겠습니까?')) {
+    $.ajax({
+    url: `/api/employees/${empNo}`,
+    method: 'DELETE',
+    success: function() {
+    alert('사원이 성공적으로 삭제되었습니다!');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 삭제에 실패했습니다.');
+  }
+  });
+  }
+  });
+
+    // Load data on page load
+    loadDepartmentsAndRanks();
+    loadEmployees();
+  });
+</script>
+</sc>
 </body>
 </html>

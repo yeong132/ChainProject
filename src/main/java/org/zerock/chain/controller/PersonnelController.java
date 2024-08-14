@@ -24,4 +24,8 @@ public class PersonnelController {
     public String powerSetting() {
         return "admin/personnel/powerSetting";
     }
+
+
+    @GetMapping("/RanksRole")
+    public String ranksSetting() {return "admin/personnel/RanksRole";}
 }
