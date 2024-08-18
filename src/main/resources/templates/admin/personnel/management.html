@@ -1,31 +1,47 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
   <title>사원 통합 관리</title>
   <meta content="" name="description"/>
   <meta content="" name="keywords"/>
 
+  <!-- link 안에는 th:href 사용! -->
   <!-- Favicons -->
-  <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
-  <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+  <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+  <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
   <!-- 폰트 설정  -->
-  <link rel="preconnect" href="https://fonts.gstatic.com"/>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
+  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+  <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"
+  />
 
   <!-- Vendor CSS Files -->
-  <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="/assets/vendor/boxicons/css/boxicons.min.css"/>
-  <link rel="stylesheet" href="/assets/vendor/quill/quill.snow.css"/>
-  <link rel="stylesheet" href="/assets/vendor/quill/quill.bubble.css"/>
-  <link rel="stylesheet" href="/assets/vendor/remixicon/remixicon.css"/>
-  <link rel="stylesheet" href="/assets/vendor/simple-datatables/style.css"/>
+  <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+  <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
   <!-- Template Main CSS File -->
-  <link rel="stylesheet" href="/assets/css/style.css"/>
+  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+
+  <!-- =======================================================
+* Template Name: NiceAdmin
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Updated: Apr 20 2024 with Bootstrap v5.3.3
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
 
 <body>
@@ -38,17 +54,47 @@
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
-  <!-- Header Nav -->
+  <!-- 로고 끝 -->
+
+  <!-- <div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+      <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+      <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+    </form>
+  </div> -->
+  <!-- 검색바 끝 -->
+
   <nav class="header-nav ms-auto">
     <ul class="d-flex align-items-center">
+      <!-- <li class="nav-item d-block d-lg-none">
+        <a class="nav-link nav-icon search-bar-toggle" href="#">
+          <i class="bi bi-search"></i>
+        </a>
+      </li> -->
+      <!-- 검색 아이콘 끝 -->
+
+      <li class="nav-item dropdown" id="commuteIcon">
+        <div class="from-check form-switch me-3">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        </div>
+      </li>
+      <!-- 출퇴근 아이콘 끝 -->
+
       <li class="nav-item dropdown">
         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
           <i class="bi bi-bell"></i>
-          <span class="badge btn-secondary badge-number">4</span>
-        </a>
+          <span class="badge btn-secondary badge-number">4</span> </a>
+        <!-- 알림창 아이콘 끝 -->
+
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-          <li class="dropdown-header">4개의 새 알림이 있습니다</li>
-          <li><hr class="dropdown-divider"/></li>
+          <li class="dropdown-header">
+            4개의 새 알림이 있습니다
+            <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+          </li>
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
           <li class="notification-item">
             <i class="bi bi-exclamation-circle text-warning"></i>
             <div>
@@ -57,61 +103,212 @@
               <p>30 min. ago</p>
             </div>
           </li>
-          <li><hr class="dropdown-divider"/></li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+              <h4>Atque rerum nesciunt</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>1 hr. ago</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+              <h4>Sit rerum fuga</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>2 hrs. ago</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li class="notification-item">
+            <i class="bi bi-info-circle text-primary"></i>
+            <div>
+              <h4>Dicta reprehenderit</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>4 hrs. ago</p>
+            </div>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+          <li class="dropdown-footer">
+            <a href="/user/alarm">모든 알림 표시</a>
+          </li>
         </ul>
+        <!-- 알림 드롭다운 목록 끝 -->
       </li>
-      <!-- More items... -->
+      <!-- 알림 전체 끝 -->
+
+      <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="/user/setting">
+          <i class="bi bi-gear"></i>
+        </a>
+        <!-- 환경설정 아이콘 끝 -->
+      </li>
+      <!-- 환경설정 전체 끝 -->
+
+
       <li class="nav-item dropdown pe-3">
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span>
-        </a>
+          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+        <!-- 프로필 이미지 항목 끝 -->
+
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
           <li class="dropdown-header">
             <h6>박영민</h6>
             <span>사원</span>
           </li>
-          <li><hr class="dropdown-divider"/></li>
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="../static/users-profile.html">
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
               <i class="bi bi-person"></i>
-              <span>내 프로필</span>
+              <span>마이 페이지</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+              <i class="bi bi-diagram-2"></i>
+              <span>조직도</span>
+            </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+              <i class="bi bi-power"></i>
+              <span>로그아웃</span>
+            </a>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider"/>
+          </li>
+
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/">
+              <i class="bx bx-walk"></i>
+              <span>사용자 페이지</span>
             </a>
           </li>
         </ul>
+        <!-- 프로필 드롭다운 목록 끝 -->
       </li>
+      <!-- 프로필 전체 끝 -->
     </ul>
   </nav>
+  <!-- 상단바 끝 -->
 </header>
+<!-- Header 끝 -->
+
+<!-- Header Modal -->
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">출근</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="modal-body">
+        <div id="currentTime">현재 시간:</div>
+        출근하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+        </button>
+        <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+          아니오
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">퇴근</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="currentTimes">현재 시간:</div>
+        퇴근하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+        </button>
+        <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 출퇴근 Modal 끝 -->
+<!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link" href="/admin/main">
+      <a class="nav-link dash collapsed" href="/admin/main">
         <i class="bi bi-grid"></i>
-        <span>Dashboard</span>
+        <span>대시보드</span>
       </a>
     </li>
+    <!-- End Dashboard Nav -->
+
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>인사관리</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li><a href="/admin/personnel/managemant"><i class="bi bi-circle"></i><span>사원관리</span></a></li>
-        <li><a href="/admin/personnel/powerSetting"><i class="bi bi-circle"></i><span>권한설정</span></a></li>
+      <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="/admin/personnel/management" class="active"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
+        </li>
+        <li>
+          <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
+        </li>
+
       </ul>
     </li>
+    <!-- End Components Nav -->
+
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#charts-nav" href="/admin/attendance/company">
+      <a class="nav-link collapsed" data-bs-target="#charts-nav"  href="/admin/attendance/company">
         <i class="bi bi-bar-chart"></i>
-        <span>근태관리</span>
+        <span>근태 관리</span>
       </a>
     </li>
   </ul>
 </aside>
-
-<!-- ======= Main Content ======= -->
+<!-- End Sidebar-->
 <main id="main" class="main">
   <div class="pagetitle">
     <h1>사원통합관리</h1>
@@ -128,7 +325,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
-          <div class="card-body" >
+          <div class="card-body">
             <h3 class="card-title">
               <button href="#" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">사원등록</button>
             </h3>
@@ -360,28 +557,55 @@
       </div><!-- End Col -->
     </div><!-- End Row -->
   </section>
-</main><!-- End Main -->
-
+</main>
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
   <div class="copyright">
-    &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    &copy; Copyright <strong><span>CHAIN</span></strong
+  >. All Rights Reserved
   </div>
   <div class="credits">
+    <!-- All the links in the footer should remain intact. -->
+    <!-- You can delete the links only if you purchased the pro version. -->
+    <!-- Licensing information: https://bootstrapmade.com/license/ -->
+    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
     Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
   </div>
-</footer><!-- End Footer -->
+</footer>
+<!-- Footer 끝 -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+  <i class="bi bi-chat-dots"></i>
+  <span class="badge btn-danger badge-number">&nbsp;</span>
+</a>
+<!-- 채팅창 끝-->
 
 <!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  $(document).ready(function() {
+    $(document).ready(function() {
     // Load department and rank data
     function loadDepartmentsAndRanks() {
       $.getJSON('/api/departments', function(departments) {
@@ -403,11 +627,11 @@
 
     // Load employees
     function loadEmployees() {
-      $.getJSON('/api/employees/all', function(employees) {
-        const tableBody = $('#employeeTableBody');
-        tableBody.empty();
-        employees.forEach(employee => {
-          tableBody.append(`
+    $.getJSON('/api/employees/all', function(employees) {
+    const tableBody = $('#employeeTableBody');
+    tableBody.empty();
+    employees.forEach(employee => {
+    tableBody.append(`
             <tr>
               <td>${employee.empNo}</td>
               <td>${employee.lastName} ${employee.firstName}</td>
@@ -423,110 +647,109 @@
               <td><button class="btn btn-danger delete-btn" data-id="${employee.empNo}">삭제</button></td>
             </tr>
           `);
-        });
-      });
-    }
+  });
+  });
+  }
 
     // Save employee
     $('#submitEmployeeForm').on('click', function() {
-      const employeeData = {
-        firstName: $('#first_name').val(),
-        lastName: $('#last_name').val(),
-        departmentId: $('#department').val(),
-        rankId: $('#rank').val(),
-        phoneNum: $('#phone_num').val(),
-        email: $('#email').val(),
-        birthDate: $('#birth_date').val(),
-        addr: $('#addr').val(),
-        hireDate: $('#hire_date').val(),
-        lastDate: $('#last_date').val()
-      };
+    const employeeData = {
+    firstName: $('#first_name').val(),
+    lastName: $('#last_name').val(),
+    departmentId: $('#department').val(),
+    rankId: $('#rank').val(),
+    phoneNum: $('#phone_num').val(),
+    email: $('#email').val(),
+    birthDate: $('#birth_date').val(),
+    addr: $('#addr').val(),
+    hireDate: $('#hire_date').val(),
+    lastDate: $('#last_date').val()
+  };
 
-      $.ajax({
-        url: '/api/employees',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(employeeData),
-        success: function() {
-          alert('사원이 성공적으로 등록되었습니다!');
-          $('#modalDialogScrollable').modal('hide');
-          loadEmployees();
-        },
-        error: function() {
-          alert('사원 등록에 실패했습니다.');
-        }
-      });
-    });
+    $.ajax({
+    url: '/api/employees',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(employeeData),
+    success: function() {
+    alert('사원이 성공적으로 등록되었습니다!');
+    $('#modalDialogScrollable').modal('hide');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 등록에 실패했습니다.');
+  }
+  });
+  });
 
     // Edit employee
     $('#employeeTableBody').on('click', '.edit-btn', function() {
-      const empNo = $(this).data('id');
-      $.getJSON(`/api/employees/${empNo}`, function(employee) {
-        $('#edit_emp_no').val(employee.empNo);
-        $('#edit_first_name').val(employee.firstName);
-        $('#edit_last_name').val(employee.lastName);
-        $('#edit_phone_num').val(employee.phoneNum);
-        $('#edit_email').val(employee.email);
-        $('#edit_birth_date').val(employee.birthDate);
-        $('#edit_addr').val(employee.addr);
-        $('#edit_department').val(employee.departmentId);
-        $('#edit_rank').val(employee.rankId);
-        $('#editEmployeeModal').modal('show');
-      });
-    });
+    const empNo = $(this).data('id');
+    $.getJSON(`/api/employees/${empNo}`, function(employee) {
+    $('#edit_emp_no').val(employee.empNo);
+    $('#edit_first_name').val(employee.firstName);
+    $('#edit_last_name').val(employee.lastName);
+    $('#edit_phone_num').val(employee.phoneNum);
+    $('#edit_email').val(employee.email);
+    $('#edit_birth_date').val(employee.birthDate);
+    $('#edit_addr').val(employee.addr);
+    $('#edit_department').val(employee.departmentId);
+    $('#edit_rank').val(employee.rankId);
+    $('#editEmployeeModal').modal('show');
+  });
+  });
 
     $('#submitEditEmployeeForm').on('click', function() {
-      const empNo = $('#edit_emp_no').val();
-      const employeeData = {
-        firstName: $('#edit_first_name').val(),
-        lastName: $('#edit_last_name').val(),
-        departmentId: $('#edit_department').val(),
-        rankId: $('#edit_rank').val(),
-        phoneNum: $('#edit_phone_num').val(),
-        email: $('#edit_email').val(),
-        birthDate: $('#edit_birth_date').val(),
-        addr: $('#edit_addr').val()
-      };
+    const empNo = $('#edit_emp_no').val();
+    const employeeData = {
+    firstName: $('#edit_first_name').val(),
+    lastName: $('#edit_last_name').val(),
+    departmentId: $('#edit_department').val(),
+    rankId: $('#edit_rank').val(),
+    phoneNum: $('#edit_phone_num').val(),
+    email: $('#edit_email').val(),
+    birthDate: $('#edit_birth_date').val(),
+    addr: $('#edit_addr').val()
+  };
 
-      $.ajax({
-        url: `/api/employees/${empNo}`,
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(employeeData),
-        success: function() {
-          alert('사원이 성공적으로 수정되었습니다!');
-          $('#editEmployeeModal').modal('hide');
-          loadEmployees();
-        },
-        error: function() {
-          alert('사원 수정에 실패했습니다.');
-        }
-      });
-    });
+    $.ajax({
+    url: `/api/employees/${empNo}`,
+    method: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(employeeData),
+    success: function() {
+    alert('사원이 성공적으로 수정되었습니다!');
+    $('#editEmployeeModal').modal('hide');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 수정에 실패했습니다.');
+  }
+  });
+  });
 
     // Delete employee
     $('#employeeTableBody').on('click', '.delete-btn', function() {
-      const empNo = $(this).data('id');
-      if (confirm('정말로 이 사원을 삭제하시겠습니까?')) {
-        $.ajax({
-          url: `/api/employees/${empNo}`,
-          method: 'DELETE',
-          success: function() {
-            alert('사원이 성공적으로 삭제되었습니다!');
-            loadEmployees();
-          },
-          error: function() {
-            alert('사원 삭제에 실패했습니다.');
-          }
-        });
-      }
-    });
+    const empNo = $(this).data('id');
+    if (confirm('정말로 이 사원을 삭제하시겠습니까?')) {
+    $.ajax({
+    url: `/api/employees/${empNo}`,
+    method: 'DELETE',
+    success: function() {
+    alert('사원이 성공적으로 삭제되었습니다!');
+    loadEmployees();
+  },
+    error: function() {
+    alert('사원 삭제에 실패했습니다.');
+  }
+  });
+  }
+  });
 
     // Load data on page load
     loadDepartmentsAndRanks();
     loadEmployees();
   });
 </script>
-
 </body>
 </html>

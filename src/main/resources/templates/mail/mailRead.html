@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-=======
+
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -20,14 +17,10 @@
 
     <!-- 폰트 설정  -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-<<<<<<< HEAD
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
-=======
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
 
     <!-- Vendor CSS Files -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -44,84 +37,20 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
-<<<<<<< HEAD
-        /* Custom styles */
-=======
-        /* 검색 입력란 컨테이너 스타일 */
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
+
         .card-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-<<<<<<< HEAD
-=======
-        .search-bar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        .search-bar input[type="text"] {
-            width: 200px;
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #666;
-            border-radius: 4px;
-            height: 38px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-bar input[type="text"]::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        .dropdown-menu {
-            min-width: 8rem;
-        }
-
-        .custom-checkbox-dropdown {
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-checkbox-dropdown input[type="checkbox"] {
-            margin-right: 5px;
-        }
-
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         .star-icon {
             cursor: pointer;
         }
 
-<<<<<<< HEAD
         .bi-star-fill {
             color: #ffd700;
-=======
-        .checkbox-star-container {
-            display: flex;
-            align-items: center;
-        }
 
-        .bi-star-fill {
-            color: 	#ffd700 /* 별표 아이콘을 노란색으로 설정 */
-        }
-
-        .checkbox-star-container input[type="checkbox"] {
-            margin-right: 20px;
-        }
-
-        .btn-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-group .dropdown {
-            display: inline-block;
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
         }
 
         .btn-custom {
@@ -471,8 +400,7 @@
         <!-- 게시판 사이드바 끝 -->
 
         <li class="nav-item">
-<<<<<<< HEAD
-=======
+
             <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-calendar-week"></i>
                 <span>일정</span>
@@ -487,7 +415,6 @@
         <!-- 일정 사이드바 끝 -->
 
         <li class="nav-item">
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
             <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-envelope"></i>
                 <span>이메일</span>
@@ -537,11 +464,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-<<<<<<< HEAD
                 <li class="breadcrumb-item"><a href="/mail/receive">Email</a></li>
-=======
-                <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                 <li class="breadcrumb-item active">Read</li>
             </ol>
         </nav>
@@ -555,11 +478,8 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
                                 <div>
-<<<<<<< HEAD
                                     <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
-=======
-                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
+
                                 </div>
                                 <div>
                                     <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
@@ -575,22 +495,16 @@
                                 </div>
                             </div>
                             <div>
-<<<<<<< HEAD
                                 <a href="#" class="btn btn-primary btn-custom mt-2">목록</a>
                             </div>
                         </div>
 
-=======
-                                <a href="#" class="btn btn-primary btn-custom mt-2" >목록</a>
-                            </div>
-                        </div>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
+
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
                             <div class="d-flex align-items-center mb-3">
                                 <!-- 별표 아이콘 -->
                                 <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-<<<<<<< HEAD
                                 <h3 class="ms-2 mb-0" th:text="${message.subject ?: 'No Subject'}"></h3>
                             </div>
                             <div class="mb-2">
@@ -604,18 +518,6 @@
                             <div class="mb-4">
                                 <strong>날짜:</strong>
                                 <span th:text="${message.date ?: 'Unknown Date'}"></span>
-=======
-                                <h3 class="ms-2 mb-0">새로운 기기에서 로그인 되었습니다.</h3>
-                            </div>
-                            <div class="mb-2">
-                                <strong>보낸사람:</strong> 네이버 &lt;account_noreply@navercorp.com&gt;
-                            </div>
-                            <div class="mb-2">
-                                <strong>받는사람:</strong> choh_56@naver.com
-                            </div>
-                            <div class="mb-4">
-                                <strong>날짜:</strong> 2024년 7월 26일 (금) 오후 1:07
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
                             </div>
                         </div>
 
@@ -623,25 +525,8 @@
 
                         <!-- 메일 내용 -->
                         <div class="mail-content">
-<<<<<<< HEAD
                             <div th:utext="${messageContent}"></div>
-=======
-                            <h3>로그인 정보</h3>
-                            <table class="table">
-                                <tr>
-                                    <th>일시</th>
-                                    <td>2024-07-26 (금) 13:07</td>
-                                </tr>
-                                <tr>
-                                    <th>타입</th>
-                                    <td>간편로그인 (사용)</td>
-                                </tr>
-                                <tr>
-                                    <th>운영체제</th>
-                                    <td>iOS</td>
-                                </tr>
-                            </table>
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
+
                         </div>
                         <!-- 메일 내용 끝 -->
                     </div>
@@ -649,22 +534,14 @@
             </div>
         </div>
     </section>
-<<<<<<< HEAD
-
-=======
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     <!-- 메일 내용 카드 끝 -->
 </main><!-- End main 끝 -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-<<<<<<< HEAD
-        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
-=======
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     </div>
     <div class="credits">
         <!-- All the links in the footer should remain intact. -->
