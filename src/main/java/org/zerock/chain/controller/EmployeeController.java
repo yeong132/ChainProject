@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.dto.EmployeeDTO;
+import org.zerock.chain.dto.PermissionDTO;
 import org.zerock.chain.service.EmployeeService;
 
 import java.util.List;
@@ -64,5 +65,22 @@ public class EmployeeController {
             @RequestParam int size) {
         Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
         return ResponseEntity.ok(employeePage);
+    }
+    @GetMapping("/department/{departmentId}")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
+        List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
+        return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/{id}/permissions")
+    public ResponseEntity<List<PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
+        List<PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
+        return ResponseEntity.ok(permissions);
+    }
+
+    @PutMapping("/{id}/permissions")
+    public ResponseEntity<Void> updateEmployeePermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
+        employeeService.updateEmployeePermissions(id, permissionIds);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,22 +2,23 @@ package org.zerock.chain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Entity
-@Builder
+@Getter
+@Setter
+@Table(name = "ranks")
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "emp_rank")
 public class Rank {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rank_no")
     private Long rankNo;
 
-    @Column(name = "rank_name")
+    @Column(name = "rank_name", nullable = false, length = 100)
     private String rankName;
 }

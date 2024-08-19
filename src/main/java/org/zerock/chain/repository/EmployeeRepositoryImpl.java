@@ -1,6 +1,5 @@
 package org.zerock.chain.repository;
 
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;

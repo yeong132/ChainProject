@@ -14,8 +14,14 @@ public class PersonnelController {
 
     // 사원 관리 페이지
     @GetMapping("/management")
-    public String managemant() {
+    public String management() {
         return "admin/personnel/management";
+    }
+
+    // 사원 태스트 페이지
+    @GetMapping("/managemant")
+    public String managemant() {
+        return "admin/personnel/managemeat";
     }
 
 
