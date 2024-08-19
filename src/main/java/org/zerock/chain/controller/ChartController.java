@@ -80,10 +80,17 @@ public class ChartController {
         return "redirect:/chart/OKR";
     }
 
+    // 프로젝트 차트 조회
     @GetMapping("/project")
     public String showProjectCharts(Model model) {
+        // 모든 프로젝트를 가져와서 모델에 추가
         List<ProjectDTO> projectDTOList = projectService.getAllProjects();
         model.addAttribute("projects", projectDTOList);
         return "chart/project";
+    }
+    @GetMapping("/project/details/{projectNo}")
+    public ResponseEntity<ProjectDTO> getProjectDetails(@PathVariable Long projectNo) {
+        ProjectDTO project = projectService.getProjectById(projectNo);
+        return ResponseEntity.ok(project);
     }
 }

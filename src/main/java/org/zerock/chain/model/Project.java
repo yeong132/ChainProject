@@ -21,6 +21,9 @@ public class Project {
     @Column(length = 255, nullable = false, name = "project_name")
     private String projectName;
 
+    @Column(name = "emp_no")
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     @Column(name = "project_start_date")
     private LocalDate projectStartDate;
 

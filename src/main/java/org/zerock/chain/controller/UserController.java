@@ -10,10 +10,11 @@ import org.zerock.chain.dto.FavoriteQnaDTO;
 import org.zerock.chain.dto.FavoriteQnaRequestDTO;
 import org.zerock.chain.dto.QnaDTO;
 import org.zerock.chain.dto.QnaRequestDTO;
-import org.zerock.chain.service.CommentService;
-import org.zerock.chain.service.FavoriteQnaService;
-import org.zerock.chain.service.QnaService;
+import org.zerock.chain.model.Notification;
+import org.zerock.chain.model.SystemNotification;
+import org.zerock.chain.service.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -23,14 +24,20 @@ public class UserController {
 
     private final FavoriteQnaService favoriteQnaService;
     private final QnaService qnaService;
-    private final CommentService commentService; // CommentService 추가
+    private final CommentService commentService;
+    private final NotificationService notificationService;
+    private final SystemNotificationService systemNotificationService;
+
 
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService) {
         this.favoriteQnaService = favoriteQnaService;
         this.qnaService = qnaService;
-        this.commentService = commentService; // CommentService 주입
+        this.commentService = commentService;
+        this.notificationService = notificationService;
+        this.systemNotificationService = systemNotificationService;
     }
+
 
     // Q&A 상세 페이지 조회
     @GetMapping("/qna/detail/{qnaNo}")
@@ -138,9 +145,58 @@ public class UserController {
         return "user/login";
     }
 
+
+    // 시스템 알림 작성 처리
+    @PostMapping("/systemNotification")
+    public String createSystemNotification(
+            @RequestParam("systemCategory") String systemCategory,
+            @RequestParam("systemTitle") String systemTitle,
+            @RequestParam("systemContent") String systemContent) {
+
+        SystemNotification systemNotification = new SystemNotification();
+        systemNotification.setSystemCategory(systemCategory);
+        systemNotification.setSystemTitle(systemTitle);
+        systemNotification.setSystemContent(systemContent);
+        systemNotification.setSystemUploadDate(LocalDate.now());
+
+        systemNotificationService.saveSystemNotification(systemNotification);
+        return "redirect:/user/alarm"; // 작성 후 알림 페이지로 리다이렉트
+    }
+
     // 알림 페이지로 이동
     @GetMapping("/alarm")
     public String userAlarm(Model model) {
+        int empNo = 1; // 예시 사원번호
+
+        // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
+        List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
+        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
+        // 시스템 알림
+        List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
+
+
+        // 모델에 추가
+        model.addAttribute("allNotifications", allNotifications);
+        model.addAttribute("projectNotifications", projectNotifications);
+        model.addAttribute("systemNotifications", systemNotifications);
+
         return "user/alarm";
     }
+
+    // 알림 전체 삭제
+    @PostMapping("/alarm/deleteAll")
+    public String deleteAllNotifications() {
+        int empNo = 1; // 예시 사원번호
+        notificationService.deleteAllNotifications(empNo);
+        return "redirect:/user/alarm";
+    }
+
+    // 개별 알림 삭제
+    @PostMapping("/alarm/delete/{notificationNo}")
+    public String deleteNotification(@PathVariable Long notificationNo) {
+        notificationService.deleteNotification(notificationNo);
+        return "redirect:/user/alarm";
+    }
+
+
 }
