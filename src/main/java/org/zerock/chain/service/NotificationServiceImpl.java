@@ -2,6 +2,7 @@ package org.zerock.chain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.model.Notification;
 import org.zerock.chain.repository.NotificationRepository;
 
@@ -24,6 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    @Transactional
     public void deleteAllNotifications(int empNo) {
         notificationRepository.deleteByEmpNo(empNo);
     }

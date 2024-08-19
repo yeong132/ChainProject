@@ -3,6 +3,7 @@ package org.zerock.chain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.model.SystemNotification;
 import org.zerock.chain.repository.SystemNotificationRepository;
 
@@ -29,6 +30,7 @@ public class SystemNotificationServiceImpl implements SystemNotificationService 
     }
 
     @Override // 모든 시스템 알림 삭제
+    @Transactional
     public void deleteAllSystemNotifications() {
         systemNotificationRepository.deleteAll();
     }

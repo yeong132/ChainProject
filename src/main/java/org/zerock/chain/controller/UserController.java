@@ -186,8 +186,12 @@ public class UserController {
     @PostMapping("/alarm/deleteAll")
     public String deleteAllNotifications() {
         int empNo = 1; // 예시 사원번호
+
+        // 일반 알림 삭제
         notificationService.deleteAllNotifications(empNo);
-        systemNotificationService.deleteAllSystemNotifications(); // 시스템 알림도 삭제
+        // 시스템 알림 삭제
+        systemNotificationService.deleteAllSystemNotifications();
+
         return "redirect:/user/alarm";
     }
 

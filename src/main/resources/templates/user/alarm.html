@@ -554,32 +554,41 @@
                                 </div>
                             </div>
                             <!--------------- 시스템알림  목록 ------------------------>
-                            <div class="alert alert-info alert-dismissible fade show"
-                                 role="alert" th:each="systemNotification : ${systemNotifications}">
+                            <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
+                            <div class="alert alert-dismissible fade show"
+                                 role="alert" th:each="systemNotification : ${systemNotifications}"
+                                 th:data-category="${systemNotification.systemCategory}">
                                 <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
                                 <p th:text="${systemNotification.systemTitle}"></p>
                                 <hr>
                                 <p th:text="${systemNotification.systemContent}"></p>
-                                <form method="post"
-                                      style="display:inline;"
+                                <form method="post" style="display:inline;"
                                       th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
                                     <button aria-label="Close" class="btn-close" type="submit"></button>
                                 </form>
                             </div>
-                        </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-        </div>
 
+        <form id="deleteAllForm" method="post" action="/user/alarm/deleteAll">
+            <!-- CSRF 토큰 등을 여기에 추가할 수 있습니다. (Spring Security 사용하는 경우) -->
+        </form>
     </section>
 </main><!-- End #main -->
 
+
+
+
+
+
 <!---------- 삭제 모달 창 -------------------------->
-<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal"
-     tabindex="-1">
+<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -587,8 +596,7 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                정말 삭제하시겠습니까 ?
-                ( 페이지 내 모든 알림이 삭제됩니다. )
+                정말 삭제하시겠습니까? (페이지 내 모든 알림이 삭제됩니다.)
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" onclick="deleteAlerts()" type="button">예</button>
@@ -603,7 +611,7 @@
      tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/user/systemNotification" method="post">
+            <form action="/user/systemNotification" method="post" onsubmit="return validateForm()">
                 <div class="modal-header">
                     <h5 class="modal-title" id="systemNotificationModalLabel">시스템 알림 작성</h5>
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
@@ -611,7 +619,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label" for="systemCategory">카테고리</label>
-                        <input class="form-control" id="systemCategory" name="systemCategory" required type="text">
+                        <select class="form-control" id="systemCategory" name="systemCategory" required>
+                            <option value="관리자">관리자</option>
+                            <option value="인사관리">인사관리</option>
+                            <option value="근태관리">근태관리</option>
+                            <option value="고객센터">고객센터</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="systemTitle">제목</label>
@@ -669,12 +682,10 @@
         var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         confirmationModal.show();
     }
-
     // 모든 알림을 삭제하는 함수
     function deleteAllAlerts() {
         document.getElementById('deleteAllForm').submit();
     }
-
     // 모달에서 '예'를 클릭했을 때 호출되는 함수
     function deleteAlerts() {
         deleteAllAlerts(); // 알림 삭제 함수 호출
@@ -687,7 +698,44 @@
         var modal = new bootstrap.Modal(document.getElementById('systemNotificationModal'));
         modal.show();
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var notifications = document.querySelectorAll('[data-category]');
+
+        notifications.forEach(function(notification) {
+            var category = notification.getAttribute('data-category');
+
+            // 카테고리에 따라 클래스를 설정
+            switch (category) {
+                case '고객센터':
+                    notification.classList.add('alert-success');
+                    break;
+                case '근태관리':
+                    notification.classList.add('alert-warning');
+                    break;
+                case '관리자':
+                    notification.classList.add('alert-danger');
+                    break;
+                case '인사관리':
+                    notification.classList.add('alert-secondary');
+                    break;
+                // 기본값은 없고, 카테고리가 없으면 오류 처리 또는 무시
+            }
+        });
+    });
 </script>
+
+<script>
+    function validateForm() {
+        var category = document.getElementById('systemCategory').value;
+        if (category === "") {
+            alert("카테고리를 선택하세요.");
+            return false; // 폼 제출 중단
+        }
+        return true; // 폼 제출 진행
+    }
+</script>
+
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
