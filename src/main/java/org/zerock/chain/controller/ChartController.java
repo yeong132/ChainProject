@@ -10,13 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.dto.ChartDTO;
 import org.zerock.chain.dto.ChartRequestDTO;
 import org.zerock.chain.dto.ProjectDTO;
-import org.zerock.chain.model.Project;
 import org.zerock.chain.service.ChartService;
 import org.zerock.chain.service.ProjectService;
 
-import java.time.YearMonth;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/chart")
@@ -24,11 +21,13 @@ import java.util.Map;
 public class ChartController {
 
     private final ChartService chartService;
+    private final ModelMapper modelMapper;
     private final ProjectService projectService;
 
     @Autowired
-    public ChartController(ChartService chartService, ProjectService projectService) {
+    public ChartController(ChartService chartService, ModelMapper modelMapper, ProjectService projectService) {
         this.chartService = chartService;
+        this.modelMapper = modelMapper;
         this.projectService = projectService;
     }
 
@@ -41,7 +40,8 @@ public class ChartController {
     // OKR 차트 페이지: 전체 목록 조회
     @GetMapping("/OKR")
     public String showOkrCharts(Model model) {
-        model.addAttribute("charts", chartService.getAllCharts());
+        List<ChartDTO> charts = chartService.getAllCharts();
+        model.addAttribute("charts", charts);
         return "chart/OKR";
     }
 
@@ -57,10 +57,14 @@ public class ChartController {
     // 차트 상세 정보 조회 및 수정 모달 표시
     @GetMapping("/detail/{chartNo}")
     @ResponseBody
-    public ChartDTO getChartDetail(@PathVariable Long chartNo) {
-        // JSON 데이터를 반환하여 클라이언트에서 AJAX로 처리
-        return chartService.getChartById(chartNo);
+    public ResponseEntity<ChartDTO> getChartDetail(@PathVariable Long chartNo) {
+        ChartDTO chartDTO = chartService.getChartById(chartNo);
+        if (chartDTO == null) {
+            return ResponseEntity.notFound().build(); // 404 Not Found 반환
+        }
+        return ResponseEntity.ok(chartDTO); // 200 OK와 함께 데이터 반환
     }
+
 
     // 차트 수정 등록
     @PostMapping("/update")
@@ -70,9 +74,16 @@ public class ChartController {
     }
 
     // 차트 삭제
-    @PostMapping("/delete")
+    @PostMapping("/delete/{chartNo}")
     public String deleteChart(@RequestParam Long chartNo) {
         chartService.deleteChart(chartNo);
         return "redirect:/chart/OKR";
+    }
+
+    @GetMapping("/project")
+    public String showProjectCharts(Model model) {
+        List<ProjectDTO> projectDTOList = projectService.getAllProjects();
+        model.addAttribute("projects", projectDTOList);
+        return "chart/project";
     }
 }
