@@ -6,4 +6,5 @@ import org.zerock.chain.model.SystemNotification;
 
 @Repository
 public interface SystemNotificationRepository extends JpaRepository<SystemNotification, Long> {
+
 }

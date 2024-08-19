@@ -7,4 +7,6 @@ import java.util.List;
 public interface SystemNotificationService {
     void saveSystemNotification(SystemNotification systemNotification);
     List<SystemNotification> getAllSystemNotifications();
+    void deleteAllSystemNotifications();
+    void deleteSystemNotification(Long systemNo);
 }

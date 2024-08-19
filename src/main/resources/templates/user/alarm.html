@@ -501,12 +501,9 @@
                         <div class="tab-content pt-2" id="borderedTabContent">
                             <!-- ALL 탭 내용 -->
                             <div aria-labelledby="all-tab" class="tab-pane fade show active" id="all" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show"
-                                     role="alert" th:each="notification : ${allNotifications}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}">
                                     <p th:text="'알림: ' + ${notification.notificationMessage}"></p>
-                                    <form method="post"
-                                          style="display:inline;"
-                                          th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
                                         <button aria-label="Close" class="btn-close" type="submit"></button>
                                     </form>
                                 </div>
@@ -557,22 +554,24 @@
                                 </div>
                             </div>
                             <!--------------- 시스템알림  목록 ------------------------>
-                            <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
-                                <div class="alert alert-info alert-dismissible fade show" role="alert" th:each="systemNotification : ${systemNotifications}">
-                                    <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
-                                    <p th:text="${systemNotification.systemTitle}"></p>
-                                    <hr>
-                                    <p th:text="${systemNotification.systemContent}"></p>
-                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${systemNotification.systemNo}}">
-                                        <button aria-label="Close" class="btn-close" type="submit"></button>
-                                    </form>
-                                </div>
+                            <div class="alert alert-info alert-dismissible fade show"
+                                 role="alert" th:each="systemNotification : ${systemNotifications}">
+                                <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
+                                <p th:text="${systemNotification.systemTitle}"></p>
+                                <hr>
+                                <p th:text="${systemNotification.systemContent}"></p>
+                                <form method="post"
+                                      style="display:inline;"
+                                      th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
     </section>
@@ -600,31 +599,33 @@
 </div>
 
 <!-- 시스템 알림 작성 모달 -->
-<div class="modal fade" id="systemNotificationModal" tabindex="-1" aria-labelledby="systemNotificationModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="systemNotificationModalLabel" class="modal fade" id="systemNotificationModal"
+     tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="/user/systemNotification">
+            <form action="/user/systemNotification" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title" id="systemNotificationModalLabel">시스템 알림 작성</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="systemCategory" class="form-label">카테고리</label>
-                        <input type="text" class="form-control" id="systemCategory" name="systemCategory" required>
+                        <label class="form-label" for="systemCategory">카테고리</label>
+                        <input class="form-control" id="systemCategory" name="systemCategory" required type="text">
                     </div>
                     <div class="mb-3">
-                        <label for="systemTitle" class="form-label">제목</label>
-                        <input type="text" class="form-control" id="systemTitle" name="systemTitle" required>
+                        <label class="form-label" for="systemTitle">제목</label>
+                        <input class="form-control" id="systemTitle" name="systemTitle" required type="text">
                     </div>
                     <div class="mb-3">
-                        <label for="systemContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="systemContent" name="systemContent" rows="3" required></textarea>
+                        <label class="form-label" for="systemContent">내용</label>
+                        <textarea class="form-control" id="systemContent" name="systemContent" required
+                                  rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="submit" class="btn btn-primary">저장</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
+                    <button class="btn btn-primary" type="submit">저장</button>
                 </div>
             </form>
         </div>

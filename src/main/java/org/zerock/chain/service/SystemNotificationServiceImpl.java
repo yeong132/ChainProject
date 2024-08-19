@@ -18,13 +18,23 @@ public class SystemNotificationServiceImpl implements SystemNotificationService 
         this.systemNotificationRepository = systemNotificationRepository;
     }
 
-    @Override
+    @Override   // 시스템 알림 등록
     public void saveSystemNotification(SystemNotification systemNotification) {
         systemNotificationRepository.save(systemNotification);
     }
 
-    @Override
+    @Override   // 모든 시스템 알림 조회
     public List<SystemNotification> getAllSystemNotifications() {
         return systemNotificationRepository.findAll();
+    }
+
+    @Override // 모든 시스템 알림 삭제
+    public void deleteAllSystemNotifications() {
+        systemNotificationRepository.deleteAll();
+    }
+
+    @Override // 개별 시스템 알림 삭제
+    public void deleteSystemNotification(Long systemNo) {
+        systemNotificationRepository.deleteById(systemNo);
     }
 }

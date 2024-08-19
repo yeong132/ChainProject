@@ -171,11 +171,10 @@ public class UserController {
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
         List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
-        // 시스템 알림
+        // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
 
-
-        // 모델에 추가
+        // 모든 알림에 시스템 알림을 추가합니다.
         model.addAttribute("allNotifications", allNotifications);
         model.addAttribute("projectNotifications", projectNotifications);
         model.addAttribute("systemNotifications", systemNotifications);
@@ -188,6 +187,7 @@ public class UserController {
     public String deleteAllNotifications() {
         int empNo = 1; // 예시 사원번호
         notificationService.deleteAllNotifications(empNo);
+        systemNotificationService.deleteAllSystemNotifications(); // 시스템 알림도 삭제
         return "redirect:/user/alarm";
     }
 
@@ -198,5 +198,11 @@ public class UserController {
         return "redirect:/user/alarm";
     }
 
+    // 개별 시스템 알림 삭제
+    @PostMapping("/systemNotification/delete/{systemNo}")
+    public String deleteSystemNotification(@PathVariable Long systemNo) {
+        systemNotificationService.deleteSystemNotification(systemNo);
+        return "redirect:/user/alarm";
+    }
 
 }
