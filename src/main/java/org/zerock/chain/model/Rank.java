@@ -9,16 +9,16 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "department")
+@Table(name = "ranks")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
+public class Rank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dmp_no")
-    private Long dmpNo;
+    @Column(name = "rank_no")
+    private Long rankNo;
 
-    @Column(name = "dmp_name", nullable = false, length = 100)
-    private String dmpName;
+    @Column(name = "rank_name", nullable = false, length = 100)
+    private String rankName;
 }
