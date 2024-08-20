@@ -829,54 +829,60 @@
 <script>
     $(document).ready(function () {
         const participantList = $('#participantList');
-        const employeeSelect = $('#employeeSelect');
         let participantIds = new Set();
 
-        // 프로젝트 참여자 데이터를 읽어오기
-        let initialParticipants = $('#projectData').data('participants').split(',');
-
-        // 참여자 목록에 사원 이름만 추가하는 함수
+        // 참여자 목록에 사원 추가하는 함수
         function addParticipant(empNo, empName) {
             const participantItem = $(`
-                <span class="badge bg-secondary me-2">
-                    ${empName} <i class="bi bi-x-circle remove-participant" data-emp-no="${empNo}"></i>
-                </span>
-            `);
+            <span class="badge bg-secondary me-2">
+                ${empName}
+            </span>
+        `);
             participantList.append(participantItem);
+        }
+
+        // 페이지 로드 시 저장된 참여자 목록을 초기화하여 출력
+        const initialParticipants = $('#projectData').data('participants').split(',');
+        $.getJSON('/api/employees/all', function (employees) {
+            const employeeMap = {};
+            employees.forEach(employee => {
+                employeeMap[employee.empNo] = employee.lastName + employee.firstName; // 사원 번호에 대응하는 이름을 저장
+            });
+
+            initialParticipants.forEach(empNo => {
+                if (employeeMap[empNo]) {
+                    participantIds.add(empNo);
+                    addParticipant(empNo, employeeMap[empNo]);
+                }
+            });
+        });
+
+        // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
+        function updateParticipantsField() {
+            $('#participantsField').val(Array.from(participantIds).join(','));
         }
 
         // 사원 목록을 불러와서 부서별로 그룹화하여 드롭다운에 추가하는 함수
         function loadEmployeesForSelect() {
             $.getJSON('/api/employees/all', function (employees) {
-                const employeeMap = {};
+                const employeeSelect = $('#employeeSelect');
+                employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+
                 const departments = {};
 
                 employees.forEach(employee => {
-                    employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
-
-                    if (!departments[employee.departmentName]) {
-                        departments[employee.departmentName] = [];
-                    }
-                    departments[employee.departmentName].push(employee);
-                });
-
-                // 초기 참여자 목록을 출력
-                participantList.empty(); // 기존 참여자 목록 초기화
-                participantIds.clear(); // 참여자 ID 세트 초기화
-
-                initialParticipants.forEach(empNo => {
-                    if (employeeMap[empNo]) {
-                        participantIds.add(empNo);
-                        addParticipant(empNo, employeeMap[empNo]);
+                    if (!participantIds.has(employee.empNo)) {
+                        if (!departments[employee.departmentName]) {
+                            departments[employee.departmentName] = [];
+                        }
+                        departments[employee.departmentName].push(employee);
                     }
                 });
 
-                // 부서별로 그룹화된 사원 목록을 드롭다운에 추가
-                employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
                 for (const departmentName in departments) {
                     const optgroup = $('<optgroup>').attr('label', departmentName);
                     departments[departmentName].forEach(employee => {
-                        const option = `<option value="${employee.empNo}" data-name="${employeeMap[employee.empNo]}" ${participantIds.has(employee.empNo) ? 'disabled' : ''}>${employeeMap[employee.empNo]}</option>`;
+                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}">${employee.lastName}${employee.firstName}</option>`;
                         optgroup.append(option);
                     });
                     employeeSelect.append(optgroup);
@@ -887,41 +893,26 @@
             });
         }
 
-        // 참여자 목록에서 사원 삭제하는 함수
-        participantList.on('click', '.remove-participant', function () {
-            const empNo = $(this).data('emp-no');
-            participantIds.delete(empNo);
-
-            // 저장된 데이터를 갱신
-            initialParticipants = initialParticipants.filter(id => id !== empNo);
-            updateParticipantsField();
-            loadEmployeesForSelect(); // 드롭다운 목록 갱신 및 선택된 참여자 초기화
-        });
-
-        // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
-        function updateParticipantsField() {
-            $('#participantsField').val(Array.from(participantIds).join(','));
-        }
-
         // 사원 선택 시 참여자 목록에 추가
         $('#employeeSelect').on('change', function () {
             const selectedOption = $(this).find('option:selected');
             const empNo = selectedOption.val();
             const empName = selectedOption.data('name');
+
             if (empNo && !participantIds.has(empNo)) {
                 participantIds.add(empNo);
-                initialParticipants.push(empNo); // 새로 추가된 참여자 ID를 저장된 데이터에 추가
+                addParticipant(empNo, empName);
+                $(this).val(''); // 선택 초기화
                 updateParticipantsField();
-                loadEmployeesForSelect(); // 드롭다운 목록 갱신 및 선택된 참여자 초기화
+                loadEmployeesForSelect(); // 목록 갱신
             }
         });
 
         // 페이지 로드 시 사원 목록 불러오기
         loadEmployeesForSelect();
     });
+
 </script>
-
-
 
 
 
