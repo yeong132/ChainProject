@@ -439,157 +439,160 @@
     <!----------------------------------------------------------------페이지 별 타이틀 ---------------------------------------------------------------------->
 
     <section class="section">
-            <form class="row" enctype="multipart/form-data" id="combinedForm" method="post"
-                  th:action="@{/project/modify/{projectNo}(projectNo=${project.projectNo})}">
-                <input id="projectNo" name="projectNo" th:value="${project.projectNo}" type="hidden">
-                <input id="isTemporary" name="isTemporary" th:value="${project.isTemporary}" type="hidden">
-                <input id="projectFavorite" name="projectFavorite" th:value="${project.projectFavorite}" type="hidden">
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Project</h5>
-                            <fieldset>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">제목</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectName" placeholder="프로젝트 명"
-                                               required th:value="${project.projectName}" type="text">
-                                    </div>
+        <form class="row" enctype="multipart/form-data" id="combinedForm" method="post"
+              th:action="@{/project/modify/{projectNo}(projectNo=${project.projectNo})}">
+            <input id="projectNo" name="projectNo" th:value="${project.projectNo}" type="hidden">
+            <input id="isTemporary" name="isTemporary" th:value="${project.isTemporary}" type="hidden">
+            <input id="projectFavorite" name="projectFavorite" th:value="${project.projectFavorite}" type="hidden">
+            <input id="participantsField" name="participants" type="hidden">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Project</h5>
+                        <fieldset>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">제목</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectName" placeholder="프로젝트 명" required
+                                           th:value="${project.projectName}" type="text">
                                 </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">참여자</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="participants"
-                                               placeholder="본인 필수 고정" required th:value="${project.participants}"
-                                               type="text">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">참여자</label>
-                                    <div class="col-sm-11">
-                                        <select aria-label="Default select example" class="form-select" required>
-                                            <option selected>조직도 연동하기</option>
-                                            <option value="1">김선혜</option>
-                                            <option value="2">박성은</option>
-                                            <option value="3">신혜리</option>
-                                            <option value="4">성준혁</option>
-                                            <option value="5">임종하</option>
-                                            <option value="6">박영민</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">부서</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="dmpNo" placeholder="부서" required
-                                               th:value="${project.dmpNo}" type="text">
-                                    </div>
-                                </div>
-                                <!-- 첨부 파일 -->
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="projectFiles" name="projectFiles" type="file">
-                                        <input name="existingProjectFiles" th:value="${project.projectFiles}"
-                                               type="hidden">
-                                        <a target="_blank" th:href="@{${project.projectFiles}}">기존 파일 보기</a>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">시작일</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectStartDate" required
-                                               th:value="${project.projectStartDate}" type="date">
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">종료일</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectEndDate" required
-                                               th:value="${project.projectEndDate}" type="date">
-                                    </div>
-                                </div>
+                            </div>
+                            <!-- 프로젝트 참여자 데이터를 숨겨진 HTML 요소의 데이터 속성으로 전달 -->
+                            <div hidden id="projectData" th:data-participants="${project.participants}">
+                            </div>
 
-                                <!-- 즐겨찾기 (페이지진입 : 데이터 값. 클릭으로 상태 변경 가능 )-->
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">즐겨찾기</label>
-                                    <div class="col-sm-10">
-                                        <i class="bi star-icon right-align-block"
-                                           onclick="toggleStar(this, event)"
-                                           th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>
-                                    </div>
+                            <!-- 참여자 목록 -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">참여자</label>
+                                <div class="col-sm-10" id="participantList">
+                                    <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                                 </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">내용</label>
-                                    <div class="col-sm-11">
+                            <!-- 참여자 선택 -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <select aria-label="참여자 선택" class="form-select" id="employeeSelect">
+                                        <option selected value="">참여자를 선택하세요</option>
+                                        <!-- 부서별로 그룹화된 사원 목록이 여기에 추가됩니다 -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">부서</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="dmpNo" placeholder="부서" required
+                                           th:value="${project.dmpNo}" type="text">
+                                </div>
+                            </div>
+                            <!-- 첨부 파일 -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="projectFiles" name="projectFiles" type="file">
+                                    <input name="existingProjectFiles" th:value="${project.projectFiles}"
+                                           type="hidden">
+                                    <a target="_blank" th:href="@{${project.projectFiles}}">기존 파일 보기</a>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">시작일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectStartDate" required
+                                           th:value="${project.projectStartDate}" type="date">
+                                </div>
+                                <label class="col-sm-2 col-form-label">종료일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectEndDate" required
+                                           th:value="${project.projectEndDate}" type="date">
+                                </div>
+                            </div>
+
+                            <!--                                &lt;!&ndash; 즐겨찾기 (페이지진입 : 데이터 값. 클릭으로 상태 변경 가능 )&ndash;&gt;-->
+                            <!--                                <div class="row mb-3">-->
+                            <!--                                    <label class="col-sm-2 col-form-label">즐겨찾기</label>-->
+                            <!--                                    <div class="col-sm-10">-->
+                            <!--                                        <i class="bi star-icon right-align-block"-->
+                            <!--                                           onclick="toggleStar(this, event)"-->
+                            <!--                                           th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">내용</label>
+                                <div class="col-sm-10">
                                         <textarea id="froala" name="projectContent" th:text="${project.projectContent}">
                                         </textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">프로젝트 차트</h5>
+                        <h6 class="mt-3">진행도 현황</h6>
+                        <fieldset>
+                            <input name="projectNo" type="hidden" value="0">
+                            <input class="form-control" id="projectProgress" name="projectProgress" type="hidden"
+                                   value="0">
+                            <div class="progress">
+                                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="progress-bar"
+                                     id="progress-bar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <fieldset class="row mb-3 mt-5">
+                                <h6>진행 상황 체크리스트</h6>
+                                <legend class="col-form-label col-sm-2 pt-0"></legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox1" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox1">작업 1 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox2" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox2">작업 2 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox3" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox3">작업 3 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox4" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox4">작업 4 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox5" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox5">작업 5 (20%)</label>
                                     </div>
                                 </div>
                             </fieldset>
-                        </div>
+                        </fieldset>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">프로젝트 차트</h5>
-                            <h6 class="mt-3">진행도 현황</h6>
-                            <fieldset>
-                                <input name="projectNo" type="hidden" value="0">
-                                <input class="form-control" id="projectProgress" name="projectProgress" type="hidden"
-                                       value="0">
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="progress-bar"
-                                         id="progress-bar" role="progressbar" style="width: 0%;"></div>
-                                </div>
-                                <fieldset class="row mb-3 mt-5">
-                                    <h6>진행 상황 체크리스트</h6>
-                                    <legend class="col-form-label col-sm-1 pt-0"></legend>
-                                    <div class="col-sm-11">
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox1" onclick="updateProgress()"
-                                                   type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox1">작업 1 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox2" onclick="updateProgress()"
-                                                   type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox2">작업 2 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox3" onclick="updateProgress()"
-                                                   type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox3">작업 3 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox4" onclick="updateProgress()"
-                                                   type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox4">작업 4 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox5" onclick="updateProgress()"
-                                                   type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox5">작업 5 (20%)</label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </fieldset>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            </div>
+        </form>
 
-            <!---------------------------------------------------------버튼 위젯 ----------------------------------------------------------------->
-                    <div class="offset-sm-0">
-                        <div class="col-sm-5">
-                            <button class="btn btn-primary" onclick="showModal(event)"  type="button">수정
-                            </button>
-                            <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
-                            <button class="btn btn-danger" onclick="showDeleteModal()" type="button">삭제</button>
-                            <button class="btn btn-primary" onclick="showRegisterModal(event)" th:if="${project.isTemporary}" type="button">등록
-                        </button>
-                        </div>
-                    </div>
+        <!---------------------------------------------------------버튼 위젯 ----------------------------------------------------------------->
+        <div class="offset-sm-0">
+            <div class="col-sm-5">
+                <button class="btn btn-primary" onclick="showModal(event)" type="button">수정
+                </button>
+                <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
+                <button class="btn btn-danger" onclick="showDeleteModal()" type="button">삭제</button>
+                <button class="btn btn-primary" onclick="showRegisterModal(event)" th:if="${project.isTemporary}"
+                        type="button">등록
+                </button>
+            </div>
+        </div>
     </section>
 </main>
 <!-- End #main -->
@@ -803,10 +806,7 @@
         document.getElementById('isTemporary').value = 'false';
         submitForm();
     }
-
 </script>
-
-
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -824,6 +824,107 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 조직도 연동 -->
+<script>
+    $(document).ready(function () {
+        const participantList = $('#participantList');
+        const employeeSelect = $('#employeeSelect');
+        let participantIds = new Set();
+
+        // 프로젝트 참여자 데이터를 읽어오기
+        let initialParticipants = $('#projectData').data('participants').split(',');
+
+        // 참여자 목록에 사원 이름만 추가하는 함수
+        function addParticipant(empNo, empName) {
+            const participantItem = $(`
+                <span class="badge bg-secondary me-2">
+                    ${empName} <i class="bi bi-x-circle remove-participant" data-emp-no="${empNo}"></i>
+                </span>
+            `);
+            participantList.append(participantItem);
+        }
+
+        // 사원 목록을 불러와서 부서별로 그룹화하여 드롭다운에 추가하는 함수
+        function loadEmployeesForSelect() {
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
+                const departments = {};
+
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
+
+                    if (!departments[employee.departmentName]) {
+                        departments[employee.departmentName] = [];
+                    }
+                    departments[employee.departmentName].push(employee);
+                });
+
+                // 초기 참여자 목록을 출력
+                participantList.empty(); // 기존 참여자 목록 초기화
+                participantIds.clear(); // 참여자 ID 세트 초기화
+
+                initialParticipants.forEach(empNo => {
+                    if (employeeMap[empNo]) {
+                        participantIds.add(empNo);
+                        addParticipant(empNo, employeeMap[empNo]);
+                    }
+                });
+
+                // 부서별로 그룹화된 사원 목록을 드롭다운에 추가
+                employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+                for (const departmentName in departments) {
+                    const optgroup = $('<optgroup>').attr('label', departmentName);
+                    departments[departmentName].forEach(employee => {
+                        const option = `<option value="${employee.empNo}" data-name="${employeeMap[employee.empNo]}" ${participantIds.has(employee.empNo) ? 'disabled' : ''}>${employeeMap[employee.empNo]}</option>`;
+                        optgroup.append(option);
+                    });
+                    employeeSelect.append(optgroup);
+                }
+            }).fail(function (jqxhr, textStatus, error) {
+                console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
+                alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+            });
+        }
+
+        // 참여자 목록에서 사원 삭제하는 함수
+        participantList.on('click', '.remove-participant', function () {
+            const empNo = $(this).data('emp-no');
+            participantIds.delete(empNo);
+
+            // 저장된 데이터를 갱신
+            initialParticipants = initialParticipants.filter(id => id !== empNo);
+            updateParticipantsField();
+            loadEmployeesForSelect(); // 드롭다운 목록 갱신 및 선택된 참여자 초기화
+        });
+
+        // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
+        function updateParticipantsField() {
+            $('#participantsField').val(Array.from(participantIds).join(','));
+        }
+
+        // 사원 선택 시 참여자 목록에 추가
+        $('#employeeSelect').on('change', function () {
+            const selectedOption = $(this).find('option:selected');
+            const empNo = selectedOption.val();
+            const empName = selectedOption.data('name');
+            if (empNo && !participantIds.has(empNo)) {
+                participantIds.add(empNo);
+                initialParticipants.push(empNo); // 새로 추가된 참여자 ID를 저장된 데이터에 추가
+                updateParticipantsField();
+                loadEmployeesForSelect(); // 드롭다운 목록 갱신 및 선택된 참여자 초기화
+            }
+        });
+
+        // 페이지 로드 시 사원 목록 불러오기
+        loadEmployeesForSelect();
+    });
+</script>
+
+
+
+
+
 </body>
 </html>
 

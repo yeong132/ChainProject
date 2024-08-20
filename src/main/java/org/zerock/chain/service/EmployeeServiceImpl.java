@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.dto.EmployeeDTO;
 import org.zerock.chain.dto.PermissionDTO;
-import org.zerock.chain.exception.EmployeeNotFoundException;
+//import org.zerock.chain.exception.EmployeeNotFoundException;
 import org.zerock.chain.model.*;
 import org.zerock.chain.repository.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -26,12 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeePermissionRepository employeePermissionRepository;
     private final ModelMapper modelMapper;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository,
-                               DepartmentRepository departmentRepository,
-                               RankRepository rankRepository,
-                               PermissionRepository permissionRepository,
-                               EmployeePermissionRepository employeePermissionRepository,
-                               ModelMapper modelMapper) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, RankRepository rankRepository, PermissionRepository permissionRepository, EmployeePermissionRepository employeePermissionRepository, ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.rankRepository = rankRepository;
@@ -62,8 +58,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-
 
     private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO dto = modelMapper.map(employee, EmployeeDTO.class);
@@ -101,25 +95,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     // 이건 혹시 몰라서 드립니다.
-    private void updateEmployeeFromDTO(Employee employee, EmployeeDTO employeeDTO) {
-        employee.setFirstName(employeeDTO.getFirstName());
-        employee.setLastName(employeeDTO.getLastName());
-        employee.setPhoneNum(employeeDTO.getPhoneNum());
-        employee.setBirthDate(employeeDTO.getBirthDate());
-        employee.setAddr(employeeDTO.getAddr());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setLastDate(employeeDTO.getLastDate());
-
-        if (employeeDTO.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(employeeDTO.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
-            employee.setDepartment(department);
-        }
-
-        if (employeeDTO.getRankId() != null) {
-            Rank rank = rankRepository.findById(employeeDTO.getRankId())
-                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
-            employee.setRank(rank);
-        }
-    }
+//    @Override
+//    private void updateEmployeeFromDTO(Employee employee, EmployeeDTO employeeDTO) {
+//        employee.setFirstName(employeeDTO.getFirstName());
+//        employee.setLastName(employeeDTO.getLastName());
+//        employee.setPhoneNum(employeeDTO.getPhoneNum());
+//        employee.setBirthDate(employeeDTO.getBirthDate());
+//        employee.setAddr(employeeDTO.getAddr());
+//        employee.setEmail(employeeDTO.getEmail());
+//        employee.setLastDate(employeeDTO.getLastDate());
+//
+//        if (employeeDTO.getDepartmentId() != null) {
+//            Department department = departmentRepository.findById(employeeDTO.getDepartmentId())
+//                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+//            employee.setDepartment(department);
+//        }
+//
+//        if (employeeDTO.getRankId() != null) {
+//            Rank rank = rankRepository.findById(employeeDTO.getRankId())
+//                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
+//            employee.setRank(rank);
+//        }}
 }
