@@ -10,5 +10,5 @@ public class NotificationRequestDTO {
     private long referenceId;
     private String  notificationMessage;
     private LocalDateTime notificationDate;
-    private boolean isRead;
+    private Boolean isRead;
 }

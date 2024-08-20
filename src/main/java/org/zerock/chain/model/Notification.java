@@ -35,5 +35,5 @@ public class Notification {
     private LocalDateTime notificationDate;
 
     @Column(name = "is_read")
-    private boolean isRead;
+    private Boolean isRead;
 }

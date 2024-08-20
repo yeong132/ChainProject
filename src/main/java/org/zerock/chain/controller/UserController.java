@@ -170,13 +170,17 @@ public class UserController {
 
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
-        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
+        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo,"프로젝트");
+        List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo,"공지사항");
+        List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo,"업무보고서");
         // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
 
         // 모든 알림에 시스템 알림을 추가합니다.
         model.addAttribute("allNotifications", allNotifications);
         model.addAttribute("projectNotifications", projectNotifications);
+        model.addAttribute("noticeNotifications", noticeNotifications);
+        model.addAttribute("reportNotifications", reportNotifications);
         model.addAttribute("systemNotifications", systemNotifications);
 
         return "user/alarm";

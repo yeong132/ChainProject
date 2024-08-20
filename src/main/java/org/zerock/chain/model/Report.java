@@ -17,6 +17,9 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportNo;
 
+    @Column(name = "emp_no")
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     @Column(name = "report_name", length = 255, nullable = false)
     private String reportName;
 
