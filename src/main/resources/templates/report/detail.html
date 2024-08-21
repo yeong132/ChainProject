@@ -478,12 +478,18 @@
                                 </div>
                             </div>
 
+                            <!-- 데이터를 hidden input 요소에 저장 -->
+                            <input type="hidden" id="reportData" th:value="${report.reportParticipants}" />
+
+                            <!-- 참여자 목록을 표시할 HTML 구조 -->
                             <div class="row mb-3" th:if="${report.reportCategory == '회의록' || report.reportCategory == '보고서'}">
                                 <label class="col-sm-2 col-form-label">참여자</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" readonly type="text" th:value="${report.reportParticipants}">
+                                <div class="col-sm-10" id="participantList">
+                                    <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
+
+
 
                             <div class="row mb-3" th:if="${report.reportCategory == '회의록'}">
                                 <label class="col-sm-2 col-form-label">회의 시간</label>
@@ -587,5 +593,52 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 조직도 연동 -->
+<script>
+    $(document).ready(function () {
+        const participantList = $('#participantList');
+        let participantIds = new Set();
+
+        // 참여자 목록에 사원 추가하는 함수
+        function addParticipant(empNo, empName, empTitle, empDepartment) {
+            const participantItem = $(`
+            <span class="badge bg-secondary me-2">
+                ${empName} (${empTitle}/${empDepartment})
+            </span>
+        `);
+            participantList.append(participantItem);
+        }
+
+        // 페이지 로드 시 저장된 참여자 목록을 초기화하여 출력
+        const initialParticipants = $('#reportData').val();
+
+        if (initialParticipants) {
+            const participantsArray = initialParticipants.split(',');
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = {
+                        name: employee.lastName + employee.firstName,
+                        title: employee.title,
+                        department: employee.departmentName
+                    };
+                });
+
+                participantsArray.forEach(empNo => {
+                    if (employeeMap[empNo]) {
+                        participantIds.add(empNo);
+                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].title, employeeMap[empNo].department);
+                    }
+                });
+            });
+        } else {
+            console.warn("No participants data found.");
+        }
+    });
+</script>
+
+
+
 </body>
 </html>
