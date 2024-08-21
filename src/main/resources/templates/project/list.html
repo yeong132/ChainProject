@@ -107,7 +107,6 @@
                             <p>1 hr. ago</p>
                         </div>
                     </li>
-
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
@@ -120,7 +119,6 @@
                             <p>2 hrs. ago</p>
                         </div>
                     </li>
-
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
@@ -133,7 +131,6 @@
                             <p>4 hrs. ago</p>
                         </div>
                     </li>
-
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
@@ -168,7 +165,6 @@
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
-
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
                             <i class="bi bi-person"></i>
@@ -178,7 +174,6 @@
                     <li>
                         <hr class="dropdown-divider"/>
                     </li>
-
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
                             <i class="bi bi-diagram-2"></i>
@@ -452,8 +447,10 @@
                                     <input name="projectFavorite" th:value="${!project.projectFavorite}" type="hidden"/>
                                 </form>
                                 <h3 class="pj-mt0" th:text="${project.projectName}">프로젝트명</h3>
-                                <p th:utext="'참여자: ' + ${project.participants} + '<br>' + ${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">
-                                    참여자<br>기간</p>
+                                <p class="project-participants" th:data-participants="${project.participants}">
+                                    <!-- JavaScript로 사원 이름이 여기에 출력됩니다. -->
+                                </p>
+                                <p th:utext="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></p>
                                 <div class="progress mt-3">
                                     <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
                                          th:aria-valuenow="${project.projectProgress}"
@@ -485,8 +482,13 @@
                                     <input name="projectFavorite" th:value="${!project.projectFavorite}" type="hidden"/>
                                 </form>
                                 <h3 class="pj-mt0" th:text="${project.projectName}">프로젝트명</h3>
-                                <p th:utext="${project.participants} + '<br>' + ${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">
-                                    참여자<br>기간</p>
+                                <p class="project-participants" th:data-participants="${project.participants}">
+                                    <!-- JavaScript로 사원 이름이 여기에 출력됩니다. -->
+                                </p>
+                                <p th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}">
+                                    <!-- 기간 출력 -->
+                                </p>
+
                                 <div class="progress mt-3">
                                     <div aria-valuemax="100" aria-valuemin="0" class="progress-bar "
                                          role="progressbar"
@@ -508,7 +510,6 @@
 <!-- End #main -->
 
 
-<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
 <footer class="footer" id="footer">
     <div class="copyright">
@@ -535,7 +536,6 @@
         }
     }
 </script>
-
 
 <!-- 스크롤 이동 JS -->
 <script>
@@ -574,5 +574,71 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 조직도 연동 -->
+<script>
+    $(document).ready(function () {
+        // 초기 설정
+        const projectElements = $('.project-participants');
+        let participantIds = new Set();
+
+        // 참여자 목록에 사원 이름을 추가하는 함수
+        function addParticipant(container, empName) {
+            const participantItem = $(`
+            <span>
+                ${empName}
+            </span>
+        `);
+            container.append(participantItem);
+        }
+
+        // 모든 프로젝트 카드에 대해 참여자 데이터를 가져와서 처리
+        projectElements.each(function () {
+            const participantsData = $(this).data('participants'); // data-participants 속성 가져오기
+            const participantContainer = $(this); // 현재 요소 (참여자 표시할 곳)
+
+            if (participantsData) {
+                let participantsArray = [];
+
+                if (typeof participantsData === 'string') {
+                    participantsArray = participantsData.split(','); // 문자열인 경우 쉼표로 구분하여 배열로 변환
+                } else if (Array.isArray(participantsData)) {
+                    participantsArray = participantsData; // 이미 배열인 경우
+                } else if (typeof participantsData === 'number') {
+                    participantsArray = [participantsData.toString()]; // 단일 사원번호인 경우 배열로 처리
+                } else {
+                    console.error("Unexpected data type for participantsData:", typeof participantsData);
+                    return;
+                }
+
+                // API에서 사원 정보 가져오기
+                $.getJSON('/api/employees/all', function (employees) {
+                    const employeeMap = {};
+                    employees.forEach(employee => {
+                        employeeMap[employee.empNo] = {
+                            name: employee.lastName + employee.firstName
+                        };
+                    });
+
+                    // participantsArray를 순회하며 사원 이름 추가
+                    participantsArray.forEach(empNo => {
+                        if (employeeMap[empNo]) {
+                            participantIds.add(empNo);
+                            addParticipant(participantContainer, employeeMap[empNo].name);
+                        } else {
+                            console.warn(`Employee with empNo ${empNo} not found.`);
+                        }
+                    });
+                }).fail(function () {
+                    console.error("Failed to fetch employee data.");
+                });
+            } else {
+                console.warn("No participants data found for this project.");
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>

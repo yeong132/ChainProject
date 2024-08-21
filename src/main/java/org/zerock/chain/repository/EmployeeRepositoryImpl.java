@@ -6,11 +6,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import org.zerock.chain.model.Department;
-import org.zerock.chain.model.EmpRank;
 import org.zerock.chain.model.Employee;
+import org.zerock.chain.model.Rank;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
@@ -38,7 +39,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
         }
 
         if (rankName != null) {
-            Join<Employee, EmpRank> rankJoin = employee.join("rank");
+            Join<Employee, Rank> rankJoin = employee.join("rank");
             predicates.add(cb.equal(rankJoin.get("rankName"), rankName));
         }
 

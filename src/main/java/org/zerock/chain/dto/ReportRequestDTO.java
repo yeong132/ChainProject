@@ -1,16 +1,18 @@
 package org.zerock.chain.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 @Data
 public class ReportRequestDTO {
+
+    private Long reportNo;
+
     private String reportName;
+
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     private String reportCategory;
     private String reportContent;
     private String reportAuthor;

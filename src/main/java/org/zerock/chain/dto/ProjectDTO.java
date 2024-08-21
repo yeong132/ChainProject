@@ -18,12 +18,11 @@ public class ProjectDTO {
     private Long projectNo;
     private String projectName;
 
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
 
     // 날짜 형식 변환 어노테이션 사용
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectStartDate;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectEndDate;
 

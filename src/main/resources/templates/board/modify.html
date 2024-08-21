@@ -449,59 +449,63 @@
                 <h5 class="card-title">경조사 게시글 수정</h5>
 
                 <!-- General Form Elements -->
-                <form>
+                <form id="boardForm" method="post" th:action="@{/board/modify/{boardNo}(boardNo=${board.boardNo})}">
+                  <input name="boardFiles" th:value="${board.boardFiles}" type="hidden">
+
+
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputText">제목</label>
+                    <label class="col-sm-1 col-form-label" >제목</label>
                     <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="프로젝트1">
+                      <input class="form-control" name="boardName" type="text"placeholder="제목"th:value="${board.boardName}" >
                     </div>
                   </div>
 
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="email" value="본인 고정">
-                    </div>
-                  </div>
 
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label">카테고리</label>
                     <div class="col-sm-11">
-                      <select aria-label="Default select example" class="form-select">
-                        <option selected>카테고리 연동하기</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                      <select aria-label="Default select example" class="form-select" name="boardCategory" >
+                        <option value="" disabled selected>카테고리</option>
+                        <option value="결혼식">결혼식</option>
+                        <option value="장례식">장례식</option>
+                        <option value="기타">기타</option>
                       </select>
                     </div>
                   </div>
 
+
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">위치</label>
+                    <label class="col-sm-1 col-form-label" >작성자</label>
                     <div class="col-sm-11">
-                      <input class="form-control" readonly type="text" value="지도API 연동 필요">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" id="formFile" readonly type="file">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputDate">날짜</label>
-                    <div class="col-sm-11">
-                      <input class="form-control" readonly type="date">
+                      <input class="form-control"  name="boardAuthor" type="text" th:value="${board.boardAuthor}">
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" for="inputPassword">내용</label>
+                    <label class="col-sm-1 col-form-label" >위치</label>
                     <div class="col-sm-11">
-                      <div id="froala"></div>
+                      <input class="form-control" name="boardLocation" type="text"  th:value="${board.boardLocation}" >
                     </div>
                   </div>
 
+                  <div class="row mb-3">
+                    <label class="col-sm-1 col-form-label">첨부 파일</label>
+                    <div class="col-sm-11">
+                      <input class="form-control" id="formFile" name="noticeFiles" th:value="${board.boardFiles}" type="file">
+                      <div th:if="${board.boardFiles != null}">
+                        <p>첨부된 파일:
+                          <a download th:href="@{${board.boardFiles}}" th:text="${board.boardFiles}"></a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-1 col-form-label" >내용</label>
+                    <div class="col-sm-11">
+                      <textarea id="froala" name="boardContent"  th:text="${board.boardContent}"></textarea>
+                    </div>
+                  </div>
 
                   <div class="offset-sm-0">
                     <div class="col-sm-5">
@@ -510,9 +514,8 @@
                       <button  type="button" class="btn btn-primary" onclick="showConfirmationModal()">삭제</button>
                     </div>
                   </div>
-
-
-                </form><!-- End General Form Elements -->
+                </form>
+                <!-- End General Form Elements -->
 
               </div>
             </div>
@@ -526,16 +529,20 @@
 
 
 
-  <!------------------------------------------------------------저장 확인 모달 창 --------------------------------------------------------------------------->
-  <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
+
+
+
+
+  <!-------------------저장 확인 모달 창 --------------------------------------------------------------------------->
+  <div aria-hidden="true" aria-labelledby="saveModalLabel" class="modal fade" id="saveModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="saveModalLabel">저장 확인</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="saveModalLabel">수정 저장 확인</h5>
+          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
         </div>
         <div class="modal-body">
-          저장하시겠습니까 ?
+          수정한 내용을 저장하시겠습니까 ?
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger" onclick="saveAlerts()" type="button">예</button>
@@ -544,33 +551,31 @@
       </div>
     </div>
   </div>
-
-  <!------------------------------------------------------------삭제 확인 모달 창 --------------------------------------------------------------------------->
-  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <!------------------삭제 확인 모달 창 --------------------------------------------------------------------------->
+  <div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="confirmationModalLabel">삭제 확인</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
         </div>
         <div class="modal-body">
-          삭제하시겠습니까?
+          해당 게시글을 삭제하시겠습니까?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" onclick="deleteAlerts()">예</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">아니요</button>
+          <button class="btn btn-danger" onclick="deleteAlerts()" type="button">예</button>
+          <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
         </div>
       </div>
     </div>
   </div>
-
-  <!------------------------------------------------------------ 목록 경고 모달 창 --------------------------------------------------------------------------->
-  <div class="modal fade" id="WarningModal" tabindex="-1" aria-labelledby="WarningModalLabel" aria-hidden="true">
+  <!--------------- 목록 경고 모달 창 --------------------------------------------------------------------------->
+  <div aria-hidden="true" aria-labelledby="WarningModalLabel" class="modal fade" id="WarningModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="WarningModalLabel">경고</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
         </div>
         <div class="modal-body">
           현재 입력한 내용이 저장되지 않을 수 있습니다. 목록으로 돌아가시겠습니까?
@@ -584,12 +589,11 @@
   </div>
 
 
-    <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
+  <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
+      &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
       <!-- All the links in the footer should remain intact. -->
@@ -614,56 +618,75 @@
   </a>
   <!-- 채팅창 끝-->
 
-  <!-- 저장 확인 모달 JS  -->
+  <!-- 수정 삭제 목록 모달 -->
   <script>
-    function showModal() { // 모달을 보여주는 함수
-      var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
-      saveModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
-    function saveAlerts() {
-      var saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
-      saveModal.hide(); // 모달을 먼저 닫는다
-      saveModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
-        window.location.href = '/board/detail';
+    // Froala Editor 초기화
+    $(document).ready(function() {
+      new FroalaEditor('#froala', {
+        language: 'ko',
+        heightMin: 300,
+        events: {
+          // Froala Editor가 초기화될 때 호출됩니다.
+          'initialized': function () {
+            // textarea의 값을 Froala Editor에 설정합니다.
+            this.html.set($('#froala').text());
+          },
+          // Froala Editor의 내용이 변경될 때 호출됩니다.
+          'contentChanged': function () {
+            // Froala Editor의 내용을 textarea에 설정합니다.
+            $('#froala').val(this.html.get());
+          }
+        }
       });
+    });
+
+    // 수정 모달
+    function showModal() {
+      var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
+      saveModal.show();
     }
-  </script>
-  <!-- 삭제 확인 모달 JS  -->
-  <script>
-    // 모달을 보여주는 함수
+
+    function saveAlerts() {
+      document.getElementById('boardForm').submit(); // 폼 제출
+    }
+
+    // 삭제 모달
     function showConfirmationModal() {
       var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
       confirmationModal.show();
     }
 
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
     function deleteAlerts() {
-      // 알림 삭제 로직 구현
-      const alerts = document.querySelectorAll('.alert');
-      alerts.forEach(alert => alert.remove());
+      const boardNo = [[${board.boardNo}]] ;  // Thymeleaf 표현식으로 boardNo 값을 가져옵니다.
 
-      var confirmationModal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
-      confirmationModal.hide(); // 모달 닫기
-
-      // 모달이 완전히 닫힌 후 페이지 이동
-      confirmationModal._element.addEventListener('hidden.bs.modal', function() {
-        window.location.href = '/board/list';
+      fetch(`/board/delete/${boardNo}`, {
+        method: 'POST'
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = '/board/list';
+        } else {
+          alert('삭제에 실패했습니다. 상태 코드: ' + response.status);
+        }
+      }).catch(error => {
+        console.error('Error during deletion:', error);
       });
     }
-  </script>
-  <!-- 목록 경고 모달 JS  -->
-  <script>
+
+
+    // 목록 확인 모달
     function showWarningModal() { // 모달을 보여주는 함수
       var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-      WarningModal.show();}
-    // 모달에서 '예'를 클릭했을 때 호출되는 함수
+      WarningModal.show();
+    }
+
     function WarningAlerts() {
       var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
       WarningModal.hide(); // 모달을 먼저 닫는다
-      WarningModal._element.addEventListener('hidden.bs.modal', function() { // 모달이 완전히 닫힌 후 페이지 이동
+      WarningModal._element.addEventListener('hidden.bs.modal', function () { // 모달이 완전히 닫힌 후 페이지 이동
         window.location.href = '/board/list';
       });
     }
+
   </script>
 
   <!-- Vendor JS Files -->

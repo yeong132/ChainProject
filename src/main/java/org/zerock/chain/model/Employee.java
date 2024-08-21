@@ -38,6 +38,9 @@ public class Employee {
     @Column(name = "addr", length = 255)
     private String addr;
 
+    @Column(name = "email", nullable = false, length = 100, unique = true)
+    private String email;
+
     @Column(name = "hire_date")
     private LocalDate hireDate;
 

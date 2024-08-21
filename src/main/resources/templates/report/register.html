@@ -448,6 +448,7 @@
                 <form action="/report/register" id="reportForm" method="post">
                   <input id="isTemporary" name="isTemporary" type="hidden" value="false">
                   <input id="reportCategory" name="reportCategory" type="hidden" value="">
+                  <input id="participantsField" name="reportParticipants" type="hidden">
 
                   <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">문서 종류</label>
@@ -480,12 +481,25 @@
                         <input class="form-control" name="reportAuthor" placeholder="본인 고정" required type="text">
                       </div>
                     </div>
+
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">참여자</label>
-                      <div class="col-sm-10">
-                        <input class="form-control" name="reportParticipants" placeholder="참석자/직급/부서" required type="text">
+                      <div class="col-sm-10" id="participantList">
+                        <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                       </div>
                     </div>
+                    <button id="resetSelection" class="btn btn-secondary">전체 취소</button>
+
+                    <div class="row mb-3">
+                      <label class="col-sm-2 col-form-label"></label>
+                      <div class="col-sm-10">
+                        <select aria-label="참여자 선택" class="form-select" id="employeeSelect" required>
+                          <option selected value="">참여자를 선택하세요</option>
+                          <!-- 부서별로 그룹화된 사원 목록이 여기에 추가됩니다 -->
+                        </select>
+                      </div>
+                    </div>
+
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">회의 시간</label>
                       <div class="col-sm-10">
@@ -698,10 +712,10 @@
     // 폼을 업데이트하는 함수. 선택된 문서 종류에 따라 해당 폼을 보여주고 나머지는 숨김.
     function updateForm() {
       const selectedType = document.querySelector('input[name="docType"]:checked').value;
-
       const meetingForm = document.getElementById('meetingForm');
       const paperForm = document.getElementById('paperForm');
       const diaryForm = document.getElementById('diaryForm');
+      const participantsField = document.getElementById('participantsField');
 
       // 모든 폼을 숨기고 비활성화
       meetingForm.style.display = 'none';
@@ -715,7 +729,12 @@
       if (selectedType === 'meeting') {
         meetingForm.style.display = 'block';
         enableForm(meetingForm);
-      } else if (selectedType === 'paper') {
+        participantsField.disabled = false;  // 회의록 폼에서만 참여자 필드를 활성화
+      } else {
+        participantsField.disabled = true;  // 나머지 폼에서는 참여자 필드를 비활성화
+      }
+
+      if (selectedType === 'paper') {
         paperForm.style.display = 'block';
         enableForm(paperForm);
       } else if (selectedType === 'diary') {
@@ -731,7 +750,7 @@
     function disableForm(form) {
       const inputs = form.querySelectorAll('input, textarea');
       inputs.forEach(input => {
-        input.disabled = true;
+        input.disabled = true; // 필드 비활성화
       });
     }
 
@@ -739,7 +758,7 @@
     function enableForm(form) {
       const inputs = form.querySelectorAll('input, textarea');
       inputs.forEach(input => {
-        input.disabled = false;
+        input.disabled = false; // 필드 활성화
       });
     }
 
@@ -750,27 +769,21 @@
       saveModal.show(); // 저장 확인 모달 표시
     }
 
-    // 폼을 제출하는 함수. 빈 값을 null로 설정하고 폼을 제출.
+    // 폼을 제출하는 함수. 빈 값을 가진 필드를 제거하고 폼을 제출.
     function submitForm() {
-      // 빈값 처리
       const form = document.getElementById('reportForm');
+
+      // 빈 값을 가진 필드를 제거
       const inputs = form.querySelectorAll('input, textarea');
       inputs.forEach(input => {
         if (input.value.trim() === '') {
-          input.value = null; // 빈 값을 null로 설정
-        }
-      });
-
-      // 비활성화된 입력 필드를 제외하고 폼 제출
-      const enabledInputs = form.querySelectorAll('input:not([disabled]), textarea:not([disabled])');
-      enabledInputs.forEach(input => {
-        if (input.value.trim() === '') {
-          input.value = null;
+          input.disabled = true;  // 비어있는 입력 필드 비활성화
         }
       });
 
       form.submit();
     }
+
 
     // 저장 확인 모달의 '예' 버튼 클릭 시 호출되는 함수. 모달을 닫고 폼을 제출.
     function saveAlerts() {
@@ -818,9 +831,6 @@
 
 
 
-
-
-
   <!-- Vendor JS Files -->
   <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -837,6 +847,146 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/wemaked.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- 조직도 연동 -->
+<script>
+  $(document).ready(function () {
+    const participantList = $('#participantList');
+    let participantIds = new Set();
+
+    // 부서별로 그룹화된 사원 목록을 불러와 드롭다운에 추가하는 함수
+    function loadEmployeesForSelect() {
+      $.getJSON('/api/employees/all', function (employees) {
+        const employeeSelect = $('#employeeSelect');
+        employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+
+        const departments = {};
+
+        employees.forEach(employee => {
+          if (!participantIds.has(employee.empNo)) {
+            if (!departments[employee.departmentName]) {
+              departments[employee.departmentName] = [];
+            }
+            departments[employee.departmentName].push(employee);
+          }
+        });
+
+        for (const departmentName in departments) {
+          const optgroup = $('<optgroup>').attr('label', departmentName);
+          departments[departmentName].forEach(employee => {
+            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
+            optgroup.append(option);
+          });
+          employeeSelect.append(optgroup);
+        }
+      }).fail(function (jqxhr, textStatus, error) {
+        console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
+        alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+      });
+    }
+
+    // 참여자 목록에 사원을 추가하는 함수
+    function addParticipant(empNo, empName, empRank, empDepartment) {
+      if (!participantIds.has(empNo)) {
+        participantIds.add(empNo);
+        const participantItem = $(`
+                <span class="badge bg-secondary me-2">
+                    ${empName} (${empRank}/${empDepartment})
+                    <i class="bi bi-x-circle remove-participant" data-emp-no="${empNo}"></i>
+                </span>
+            `);
+        participantList.append(participantItem);
+        updateParticipantsField();
+        loadEmployeesForSelect(); // 목록 갱신
+      }
+    }
+
+    // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
+    function updateParticipantsField() {
+      const participantsArray = Array.from(participantIds);
+      $('#participantsField').val(participantsArray.join(',')); // 사원번호 리스트를 report_participants 필드에 설정
+    }
+
+    // 사원 선택 시 참여자 목록에 추가
+    $('#employeeSelect').on('change', function () {
+      const selectedOption = $(this).find('option:selected');
+      const empNo = selectedOption.val();
+      const empName = selectedOption.data('name');
+      const empRank = selectedOption.data('rank');  // 직급
+      const empDepartment = selectedOption.data('department');  // 부서
+      if (empNo && !participantIds.has(empNo)) {
+        addParticipant(empNo, empName, empRank, empDepartment);
+        $(this).val(''); // 선택 초기화
+      }
+    });
+
+    // 개별 취소 기능 구현
+    participantList.on('click', '.remove-participant', function () {
+      const empNo = $(this).data('emp-no');
+      // participantIds에서 제거
+      participantIds.delete(empNo.toString());
+      // 화면에서 해당 항목 제거
+      $(this).parent().remove();
+      // 선택된 참여자 목록 필드 업데이트
+      updateParticipantsField();
+      // 드롭다운 초기화 및 갱신
+      refreshEmployeeSelect();
+    });
+
+    // 전체 취소 버튼 클릭 시 실행되는 함수
+    $('#resetSelection').on('click', function () {
+      // 선택된 사원 목록 및 ID 집합 초기화
+      participantIds.clear();
+      participantList.empty();
+      updateParticipantsField();
+
+      // 드롭다운 초기화
+      loadEmployeesForSelect(); // 사원 목록을 새로 불러와 드롭다운 갱신
+    });
+
+    // 드롭다운 목록을 갱신하는 함수 (개별 취소에서도 사용)
+    function refreshEmployeeSelect() {
+      const employeeSelect = $('#employeeSelect');
+      employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+
+      $.getJSON('/api/employees/all', function (employees) {
+        const departments = {};
+
+        employees.forEach(employee => {
+          if (!participantIds.has(employee.empNo)) {
+            if (!departments[employee.departmentName]) {
+              departments[employee.departmentName] = [];
+            }
+            departments[employee.departmentName].push(employee);
+          }
+        });
+
+        for (const departmentName in departments) {
+          const optgroup = $('<optgroup>').attr('label', departmentName);
+          departments[departmentName].forEach(employee => {
+            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
+            optgroup.append(option);
+          });
+          employeeSelect.append(optgroup);
+        }
+      }).fail(function (jqxhr, textStatus, error) {
+        console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
+        alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+      });
+    }
+
+    // 페이지 로드 시 사원 목록 불러오기
+    loadEmployeesForSelect();
+
+    // 폼 제출 시 선택된 참여자 목록을 업데이트
+    $('#reportForm').on('submit', function () {
+      updateParticipantsField();
+    });
+  });
+</script>
+
+
+
   </body>
 </html>
 

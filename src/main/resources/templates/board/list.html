@@ -449,14 +449,13 @@
 
       <section class="section ">
         <div class="row">
-
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title"></h5>
 
                 <!-- Table with stripped rows -->
-                <table class="table datatable table-hover ">
+                <table class="table datatable table-hover">
                   <thead>
                   <tr>
                     <th>번호</th>
@@ -467,83 +466,13 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>회의록</td>
-                    <td><a href="/board/detail">24년 7월23일 회의록</a></td>
-                    <td>임종하</td>
-                    <td>2005/02/11</td>
+                  <tr th:each="board : ${boards}" th:onclick="|location.href='@{/board/detail/{boardNo}(boardNo=${board.boardNo})}'|">
+                  <td th:text="${board.boardNo}"></td>
+                    <td th:text="${board.boardCategory}"></td>
+                    <td th:text="${board.boardName}"></td>
+                    <td th:text="${board.boardAuthor}"></td>
+                    <td th:text="${board.boardUploadDate}"></td>
                   </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>업무일지</td>
-                    <td><a href="/board/detail">7월 3주차 업무일지</a></td>
-                    <td>성준혁</td>
-                    <td>1999/04/07</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>보고서</td>
-                    <td><a href="/board/detail">팀프로젝트 현황 보고서</a></td>
-                    <td>박성은</td>
-                    <td>2005/09/08</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>보고서</td>
-                    <td><a href="/board/detail">5월 비품 목록</a></td>
-                    <td>이지영</td>
-                    <td>2009/29/11</td>
-                  </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>회의록</td>
-                    <td><a href="/board/detail">24년 7월23일 회의록</a></td>
-                    <td>임종하</td>
-                    <td>2005/02/11</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>업무일지</td>
-                    <td><a href="/board/detail">7월 3주차 업무일지</a></td>
-                    <td>성준혁</td>
-                    <td>1999/04/07</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>보고서</td>
-                    <td><a href="/board/detail">팀프로젝트 현황 보고서</a></td>
-                    <td>박성은</td>
-                    <td>2005/09/08</td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>보고서</td>
-                    <td><a href="/board/detail">5월 비품 목록</a></td>
-                    <td>이지영</td>
-                    <td>2009/29/11</td>
-                  </tr>                                    <tr>
-                    <td>1</td>
-                    <td>회의록</td>
-                    <td><a href="/board/detail">24년 7월23일 회의록</a></td>
-                    <td>임종하</td>
-                    <td>2005/02/11</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>업무일지</td>
-                    <td><a href="/board/detail">7월 3주차 업무일지</a></td>
-                    <td>성준혁</td>
-                    <td>1999/04/07</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>보고서</td>
-                    <td><a href="/board/detail">팀프로젝트 현황 보고서</a></td>
-                    <td>박성은</td>
-                    <td>2005/09/08</td>
-                  </tr>
-
                   </tbody>
                 </table>
                 <!-- End Table with stripped rows -->

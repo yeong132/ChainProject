@@ -31,10 +31,16 @@ public class ReportController {
     @GetMapping("/list")
     public String listGET(Model model) {
         List<ReportDTO> reportList = reportService.getAllReports();
-        List<ReportDTO> temporaryReports = reportService.getTemporaryReports(); // 임시 보관 문서 조회 추가
         model.addAttribute("reportList", reportList);
-        model.addAttribute("temporaryReports", temporaryReports); // 임시 보관 문서 모델에 추가
         return "report/list";
+    }
+
+    // 문서 전체 목록 조회
+    @GetMapping("/temporary")
+    public String temporaryGET(Model model) {
+        List<ReportDTO> temporaryReports = reportService.getTemporaryReports(); // 임시 보관 문서 조회 추가
+        model.addAttribute("temporaryReports", temporaryReports); // 임시 보관 문서 모델에 추가
+        return "report/temporary";
     }
 
     // 문서 개별 상세 조회
