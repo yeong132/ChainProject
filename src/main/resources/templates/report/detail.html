@@ -478,8 +478,8 @@
                                 </div>
                             </div>
 
-                            <!-- 데이터를 hidden input 요소에 저장 -->
-                            <input type="hidden" id="reportData" th:value="${report.reportParticipants}" />
+                            <!-- 프로젝트 참여자 데이터를 숨겨진 HTML 요소의 데이터 속성으로 전달 -->
+                            <div hidden id="reportData" th:data-participants="${report.reportParticipants}"></div>
 
                             <!-- 참여자 목록을 표시할 HTML 구조 -->
                             <div class="row mb-3" th:if="${report.reportCategory == '회의록' || report.reportCategory == '보고서'}">
@@ -603,69 +603,59 @@
         let participantIds = new Set();
 
         // 참여자 목록에 사원 추가하는 함수
-        function addParticipant(empNo, empName, empTitle, empDepartment) {
+        function addParticipant(empNo, empName, empRank, empDepartment) {
             const participantItem = $(`
                 <span class="badge bg-secondary me-2">
-                    ${empName} (${empTitle}/${empDepartment})
+                    ${empName} (${empRank}/${empDepartment})
                 </span>
             `);
             participantList.append(participantItem);
         }
 
         // 페이지 로드 시 저장된 참여자 목록을 초기화하여 출력
-        let initialParticipants = $('#projectData').data('participants');
+        const initialParticipants = $('#reportData').data('participants');
 
-        // 데이터 타입 확인 및 처리
-        if (typeof initialParticipants === 'number') {
-            // 단일 숫자형 사원 ID일 경우 문자열로 변환
-            initialParticipants = initialParticipants.toString();
-        }
+        if (initialParticipants) {
+            // participantsArray 초기화
+            let participantsArray = [];
 
-        if (typeof initialParticipants === 'string') {
-            // 쉼표로 구분된 경우 배열로 변환하여 처리
-            if (initialParticipants.includes(',')) {
-                initialParticipants = initialParticipants.split(',');
+            // initialParticipants가 배열인지 확인
+            if (Array.isArray(initialParticipants)) {
+                participantsArray = initialParticipants;
+            } else if (typeof initialParticipants === 'string') {
+                // 문자열인 경우 쉼표로 구분하여 배열로 변환
+                participantsArray = initialParticipants.split(',');
+            } else if (typeof initialParticipants === 'number') {
+                // 숫자인 경우 단일 사원번호로 배열에 추가
+                participantsArray = [initialParticipants.toString()];
             } else {
-                // 단일 사원 번호로 처리
-                handleParticipant(initialParticipants);
-                return; // 단일 사원 처리 후 종료
+                console.error("Unexpected data type for initialParticipants:", typeof initialParticipants);
+                return;
             }
-        } else if (Array.isArray(initialParticipants)) {
-            // 이미 배열인 경우 그대로 처리
-            initialParticipants.forEach(empNo => handleParticipant(empNo));
-            return;
-        } else if (initialParticipants == null || initialParticipants === '') {
-            // null이나 빈 값 처리
-            console.warn("No participants found.");
-            return;
-        } else {
-            // 예상치 못한 데이터 타입 처리
-            console.error("Unexpected data type for participants:", typeof initialParticipants);
-            return;
-        }
 
-        // 배열로 변환된 경우 각 사원 번호 처리
-        initialParticipants.forEach(empNo => handleParticipant(empNo));
-
-        // 사원 정보 처리 함수
-        function handleParticipant(empNo) {
+            // API에서 사원 정보 가져오기
             $.getJSON('/api/employees/all', function (employees) {
                 const employeeMap = {};
                 employees.forEach(employee => {
                     employeeMap[employee.empNo] = {
                         name: employee.lastName + employee.firstName,
-                        title: employee.title,
+                        rank: employee.rankName,
                         department: employee.departmentName
                     };
                 });
 
-                if (employeeMap[empNo]) {
-                    participantIds.add(empNo);
-                    addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].title, employeeMap[empNo].department);
-                } else {
-                    console.warn(`Employee with empNo ${empNo} not found.`);
-                }
+                // participantsArray를 순회하며 사원 정보 추가
+                participantsArray.forEach(empNo => {
+                    if (employeeMap[empNo]) {
+                        participantIds.add(empNo);
+                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].rank, employeeMap[empNo].department);
+                    } else {
+                        console.warn(`Employee with empNo ${empNo} not found.`);
+                    }
+                });
             });
+        } else {
+            console.warn("No participants data found.");
         }
     });
 </script>
