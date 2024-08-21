@@ -475,10 +475,11 @@
                         <input class="form-control" name="reportName" placeholder="회의록 제목" required type="text">
                       </div>
                     </div>
+
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">작성자</label>
                       <div class="col-sm-10">
-                        <input class="form-control" name="reportAuthor" placeholder="본인 고정" required type="text">
+                        <input class="form-control" name="reportAuthor" type="text"  th:text="${fullName}">
                       </div>
                     </div>
 
@@ -540,12 +541,10 @@
                       </div>
                     </div>
 
-
-
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">작성자</label>
                       <div class="col-sm-10">
-                        <input class="form-control" name="reportAuthor" placeholder="본인 고정" required type="text">
+                        <input class="form-control" name="reportAuthor"  type="text" th:text="${fullName}">
                       </div>
                     </div>
                     <div class="row mb-3">

@@ -72,4 +72,5 @@ public class SignupController {
 
         return "index"; // 인증된 경우 홈 페이지로 이동
     }
+
 }

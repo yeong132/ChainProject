@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Data
@@ -22,6 +24,8 @@ public class ProjectRequestDTO {
     private boolean projectFavorite;
     private int projectProgress;
     private boolean isTemporary; // 임시 보관
+    private LocalDateTime uploadDate;
+
 
     public void setIsTemporary(boolean isTemporary) {
         this.isTemporary = isTemporary;
@@ -29,7 +33,6 @@ public class ProjectRequestDTO {
     public void setProjectFavorite(boolean projectFavorite) {
         this.projectFavorite = projectFavorite;
     }
-
     public void setProjectProgress(Integer projectProgress) {
         this.projectProgress = projectProgress;
     }

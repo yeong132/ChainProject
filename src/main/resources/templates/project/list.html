@@ -429,6 +429,9 @@
         <div class="col-xl-2">
             <button class="btn btn-primary" id="TsBoxScrollButton">임시보관함</button>
         </div>
+        <div class="col-xl-2">
+            <button class="btn btn-warning" onclick="location.href='/project/history'">히스토리</button>
+        </div>
     </div>
     <section>
         <br>
@@ -577,68 +580,104 @@
 
 <!-- 조직도 연동 -->
 <script>
+
+    // 즐겨찾기 기준으로 정렬하는 코드
     $(document).ready(function () {
-        // 초기 설정
-        const projectElements = $('.project-participants');
-        let participantIds = new Set();
+        // 일반 프로젝트 섹션 처리
+        const generalProjectContainer = $('.section.contact').first().find('.row > .col-lg-12 > .row'); // 일반 프로젝트 컨테이너 선택
+        const generalProjects = generalProjectContainer.children('.col-lg-2-5').toArray(); // 일반 프로젝트들을 배열로 가져오기
 
-        // 참여자 목록에 사원 이름을 추가하는 함수
-        function addParticipant(container, empName) {
-            const participantItem = $(`
-            <span>
-                ${empName}
-            </span>
-        `);
-            container.append(participantItem);
-        }
+        generalProjects.sort((a, b) => {
+            const aFavorite = $(a).find('input[name="projectFavorite"]').val() === 'false'; // 프로젝트 a의 즐겨찾기 여부 확인
+            const bFavorite = $(b).find('input[name="projectFavorite"]').val() === 'false'; // 프로젝트 b의 즐겨찾기 여부 확인
 
-        // 모든 프로젝트 카드에 대해 참여자 데이터를 가져와서 처리
-        projectElements.each(function () {
-            const participantsData = $(this).data('participants'); // data-participants 속성 가져오기
-            const participantContainer = $(this); // 현재 요소 (참여자 표시할 곳)
-
-            if (participantsData) {
-                let participantsArray = [];
-
-                if (typeof participantsData === 'string') {
-                    participantsArray = participantsData.split(','); // 문자열인 경우 쉼표로 구분하여 배열로 변환
-                } else if (Array.isArray(participantsData)) {
-                    participantsArray = participantsData; // 이미 배열인 경우
-                } else if (typeof participantsData === 'number') {
-                    participantsArray = [participantsData.toString()]; // 단일 사원번호인 경우 배열로 처리
-                } else {
-                    console.error("Unexpected data type for participantsData:", typeof participantsData);
-                    return;
-                }
-
-                // API에서 사원 정보 가져오기
-                $.getJSON('/api/employees/all', function (employees) {
-                    const employeeMap = {};
-                    employees.forEach(employee => {
-                        employeeMap[employee.empNo] = {
-                            name: employee.lastName + employee.firstName
-                        };
-                    });
-
-                    // participantsArray를 순회하며 사원 이름 추가
-                    participantsArray.forEach(empNo => {
-                        if (employeeMap[empNo]) {
-                            participantIds.add(empNo);
-                            addParticipant(participantContainer, employeeMap[empNo].name);
-                        } else {
-                            console.warn(`Employee with empNo ${empNo} not found.`);
-                        }
-                    });
-                }).fail(function () {
-                    console.error("Failed to fetch employee data.");
-                });
+            if (aFavorite && !bFavorite) {
+                return -1; // a가 b보다 우선
+            } else if (!aFavorite && bFavorite) {
+                return 1; // b가 a보다 우선
             } else {
-                console.warn("No participants data found for this project.");
+                return 0; // 즐겨찾기 여부가 같다면 순서 유지
             }
         });
+
+        generalProjectContainer.append(generalProjects); // 정렬된 일반 프로젝트들을 DOM에 다시 추가
+
+        // 임시 보관 프로젝트 섹션 처리
+        const temporaryProjectContainer = $('#TsBox').find('.row'); // 임시 보관 프로젝트 컨테이너 선택
+        const temporaryProjects = temporaryProjectContainer.children('.col-lg-2-5').toArray(); // 임시 보관 프로젝트들을 배열로 가져오기
+
+        temporaryProjects.sort((a, b) => {
+            const aFavorite = $(a).find('input[name="projectFavorite"]').val() === 'false'; // 프로젝트 a의 즐겨찾기 여부 확인
+            const bFavorite = $(b).find('input[name="projectFavorite"]').val() === 'false'; // 프로젝트 b의 즐겨찾기 여부 확인
+
+            if (aFavorite && !bFavorite) {
+                return -1; // a가 b보다 우선
+            } else if (!aFavorite && bFavorite) {
+                return 1; // b가 a보다 우선
+            } else {
+                return 0; // 즐겨찾기 여부가 같다면 순서 유지
+            }
+        });
+
+        temporaryProjectContainer.append(temporaryProjects); // 정렬된 임시 보관 프로젝트들을 DOM에 다시 추가
+    });
+
+
+    // 참여자 정보를 표시하는 코드
+    $(document).ready(function () {
+        function displayParticipants(container, participantNames) {
+            if (participantNames.length > 2) {
+                const displayedNames = participantNames.slice(0, 2).join(', ');
+                const remainingCount = participantNames.length - 2;
+                container.text(`${displayedNames} 외 ${remainingCount}인`);
+            } else {
+                container.text(participantNames.join(', '));
+            }
+        }
+
+        function processProjectParticipants(section) {
+            const projectElements = section.find('.project-participants');
+
+            projectElements.each(function () {
+                const participantsData = $(this).data('participants');
+                const participantContainer = $(this);
+
+                if (participantsData) {
+                    let participantsArray = Array.isArray(participantsData) ? participantsData
+                        : participantsData.split(',');
+
+                    $.getJSON('/api/employees/all', function (employees) {
+                        const employeeMap = {};
+                        employees.forEach(employee => {
+                            employeeMap[employee.empNo] = employee.lastName + employee.firstName;
+                        });
+
+                        const participantNames = participantsArray.map(empNo => employeeMap[empNo]).filter(Boolean);
+
+                        if (participantNames.length > 0) {
+                            displayParticipants(participantContainer, participantNames);
+                        } else {
+                            participantContainer.text("참여자 정보 없음");
+                        }
+
+                    }).fail(function () {
+                        console.error("Failed to fetch employee data.");
+                    });
+                } else {
+                    console.warn("No participants data found for this project.");
+                }
+            });
+        }
+
+        // 일반 프로젝트 섹션 처리
+        processProjectParticipants($('.section.contact').first());
+
+        // 임시 보관 프로젝트 섹션 처리
+        processProjectParticipants($('#TsBox'));
     });
 
 </script>
+
 
 </body>
 </html>

@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -30,6 +31,7 @@ public class ProjectDTO {
     private String participants;
     private String projectContent;
     private String projectFiles;
+    private LocalDateTime uploadDate;
 
     // 기본 값 설정
     private boolean projectFavorite = false;
