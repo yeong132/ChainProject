@@ -75,12 +75,12 @@ dependencies {
     // Thumbnailator
     implementation 'net.coobird:thumbnailator:0.4.16'
 
-/*    // Spring Security
+    // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // Thymeleaf & Spring Security 통합 라이브러리
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'*/
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
     implementation 'org.springframework.boot:spring-boot-starter-tomcat' // 내장 Tomcat 서버 사용
     implementation 'org.springframework.boot:spring-boot-starter-json' // JSON 처리 라이브러리
@@ -103,6 +103,10 @@ dependencies {
     implementation group: 'org.webjars.npm', name: 'axios', version: '1.7.2'
     //
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
+    // javax.servlet 패키지를 사용하기 위한 의존성 추가
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    // compileOnly: 컴파일 시에는 포함되지만, 런타임에는 서블릿 컨테이너가 제공하는 의존성
 
 }
 

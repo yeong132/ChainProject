@@ -72,10 +72,9 @@
                     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
 
                     <div class="col-8">
-                      <label for="yourUsername" class="form-label"></label>
+                      <label for="yourEmpNo" class="form-label"></label>
                       <div class="input-group has-validation">
-                        <!--<span class="input-group-text" id="inputGroupPrepend">@</span>-->
-                        <input type="text" name="username" class="form-control" id="yourUsername" placeholder="사원번호" required>
+                        <input type="text" name="emp_no" class="form-control" id="yourEmpNo" placeholder="사원번호" required>
                         <div class="invalid-feedback">사원번호를 입력하세요.</div>
                       </div>
                     </div>
@@ -88,7 +87,7 @@
 
                     <div class="col-8">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                        <input class="form-check-input" type="checkbox" name="remember-me" value="true" id="rememberMe">
                         <label class="form-check-label" for="rememberMe">정보 기억하기</label>
                       </div>
                     </div>
@@ -98,6 +97,16 @@
                     <!-- 계정 생성하기 버튼 추가 -->
                     <div class="col-8">
                       <a href="/signup" class="btn btn-secondary w-100" role="button">회원가입</a>
+                    </div>
+
+                    <!-- 로그인 실패 시 메시지 출력 -->
+                    <div th:if="${param.error}" class="alert alert-danger">
+                      사원번호와 비밀번호가 일치하지 않습니다.
+                    </div>
+
+                    <!-- 로그아웃 후 메시지 출력 -->
+                    <div th:if="${param.logout}" class="alert alert-success">
+                      로그아웃 되었습니다.
                     </div>
 
                   </form>
