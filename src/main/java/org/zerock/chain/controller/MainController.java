@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainController {
-    @GetMapping("/")
+    /*@GetMapping("/")
     public String index() {
         return "index"; // templates/index.html 파일을 서빙
-    }
+    }*/
 
     @GetMapping("/example")
     public String example() {
