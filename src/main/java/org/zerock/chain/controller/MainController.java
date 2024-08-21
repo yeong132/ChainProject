@@ -27,13 +27,13 @@ public class MainController {
         return "/logout";
     }
 
-    // 로그인 페이지로 이동
+/*    // 로그인 페이지로 이동
     @GetMapping("/login")
     public String userLogin(Model model) {
         return "/login";
     }
 
     // 회원가입 페이지로 이동
-/*    @GetMapping("/createAccount")
-    public String createAccount(Model model) {return "/createAccount";}*/
+    @GetMapping("/signup")
+    public String createAccount(Model model) {return "/signup";}*/
 }
