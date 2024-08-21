@@ -126,17 +126,7 @@ public class UserController {
         return "redirect:/user/Q&A"; // 삭제 후 Q&A 페이지로 리다이렉트
     }
 
-    // 로그아웃 페이지로 이동
-    @GetMapping("/logout")
-    public String userLogout(Model model) {
-        return "user/logout";
-    }
 
-    // 로그인 페이지로 이동
-    @GetMapping("/login")
-    public String userLogin(Model model) {
-        return "user/login";
-    }
 
     // 알림 페이지로 이동
     @GetMapping("/alarm")
