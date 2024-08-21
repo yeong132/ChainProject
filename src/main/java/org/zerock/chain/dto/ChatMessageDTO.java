@@ -20,8 +20,4 @@ public class ChatMessageDTO {
     private String chatContent; // 메시지 내용
     private Date chatSentTime; // 채팅 보낸 시간
     private boolean isRead;
-
-//    private Long chatNo; // 메시지 번호
-//    private Long chatRoomNo; // 채팅방 번호
-//    private Long empNo; // 채팅을 보낸 사원 번호
 }

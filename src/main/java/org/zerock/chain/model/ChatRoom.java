@@ -18,33 +18,14 @@ public class ChatRoom {
     private Long id;
 
     @Column(name = "chat_no")
-    private String chatNo;
+    private String chatNo; // 방
 
     @Column(name = "sender_emp_no")
-    private String senderEmpNo;
+    private String senderEmpNo; // 발신자
 
     @Column(name = "recipient_emp_no")
-    private String recipientEmpNo;
+    private String recipientEmpNo; // 수신자
 
     @Column(name = "unread_count", nullable = false)
-    private int unreadCount = 0; // 기본값 0
-
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long chatRoomNo;
-//    @Column(name = "room_name")
-//    private String roomName;
-//
-//    @Column(name = "room_type", nullable = false)
-//    private boolean roomType;  // 0: 일반 / 1: 즐겨찾기
-//
-//    @Column(name = "recent_active_time")
-//    private LocalDateTime recentActiveTime;
-//
-//    @OneToMany(mappedBy = "chatRoom")
-//    private List<ChatMessage> messages;
-//
-//    public boolean getRoomType() {
-//        return roomType;
-//    }
+    private int unreadCount = 0; // 읽지 않은 메시지 수
 }

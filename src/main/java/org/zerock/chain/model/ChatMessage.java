@@ -21,34 +21,24 @@ public class ChatMessage {
     private Long id;
 
     @Column(name = "chat_no")
-    private String chatNo;
+    private String chatNo; // 방
 
     @Column(name = "sender_emp_no")
-    private String senderEmpNo;
+    private String senderEmpNo; // 발신자
 
     @Column(name = "recipient_emp_no")
-    private String recipientEmpNo;
+    private String recipientEmpNo; // 수신자
 
     @ManyToOne
     @JoinColumn(name = "chat_room_no", referencedColumnName = "id")
-    private ChatRoom chatRoom;
+    private ChatRoom chatRoom; // 방번호
 
     @Column(name = "chat_content")
-    private String chatContent;
+    private String chatContent; // 내용
 
     @Column(name = "chat_sent_time")
-    private Date chatSentTime;
+    private Date chatSentTime; // 보낸 시간
 
     @Column(name = "is_read", nullable = false)
-    private boolean isRead = false;  // 기본값은 false
-
-//    @ManyToOne
-//    @JoinColumn(name = "chat_room_no")
-//    private ChatRoom chatRoom;
-
-//    @ManyToOne
-//    @JoinColumn(name = "emp_no")
-//    private Employee employee;
-
-
+    private boolean isRead = false;  // 메시지 확인 여부
 }

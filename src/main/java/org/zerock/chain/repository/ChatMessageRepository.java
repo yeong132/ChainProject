@@ -21,5 +21,4 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, String
     @Query("UPDATE ChatMessage m SET m.isRead = true WHERE m.chatNo = :chatNo")
     void markMessagesAsRead(@Param("chatNo") String chatNo);
 
-//    List<ChatMessage> findByChatRoom_ChatRoomNo(Long chatRoomNo);
 }

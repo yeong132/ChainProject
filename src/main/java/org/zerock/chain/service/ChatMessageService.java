@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.model.ChatMessage;
 import org.zerock.chain.model.ChatNotification;
+import org.zerock.chain.model.User;
 import org.zerock.chain.repository.ChatMessageRepository;
 import org.zerock.chain.repository.ChatNotificationRepository;
 import org.zerock.chain.repository.ChatRoomRepository;
@@ -44,6 +45,11 @@ public class ChatMessageService {
         chatRoomRepository.save(chatRoom);
 
         return savedMessage;
+    }
+
+    // 현재 사용자의 대화 중인 사용자 목록 반환
+    public List<User> findActiveChatUsers(String nickname) {
+        return chatRoomRepository.findActiveChatUsersByNickname(nickname);
     }
 
     public List<ChatMessage> findChatMessages(String senderEmpNo, String recipientEmpNo) {
