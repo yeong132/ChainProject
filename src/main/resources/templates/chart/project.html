@@ -2,753 +2,889 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-  <title>프로젝트 차트</title>
-  <meta content="" name="description" />
-  <meta content="" name="keywords" />
+    <title>프로젝트 차트</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
 
-  <!-- link 안에는 th:href 사용! -->
-  <!-- Favicons -->
-  <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-  <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <!-- link 안에는 th:href 사용! -->
+    <!-- Favicons -->
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
-  <!-- 폰트 설정  -->
-  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-  <link
-          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet"
-  />
+    <!-- 폰트 설정  -->
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
 
-  <!-- Vendor CSS Files -->
-  <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-  <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <!-- Vendor CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
 
-  <!-- Template Main CSS File -->
-  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <!-- Template Main CSS File -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
 
-  <!-- =======================================================
-* Template Name: NiceAdmin
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Updated: Apr 20 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
 </head>
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-  <div class="d-flex align-items-center justify-content-between">
-    <a href="/" class="logo d-flex align-items-center">
-      <img src="/assets/img/logo.png" alt=""/>
-      <span class="d-none d-lg-block">CHAIN</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div>
-  <!-- 로고 끝 -->
-
-  <!-- <div class="search-bar">
-    <form class="search-form d-flex align-items-center" method="POST" action="#">
-      <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-      <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-    </form>
-  </div> -->
-  <!-- 검색바 끝 -->
-
-  <nav class="header-nav ms-auto">
-    <ul class="d-flex align-items-center">
-      <!-- <li class="nav-item d-block d-lg-none">
-        <a class="nav-link nav-icon search-bar-toggle" href="#">
-          <i class="bi bi-search"></i>
+<header class="header fixed-top d-flex align-items-center" id="header">
+    <div class="d-flex align-items-center justify-content-between">
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
+            <span class="d-none d-lg-block">CHAIN</span>
         </a>
-      </li> -->
-      <!-- 검색 아이콘 끝 -->
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <!-- 로고 끝 -->
 
-      <li class="nav-item dropdown" id="commuteIcon">
-        <div class="from-check form-switch me-3">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-        </div>
-      </li>
-      <!-- 출퇴근 아이콘 끝 -->
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div> -->
+    <!-- 검색바 끝 -->
 
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-bell"></i>
-          <span class="badge btn-secondary badge-number">4</span> </a>
-        <!-- 알림창 아이콘 끝 -->
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <!-- <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="bi bi-search"></i>
+              </a>
+            </li> -->
+            <!-- 검색 아이콘 끝 -->
 
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-          <li class="dropdown-header">
-            4개의 새 알림이 있습니다
-            <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
 
-          <li class="notification-item">
-            <i class="bi bi-exclamation-circle text-warning"></i>
-            <div>
-              <h4>Lorem Ipsum</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>30 min. ago</p>
-            </div>
-          </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge btn-secondary badge-number">4</span> </a>
+                <!-- 알림창 아이콘 끝 -->
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                    <li class="dropdown-header">
+                        4개의 새 알림이 있습니다
+                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li class="notification-item">
-            <i class="bi bi-x-circle text-danger"></i>
-            <div>
-              <h4>Atque rerum nesciunt</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>1 hr. ago</p>
-            </div>
-          </li>
+                    <li class="notification-item">
+                        <i class="bi bi-exclamation-circle text-warning"></i>
+                        <div>
+                            <h4>Lorem Ipsum</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>30 min. ago</p>
+                        </div>
+                    </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li class="notification-item">
-            <i class="bi bi-check-circle text-success"></i>
-            <div>
-              <h4>Sit rerum fuga</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>2 hrs. ago</p>
-            </div>
-          </li>
+                    <li class="notification-item">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <div>
+                            <h4>Atque rerum nesciunt</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>1 hr. ago</p>
+                        </div>
+                    </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li class="notification-item">
-            <i class="bi bi-info-circle text-primary"></i>
-            <div>
-              <h4>Dicta reprehenderit</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>4 hrs. ago</p>
-            </div>
-          </li>
+                    <li class="notification-item">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <div>
+                            <h4>Sit rerum fuga</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>2 hrs. ago</p>
+                        </div>
+                    </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-          <li class="dropdown-footer">
-            <a href="/user/alarm">모든 알림 표시</a>
-          </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li class="notification-item">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        <div>
+                            <h4>Dicta reprehenderit</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>4 hrs. ago</p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="/user/alarm">모든 알림 표시</a>
+                    </li>
+                </ul>
+                <!-- 알림 드롭다운 목록 끝 -->
+            </li>
+            <!-- 알림 전체 끝 -->
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <!-- 환경설정 아이콘 끝 -->
+            </li>
+            <!-- 환경설정 전체 끝 -->
+
+
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+                <!-- 프로필 이미지 항목 끝 -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박영민</h6>
+                        <span>사원</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이 페이지</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                            <i class="bi bi-tools"></i>
+                            <span>회사 관리자</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- 프로필 드롭다운 목록 끝 -->
+            </li>
+            <!-- 프로필 전체 끝 -->
         </ul>
-        <!-- 알림 드롭다운 목록 끝 -->
-      </li>
-      <!-- 알림 전체 끝 -->
-
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="/user/setting">
-          <i class="bi bi-gear"></i>
-        </a>
-        <!-- 환경설정 아이콘 끝 -->
-      </li>
-      <!-- 환경설정 전체 끝 -->
-
-
-      <li class="nav-item dropdown pe-3">
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-        <!-- 프로필 이미지 항목 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-          <li class="dropdown-header">
-            <h6>박영민</h6>
-            <span>사원</span>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-              <i class="bi bi-person"></i>
-              <span>마이 페이지</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-              <i class="bi bi-diagram-2"></i>
-              <span>조직도</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-              <i class="bi bi-power"></i>
-              <span>로그아웃</span>
-            </a>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-              <i class="bi bi-tools"></i>
-              <span>회사 관리자</span>
-            </a>
-          </li>
-        </ul>
-        <!-- 프로필 드롭다운 목록 끝 -->
-      </li>
-      <!-- 프로필 전체 끝 -->
-    </ul>
-  </nav>
-  <!-- 상단바 끝 -->
+    </nav>
+    <!-- 상단바 끝 -->
 </header>
 <!-- Header 끝 -->
 
 <!-- Header Modal -->
 <!-- 출퇴근 Modal -->
 <div class="modal fade" id="attendanceModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">출근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
 
 
-      <div class="modal-body">
-        <div id="currentTime">현재 시간:</div>
-        출근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-          아니오
-        </button>
-      </div>
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
+                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
+                    아니오
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <div class="modal fade" id="leaveworkModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">퇴근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="currentTimes">현재 시간:</div>
-        퇴근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-        </button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
+                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- 출퇴근 Modal 끝 -->
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-  <ul class="sidebar-nav" id="sidebar-nav">
-    <li class="nav-item ">
-      <a class="nav-link dash collapsed" href="/">
-        <i class="bi bi-grid"></i>
-        <span>대시보드</span>
-      </a>
-    </li>
-    <!-- 대시보드 사이드바 끝 -->
+<aside class="sidebar" id="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item ">
+            <a class="nav-link dash collapsed" href="/">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+        <!-- 대시보드 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i>
-        <span>기본 사항</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-          <ul>
-            <li>
-              <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-            </li>
-          </ul>
-          </div>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>기본 사항</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
+                    <ul>
+                        <li>
+                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
+                        </li>
+                    </ul>
+                    </div>
+                </li>
+            </ul>
         </li>
-      </ul>
-    </li>
-    <!-- 기본사항 끝 -->
+        <!-- 기본사항 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-clipboard-data"></i>
-        <span>업무</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i>
+                <span>업무</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse show" data-bs-parent="#sidebar-nav" id="work-nav">
+                <li>
+                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                </li>
+                <li>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                </li>
+                <li>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a class="active" href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-        </li>
-        <li>
-          <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-        </li>
-        <li>
-          <a href="/chart/main" class="active"> <i class="bi bi-circle"></i><span>차트</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 업무 사이드바 끝 -->
+        <!-- 업무 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-archive"></i>
-        <span>전자결재</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i>
+                <span>전자결재</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
+                <li>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 전자결재 사이드바 끝 -->
+        <!-- 전자결재 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-people-fill"></i>
-        <span>게시판</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people-fill"></i>
+                <span>게시판</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
+                <li>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                </li>
+                <li>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                </li>
+                <li>
+                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
+                </li>
+                <li>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-        </li>
-        <li>
-          <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-        </li>
-        <li>
-          <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 게시판 사이드바 끝 -->
+        <!-- 게시판 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-calendar-week"></i>
-        <span>일정</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-week"></i>
+                <span>일정</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+                </li>
+            </ul>
         </li>
-      </ul>
-    </li>
-    <!-- 일정 사이드바 끝 -->
+        <!-- 일정 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-envelope"></i>
-        <span>이메일</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-envelope"></i>
+                <span>이메일</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
+                <li>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-        </li>
-        <li>
-          <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 이메일 사이드바 끝 -->
+        <!-- 이메일 사이드바 끝 -->
 
-    <li class="nav-item qna">
-      <a class="nav-link qna collapsed" href="/user/Q&A">
-        <i class="bi bi-question-circle"></i>
-        <span>고객센터</span>
-      </a>
-    </li>
-    <!-- 고객센터 사이드바 끝 -->
+        <li class="nav-item qna">
+            <a class="nav-link qna collapsed" href="/user/Q&A">
+                <i class="bi bi-question-circle"></i>
+                <span>고객센터</span>
+            </a>
+        </li>
+        <!-- 고객센터 사이드바 끝 -->
 
-  </ul>
+    </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
 <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
-<main id="main" class="main">
-  <div class="pagetitle">
-    <h1>프로젝트 차트</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/chart/main">Chart</a></li>
-        <li class="breadcrumb-item active">Project</li>
-      </ol>
-    </nav>
-  </div>
-      <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+<main class="main" id="main">
+    <div class="pagetitle">
+        <h1>프로젝트 차트</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/chart/main">Chart</a></li>
+                <li class="breadcrumb-item active">Project</li>
+            </ol>
+        </nav>
+    </div>
 
-<!--      <div class="row gy-4 mb-3">-->
-<!--        <div class="col-xl-6">-->
-<!--          <button class="btn btn-primary" onclick="location.href='/chart/projectRegister'">새 프로젝트 차트 생성</button>-->
-<!--        </div>-->
-<!--      </div>-->
-      <!------------------------------------------------------------------ 검색 위젯 -------------------------------------------------------------------->
-
-
-      <section class="section ">
+    <section class="section">
         <div class="row">
-
-
-          <!------------------------------------------------------------------위젯 -------------------------------------------------------------------->
-          <div class="col-lg-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">카테고리 필터링</h5>
-
-                <!-- 체크박스-->
-
-                <!-- Bordered Tabs -->
-                <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
-                  <li class="nav-item" role="presentation">
-                    <button aria-controls="home" aria-selected="true" class="nav-link active"
-                            data-bs-target="#bordered-home" data-bs-toggle="tab" id="home-tab" role="tab"
-                            type="button">Filter 1
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button aria-controls="profile" aria-selected="false" class="nav-link"
-                            data-bs-target="#bordered-profile" data-bs-toggle="tab" id="profile-tab"
-                            role="tab" type="button">Filter 2
-                    </button>
-                  </li>
-                  <li class="nav-item" role="presentation">
-                    <button aria-controls="contact" aria-selected="false" class="nav-link"
-                            data-bs-target="#bordered-contact" data-bs-toggle="tab" id="contact-tab"
-                            role="tab" type="button">Filter 3
-                    </button>
-                  </li>
-                </ul>
-                <div class="tab-content pt-2" id="borderedTabContent">
-                  <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home"
-                       role="tabpanel">
-
-                    <div class="form-check">
-                      <input class="form-check-input" id="1" name="1" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 1
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="2" name="2" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 2
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="3" name="3" type="radio">
-                      <label class="form-check-label" for="3">
-                        카테고리 3
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="4" name="4" type="radio">
-                      <label class="form-check-label" for="4">
-                        카테고리 4
-                      </label>
-                    </div>
-
-
-                  </div>
-                  <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile"
-                       role="tabpanel">
-                    <div class="form-check">
-                      <input class="form-check-input" id="1" name="1" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 1
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="2" name="2" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 2
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="3" name="3" type="radio">
-                      <label class="form-check-label" for="3">
-                        카테고리 3
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="4" name="4" type="radio">
-                      <label class="form-check-label" for="4">
-                        카테고리 4
-                      </label>
-                    </div>
-                  </div>
-
-                  <div aria-labelledby="contact-tab" class="tab-pane fade" id="bordered-contact"
-                       role="tabpanel">
-                    <div class="form-check">
-                      <input class="form-check-input" id="1" name="1" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 1
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="2" name="2" type="radio">
-                      <label class="form-check-label" for="1">
-                        카테고리 2
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="3" name="3" type="radio">
-                      <label class="form-check-label" for="3">
-                        카테고리 3
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" id="4" name="4" type="radio">
-                      <label class="form-check-label" for="4">
-                        카테고리 4
-                      </label>
-                    </div>
-                  </div>
-                </div><!-- End Bordered Tabs -->
-
-              </div>
+            <!-- 프로젝트 데이터를 숨긴 필드로 저장 -->
+            <div id="projectData" style="display:none;">
+                <input class="projectName" th:each="project : ${projects}" th:value="${project.projectName}"
+                       type="hidden"/>
+                <input class="projectProgress" th:each="project : ${projects}" th:value="${project.projectProgress}"
+                       type="hidden"/>
+                <input class="projectStartDate" th:each="project : ${projects}" th:value="${project.projectStartDate}"
+                       type="hidden"/>
+                <input class="projectEndDate" th:each="project : ${projects}" th:value="${project.projectEndDate}"
+                       type="hidden"/>
             </div>
-          </div>
-
-          <!------------------------------------------------------------------위젯 3--------------------------------------------------------------------->
-
-          <div class="col-lg-8">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title"><a href="/chart/project">project Chart</a></h5>
-
-                <!-- Column Chart -->
-                <div id="columnChart"></div>
-
-                <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    new ApexCharts(document.querySelector("#columnChart"), {
-                      series: [{
-                        name: 'Net Profit',
-                        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-                      }, {
-                        name: 'Revenue',
-                        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-                      }, {
-                        name: 'Free Cash Flow',
-                        data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-                      }],
-                      chart: {
-                        type: 'bar',
-                        height: 350
-                      },
-                      plotOptions: {
-                        bar: {
-                          horizontal: false,
-                          columnWidth: '55%',
-                          endingShape: 'rounded'
-                        },
-                      },
-                      dataLabels: {
-                        enabled: false
-                      },
-                      stroke: {
-                        show: true,
-                        width: 2,
-                        colors: ['transparent']
-                      },
-                      xaxis: {
-                        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                      },
-                      yaxis: {
-                        title: {
-                          text: '$ (thousands)'
-                        }
-                      },
-                      fill: {
-                        opacity: 1
-                      },
-                      tooltip: {
-                        y: {
-                          formatter: function (val) {
-                            return "$ " + val + " thousands"
-                          }
-                        }
-                      }
-                    }).render();
-                  });
-                </script>
-                <!-- End Column Chart -->
-
-              </div>
+            <!-- 완료/ 미완료 진행 현황 차트 -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <select class="form-select" id="completionMonthSelector">
+                        </select>
+                        <!-- 가로 바 차트를 표시할 div 추가 -->
+                        <div id="completionBarChart"></div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
-
-
-          <!---------------------------------------------------------------데이터 테이블 위젯--------------------------------------------------------------------->
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title"> Project -- Radial Bar Chart</h5>
-
-                <!-- Radial Bar Chart -->
-                <div id="radialBarChart"></div>
-                <script>
-                  document.addEventListener("DOMContentLoaded", () => {
-                    new ApexCharts(document.querySelector("#radialBarChart"), {
-                      series: [44, 55, 67, 83],
-                      chart: {
-                        height: 350,
-                        type: 'radialBar',
-                        toolbar: {
-                          show: true
-                        }
-                      },
-                      plotOptions: {
-                        radialBar: {
-                          dataLabels: {
-                            name: {
-                              fontSize: '22px',
-                            },
-                            value: {
-                              fontSize: '16px',
-                            },
-                            total: {
-                              show: true,
-                              label: 'Total',
-                              formatter: function(w) {
-                                // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                                return 249
-                              }
-                            }
-                          }
-                        }
-                      },
-                      labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
-                    }).render();
-                  });
-                </script>
-                <!-- End Radial Bar Chart -->
-
-              </div>
+            <!-- 월별 진행 현황 차트 -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Project -- 월별 진행 현황</h5>
+                        <!-- 월 선택 -->
+                        <select class="form-select mb-3" id="monthSelector">
+                        </select>
+                        <!-- Radial Bar Chart -->
+                        <div id="radialBarChart"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 연간 진행 현황 차트 -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Project -- 연간 진행 현황</h5>
+                        <!-- 연도 선택 -->
+                        <select class="form-select mb-3" id="yearSelector">
+                        </select>
+                        <!-- Radial Bar Chart -->
+                        <div id="annualRadialBarChart"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 프로젝트 목록을 보여주는 테이블 -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">프로젝트 목록</h5>
+                        <table class="table datatable table-hover">
+                            <thead>
+                            <tr>
+                                <th>프로젝트 이름</th>
+                                <th>진행도</th>
+                                <th>시작일</th>
+                                <th>종료일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="project : ${projects}"
+                                th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
+                                <td th:text="${project.projectName}"></td>
+                                <td th:text="${project.projectProgress + '%'}"></td>
+                                <td th:text="${project.projectStartDate}"></td>
+                                <td th:text="${project.projectEndDate}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
+
+</main>
+<!-- End #main -->
 
 
+<!-- 프로젝트 상세 정보 모달 -->
+<div aria-hidden="true" aria-labelledby="projectDetailsModalLabel" class="modal fade" id="projectDetailsModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectDetailsModalLabel">프로젝트 상세 정보</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>프로젝트 이름 :</strong> <span id="modalProjectName"></span></p>
+                <p><strong>부서 및 참여자 :</strong> <span id="modalParticipants"></span> / <span id="modalDmpNo"></span></p>
+                <p><strong>내용 :</strong> <span id="modalProjectContent"></span></p>
+                <p><strong>진행도 :</strong> <span id="modalProjectProgress"></span></p>
+                <p><strong>기간 :</strong> <span id="modalProjectStartDate"></span> ~ <span
+                        id="modalProjectEndDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
+            </div>
         </div>
-      </section>
-    </main>
-    <!-- End #main -->
+    </div>
+</div>
 
-
-
-
-
-
-    <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
+<!----------------------------======= 고정 Footer ======= ------------------------------------------->
+<!-- ======= Footer ======= -->
+<footer class="footer" id="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>CHAIN</span></strong
+        &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
     </div>
     <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
-  </footer>
-  <!-- Footer 끝 -->
+</footer>
+<!-- Footer 끝 -->
 
-  <!-- 채팅창 및 맨위로 가기 -->
-  <!-- 맨위로 가기-->
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+
+<!--상세보기 모달 -->
+<script>
+    function showProjectDetails(projectNo) {
+        // 서버에서 projectNo를 이용해 데이터를 가져옵니다.
+        fetch('/chart/project/details/' + projectNo)
+            .then(response => response.json())
+            .then(data => {
+                // 데이터 가져오기 성공 시, 모달에 정보 설정
+                document.getElementById('modalProjectName').textContent = data.projectName;
+                document.getElementById('modalDmpNo').textContent = data.dmpNo;
+                document.getElementById('modalParticipants').textContent = data.participants;
+                document.getElementById('modalProjectProgress').textContent = data.projectProgress + '%';
+                document.getElementById('modalProjectStartDate').textContent = data.projectStartDate;
+                document.getElementById('modalProjectEndDate').textContent = data.projectEndDate;
+
+                // projectContent의 <p> 태그를 제거하고 텍스트만 설정
+                const modalProjectContentElement = document.getElementById('modalProjectContent');
+                let rawContent = data.projectContent;
+
+                // <p>와 </p>를 빈 문자열로 대체
+                rawContent = rawContent.replace(/<\/?p>/g, '');
+
+                // 텍스트를 설정
+                modalProjectContentElement.textContent = rawContent;
+
+                // 모달을 띄우기
+                const modal = new bootstrap.Modal(document.getElementById('projectDetailsModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error fetching project details:', error);
+            });
+    }
+
+</script>
+
+
+<!-- 차트 렌더링 및 업데이트 스크립트 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 프로젝트 데이터를 DOM에서 가져와 배열로 변환
+        const projectNames = document.querySelectorAll('.projectName');
+        const projectProgresses = document.querySelectorAll('.projectProgress');
+        const projectStartDates = document.querySelectorAll('.projectStartDate');
+        const projectEndDates = document.querySelectorAll('.projectEndDate');
+
+        const projects = Array.from(projectNames).map((input, index) => ({
+            projectName: input.value,
+            projectProgress: parseInt(projectProgresses[index].value, 10),
+            projectStartDate: new Date(projectStartDates[index].value),
+            projectEndDate: new Date(projectEndDates[index].value),
+        }));
+
+        // 월별 및 연도별로 프로젝트를 그룹화하는 함수
+        function groupProjectsByMonthAndYear(projects) {
+            const monthGroups = {};
+            const yearGroups = {};
+
+            projects.forEach(project => {
+                const startDate = project.projectStartDate;
+                const monthKey = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`;
+                const yearKey = startDate.getFullYear().toString();
+
+                if (!monthGroups[monthKey]) {
+                    monthGroups[monthKey] = { total: 0, completed: 0, notCompleted: 0, 20: 0, 40: 0, 60: 0, 80: 0, 100: 0 };
+                }
+
+                if (!yearGroups[yearKey]) {
+                    yearGroups[yearKey] = { total: 0, completed: 0, notCompleted: 0, 20: 0, 40: 0, 60: 0, 80: 0, 100: 0 };
+                }
+
+                const progress = project.projectProgress;
+                const progressKey = [20, 40, 60, 80, 100].find(p => p >= progress);
+
+                if (progressKey) {
+                    monthGroups[monthKey][progressKey]++;
+                    yearGroups[yearKey][progressKey]++;
+                }
+
+                if (progress === 100) {
+                    monthGroups[monthKey].completed++;
+                    yearGroups[yearKey].completed++;
+                } else {
+                    monthGroups[monthKey].notCompleted++;
+                    yearGroups[yearKey].notCompleted++;
+                }
+
+                monthGroups[monthKey].total++;
+                yearGroups[yearKey].total++;
+            });
+
+            return { monthGroups, yearGroups };
+        }
+
+        // 도넛 차트를 생성하거나 업데이트하는 함수
+        function renderOrUpdateDonutChart(chart, chartElementId, progressData) {
+            const totalProjects = progressData.total; // 각 월별로 올바르게 계산된 total 값 사용
+
+            const seriesData = totalProjects > 0 ? [
+                Math.round((progressData[20] / totalProjects) * 100),
+                Math.round((progressData[40] / totalProjects) * 100),
+                Math.round((progressData[60] / totalProjects) * 100),
+                Math.round((progressData[80] / totalProjects) * 100),
+                Math.round((progressData[100] / totalProjects) * 100)
+            ] : [0, 0, 0, 0, 0];
+
+            if (chart) {
+                chart.updateSeries(seriesData); // 반올림된 값을 사용하여 시리즈 업데이트
+            } else {
+                chart = new ApexCharts(document.querySelector(`#${chartElementId}`), {
+                    series: seriesData, // 반올림된 값을 사용하여 시리즈 생성
+                    chart: {
+                        height: 350,
+                        type: 'donut',
+                    },
+                    labels: ['20%', '40%', '60%', '80%', '100%'],
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '65%',
+                                labels: {
+                                    show: true,
+                                    total: {
+                                        show: true,
+                                        label: 'Total',
+                                        formatter: function () {
+                                            return totalProjects; // 각 월별로 정확한 totalProjects 값 출력
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        formatter: function (val) {
+                            return `${Math.round(val)}%`; // 반올림된 값으로 표시
+                        },
+                        dropShadow: {
+                            enabled: false
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                });
+                chart.render();
+            }
+            return chart;
+        }
+
+        // 스택형 가로 막대 그래프 생성 또는 업데이트 함수 (완료/미완료)
+        function renderOrUpdateCompletionRatioStackedBarChart(chart, completionGroups) {
+            const totalProjects = completionGroups.total;
+            const completedRatio = (completionGroups.completed / totalProjects) * 100;
+            const notCompletedRatio = (completionGroups.notCompleted / totalProjects) * 100;
+
+            const seriesData = [{
+                name: '완료',
+                data: [Math.round(completedRatio)]
+            }, {
+                name: '미완료',
+                data: [Math.round(notCompletedRatio)]
+            }];
+
+            if (chart) {
+                chart.updateSeries(seriesData);
+            } else {
+                const options = {
+                    series: seriesData,
+                    chart: {
+                        type: 'bar',
+                        height: 130,
+                        stacked: true,
+                        stackType: '100%',
+                        toolbar: {
+                            show: false // 저장 옵션을 숨기기 위해 추가
+                        }
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function(val) {
+                            return val.toFixed(0) + '%';
+                        }
+                    },
+                    xaxis: {
+                        labels: {
+                            show: false // 가로축에 있는 라벨(값) 숨기기
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            show: false // 세로 축에 있는 라벨을 숨깁니다.
+                        }
+                    },
+                    colors: ['#49A85CFF', '#c4c2c2'],  // 색상 설정 (완료: 초록, 미완료: 빨강)
+                    legend: {
+                        position: 'bottom'
+                    }
+                };
+                chart = new ApexCharts(document.querySelector("#completionBarChart"), options);
+                chart.render();
+            }
+
+            return chart;
+        }
+
+        // 차트를 업데이트하는 함수 (월별 및 연도별)
+        function updateCharts(selectedMonth, selectedYear, selectedCompletionMonth) {
+            const monthProgressData = monthGroups[selectedMonth];
+            const yearProgressData = yearGroups[selectedYear];
+            const completionMonthData = monthGroups[selectedCompletionMonth];
+
+            // 월별 도넛 차트 업데이트
+            monthChart = renderOrUpdateDonutChart(monthChart, 'radialBarChart', monthProgressData);
+
+            // 연도별 도넛 차트 업데이트
+            yearChart = renderOrUpdateDonutChart(yearChart, 'annualRadialBarChart', yearProgressData);
+
+            // 완료/미완료 비율 차트 업데이트
+            completionBarChart = renderOrUpdateCompletionRatioStackedBarChart(completionBarChart, completionMonthData);
+        }
+
+        const { monthGroups, yearGroups } = groupProjectsByMonthAndYear(projects);
+
+        // 선택 요소에 옵션을 추가하는 함수 (월별 및 연도별)
+        function populateSelector(selectorId, groups) {
+            const selector = document.getElementById(selectorId);
+            Object.keys(groups).sort((a, b) => new Date(b) - new Date(a)).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = key;
+                selector.appendChild(option);
+            });
+        }
+
+        populateSelector('monthSelector', monthGroups);
+        populateSelector('yearSelector', yearGroups);
+        populateSelector('completionMonthSelector', monthGroups);  // 완료/미완료 차트를 위한 월 선택 추가
+
+        // 페이지 초기화 시 가장 최신의 월과 연도를 기본으로 선택
+        function initializeCharts() {
+            const latestMonth = Object.keys(monthGroups).sort((a, b) => new Date(b) - new Date(a))[0];
+            const latestYear = Object.keys(yearGroups).sort((a, b) => new Date(b) - new Date(a))[0];
+
+            document.getElementById('monthSelector').value = latestMonth;
+            document.getElementById('yearSelector').value = latestYear;
+            document.getElementById('completionMonthSelector').value = latestMonth;
+
+            if (latestMonth && latestYear && monthGroups[latestMonth] && yearGroups[latestYear]) {
+                updateCharts(latestMonth, latestYear, latestMonth);  // 최신 월과 연도, 최신 완료/미완료 월에 따라 차트 업데이트
+            }
+        }
+
+        document.getElementById('monthSelector').addEventListener('change', function() {
+            const selectedMonth = this.value;
+            const selectedYear = document.getElementById('yearSelector').value;
+            const selectedCompletionMonth = document.getElementById('completionMonthSelector').value;
+            if (selectedMonth && selectedYear && selectedCompletionMonth && monthGroups[selectedMonth] && yearGroups[selectedYear]) {
+                updateCharts(selectedMonth, selectedYear, selectedCompletionMonth); // 선택된 월과 연도, 완료/미완료 월에 따라 차트 업데이트
+            }
+        });
+
+        document.getElementById('yearSelector').addEventListener('change', function() {
+            const selectedYear = this.value;
+            const selectedMonth = document.getElementById('monthSelector').value;
+            const selectedCompletionMonth = document.getElementById('completionMonthSelector').value;
+            if (selectedMonth && selectedYear && selectedCompletionMonth && monthGroups[selectedMonth] && yearGroups[selectedYear]) {
+                updateCharts(selectedMonth, selectedYear, selectedCompletionMonth); // 선택된 연도와 월, 완료/미완료 월에 따라 차트 업데이트
+            }
+        });
+
+        document.getElementById('completionMonthSelector').addEventListener('change', function() {
+            const selectedCompletionMonth = this.value;
+            const selectedMonth = document.getElementById('monthSelector').value;
+            const selectedYear = document.getElementById('yearSelector').value;
+            if (selectedMonth && selectedYear && selectedCompletionMonth && monthGroups[selectedMonth] && yearGroups[selectedYear]) {
+                updateCharts(selectedMonth, selectedYear, selectedCompletionMonth); // 선택된 완료/미완료 월과 연도에 따라 차트 업데이트
+            }
+        });
+
+        let monthChart, yearChart, completionBarChart;
+        initializeCharts(); // 차트 초기화
+    });
+
+</script>
+
+
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
     <i class="bi bi-arrow-up-short"></i>
-  </a>
-  <!-- 맨위로 가기 끝-->
-  <!-- 채팅창 -->
-  <a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
-  </a>
-  <!-- 채팅창 끝-->
+</a>
+<!-- 채팅창 끝-->
 
-  <!-- Vendor JS Files -->
-  <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="/assets/vendor/echarts/echarts.min.js"></script>
-  <script src="/assets/vendor/quill/quill.js"></script>
-  <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="/assets/vendor/php-email-form/validate.js"></script>
-  <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-  <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
+<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
 
-  <!-- Template Main JS File -->
-  <script src="/assets/js/main.js"></script>
-  <script src="/assets/js/wemaked.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  </body>
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
 </html>
 

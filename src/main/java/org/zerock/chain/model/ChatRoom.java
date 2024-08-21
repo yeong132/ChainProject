@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Data
 @Entity
 @Builder
@@ -18,18 +15,17 @@ import java.util.List;
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatRoomNo;
+    private Long id;
 
-    @Column(name = "room_name")
-    private String roomName;
+    @Column(name = "chat_no")
+    private String chatNo; // 방
 
-    @Column(name = "room_type")
-    private boolean roomType;  // 0: 일반 / 1: 즐겨찾기
+    @Column(name = "sender_emp_no")
+    private String senderEmpNo; // 발신자
 
-    @Column(name = "recent_active_time")
-    private LocalDateTime recentActiveTime;
+    @Column(name = "recipient_emp_no")
+    private String recipientEmpNo; // 수신자
 
-    @OneToMany(mappedBy = "chatRoom")
-    private List<ChatMessage> messages;
-
+    @Column(name = "unread_count", nullable = false)
+    private int unreadCount = 0; // 읽지 않은 메시지 수
 }

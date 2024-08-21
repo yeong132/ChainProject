@@ -322,7 +322,7 @@
                     <a href="/project/list" class="active"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -444,15 +444,14 @@
     <!-----------------------------------------------------------------페이지 타이틀 ------------------------------------------------------------------------>
     <section class="section">
         <div class="row">
-            <!---------------------------------------------------------메인 위젯 1 ------------------------------------------------------------------>
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Project</h5>
                         <form th:action="@{/project/toggleFavorite}" method="post" style="display: inline;">
-                        <input type="hidden" name="projectNo" th:value="${project.projectNo}"/>
-                        <input type="hidden" name="projectFavorite" th:value="${!project.projectFavorite}"/>
-                    </form>
+                            <input type="hidden" name="projectNo" th:value="${project.projectNo}"/>
+                            <input type="hidden" name="projectFavorite" th:value="${!project.projectFavorite}"/>
+                        </form>
                         <form>
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="projectName">제목</label>
@@ -461,29 +460,26 @@
                                 </div>
                             </div>
 
-
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="participants">참여자</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" readonly type="text" id="participants" th:value="${project.participants}" >
-                                </div>
+                            <!-- 프로젝트 참여자 데이터를 숨겨진 HTML 요소의 데이터 속성으로 전달 -->
+                            <div hidden id="projectData" th:data-participants="${project.participants}">
                             </div>
 
+                            <!-- 참여자 목록 -->
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">참여자</label>
-                                <div class="col-sm-10">
-                                    <select aria-label="Default select example" class="form-select" readonly>
-                                        <option selected>조직도 연동하기</option>
-                                        <option value="1">김선혜</option>
-                                        <option value="2">박성은</option>
-                                        <option value="3">신혜리</option>
-                                        <option value="4">성준혁</option>
-                                        <option value="5">임종하</option>
-                                        <option value="6">박영민</option>
-                                    </select>
+                                <div class="col-sm-10" id="participantList">
+                                    <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
+
+
+<!--                            <div class="row mb-3">-->
+<!--                                <label class="col-sm-2 col-form-label" for="participants">참여자</label>-->
+<!--                                <div class="col-sm-10">-->
+<!--                                    <input class="form-control" readonly type="text" id="participants" th:value="${project.participants}" >-->
+<!--                                </div>-->
+<!--                            </div>-->
+
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="dmpNo">부서</label>
@@ -507,13 +503,13 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">즐겨찾기</label>
-                                <div class="col-sm-10">
-                                    <i class="bi star-icon right-align-block" th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>
-                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" th:value="${project.projectFavorite}">
-                                </div>
-                            </div>
+<!--                            <div class="row mb-3">-->
+<!--                                <label class="col-sm-2 col-form-label">즐겨찾기</label>-->
+<!--                                <div class="col-sm-10">-->
+<!--                                    <i class="bi star-icon right-align-block" th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>-->
+<!--                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" th:value="${project.projectFavorite}">-->
+<!--                                </div>-->
+<!--                            </div>-->
 
 
                             <div class="row mb-3">
@@ -613,5 +609,73 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- 조직도 연동 -->
+<script>
+    $(document).ready(function () {
+        const participantList = $('#participantList');
+        let participantIds = new Set();
+
+        // 참여자 목록에 사원 추가하는 함수
+        function addParticipant(empNo, empName, empRank, empDepartment) {
+            const participantItem = $(`
+                <span class="badge bg-secondary me-2">
+                    ${empName} (${empRank}/${empDepartment})
+                </span>
+            `);
+            participantList.append(participantItem);
+        }
+
+        // 페이지 로드 시 저장된 참여자 목록을 초기화하여 출력
+        const initialParticipants = $('#projectData').data('participants');
+
+        if (initialParticipants) {
+            // participantsArray 초기화
+            let participantsArray = [];
+
+            // initialParticipants가 배열인지 확인
+            if (Array.isArray(initialParticipants)) {
+                participantsArray = initialParticipants;
+            } else if (typeof initialParticipants === 'string') {
+                // 문자열인 경우 쉼표로 구분하여 배열로 변환
+                participantsArray = initialParticipants.split(',');
+            } else if (typeof initialParticipants === 'number') {
+                // 숫자인 경우 단일 사원번호로 배열에 추가
+                participantsArray = [initialParticipants.toString()];
+            } else {
+                console.error("Unexpected data type for initialParticipants:", typeof initialParticipants);
+                return;
+            }
+
+            // API에서 사원 정보 가져오기
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = {
+                        name: employee.lastName + employee.firstName,
+                        rank: employee.rankName,
+                        department: employee.departmentName
+                    };
+                });
+
+                // participantsArray를 순회하며 사원 정보 추가
+                participantsArray.forEach(empNo => {
+                    if (employeeMap[empNo]) {
+                        participantIds.add(empNo);
+                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].rank, employeeMap[empNo].department);
+                    } else {
+                        console.warn(`Employee with empNo ${empNo} not found.`);
+                    }
+                });
+            });
+        } else {
+            console.warn("No participants data found.");
+        }
+    });
+</script>
+
+
+
 </body>
 </html>

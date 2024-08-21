@@ -45,7 +45,7 @@
     <!-- 위젯 CSS -->
     <style>
         .list-group-item {
-            padding: 0px 10px;
+            padding: 0 10px;
             border-radius: 5px;
         }
     </style>
@@ -213,10 +213,10 @@
 
 
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
+
+                <!-- 프로필 이미지 항목 끝 --><a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${fullName}">박영민</span> </a>
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
@@ -248,7 +248,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -367,7 +367,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>

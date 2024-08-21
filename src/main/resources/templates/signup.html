@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+  <title>회원가입</title>
+  <meta content="" name="description" />
+  <meta content="" name="keywords" />
+
+  <!-- Favicons -->
+  <link th:href="@{/assets/img/favicon.png}" rel="icon" />
+  <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon" />
+
+  <!-- 폰트 설정  -->
+  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect" />
+  <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"
+  />
+
+  <!-- Vendor CSS Files -->
+  <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+  <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+
+  <!-- Template Main CSS File -->
+  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+
+  <!-- =======================================================
+* Template Name: NiceAdmin
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Updated: Apr 20 2024 with Bootstrap v5.3.3
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+======================================================== -->
+</head>
+
+<body>
+<main>
+  <div class="container">
+
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 d-flex flex-column align-items-center justify-content-center">
+
+            <div class="d-flex justify-content-center py-4">
+              <a href="/" class="logo d-flex align-items-center w-auto">
+                <img src="/assets/img/logo.png" alt="">
+                <span class="d-none d-lg-block">CHAIN</span>
+              </a>
+            </div>
+            <!-- End Logo -->
+
+            <div class="card mb-3">
+
+              <div class="card-body">
+
+                <div class="pt-4 pb-2">
+                  <h5 class="card-title text-center pb-0 fs-4">회원가입</h5>
+                </div>
+
+                <form class="row g-3 needs-validation justify-content-sm-center pb-2" novalidate method="post" th:action="@{/signup}" th:object="${signup}" onsubmit="return validateForm(event)">
+                  <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+
+                  <div class="col-12">
+                    <label for="lastName" class="form-label">성</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" id="lastName" required>
+                    <div class="invalid-feedback">성을 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="firstName" class="form-label">이름</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" id="firstName" required>
+                    <div class="invalid-feedback">이름을 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="password" class="form-label">비밀번호</label>
+                    <input type="password" th:field="*{password}" class="form-control" id="password" minlength="4" required>
+                    <div class="invalid-feedback">비밀번호는 최소 4자리 이상이어야 합니다.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                    <input type="password" name="confirm_password" class="form-control" id="confirmPassword" minlength="4" required>
+                    <div class="invalid-feedback">비밀번호 확인을 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="birthDate" class="form-label">생년월일</label>
+                    <input type="date" th:field="*{birthDate}" class="form-control" id="birthDate" required>
+                    <div class="invalid-feedback">생년월일을 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="phone" class="form-label">전화번호</label>
+                    <input type="text" th:field="*{phoneNum}" class="form-control" id="phone" required>
+                    <div class="invalid-feedback">전화번호를 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" th:field="*{email}" class="form-control" id="email" required>
+                    <div class="invalid-feedback">유효한 이메일을 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="address" class="form-label">주소</label>
+                    <input type="text" th:field="*{addr}" class="form-control" id="address" required>
+                    <div class="invalid-feedback">주소를 입력하세요.</div>
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn btn-primary w-100" type="submit">회원가입</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+
+            <div class="credits">
+              <!-- All the links in the footer should remain intact. -->
+              <!-- You can delete the links only if you purchased the pro version. -->
+              <!-- Licensing information: https://bootstrapmade.com/license/ -->
+              <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+              Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+<!-- End #main -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<!--  <script src="/assets/js/wemaked.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 유효성 검사 스크립트 -->
+<script>
+  function validateForm(event) {
+    // 각 필드 값 가져오기
+    var lastName = document.getElementById("lastName").value.trim();
+    var firstName = document.getElementById("firstName").value.trim();
+    var password = document.getElementById("password").value.trim();
+    var confirmPassword = document.getElementById("confirmPassword").value.trim();
+    var birthDate = document.getElementById("birthDate").value.trim();
+    var phone = document.getElementById("phone").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var address = document.getElementById("address").value.trim();
+
+    // 빈 필드 확인
+    if (!lastName || !firstName || !password || !confirmPassword || !birthDate || !phone || !email || !address) {
+      alert("모든 필드를 채워주세요.");
+      event.preventDefault();  // 폼 제출 방지
+      return false;
+    }
+
+    // 비밀번호 길이 확인
+    if (password.length < 4) {
+      alert("비밀번호는 최소 4자리 이상이어야 합니다.");
+      event.preventDefault();  // 폼 제출 방지
+      return false;
+    }
+
+    // 비밀번호와 비밀번호 확인 일치 여부 확인
+    if (password !== confirmPassword) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      event.preventDefault();  // 폼 제출 방지
+      return false;
+    }
+
+    // 모든 검사가 통과되면 폼 제출 허용
+    return true;
+  }
+</script>
+
+</body>
+</html>

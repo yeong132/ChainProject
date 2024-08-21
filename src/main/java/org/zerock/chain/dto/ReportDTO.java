@@ -11,6 +11,9 @@ import java.time.LocalDate;
 public class ReportDTO {
 
     private Long reportNo;
+
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     private String reportName;  // 제목
     private String reportCategory;  // 카테고리
     private String reportContent;   // 내용

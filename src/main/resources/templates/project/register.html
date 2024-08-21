@@ -11,29 +11,29 @@
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
     <!-- 폰트 설정  -->
-    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
     <!-- Vendor CSS Files -->
-    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -46,10 +46,10 @@
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -75,13 +75,13 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell"></i>
                     <span class="badge btn-secondary badge-number">4</span> </a>
                 <!-- 알림창 아이콘 끝 -->
@@ -164,8 +164,8 @@
 
 
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
                     <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
                 <!-- 프로필 이미지 항목 끝 -->
 
@@ -232,7 +232,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
 
 
@@ -241,9 +241,9 @@
                 출근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
                     아니오
                 </button>
             </div>
@@ -255,16 +255,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <div id="currentTimes">현재 시간:</div>
                 퇴근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
                 </button>
             </div>
         </div>
@@ -274,7 +274,7 @@
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<aside class="sidebar" id="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item ">
             <a class="nav-link dash collapsed" href="/">
@@ -290,7 +290,7 @@
                 <span>기본 사항</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
@@ -310,15 +310,15 @@
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse show" data-bs-parent="#sidebar-nav" id="work-nav">
                 <li>
                     <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
                 <li>
-                    <a href="/project/list" class="active"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                    <a class="active" href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -333,7 +333,7 @@
                 <span>전자결재</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
@@ -350,7 +350,7 @@
                 <span>게시판</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
                 <li>
                     <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
@@ -373,7 +373,7 @@
                 <span>일정</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
                 </li>
@@ -387,7 +387,7 @@
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
                 <li>
                     <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
@@ -424,7 +424,7 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
-<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+
 <main class="main" id="main">
     <div class="pagetitle">
         <h1>새 프로젝트 생성</h1>
@@ -438,151 +438,161 @@
     </div>
 
     <section class="section">
-        <div class="row">
-            <form id="combinedForm" method="post" action="/project/register">
-                <input type="hidden" id="isTemporary" name="isTemporary" value="false">
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Project</h5>
-                            <fieldset>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">제목</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectName" placeholder="프로젝트 명" required type="text">
-                                    </div>
+        <form action="/project/register" class="row" id="combinedForm" method="post">
+            <input id="isTemporary" name="isTemporary" type="hidden" value="false">
+            <input id="participantsField" name="participants" type="hidden" value="">
+            <!-- 사원번호 고정값 지정 -->
+            <input id="empNo" name="empNo" type="hidden" value="1">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Project</h5>
+                        <fieldset>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">제목</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectName" placeholder="프로젝트 명" required
+                                           type="text">
                                 </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">참여자</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="participants" placeholder="본인 필수 고정" required type="text">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">참여자</label>
-                                    <div class="col-sm-11">
-                                        <select aria-label="Default select example" class="form-select" required>
-                                            <option selected>조직도 연동하기</option>
-                                            <option value="1">김선혜</option>
-                                            <option value="2">박성은</option>
-                                            <option value="3">신혜리</option>
-                                            <option value="4">성준혁</option>
-                                            <option value="5">임종하</option>
-                                            <option value="6">박영민</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">부서</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="dmpNo" placeholder="부서" required type="text">
-                                    </div>
-                                </div>
-                                <!-- 첨부 파일 -->
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="projectFiles" type="file" name="projectFiles">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">시작일</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectStartDate" required type="date">
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">종료일</label>
-                                    <div class="col-sm-11">
-                                        <input class="form-control" name="projectEndDate" required type="date">
-                                    </div>
-                                </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">즐겨찾기</label>
-                                    <div class="col-sm-10">
-                                        <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this, event)"></i>
-                                        <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" value="false">
-                                    </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">참여자</label>
+                                <div class="col-sm-10" id="participantList">
+                                    <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                                 </div>
+                            </div>
+                            <button id="resetSelection" class="btn btn-secondary">전체 취소</button>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <select aria-label="참여자 선택" class="form-select" id="employeeSelect" required>
+                                        <option selected value="">참여자를 선택하세요</option>
+                                        <!-- 부서별로 그룹화된 사원 목록이 여기에 추가됩니다 -->
+                                    </select>
+                                </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-1 col-form-label">내용</label>
-                                    <div class="col-sm-11">
-                                        <textarea name="projectContent" id="froala">
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">부서</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="dmpNo" placeholder="부서" required type="text">
+                                </div>
+                            </div>
+                            <!-- 첨부 파일 -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" id="projectFiles" name="projectFiles" type="file">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">시작일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectStartDate" required type="date">
+                                </div>
+                                <label class="col-sm-2 col-form-label">종료일</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="projectEndDate" required type="date">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">즐겨찾기</label>
+                                <div class="col-sm-10">
+                                    <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this, event)"></i>
+                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" value="false">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">내용</label>
+                                <div class="col-sm-10">
+                                        <textarea id="froala" name="projectContent">
                                         </textarea>
-                                    </div>
                                 </div>
-                            </fieldset>
-                        </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">프로젝트 차트</h5>
-                            <h6 class="mt-3">진행도 현황</h6>
-                            <fieldset>
-                                <input type="hidden" id="projectNo" name="projectNo" value="0">
-                                <input class="form-control" id="projectProgress" name="projectProgress" type="hidden" value="0">
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%;"></div>
-                                </div>
-                                <fieldset class="row mb-3 mt-5">
-                                    <h6>진행 상황 체크리스트</h6>
-                                    <legend class="col-form-label col-sm-1 pt-0"></legend>
-                                    <div class="col-sm-11">
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox1" onclick="updateProgress()" type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox1">작업 1 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox2" onclick="updateProgress()" type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox2">작업 2 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox3" onclick="updateProgress()" type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox3">작업 3 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox4" onclick="updateProgress()" type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox4">작업 4 (20%)</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" id="checkbox5" onclick="updateProgress()" type="checkbox" value="20">
-                                            <label class="form-check-label" for="checkbox5">작업 5 (20%)</label>
-                                        </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">프로젝트 차트</h5>
+                        <h6 class="mt-3">진행도 현황</h6>
+                        <fieldset>
+                            <input id="projectNo" name="projectNo" type="hidden" value="0">
+                            <input class="form-control" id="projectProgress" name="projectProgress" type="hidden"
+                                   value="0">
+                            <div class="progress">
+                                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="progress-bar"
+                                     id="progress-bar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <fieldset class="row mb-3 mt-5">
+                                <h6>진행 상황 체크리스트</h6>
+                                <legend class="col-form-label col-sm-2 pt-0"></legend>
+                                <div class="col-sm-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox1" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox1">작업 1 (20%)</label>
                                     </div>
-                                </fieldset>
-                            </fieldset>
-                            <div class="row">
-                                <div class="col-sm-11 offset-sm-1">
-                                    <button class="btn btn-primary" type="button" onclick="showModal(event)">저장</button>
-                                    <button class="btn btn-primary" type="button" onclick="showTempSaveModal(event)">임시저장</button>
-                                    <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox2" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox2">작업 2 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox3" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox3">작업 3 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox4" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox4">작업 4 (20%)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="checkbox5" onclick="updateProgress()"
+                                               type="checkbox" value="20">
+                                        <label class="form-check-label" for="checkbox5">작업 5 (20%)</label>
+                                    </div>
                                 </div>
+                            </fieldset>
+                        </fieldset>
+                        <div class="row">
+                            <div class="col-sm-10 offset-sm-1">
+                                <button class="btn btn-primary" onclick="showModal(event)" type="button">저장</button>
+                                <button class="btn btn-primary" onclick="showTempSaveModal(event)" type="button">임시저장
+                                </button>
+                                <button class="btn btn-primary" onclick="showWarningModal()" type="button">취소</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </section>
 </main>
 <!-- End #main -->
 
+
 <!--저장 확인 모달-->
-<div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="saveModalLabel" class="modal fade" id="saveModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="saveModalLabel">저장 확인</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 저장하시겠습니까 ?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="submitForm()">저장</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button class="btn btn-primary" onclick="submitForm()" type="button">저장</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
             </div>
         </div>
     </div>
@@ -606,25 +616,27 @@
     </div>
 </div>
 <!-- 임시저장 확인 모달 -->
-<div class="modal fade" id="tempSaveModal" tabindex="-1" aria-labelledby="tempSaveModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="tempSaveModalLabel" class="modal fade" id="tempSaveModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="tempSaveModalLabel">임시 저장 확인</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 임시 저장하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="submitTempForm()">예</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                <button class="btn btn-primary" onclick="submitTempForm()" type="button">예</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
             </div>
         </div>
     </div>
 </div>
+
+
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer" id="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
@@ -641,16 +653,17 @@
 
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
     <i class="bi bi-arrow-up-short"></i>
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
 <!-- 채팅창 끝-->
+
 
 <!-- 저장 확인 모달 JS  -->
 <script>
@@ -659,6 +672,7 @@
         var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
         saveModal.show(); // 저장 확인 모달 표시
     }
+
     function submitForm() {
         document.getElementById('combinedForm').submit();
     }
@@ -685,7 +699,6 @@
         });
     }
 </script>
-
 <!-- 임시저장 모달 JS -->
 <script>
     function showTempSaveModal(event) {
@@ -700,6 +713,7 @@
     }
 </script>
 
+
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -709,12 +723,154 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
+<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- 조직도 연동 -->
+<script>
+    $(document).ready(function () {
+        const participantList = $('#participantList');
+        let participantIds = new Set();
+
+        // 부서별로 그룹화된 사원 목록을 불러와 드롭다운에 추가하는 함수
+        function loadEmployeesForSelect() {
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeSelect = $('#employeeSelect');
+                employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+
+                const departments = {};
+
+                employees.forEach(employee => {
+                    if (!participantIds.has(employee.empNo)) {
+                        if (!departments[employee.departmentName]) {
+                            departments[employee.departmentName] = [];
+                        }
+                        departments[employee.departmentName].push(employee);
+                    }
+                });
+
+                for (const departmentName in departments) {
+                    const optgroup = $('<optgroup>').attr('label', departmentName);
+                    departments[departmentName].forEach(employee => {
+                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
+                        optgroup.append(option);
+                    });
+                    employeeSelect.append(optgroup);
+                }
+            }).fail(function (jqxhr, textStatus, error) {
+                console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
+                alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+            });
+        }
+
+        // 참여자 목록에 사원을 추가하는 함수
+        function addParticipant(empNo, empName, empRank, empDepartment) {
+            if (!participantIds.has(empNo)) {
+                participantIds.add(empNo);
+                const participantItem = $(`
+                <span class="badge bg-secondary me-2">
+                    ${empName} (${empRank}/${empDepartment})
+                    <i class="bi bi-x-circle remove-participant" data-emp-no="${empNo}"></i>
+                </span>
+            `);
+                participantList.append(participantItem);
+                updateParticipantsField();
+                loadEmployeesForSelect(); // 목록 갱신
+            }
+        }
+
+        // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
+        function updateParticipantsField() {
+            const participantsArray = Array.from(participantIds);
+            $('#participantsField').val(participantsArray.join(',')); // 사원번호 리스트를 report_participants 필드에 설정
+        }
+
+        // 사원 선택 시 참여자 목록에 추가
+        $('#employeeSelect').on('change', function () {
+            const selectedOption = $(this).find('option:selected');
+            const empNo = selectedOption.val();
+            const empName = selectedOption.data('name');
+            const empRank = selectedOption.data('rank');  // 직급
+            const empDepartment = selectedOption.data('department');  // 부서
+            if (empNo && !participantIds.has(empNo)) {
+                addParticipant(empNo, empName, empRank, empDepartment);
+                $(this).val(''); // 선택 초기화
+            }
+        });
+
+        // 개별 취소 기능 구현
+        participantList.on('click', '.remove-participant', function () {
+            const empNo = $(this).data('emp-no');
+            // participantIds에서 제거
+            participantIds.delete(empNo.toString());
+            // 화면에서 해당 항목 제거
+            $(this).parent().remove();
+            // 선택된 참여자 목록 필드 업데이트
+            updateParticipantsField();
+            // 드롭다운 초기화 및 갱신
+            refreshEmployeeSelect();
+        });
+
+        // 전체 취소 버튼 클릭 시 실행되는 함수
+        $('#resetSelection').on('click', function () {
+            // 선택된 사원 목록 및 ID 집합 초기화
+            participantIds.clear();
+            participantList.empty();
+            updateParticipantsField();
+
+            // 드롭다운 초기화
+            loadEmployeesForSelect(); // 사원 목록을 새로 불러와 드롭다운 갱신
+        });
+
+        // 드롭다운 목록을 갱신하는 함수 (개별 취소에서도 사용)
+        function refreshEmployeeSelect() {
+            const employeeSelect = $('#employeeSelect');
+            employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
+
+            $.getJSON('/api/employees/all', function (employees) {
+                const departments = {};
+
+                employees.forEach(employee => {
+                    if (!participantIds.has(employee.empNo)) {
+                        if (!departments[employee.departmentName]) {
+                            departments[employee.departmentName] = [];
+                        }
+                        departments[employee.departmentName].push(employee);
+                    }
+                });
+
+                for (const departmentName in departments) {
+                    const optgroup = $('<optgroup>').attr('label', departmentName);
+                    departments[departmentName].forEach(employee => {
+                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
+                        optgroup.append(option);
+                    });
+                    employeeSelect.append(optgroup);
+                }
+            }).fail(function (jqxhr, textStatus, error) {
+                console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
+                alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+            });
+        }
+
+
+        // 페이지 로드 시 사원 목록 불러오기
+        loadEmployeesForSelect();
+
+        // 폼 제출 시 선택된 참여자 목록을 업데이트
+        $('#combinedForm').on('submit', function () {
+            updateParticipantsField();
+        });
+    });
+</script>
+
+
+
 </body>
 </html>

@@ -318,7 +318,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -451,63 +451,62 @@
                         <!-- General Form Elements -->
                         <form>
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputText">제목</label>
+                                <label class="col-sm-1 col-form-label">제목</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text" value="프로젝트1">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputEmail">작성자</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" readonly type="email" value="본인 고정">
+                                    <input class="form-control" readonly type="text" th:value="${board.boardName}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">카테고리</label>
                                 <div class="col-sm-11">
-                                    <select aria-label="Default select example" class="form-select">
-                                        <option selected>카테고리 연동하기</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
+                                    <select class="form-select" name="boardCategory" disabled>
+                                        <option value="" disabled>카테고리</option>
+                                        <option value="결혼식" th:selected="${board.boardCategory == '결혼식'}">결혼식</option>
+                                        <option value="장례식" th:selected="${board.boardCategory == '장례식'}">장례식</option>
+                                        <option value="기타" th:selected="${board.boardCategory == '기타'}">기타</option>
                                     </select>
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputNumber">위치</label>
+                                <label class="col-sm-1 col-form-label" >작성자</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text" value="지도API 연동 필요">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputNumber">첨부 파일</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" id="formFile" readonly type="file">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputDate">날짜</label>
-                                <div class="col-sm-11">
-                                    <input class="form-control" readonly type="date">
+                                    <input class="form-control" readonly type="text"  th:value="${board.boardAuthor}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" for="inputContent">내용</label>
+                                <label class="col-sm-1 col-form-label" >위치</label>
                                 <div class="col-sm-11">
-                                    <div id="froala"></div>
+                                    <input class="form-control" readonly type="text"  th:value="${board.boardLocation}" >
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-1 col-form-label">첨부 파일</label>
+                                <div class="col-sm-11">
+                                    <input class="form-control" id="formFile" name="noticeFiles" th:value="${board.boardFiles}" type="file">
+                                    <div th:if="${board.boardFiles != null}">
+                                        <p>첨부된 파일:
+                                            <a download th:href="@{${board.boardFiles}}" th:text="${board.boardFiles}"></a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-1 col-form-label">내용</label>
+                                <div class="col-sm-11">
+                                    <textarea id="froala"  th:value="${board.boardContent}"></textarea>
                                 </div>
                             </div>
 
 
                             <div class="offset-sm-0">
                                 <div class="col-sm-5">
-                                    <button class="btn btn-primary" onclick="location.href='/board/modify'"
-                                            type="button">수정
-                                    </button>
+                                    <button class="btn btn-primary" th:onclick="'location.href=\'/board/modify/' + ${board.boardNo} + '\''" type="button">수정</button>
                                     <button class="btn btn-primary" onclick="location.href='/board/list'"
                                             type="button">목록
                                     </button>

@@ -318,7 +318,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -425,83 +425,425 @@
 </aside>
 <!-- Sidebar 전체 끝 -->
 
-<main id="main" class="main">
 
+<main id="main" class="main">
     <div class="pagetitle">
-        <h1>조직도</h1>
+        <h1>사원통합관리</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Organization Chart</a></li>
+                <li class="breadcrumb-item"><a href="/admin/main">관리자페이지</a></li>
+                <li class="breadcrumb-item">인사관리</li>
+                <li class="breadcrumb-item active">사원통합관리</li>
             </ol>
         </nav>
     </div>
-    <!-- 페이지 제목 끝 -->
 
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
+
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            조직도
-                            <span>| 조직도</span>
-                        </h5>
+                        <h3 class="card-title">
+                            <button href="#" class="btn btn-light" data-bs-toggle="modal"
+                                    data-bs-target="#departmentFormModal">부서등록</button>
+                            <button href="#" class="btn btn-danger" id="openDeleteDepartmentModalBtn">부서삭제</button>
+                        </h3>
+
+                        <div class="accordion accordion-flush">
+                            <!-- 전체 항목 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingAll">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#flush-collapseAll" aria-expanded="false"
+                                            aria-controls="flush-collapseAll">
+                                        전체 사원 목록
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseAll" class="accordion-collapse collapse"
+                                     aria-labelledby="flush-headingAll" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <table class="table datatable-selector">
+                                            <thead>
+                                            <tr>
+                                                <th>사원번호</th>
+                                                <th>부서</th>
+                                                <th>직급</th>
+                                                <th>이름</th>
+                                                <th>전화번호</th>
+                                                <th>수정</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="allEmployeesTableBody">
+                                            <!-- 전체 사원 목록이 여기에 추가됩니다. -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accordion -->
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <!-- 부서별 항목이 여기 추가될 예정 -->
+                            <div id="departmentAccordionItems"></div>
+                        </div><!-- End Accordion -->
+
                     </div>
                 </div>
-                <!-- 카드 내용 끝 -->
+
             </div>
-            <!-- 공간 나눔 끝 -->
         </div>
+
+        <!-- Delete Department Modal -->
+        <div class="modal fade" id="deleteDepartmentModal" tabindex="-1"
+             aria-labelledby="deleteDepartmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteDepartmentModalLabel">부서 삭제</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="deleteDepartmentList" class="list-group">
+                            <!-- 삭제할 부서 체크박스 리스트가 여기에 추가됩니다. -->
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteDepartmentBtn">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Department Management Modal -->
+
+        <!-- Department Form Modal -->
+        <div class="modal fade" id="departmentFormModal" tabindex="-1" role="dialog"
+             aria-labelledby="departmentFormModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="departmentFormModalLabel">부서 추가/수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="departmentForm">
+                            <input type="hidden" id="departmentId">
+                            <div class="form-group">
+                                <label for="departmentNameInput">부서 이름</label>
+                                <input type="text" class="form-control" id="departmentNameInput" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="saveDepartmentBtn">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Department Form Modal -->
+
+        <!-- 권한 수정 모달 -->
+        <div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog"
+             aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editEmployeeModalLabel">권한 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editEmployeeForm">
+                            <input type="hidden" id="editEmpId">
+                            <!-- 권한 체크박스 목록이 여기에 동적으로 추가됩니다. -->
+                            <div id="permissionsDiv" class="form-group"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="savePermissionBtn">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End 권한 수정 모달 -->
+
     </section>
-    <!--  본문 영역 끝  -->
 </main>
-<!-- #main 끝 -->
+
+<!-- End Main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
-</footer>
-<!-- Footer 끝 -->
+</footer><!-- End Footer -->
 
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
-<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="/assets/vendor/echarts/echarts.min.js"></script>
-<script src="/assets/vendor/quill/quill.js"></script>
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
-
-<!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-<script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.1.52/go.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // 전체 사원 데이터를 불러오는 함수
+        function loadAllEmployees() {
+            $.getJSON('/api/employees/all')
+                .done(function (employees) {
+                    const tableBody = $('#allEmployeesTableBody');
+                    tableBody.empty();
+                    employees.forEach(employee => {
+                        tableBody.append(createEmployeeRow(employee));
+                    });
+                })
+                .fail(function () {
+                    console.error("전체 사원 목록을 불러오는 데 실패했습니다.");
+                });
+        }
+
+        // 개별 사원 행을 생성하는 함수
+        function createEmployeeRow(employee) {
+            return `
+            <tr>
+                <td>${employee.empNo}</td>
+                <td>${employee.departmentName || 'N/A'}</td>
+                <td>${employee.rankName || 'N/A'}</td>
+                <td>${employee.lastName}${employee.firstName}</td>
+                <td>${employee.phoneNum}</td>
+                <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
+            </tr>
+        `;
+        }
+
+        // 전체 사원 목록 아코디언이 열릴 때 데이터 로드
+        $('#flush-collapseAll').on('show.bs.collapse', loadAllEmployees);
+
+        // 권한 수정 모달창 열기
+        $(document).on('click', '.edit-btn', function () {
+            const empNo = $(this).data('id');
+            $('#editEmpId').val(empNo);
+
+            $.when(
+                $.getJSON(`/api/employees/${empNo}/permissions`),
+                $.getJSON('/api/permissions')
+            ).done(function (employeePermissions, permissions) {
+                const permissionsDiv = $('#permissionsDiv');
+                permissionsDiv.empty();
+
+                permissions[0].forEach(permission => {
+                    const isChecked = employeePermissions[0].some(ep => ep.perNo === permission.perNo);
+                    permissionsDiv.append(createPermissionCheckbox(permission, isChecked));
+                });
+
+                $('#editEmployeeModal').modal('show');
+            }).fail(function () {
+                alert('권한 데이터를 불러오는 데 실패했습니다.');
+            });
+        });
+
+        // 개별 권한 체크박스 생성 함수
+        function createPermissionCheckbox(permission, isChecked) {
+            return `
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="${permission.perNo}" id="permission${permission.perNo}" ${isChecked ? 'checked' : ''}>
+                <label class="form-check-label" for="permission${permission.perNo}">
+                    ${permission.perName}
+                </label>
+            </div>
+        `;
+        }
+
+        // 권한 수정 저장 버튼 클릭 시
+        $('#savePermissionBtn').on('click', function () {
+            const empNo = $('#editEmpId').val();
+            const selectedPermissions = [];
+
+            $('#permissionsDiv .form-check-input:checked').each(function () {
+                selectedPermissions.push($(this).val());
+            });
+
+            $.ajax({
+                url: `/api/employees/${empNo}/permissions`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(selectedPermissions),
+                success: function () {
+                    alert('권한이 성공적으로 수정되었습니다.');
+                    $('#editEmployeeModal').modal('hide');
+                },
+                error: function () {
+                    alert('권한 수정에 실패했습니다.');
+                }
+            });
+        });
+
+        // 부서별 사원 데이터를 불러오는 함수
+        function loadEmployeesByDepartment(departmentId, tableBodyElement) {
+            $.getJSON(`/api/departments/${departmentId}/employees`)
+                .done(function (employees) {
+                    tableBodyElement.empty();
+                    if (employees && employees.length > 0) {
+                        employees.forEach(employee => {
+                            tableBodyElement.append(createEmployeeRow(employee));
+                        });
+                    } else {
+                        tableBodyElement.html('<tr><td colspan="6">No employees found for this department.</td></tr>');
+                    }
+                })
+                .fail(function () {
+                    console.error("부서별 사원 목록을 불러오는 데 실패했습니다.");
+                });
+        }
+
+        // 부서별 아코디언이 열릴 때 사원 목록을 불러오는 이벤트 핸들러 추가
+        $(document).on('show.bs.collapse', '.accordion-collapse', function () {
+            const departmentId = $(this).attr('data-department-id');
+            const tableBodyElement = $(this).find('tbody');
+            loadEmployeesByDepartment(departmentId, tableBodyElement);
+        });
+
+        // 부서별 아코디언 항목을 생성하는 함수
+        function createDepartmentAccordionItem(departmentId, departmentName) {
+            return `
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-heading${departmentId}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${departmentId}" aria-expanded="false" aria-controls="flush-collapse${departmentId}">
+                        ${departmentName}
+                    </button>
+                </h2>
+                <div id="flush-collapse${departmentId}" class="accordion-collapse collapse" aria-labelledby="flush-heading${departmentId}" data-bs-parent="#accordionFlushExample" data-department-id="${departmentId}">
+                    <div class="accordion-body">
+                        <table class="table datatable-selector">
+                            <thead>
+                                <tr>
+                                    <th>사원번호</th>
+                                    <th>부서</th>
+                                    <th>직급</th>
+                                    <th>이름</th>
+                                    <th>전화번호</th>
+                                    <th>수정</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeeTableBody${departmentId}">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+        }
+
+        // 모든 부서를 불러오고 아코디언을 초기화하는 함수
+        function loadDepartments() {
+            $.getJSON('/api/departments')
+                .done(function (departments) {
+                    const accordionContainer = $('#accordionFlushExample');
+                    accordionContainer.empty();
+                    departments.forEach(department => {
+                        accordionContainer.append(createDepartmentAccordionItem(department.dmpNo, department.dmpName));
+                    });
+                })
+                .fail(function () {
+                    console.error("부서 목록을 불러오는 데 실패했습니다.");
+                });
+        }
+
+        // 부서 삭제 모달 열기
+        $('#openDeleteDepartmentModalBtn').on('click', function () {
+            loadDepartmentsForDeletion();
+            $('#deleteDepartmentModal').modal('show');
+        });
+
+        // 부서 목록을 불러와 삭제 모달에 표시
+        function loadDepartmentsForDeletion() {
+            $.getJSON('/api/departments')
+                .done(function (departments) {
+                    const departmentList = $('#deleteDepartmentList');
+                    departmentList.empty();
+                    departments.forEach(department => {
+                        departmentList.append(`
+                        <li class="list-group-item">
+                            <input type="checkbox" class="form-check-input delete-department-checkbox" value="${department.dmpNo}">
+                            ${department.dmpName}
+                        </li>
+                    `);
+                    });
+                })
+                .fail(function () {
+                    console.error("부서 목록을 불러오는 데 실패했습니다.");
+                });
+        }
+
+        // 부서 삭제 확인 버튼 클릭 이벤트 핸들러
+        $('#confirmDeleteDepartmentBtn').on('click', function () {
+            const selectedDepartments = [];
+            $('.delete-department-checkbox:checked').each(function () {
+                selectedDepartments.push($(this).val());
+            });
+
+            if (selectedDepartments.length > 0) {
+                if (confirm('선택한 부서를 삭제하시겠습니까?')) {
+                    deleteDepartments(selectedDepartments);
+                }
+            } else {
+                alert('삭제할 부서를 선택하세요.');
+            }
+        });
+
+        // 부서 삭제 함수
+        function deleteDepartments(departmentIds) {
+            $.ajax({
+                url: '/api/departments/bulk-delete',
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({ departmentIds: departmentIds }),
+                success: function () {
+                    alert('선택한 부서가 성공적으로 삭제되었습니다.');
+                    $('#deleteDepartmentModal').modal('hide');
+                    loadDepartments(); // 부서 목록 새로 고침
+                },
+                error: function () {
+                    alert('부서 삭제에 실패했습니다.');
+                }
+            });
+        }
+
+        // 부서 등록 버튼 클릭 이벤트 핸들러
+        $('#saveDepartmentBtn').on('click', function () {
+            const departmentName = $('#departmentNameInput').val();
+            const departmentData = { dmpName: departmentName };
+
+            $.ajax({
+                url: '/api/departments',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(departmentData),
+                success: function (newDepartment) {
+                    createDepartmentAccordionItem(newDepartment.dmpNo, newDepartment.dmpName);
+                    $('#departmentFormModal').modal('hide');
+                    alert('부서가 성공적으로 등록되었습니다!');
+                    loadDepartments(); // 부서 목록 새로 고침
+                },
+                error: function () {
+                    alert('부서 등록에 실패했습니다.');
+                }
+            });
+        });
+
+        // 페이지 로드 시 부서 목록을 불러오는 함수 호출
+        loadDepartments();
+    });
+
+</script>
 </body>
 </html>

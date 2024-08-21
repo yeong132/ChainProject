@@ -21,6 +21,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+
     // 프로젝트 전체 목록 조회
     @GetMapping("/list")
     public String listGET(Model model) {

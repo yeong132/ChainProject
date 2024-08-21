@@ -1,6 +1,5 @@
 package org.zerock.chain.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.model.Department;
@@ -35,4 +34,3 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentRepository.deleteById(id);
     }
 }
-

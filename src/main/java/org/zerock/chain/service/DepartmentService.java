@@ -1,6 +1,5 @@
 package org.zerock.chain.service;
 
-
 import org.zerock.chain.model.Department;
 
 import java.util.List;

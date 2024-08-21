@@ -9,6 +9,9 @@ import lombok.Setter;
 @Data
 public class ProjectRequestDTO {
     private Long projectNo;
+
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     private String projectName;
     private String projectStartDate;
     private String projectEndDate;
