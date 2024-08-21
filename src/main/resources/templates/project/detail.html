@@ -618,87 +618,64 @@
         let participantIds = new Set();
 
         // 참여자 목록에 사원 추가하는 함수
-        function addParticipant(empNo, empName) {
+        function addParticipant(empNo, empName, empTitle, empDepartment) {
             const participantItem = $(`
-            <span class="badge bg-secondary me-2">
-                ${empName}
-            </span>
-        `);
+                <span class="badge bg-secondary me-2">
+                    ${empName} (${empTitle}/${empDepartment})
+                </span>
+            `);
             participantList.append(participantItem);
         }
 
         // 페이지 로드 시 저장된 참여자 목록을 초기화하여 출력
-        const initialParticipants = $('#projectData').data('participants').split(',');
-        $.getJSON('/api/employees/all', function (employees) {
-            const employeeMap = {};
-            employees.forEach(employee => {
-                employeeMap[employee.empNo] = employee.lastName + employee.firstName; // 사원 번호에 대응하는 이름을 저장
-            });
+        const initialParticipants = $('#projectData').data('participants');
 
-            initialParticipants.forEach(empNo => {
-                if (employeeMap[empNo]) {
-                    participantIds.add(empNo);
-                    addParticipant(empNo, employeeMap[empNo]);
-                }
-            });
-        });
+        if (initialParticipants) {
+            // participantsArray 초기화
+            let participantsArray = [];
 
-        // 선택된 사원번호를 숨겨진 필드에 설정하는 함수
-        function updateParticipantsField() {
-            $('#participantsField').val(Array.from(participantIds).join(','));
-        }
+            // initialParticipants가 배열인지 확인
+            if (Array.isArray(initialParticipants)) {
+                participantsArray = initialParticipants;
+            } else if (typeof initialParticipants === 'string') {
+                // 문자열인 경우 쉼표로 구분하여 배열로 변환
+                participantsArray = initialParticipants.split(',');
+            } else if (typeof initialParticipants === 'number') {
+                // 숫자인 경우 단일 사원번호로 배열에 추가
+                participantsArray = [initialParticipants.toString()];
+            } else {
+                console.error("Unexpected data type for initialParticipants:", typeof initialParticipants);
+                return;
+            }
 
-        // 사원 목록을 불러와서 부서별로 그룹화하여 드롭다운에 추가하는 함수
-        function loadEmployeesForSelect() {
+            // API에서 사원 정보 가져오기
             $.getJSON('/api/employees/all', function (employees) {
-                const employeeSelect = $('#employeeSelect');
-                employeeSelect.empty().append('<option value="" selected>참여자를 선택하세요</option>');
-
-                const departments = {};
-
+                const employeeMap = {};
                 employees.forEach(employee => {
-                    if (!participantIds.has(employee.empNo)) {
-                        if (!departments[employee.departmentName]) {
-                            departments[employee.departmentName] = [];
-                        }
-                        departments[employee.departmentName].push(employee);
-                    }
+                    employeeMap[employee.empNo] = {
+                        name: employee.lastName + employee.firstName,
+                        title: employee.title,
+                        department: employee.departmentName
+                    };
                 });
 
-                for (const departmentName in departments) {
-                    const optgroup = $('<optgroup>').attr('label', departmentName);
-                    departments[departmentName].forEach(employee => {
-                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}">${employee.lastName}${employee.firstName}</option>`;
-                        optgroup.append(option);
-                    });
-                    employeeSelect.append(optgroup);
-                }
-            }).fail(function (jqxhr, textStatus, error) {
-                console.error("사원 목록을 불러오는 데 실패했습니다: " + textStatus + ", " + error);
-                alert("사원 목록을 불러오는 데 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+                // participantsArray를 순회하며 사원 정보 추가
+                participantsArray.forEach(empNo => {
+                    if (employeeMap[empNo]) {
+                        participantIds.add(empNo);
+                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].title, employeeMap[empNo].department);
+                    } else {
+                        console.warn(`Employee with empNo ${empNo} not found.`);
+                    }
+                });
             });
+        } else {
+            console.warn("No participants data found.");
         }
-
-        // 사원 선택 시 참여자 목록에 추가
-        $('#employeeSelect').on('change', function () {
-            const selectedOption = $(this).find('option:selected');
-            const empNo = selectedOption.val();
-            const empName = selectedOption.data('name');
-
-            if (empNo && !participantIds.has(empNo)) {
-                participantIds.add(empNo);
-                addParticipant(empNo, empName);
-                $(this).val(''); // 선택 초기화
-                updateParticipantsField();
-                loadEmployeesForSelect(); // 목록 갱신
-            }
-        });
-
-        // 페이지 로드 시 사원 목록 불러오기
-        loadEmployeesForSelect();
     });
-
 </script>
+
+
 
 </body>
 </html>
