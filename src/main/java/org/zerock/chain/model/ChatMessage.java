@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,24 +15,30 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "chat_message")
 public class ChatMessage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatNo;
+    private Long id;
+
+    @Column(name = "chat_no")
+    private String chatNo; // 방
+
+    @Column(name = "sender_emp_no")
+    private String senderEmpNo; // 발신자
+
+    @Column(name = "recipient_emp_no")
+    private String recipientEmpNo; // 수신자
 
     @ManyToOne
-    @JoinColumn(name = "chat_room_no")
-    private ChatRoom chatRoom;
-
-    @ManyToOne
-    @JoinColumn(name = "emp_no")
-    private Employee employee;
+    @JoinColumn(name = "chat_room_no", referencedColumnName = "id")
+    private ChatRoom chatRoom; // 방번호
 
     @Column(name = "chat_content")
-    private String chatContent;
+    private String chatContent; // 내용
 
     @Column(name = "chat_sent_time")
-    private LocalDateTime chatSentTime;
+    private Date chatSentTime; // 보낸 시간
 
-    @Column(name = "chat_is_read", nullable = false)
-    private boolean chatIsRead;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead = false;  // 메시지 확인 여부
 }
