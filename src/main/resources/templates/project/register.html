@@ -807,10 +807,8 @@
         // 개별 취소 기능 구현
         participantList.on('click', '.remove-participant', function () {
             const empNo = $(this).data('emp-no');
-
             // participantIds에서 제거
-            participantIds.delete(empNo);
-
+            participantIds.delete(empNo.toString());
             // 화면에서 해당 항목 제거
             $(this).parent().remove();
 
