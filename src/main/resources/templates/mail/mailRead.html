@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -36,72 +37,20 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
-        /* 검색 입력란 컨테이너 스타일 */
+
         .card-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .search-bar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        .search-bar input[type="text"] {
-            width: 200px;
-            padding: 5px;
-            font-size: 14px;
-            border: 1px solid #666;
-            border-radius: 4px;
-            height: 38px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-bar input[type="text"]::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        .dropdown-menu {
-            min-width: 8rem;
-        }
-
-        .custom-checkbox-dropdown {
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-checkbox-dropdown input[type="checkbox"] {
-            margin-right: 5px;
-        }
-
         .star-icon {
             cursor: pointer;
         }
 
-        .checkbox-star-container {
-            display: flex;
-            align-items: center;
-        }
-
         .bi-star-fill {
-            color: 	#ffd700 /* 별표 아이콘을 노란색으로 설정 */
-        }
+            color: #ffd700;
 
-        .checkbox-star-container input[type="checkbox"] {
-            margin-right: 20px;
-        }
-
-        .btn-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-group .dropdown {
-            display: inline-block;
         }
 
         .btn-custom {
@@ -111,11 +60,19 @@
     </style>
 
     <!-- =======================================================
+<<<<<<< HEAD
+    * Template Name: NiceAdmin
+    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    * Updated: Apr 20 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+=======
   * Template Name: NiceAdmin
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
   * Updated: Apr 20 2024 with Bootstrap v5.3.3
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
+>>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     ======================================================== -->
 </head>
 
@@ -393,7 +350,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -443,6 +400,7 @@
         <!-- 게시판 사이드바 끝 -->
 
         <li class="nav-item">
+
             <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-calendar-week"></i>
                 <span>일정</span>
@@ -506,7 +464,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
+                <li class="breadcrumb-item"><a href="/mail/receive">Email</a></li>
                 <li class="breadcrumb-item active">Read</li>
             </ol>
         </nav>
@@ -520,7 +478,8 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
                                 <div>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
+                                    <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
+
                                 </div>
                                 <div>
                                     <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
@@ -536,24 +495,29 @@
                                 </div>
                             </div>
                             <div>
-                                <a href="#" class="btn btn-primary btn-custom mt-2" >목록</a>
+                                <a href="#" class="btn btn-primary btn-custom mt-2">목록</a>
                             </div>
                         </div>
+
+
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
                             <div class="d-flex align-items-center mb-3">
                                 <!-- 별표 아이콘 -->
                                 <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
-                                <h3 class="ms-2 mb-0">새로운 기기에서 로그인 되었습니다.</h3>
+                                <h3 class="ms-2 mb-0" th:text="${message.subject ?: 'No Subject'}"></h3>
                             </div>
                             <div class="mb-2">
-                                <strong>보낸사람:</strong> 네이버 &lt;account_noreply@navercorp.com&gt;
+                                <strong>보낸사람:</strong>
+                                <span th:text="${message.from ?: 'Unknown Sender'}"></span>
                             </div>
                             <div class="mb-2">
-                                <strong>받는사람:</strong> choh_56@naver.com
+                                <strong>받는사람:</strong>
+                                <span th:text="${message.to ?: 'Unknown Recipient'}"></span>
                             </div>
                             <div class="mb-4">
-                                <strong>날짜:</strong> 2024년 7월 26일 (금) 오후 1:07
+                                <strong>날짜:</strong>
+                                <span th:text="${message.date ?: 'Unknown Date'}"></span>
                             </div>
                         </div>
 
@@ -561,21 +525,8 @@
 
                         <!-- 메일 내용 -->
                         <div class="mail-content">
-                            <h3>로그인 정보</h3>
-                            <table class="table">
-                                <tr>
-                                    <th>일시</th>
-                                    <td>2024-07-26 (금) 13:07</td>
-                                </tr>
-                                <tr>
-                                    <th>타입</th>
-                                    <td>간편로그인 (사용)</td>
-                                </tr>
-                                <tr>
-                                    <th>운영체제</th>
-                                    <td>iOS</td>
-                                </tr>
-                            </table>
+                            <div th:utext="${messageContent}"></div>
+
                         </div>
                         <!-- 메일 내용 끝 -->
                     </div>

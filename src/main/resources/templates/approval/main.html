@@ -32,7 +32,8 @@
 
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+<!--    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>-->
+
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -98,6 +99,10 @@
             transform: scale(0.8); /* 콘텐츠 스케일 조정 */
             transform-origin: top left;
             position: absolute;
+        }
+
+        #fileList li.selected {
+            background-color: #d3d3d3; /* 선택된 항목의 배경색 */
         }
     </style>
 </head>
@@ -375,7 +380,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -497,105 +502,6 @@
     <!-- 페이지 제목 부분 종료 -->
 
     <section class=" dashboard section electronic-approval">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <!-- 결재 요청 카드 -->
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card sales-card">
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <h5 class="card-title">결재 요청</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-cart"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h4>24건</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 결재 요청 카드 끝 -->
-                    <!-- 결재 반려 카드 시작 -->
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card revenue-card">
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <h5 class="card-title">결재 반려</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-currency-dollar"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h4>1건</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- 결재 반려 카드 끝 -->
-
-                    <!-- 결재 완료 카드 시작 -->
-                    <div class="col-xxl-4 col-xl-12">
-                        <div class="card info-card customers-card">
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <h5 class="card-title">결재 완료</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h4>14건</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 결재 완료 카드 끝 -->
-                </div><!-- 12 부분 안에 row 끝 -->
-            </div><!-- 12로 나누는 부분 끝 -->
-        </div><!-- row 끝 -->
 
         <div class="row"><!-- 여기서 부터 테이블 추가 부분입니다! -->
             <div class="col-lg-12">
@@ -603,7 +509,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center"><!-- 버튼의 오른쪽 정렬 -->
 
-                            <h5 class="card-title">전체 문서함</h5>
+                            <h5 class="card-title">보낸 문서함</h5>
 
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
                                 + 새 결재 요청
@@ -617,198 +523,204 @@
                                 <th>번호</th>
                                 <th>제목</th>
                                 <th>작성자</th>
-                                <th data-type="date" data-format="YYYY/DD/MM">작성일</th>
-                                <th>양식 종류</th>
                                 <th>상태</th>
+                                <th>작성일</th>
+                                <th>양식 종류</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>안녕하세요 첫 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>스크립트(기능포함)</td>
-                                <td>요청</td>
+                            <tr th:if="${document.reqDate != null}" th:each="document : ${sentDocuments}">
+                                <td th:text="${document.docNo}"></td>
+                                <td>
+                                    <a th:href="@{/read/{docNo}(docNo=${document.docNo})}" th:text="${document.docTitle}"></a>
+                                </td>
+                                <td th:text="${document.senderName}"></td>
+                                <td th:text="${document.docStatus}"></td>
+                                <td th:text="${document.reqDate}"></td>
+                                <td th:text="${document.category}"></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td><a href="../approval/rejectionRead">안타깝게도 반려된 결재입니다 다시
                                     올려주세요</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>반려</td>
+
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td><a href="../approval/completedRead">축하합니다
                                     결재완료됐습니다!</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>완료</td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td>안녕하세요 결재 문서 올립니다</td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>보고/시행문</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>5</td>
                                 <td><a href="../approval/adminRequest">관리자가 결재할 결재
                                     문서입니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>요청</td>
+
                             </tr>
                             <tr>
                                 <td>6</td>
                                 <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>요청</td>
+
                             </tr>
                             <tr>
                                 <td>7</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>8</td>
                                 <td>안녕하세요 결재 문서 올립니다</td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>출장</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>9</td>
                                 <td>안녕하세요 결재 문서 올립니다</td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>회계/총무</td>
-                                <td>요청</td>
+
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>안녕하세요 결재 문서 올립니다</td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>휴가</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>11</td>
                                 <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>12</td>
                                 <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>13</td>
                                 <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>일반기안</td>
-                                <td>요청</td>
                             </tr>
                             <tr>
                                 <td>14</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>15</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>16</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>17</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>18</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>19</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>20</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>21</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>22</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             <tr>
                                 <td>23</td>
                                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                                 <td>이나리</td>
+                                <td>요청</td>
                                 <td>2024-07-23</td>
                                 <td>지출 결의서</td>
-                                <td>임시</td>
                             </tr>
                             </tbody>
                         </table>
@@ -859,7 +771,7 @@
             </div>
             <div class="modal-body">
                 <div class="left-pane">
-                    <ul>
+                    <ul id="fileList">
                         <li data-file="../approval/generalApproval">일반기안서</li>
                         <li data-file="../approval/overTime">연장근무신청서</li>
                         <li data-file="../approval/expense">지출결의서</li>
@@ -873,17 +785,81 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button id="submitBtn" type="button" class="btn btn-primary">작성</button>
+                <button id="submitSelectionBtn" type="button" class="btn btn-primary">작성</button>
             </div>
         </div>
     </div>
 </div><!-- Extra Large 크기 모달창 부분 끝-->
 
 <script><!-- 새로 추가한 스크립트입니다! -->
-document.addEventListener('DOMContentLoaded', (e) => {
-    const submitBtn = document.getElementById('submitBtn'); // 새 결재 요청 버튼
+let selectedCategory = ''; // 선택된 카테고리를 저장하는 변수
+
+document.addEventListener('DOMContentLoaded', () => {
     const preview = document.getElementById('preview');  // 불러온 html이 들어갈 미리보기 부분
     const listItems = document.querySelectorAll('.left-pane li'); // 모달창 왼쪽 목록 부분
+
+    let selectedFile = '';      // 선택된 파일을 저장하는 변수
+
+    document.getElementById('fileList').addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+            selectedCategory = event.target.textContent; // 선택된 양식의 텍스트를 카테고리로 설정
+            document.querySelectorAll('#fileList li').forEach(li => li.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+    });
+
+
+    // 파일 리스트 클릭 시 선택된 파일 저장
+    document.getElementById('fileList').addEventListener('click', function (e) {
+        if (e.target.tagName === 'LI') {
+            selectedFile = e.target.getAttribute('data-file');
+            // 선택된 파일 강조 표시
+            Array.from(e.target.parentElement.children).forEach(item => item.classList.remove('selected'));
+            e.target.classList.add('selected');
+
+            // 선택된 파일의 내용을 미리보기
+            fetch(selectedFile)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('preview').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Preview fetch error:', error);
+                });
+        }
+    });
+
+    // "작성" 버튼 클릭 시 결재 진행 페이지로 이동
+    document.getElementById('submitSelectionBtn').addEventListener('click', function () {
+        if (!selectedCategory) {
+            alert('양식을 선택해주세요.');
+            return;
+        }
+
+        // 문서 번호와 카테고리 정보를 먼저 서버에 저장하고, 그 후에 파일 파라미터와 함께 이동
+        fetch('/approval/create-document', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                category: selectedCategory
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const docNo = data.docNo;
+                if (docNo) {
+                    // file 파라미터가 있는 경우 URL에 포함
+                    const fileParam = selectedFile ? `&file=${encodeURIComponent(selectedFile)}` : '';
+                    // process.html로 문서 번호와 선택된 카테고리, 파일 경로를 전달
+                    window.location.href = `/approval/process?docNo=${docNo}&category=${encodeURIComponent(selectedCategory)}${fileParam}`;
+                } else {
+                    alert('문서 번호를 받아올 수 없습니다.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
 
     // 모달창 미리보기 기능
     listItems.forEach(item => {
@@ -904,31 +880,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
         });
     });
 
-    submitBtn.addEventListener('click', () => {
-        window.location.href = '../approval/process';
+    // 모달 창 닫기 버튼 클릭 시 모달 닫기
+    document.querySelector('.btn-close').addEventListener('click', () => {
+        modal.hide();
     });
-
-    // Simple DataTables 초기화
-    const table = document.querySelector('#approvalTable');
-    if (table) {
-        const SimpleDataTable = new SimpleDataTable(table, {
-            sortable: true, // 정렬 기능 활성화
-            perPage: 10, // 페이지당 항목 수 (선택 사항)
-            perPageSelect: [10, 25, 50, 100], // 페이지당 항목 수 선택
-            searchable: true // 검색 기능 활성화
-        });
-
-        // 데이터 테이블이 완전히 로드된 후 버튼 클릭
-        setTimeout(() => {
-            const sortButtons = table.querySelectorAll('th .datatable-sorter');
-            if (sortButtons.length > 0) {
-                // 번호 열의 버튼을 클릭하여 최신순으로 정렬
-                // 예를 들어, 첫 번째 열이 번호 열이라고 가정
-                sortButtons[0].click(); // 첫 번째 열의 버튼 클릭
-                sortButtons[0].click(); // 다시 클릭하여 내림차순 정렬
-            }
-        }, 100); // 데이터 테이블이 완전히 로드되도록 잠시 대기
-    }
 });
 
 function disableContent(container) {
@@ -954,7 +909,7 @@ function disableContent(container) {
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-<script src="/assets/js/wemaked.js"></script>
+<!--<script src="/assets/js/wemaked.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

@@ -4,8 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-//  DTO와 엔티티 간의 자동 매핑
 @Configuration
 public class ModelMapperConfig {
 

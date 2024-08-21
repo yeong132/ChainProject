@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -16,6 +17,7 @@
 
     <!-- 폰트 설정  -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
@@ -318,7 +320,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -427,7 +429,6 @@
 
 
 <main id="main" class="main">
-
     <div class="pagetitle">
         <h1>새 메일 작성</h1>
         <nav>
@@ -443,53 +444,41 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <!-- General Form Elements -->
-                    <form>
+                <div class="card">
+                    <div class="card-body">
+                        <!-- General Form Elements -->
+                        <form id="emailForm" th:action="@{/mail/send}" method="post">
                         <div class="offset-sm-0 mt-3">
-                            <div class="col-sm-5">
-                                <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#sendModal">보내기</button>
-                                <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#saveModal">임시저장</button>
+                                <div class="col-sm-5">
+                                    <!-- 보내기 버튼을 모달 트리거로 변경 -->
+                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#sendModal">보내기</button>
+                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#saveModal">임시저장</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-1 col-form-label">받는사람</label>
-                            <div class="col-sm-11">
-                                <input type="email" class="form-control">
+                            <div class="row mb-3">
+                                <label for="recipientEmail" class="col-sm-1 col-form-label">받는사람</label>
+                                <div class="col-sm-11">
+                                    <input type="email" class="form-control" id="recipientEmail" name="recipientEmail" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="inputReference" class="col-sm-1 col-form-label">참조</label>
-                            <div class="col-sm-11">
-                                <input type="email" class="form-control">
+                            <div class="row mb-3">
+                                <label for="subject" class="col-sm-1 col-form-label">제목</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="inputReference" class="col-sm-1 col-form-label">숨은참조</label>
-                            <div class="col-sm-11">
-                                <input type="email" class="form-control">
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <!-- Froala 에디터 -->
+                                <div id="froala-editor"></div>
+                                <!-- Froala 에디터 끝 -->
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label  class="col-sm-1 col-form-label">제목</label>
-                            <div class="col-sm-11">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <!-- Froala 에디터 -->
-                            <div id="froala"></div>
-                            <!-- Froala 에디터 끝 -->
-                        </div>
-                        <!-- 웹에디터 내용 끝 -->
-                    </form><!-- End General Form Elements -->
+                            <input type="hidden" id="message" name="message">
+                        </form><!-- End General Form Elements -->
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 
@@ -505,7 +494,8 @@
                     메일을 보내겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="confirmSend()">네</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">네</button>
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
                 </div>
             </div>
@@ -565,12 +555,24 @@
 <!-- 채팅창 끝-->
 
 <script>
-    function confirmSend() {
-        window.location.href = '/mail/complete';
+    document.addEventListener("DOMContentLoaded", function() {
+        new FroalaEditor("#froala-editor", {
+            events: {
+                'contentChanged': function () {
+                    document.getElementById('message').value = this.html.get();
+                }
+            }
+        });
+    });
+
+    function submitForm() {
+        // 폼 데이터를 제출합니다.
+        document.getElementById('emailForm').submit();
     }
 
     function confirmSave() {
-        window.location.href = '/mail/temporaryStorage';
+        // 임시 저장 기능을 구현하세요.
+        alert("임시 저장 기능이 아직 구현되지 않았습니다.");
     }
 </script>
 

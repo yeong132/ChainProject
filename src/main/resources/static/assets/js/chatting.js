@@ -1,384 +1,455 @@
-//------  오른쪽 마우스 클릭 관련 이벤트 -------
-document.addEventListener('DOMContentLoaded', function () {
-    // 기본 오른쪽 클릭 드롭다운 메뉴 막기
-    document.addEventListener('contextmenu', function (event) {
-        event.preventDefault();
+'use strict'; /* 스크립트 사용을 알림: 엄격 모드(오류 찾기에 유용) */
+
+const usernameForm = document.querySelector('#usernameForm'); // 로그인 작성 폼
+const usernamePage = document.querySelector('#username-page'); // 로그인 페이지
+
+const chatPage = document.querySelector('#chatPage'); // 채팅 페이지
+const chatRoomUsersList = document.querySelector('#v-pills-chatrooms .chat_list');// 사용자(방) 목록 영역
+const chatRoom= document.querySelector('#chatRoom'); // 채팅방 영역
+const chatArea = document.querySelector('#chatArea'); // 채팅 영역
+const messageInput = document.querySelector('#messageInput'); // 메시지 입력창
+const sendButton = document.querySelector('.send_button'); // 채팅 전송 버튼
+const backButton = document.querySelector('#backButton'); // 채팅방 닫기 버튼
+const connectingElement = document.querySelector('.connecting'); // 연결
+// const logout = document.querySelector('#logout'); // 로그아웃
+
+const chatModal = document.getElementById('chatModal'); // 모달 창
+const closeButton = document.getElementById('closeButton'); // 모달 창 닫기 버튼
+const confirmCreateRoomButton = document.getElementById('confirmCreateRoom'); // 채팅방 생성 확인 버튼
+
+let stompClient = null; // 클라이언트 객체 생성
+let nickname = null;
+let fullname = null;
+let selectedUserId = null; // 선택한 사용자
+let selectedEmployeeInfo = null; // 선택된 사원의 정보
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 조직도-부서 클릭 시, 새 채팅방 생성
+    document.querySelectorAll('.dep_emps_list span').forEach(link => {
+        link.addEventListener('click', handleEmployeeClick);
     });
 
-    // chat_list에서 커스텀 드롭다운 메뉴 표시
-    document.querySelectorAll('.chat_list .chat_room').forEach(chatRoom => {
-        // 각 채팅방의 즐겨찾기 상태를 데이터 속성으로 설정 (기본값은 'false')
-        chatRoom.dataset.favorite = chatRoom.dataset.favorite || 'false';
-
-        chatRoom.addEventListener('contextmenu', function (event) {
-            event.preventDefault();
-
-            // 기존의 모든 드롭다운 메뉴를 숨김
-            document.querySelectorAll('.chat_menu_container .dropdown-menu').forEach(menu => {
-                menu.style.display = 'none';
-            });
-
-            // 커스텀 드롭다운 메뉴 선택
-            let dropdownMenu = document.querySelector('.chat_menu_container .dropdown-menu');
-
-            // 드롭다운 메뉴 표시
-            dropdownMenu.style.display = 'block';
-            dropdownMenu.style.left = `${event.pageX}px`;
-            dropdownMenu.style.top = `${event.pageY}px`;
-
-            // 현재 채팅방의 즐겨찾기 상태에 따라 텍스트 변경
-            let favoriteMenuItem = dropdownMenu.querySelector('.dropdown-item .chatroomFavorite');
-            if (chatRoom.dataset.favorite === 'true') {
-                favoriteMenuItem.textContent = '즐겨찾기 해제';
-            } else {
-                favoriteMenuItem.textContent = '즐겨찾기 등록';
-            }
-
-            // 드롭다운 메뉴 외부 클릭 시 메뉴 닫기
-            document.addEventListener('click', function hideDropdownMenu() {
-                dropdownMenu.style.display = 'none';
-                document.removeEventListener('click', hideDropdownMenu);
-            });
-        });
+    // 조직도-부서 누르면 펼침, 닫힘
+    document.querySelectorAll('.org_dep').forEach(link => {
+        link.addEventListener('click', toggleDepartment);
     });
 
-    // 즐겨찾기 등록/해제 클릭 이벤트 처리
-    document.querySelector('.chat_menu_container .dropdown-menu .dropdown-item').addEventListener('click', function() {
-        // 현재 선택된 채팅방 요소를 찾기 위한 로직
-        let currentChatRoom = document.querySelector('.chat_menu_container .chat_menu .chat_list .chat_room[data-selected="true"]');
+    // 검색 필터
+    setupSearchFilters();
+});
 
-        if (currentChatRoom) {
-            // 즐겨찾기 상태 토글
-            if (currentChatRoom.dataset.favorite === 'true') {
-                currentChatRoom.dataset.favorite = 'false';
-            } else {
-                currentChatRoom.dataset.favorite = 'true';
-            }
+// 새 채팅방: 사원 클릭-모달 창 열기, 채팅방 생성
+function handleEmployeeClick(event) {
+    event.preventDefault();
+    const link = event.currentTarget;
+    const linkText = link.textContent.trim().split(' ');  // 공백을 기준으로 텍스트 분리
+
+    selectedEmployeeInfo = {  // 선택된 사원의 정보 저장: 사원번호, 풀네임
+        empNo: link.getAttribute('data-empno'),
+        rankName: linkText[0],
+        fullName: linkText.slice(1).join(' ')
+    };
+
+    // 모달 창 열기
+    chatModal.classList.remove('hidden');
+    // 모달 창 닫기: x 버튼 or 외부 공간 클릭
+    closeButton.onclick = function() {
+        chatModal.classList.add('hidden');
+    }
+    window.onclick = function(e) {
+        if (e.target == chatModal) {
+            chatModal.classList.add('hidden');
         }
-    });
-});
-
-// ------------- 채팅방 생성 모달창 -----------------
-// 모달 관련 변수
-let chatModal = document.getElementById("chatModal"); // 채팅방 생성 모달창
-let closeButton = document.getElementById("closeButton"); // 모달창 닫기 버튼
-let confirmButton = document.getElementById("confirmCreateRoom"); // 모달창 확인 버튼
-let selectedEmpName = ""; // 클릭된 직원의 이름을 저장할 변수
-
-// 채팅 관련 변수
-let chatChatting = document.querySelector(".chat_content.active"); // chatRoom${id} .chat_content.active
-let chatHeader = document.getElementById("chatHeader");
-let chatRoomName = document.getElementById("chatRoomName");
-let chatContent = document.querySelector(".chat_content");
-
-// 현재 활성화된 채팅방을 추적하기 위한 변수
-let activeRoomContentElement = null;
-
-// 직원 리스트 클릭 이벤트 추가
-let empItems = document.querySelectorAll(".dep_emps_list li");
-empItems.forEach(item => {
-    item.addEventListener("click", function() {
-        // 선택한 직원의 이름 텍스트를 저장
-        selectedEmpName = this.textContent.trim();
-
-        // 모달 창 열기
-        chatModal.style.display = "block";
-    });
-});
-
-// 모달 닫기 (x 버튼 클릭 시)
-closeButton.onclick = function() {
-    chatModal.style.display = "none";
-}
-
-// 모달 닫기 (모달 외부 클릭 시)
-window.onclick = function(e) {
-    if (e.target == chatModal) {
-        chatModal.style.display = "none";
+    }
+    // 모달 창 확인 버튼 클릭 시 채팅방 생성
+    confirmCreateRoomButton.onclick = function() {
+        chatModal.classList.add('hidden');
+        roomItemClick(selectedEmployeeInfo);
     }
 }
 
-// 채팅방 생성 확인 버튼 클릭 시
-confirmButton.onclick = function() {
-    // 모달 창 닫기
-    chatModal.style.display = "none";
+// 조직도: 부서 펼침/닫힘 토글
+function toggleDepartment(event) {
+    event.preventDefault();
+    const link = event.currentTarget;
+    const empList = link.parentElement;
 
-    // 새로운 채팅방 생성
-    let newChatRoom = document.createElement("div");
-    newChatRoom.className = "chat_room";
-    newChatRoom.dataset.roomId = "new"; // 실제 ID로 변경 필요
+    if (empList.classList.contains('open')) {
+        empList.classList.remove('open');
+        empList.querySelector('.dep_emps_list').style.maxHeight = null;
+    } else {
+        empList.classList.add('open');
+        const content = empList.querySelector('.dep_emps_list');
+        content.style.maxHeight = content.scrollHeight + 'px';
+    }
+}
 
-    // 채팅방 이미지
-    let roomImg = document.createElement("div");
+// 검색 필터
+function setupSearchFilters() {
+    const searchInputOrg = document.getElementById('searchInputOrg');
+    // const searchInputFavorRoom = document.getElementById('searchInputFavorRoom');
+    const searchInputChatRoom = document.getElementById('searchInputChatRoom');
+
+    // 조직도
+    searchInputOrg.addEventListener('input', function () {
+        applyFilter(searchInputOrg, '.org_dep_list > li', '.org_dep', '.dep_emps_list li');
+    });
+
+    // 방 목록
+    searchInputChatRoom.addEventListener('input', function () {
+        applyRoomFilter(searchInputChatRoom, '#v-pills-chatrooms .chat_room_item');
+    });
+}
+
+// 검색 필터: 조직도
+function applyFilter(inputElement, listSelector, nameSelector, itemSelector) {
+    const filter = inputElement.value.toLowerCase();
+
+    document.querySelectorAll(listSelector).forEach(dep => {
+        const depName = dep.querySelector(nameSelector).textContent.toLowerCase();
+        const empNames = dep.querySelectorAll(itemSelector);
+
+        let depVisible = depName.includes(filter);
+        let empVisible = false;
+
+        empNames.forEach(emp => {
+            const empName = emp.textContent.toLowerCase();
+            if (empName.includes(filter) || depVisible) {
+                empVisible = true;
+                emp.style.display = '';
+            } else {
+                emp.style.display = 'none';
+            }
+        });
+
+        if (depVisible || empVisible) {
+            dep.style.display = '';
+            dep.classList.add('open');
+            dep.querySelector('.dep_emps_list').style.maxHeight = dep.querySelector('.dep_emps_list').scrollHeight + 'px';
+        } else {
+            dep.style.display = 'none';
+        }
+
+        if (filter === '') {
+            dep.classList.remove('open');
+            dep.querySelector('.dep_emps_list').style.maxHeight = null;
+        }
+    });
+}
+
+// 검색 필터: 방 목록
+function applyRoomFilter(inputElement, roomSelector) {
+    const filter = inputElement.value.toLowerCase();
+
+    document.querySelectorAll(roomSelector).forEach(room => {
+        const roomName = room.querySelector('.room_name').textContent.toLowerCase();
+        room.style.display = roomName.includes(filter) ? '' : 'none';
+    });
+}
+
+
+// 소켓 연결 ----------- 메인js로 이동
+function connect(event) {
+    nickname = document.querySelector('#nickname').value.trim();
+    fullname = document.querySelector('#fullname').value.trim();
+
+    if (nickname && fullname) { // 닉네임 입력 확인
+        usernamePage.classList.add('hidden'); // 로그인 페이지 숨김
+        chatPage.classList.remove('hidden'); // 채팅 페이지 띄움
+
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, onConnected, onError);
+    }
+    event.preventDefault(); // 이벤트 전파 방지
+}
+
+// 연결 성공 ----------- 메인js로 이동
+function onConnected() {
+    stompClient.subscribe(`/user/${nickname}/queue/messages`, onMessageReceived); // 사용자에게 메시지 알림, 특정 사용자(nickname)에게 보내는 개별 메시지를 수신
+    stompClient.subscribe(`/user/public`, onMessageReceived); // 수신될 모든 메시지 처리(모든 공용 메시지를 수신)
+
+    // 접속한 사용자 등록
+    stompClient.send("/app/user.addUser",
+        {}, // 사용자 컨트롤러로 사용자 정보 전달
+        JSON.stringify({nickName: nickname, fullName: fullname, status: 'ONLINE'})
+    );
+    // document.querySelector('#connected-user-fullname').textContent = fullname; // 연결된 사용자 풀네임을 들고 옴
+    findAndDisplayConnectedUsers().then(); // 연결된 사용자 찾고 표시
+    displayUnreadMessages(); // 로그인 시 읽지 않은 메시지 불러오기
+}
+
+// 전체 연결된 사용자 목록을 가져옴
+async function findAndDisplayConnectedUsers() {
+    // const connectedUsersResponse = await fetch('/users'); // 전체 연결된 사용자 목록 요청
+    const connectedUsersResponse = await fetch(`/chat/activeUsers?nickname=${nickname}`); // 대화 중인 사용자 목록 호출
+    let connectedUsers = await connectedUsersResponse.json(); // JSON 형식으로 변환된 응답 데이터
+
+    // 현재 로그인한 사용자를 목록에서 제외
+    // connectedUsers = connectedUsers.filter(user => user.nickName !== nickname);
+
+    connectedUsers.forEach(user => { // 목록에 있는 사용자는 유지, 새롭게 로그인한 사용자는 추가
+        let listItem = document.getElementById(user.nickName);
+
+        if (!listItem) {
+            // 신규 사용자 추가
+            appendUserElement(user);
+        } else {
+            // 이미 존재하는 사용자의 알림 값 유지
+            const roomAlarm = listItem.querySelector('.room_alarm');
+            roomAlarm.textContent = roomAlarm.textContent || '0'; // 현재 값 유지
+        }
+    });
+}
+
+// 목록에 방 추가
+function appendUserElement(user) {
+    const listItem = document.createElement('div');
+    listItem.classList.add('chat_room_item');
+    listItem.id = user.nickName;
+
+    const roomImg = document.createElement('div');
     roomImg.className = "room_img";
-    let img = document.createElement("img");
-    img.src = "/assets/img/보노보노.png"; // 기본 이미지 또는 선택된 직원의 프로필 사진으로 변경 가능
-    // TODO: 이후에 서버에서 프로필 이미지를 받아와 img.src를 업데이트
-    // 예시: img.src = `server_endpoint/getProfileImage?name=${selectedEmpName}`;
-    img.alt = "프로필사진";
+    const img = document.createElement("img");
+    img.src = "/assets/img/보노보노.png";
+    img.alt = user.fullName;
     roomImg.appendChild(img);
 
-    // 채팅방 정보
-    let roomInfo = document.createElement("ul");
-    let roomName = document.createElement("li");
+    const roomInfo = document.createElement("ul");
+    const roomName = document.createElement("li");
     roomName.className = "room_name";
-    roomName.textContent = selectedEmpName+"님"; // 선택한 직원의 이름으로 설정
-    let roomContent = document.createElement("li");
-    roomContent.className = "room_content";
-    roomContent.textContent = "새로운 메시지가 없습니다."; // 초기 상태
-
+    roomName.textContent = `${user.fullName}님`; // 선택한 직원의 이름으로 설정
+    const roomContent = document.createElement("li");
+    roomContent.className = "room_content"; // 최근 메시지 표시
+    roomContent.textContent = "새로운 메시지가 없습니다."; // 초기 메시지
     roomInfo.appendChild(roomName);
     roomInfo.appendChild(roomContent);
 
-    // 새로운 채팅방에 요소 추가
-    newChatRoom.appendChild(roomImg);
-    newChatRoom.appendChild(roomInfo);
+    const roomAlarm = document.createElement('span');
+    roomAlarm.textContent = '0'; // 메시지 번호
+    roomAlarm.classList.add('room_alarm', 'hidden'); // 메시지 알림 숨김
 
-    // 채팅방 목록에 추가
-    document.querySelector("#v-pills-chatrooms .chat_list").appendChild(newChatRoom);
+    listItem.appendChild(roomImg); // 목록에 이미지 추가
+    listItem.appendChild(roomInfo); // 이름 및 최신 메시지 추가
+    listItem.appendChild(roomAlarm); // 메시지 알람
 
-    // 채팅방 클릭 이벤트 추가
-    newChatRoom.addEventListener("click", function() {
-        openChatRoom(selectedEmpName, roomContent);
-    });
+    listItem.addEventListener('dblclick', roomItemClick); // 채팅방 선택
 
-    // 새로운 채팅방을 자동으로 열기
-    openChatRoom(selectedEmpName, roomContent);
+    chatRoomUsersList.appendChild(listItem);
 
-    // 채팅방 열기 함수
-    function openChatRoom(empName, roomContentElement) {
-        // 채팅방 헤더 업데이트
-        chatRoomName.textContent = empName;
+    // 최신 메시지 가져와서 표시
+    updateLatestMessage(user.nickName);
+}
 
-        // 채팅방 내용 초기화 또는 업데이트
-        chatContent.innerHTML = `
-        <div class="chat_num chat_to">환영합니다! ${empName}님과의 채팅방입니다.</div>`;
+// 최신 메시지를 업데이트하는 함수 추가
+async function updateLatestMessage(userId) {
+    const userChatResponse = await fetch(`/messages/${nickname}/${userId}`);
+    let userChat = await userChatResponse.json(); // 채팅 응답 보관
 
-        // 현재 활성화된 채팅방의 room_content 요소 저장
-        activeRoomContentElement = roomContentElement;
-
-        // 채팅창 보이기
-        chatChatting.style.display = "block";
+    if (userChat.length > 0) {
+        const latestMessage = userChat[userChat.length - 1];
+        const chatRoomItem = document.getElementById(userId);
+        const roomContentElement = chatRoomItem.querySelector('.room_content');
+        roomContentElement.textContent = latestMessage.chatContent;
     }
 }
-// ------------- /end 모달창 -----------------
 
-// 조직도-부서 누르면 펼침, 닫힘
-document.addEventListener('DOMContentLoaded', function () {
-    let orgDep = document.querySelectorAll('.org_dep');
+// 선택한 채팅방 활성화
+function roomItemClick(event) {
+    document.querySelectorAll('.chat_room_item').forEach(item => {
+        item.classList.remove('active'); // 모든 사람의 채팅창 가림
+    });
+    document.querySelector('.info_text').classList.add('hidden');
 
-    orgDep.forEach(function (link) {
-        link.addEventListener('click', function (event) {
-            event.preventDefault();
-            let empList = link.parentElement;
+// clickedUser.classList.add('active'); // 현재 또는 클릭한 사용자만 활성화 추가
 
-            // 직원 목록이 열려있는지 학인
-            if (empList.classList.contains('open')) {
-                // 열려 있으면 닫음
-                empList.classList.remove('open');
-                empList.querySelector('.dep_emps_list').style.maxHeight = null;
-            } else {
-                // 닫혀있으면 목록 높이만큼 열림
-                empList.classList.add('open');
-                let content = empList.querySelector('.dep_emps_list');
-                content.style.maxHeight = content.scrollHeight + 'px';
-            }
+    const clickedUser = event.currentTarget;
+
+    if(clickedUser){
+        selectedUserId = clickedUser.getAttribute('id');
+        document.getElementById('chatRoomName').textContent = clickedUser.querySelector('.room_name').textContent; // 채팅방 이름 설정
+        // 선택된 사용자의 메시지 알림 제거
+        const roomAlarm = clickedUser.querySelector('.room_alarm');
+        roomAlarm.classList.add('hidden');
+        roomAlarm.textContent = '0';
+    } else {
+        selectedUserId = event.empNo;
+        document.getElementById('chatRoomName').textContent = `${event.fullName} ${event.rankName}님`;
+    }
+    console.log("추가한 사용자 사원 번호: ---------" + selectedUserId);
+    console.log("추가한 사용자 방 이름: ---------" + document.getElementById('chatRoomName').textContent);
+
+    // selectedUserId = clickedUser.getAttribute('id'); // 선택한 사용자id
+
+    chatRoom.classList.remove('hidden'); // 채팅창 활성화
+
+    fetchAndDisplayUserChat().then(); // 사용자 채팅 오픈
+
+    // 서버에 알림 초기화를 요청
+    markMessagesAsRead(selectedUserId);
+}
+
+async function markMessagesAsRead(userId) {
+    // 아이디 넘어가는 값 확인
+    // console.log(JSON.stringify({ senderEmpNo: nickname, recipientEmpNo: userId }));
+
+    await fetch(`/chatrooms/markAsRead`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senderEmpNo: nickname, recipientEmpNo: userId })
+    });
+}
+
+// 채팅창 대화 영역
+function displayMessage(senderEmpNo, chatContent) {
+    const messageContainer = document.createElement('div');
+
+    messageContainer.classList.add('chat_message'); // 메시지 클래스 지정
+
+    if (senderEmpNo === nickname) { // 보낸 사람과 닉네임이 동일하면
+        messageContainer.classList.add('chat_sender'); // 보낸 사람에 발신자 클래스
+    } else {
+        messageContainer.classList.add('chat_receiver'); // 받는 사람에 발신자 클래스
+    }
+
+    const message = document.createElement('p'); // 메시지 내용 담을 요소
+    message.textContent = chatContent; // 메시지 내용
+    messageContainer.appendChild(message);
+    chatArea.appendChild(messageContainer);
+
+    chatArea.scrollTop = chatArea.scrollHeight; // 최신 스크롤 표시
+}
+
+// 사용자 채팅 가져오고 표시
+async function fetchAndDisplayUserChat() {
+    // 사용자 채팅 응답 상수 가져오기
+    const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
+    let userChat = await userChatResponse.json(); // 채팅 응답 보관
+
+    chatArea.innerHTML = ''; // 채팅 영역 비움
+
+    if (userChat.length > 0) {
+        // 채팅 내용 표시
+        userChat.forEach(chat => {
+            displayMessage(chat.senderEmpNo, chat.chatContent);
         });
-    });
-});
 
-// 특정 채팅방 선택 시, 오른쪽에 채팅방 출력
-document.addEventListener('DOMContentLoaded', function () {
-    const chatInput = document.getElementById('chatInput');
-    const sendButton = document.getElementById('sendButton');
-    const chatInputContainer = document.querySelector('.chat_input');
-    // const chatHeader = document.getElementById('chatHeader');
-    // const chatRoomName = document.getElementById('chatRoomName');
-    // const chatRoomPersonnel = document.getElementById('chatRoomPersonnel'); // 인원 수 표시
-    const backButton = document.getElementById('backButton'); // 채팅방 닫기 버튼
+        const latestMessage = userChat[userChat.length - 1]; // 최신 메시지를 가져옴
 
-    // 채팅창 관련
-    document.querySelectorAll('.chat_room').forEach(room => {
-        room.addEventListener('dblclick', function () {
-            // 모든 채팅 내용을 숨김
-            document.querySelectorAll('.chat_content').forEach(chat => {
-                chat.classList.remove('active');
-            });
+        // 선택된 채팅방의 최신 메시지를 room_content에 표시
+        const activeChatRoom = document.getElementById(selectedUserId);
+        activeChatRoom.querySelector('.room_content').textContent = latestMessage.chatContent;
+    }
+}
 
-            // 선택된 채팅방 내용 표시
-            const chatRoomId = `#chatRoom${this.dataset.roomId}`;
-            const selectedChatRoom = document.querySelector(chatRoomId);
-            selectedChatRoom.classList.add('active');
+// 보낸 메시지 처리
+function sendMessage(event) {
+    const messageContent = messageInput.value.trim();
 
-            // 안내 문구 숨기기
-            document.querySelector('.info_text').style.display = 'none';
+    if (messageContent && stompClient) { // 메시지 내용, 클라이언트 존재 확인
+        const chatMessage = { // 메시지 발신자, 수신자, 내용, 시간 변수에 저장
+            senderEmpNo: nickname,
+            recipientEmpNo: selectedUserId,
+            chatContent: messageContent,
+            chatSentTime: new Date()
+        };
+        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage)); // 저장한 메시지 정보 서버로 전달
 
-            // 채팅 입력칸 표시
-            chatInputContainer.classList.add('active');
+        displayMessage(nickname, messageContent); // 표시 메시지 호출: 닉네임, 메시지값 보이기
+        messageInput.value = ''; // 채팅 입력창 초기화
+    }
+    // event.preventDefault(); // 이벤트 전파 방지
+}
 
-            // 채팅 헤드 영역 업데이트 및 표시
-            chatRoomName.textContent = this.querySelector('.room_name').textContent;
-            // chatRoomPersonnel.textContent = `${Math.floor(Math.random() * 100)}`; // 예시: 랜덤 인원 수
-            chatHeader.classList.add('active');
+// 안 읽은 채팅 수 카운트
+function updateUserNotification(senderEmpNo) {
+    const notifiedUser = document.querySelector(`#${senderEmpNo}`);
 
-            // 채팅창 스크롤을 맨 밑으로 이동
-            selectedChatRoom.scrollTop = selectedChatRoom.scrollHeight;
+    if (notifiedUser) {
+        const roomAlarm = notifiedUser.querySelector('.room_alarm');
+        // 현재 알림 숫자 값을 가져오고, 증가
+        let currentCount = parseInt(roomAlarm.textContent) || 0;
 
-            // 채팅 닫기 함수
-            const closeChat = () => {
-                chatHeader.classList.remove('active');
-                selectedChatRoom.classList.remove('active');
-                chatInputContainer.classList.remove('active');
-                document.querySelector('.info_text').style.display = 'flex';
-            };
+        currentCount++;
 
-            // 채팅 닫기 버튼 클릭 시
-            backButton.addEventListener('click', closeChat);
+        roomAlarm.textContent = currentCount.toString(); // 증가된 숫자를 설정
+        roomAlarm.classList.remove('hidden');
+    }
+}
 
+// 로그인 시 읽지 않은 메시지 불러오기
+async function displayUnreadMessages() {
+    const unreadMessagesResponse = await fetch(`/messages/unread?recipientEmpNo=${nickname}`);
+    let unreadMessages = await unreadMessagesResponse.json();
 
-            // ESC 키 눌렀을 때 채팅 닫기
-            document.addEventListener('keydown', function escListener(event) {
-                if (event.key === 'Escape') {
-                    closeChat();
-                    // ESC 키 이벤트 리스너 제거 (메모리 누수 방지)
-                    document.removeEventListener('keydown', escListener);
-                }
-            });
-        });
-    });
+    unreadMessages.forEach(message => {
+        updateUserNotification(message.senderEmpNo); // 안 읽음 채팅 알림
 
-    // 채팅창 전송버튼: 초기 상태에서 버튼을 비활성화
-    sendButton.classList.add('disabled');
-    sendButton.disabled = true; // 버튼 비활성화
-
-    // 채팅창 전송버튼: 입력값 변경 시 버튼 활성화/비활성화 처리
-    chatInput.addEventListener('input', function () {
-        if (chatInput.value.trim() === '') {
-            // 입력값이 없을 때
-            sendButton.classList.add('disabled');
-            sendButton.disabled = true; // 버튼 비활성화
-        } else {
-            // 입력값이 있을 때
-            sendButton.classList.remove('disabled');
-            sendButton.disabled = false; // 버튼 활성화
+        // 메시지를 수신한 사용자가 선택된 사용자이거나 수신자가 나 자신인 경우에만 메시지를 표시
+        if (selectedUserId && selectedUserId === message.senderEmpNo) {
+            displayMessage(message.senderEmpNo, message.chatContent); // 메시지 출력
         }
     });
 
-    // 채팅 입력 후 전송
-    sendButton.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
+}
 
-    // 새 채팅 전송 시, 말풍선 추가
-    function sendMessage() {
-        const activeChat = document.querySelector('.chat_content.active');
-        if (activeChat) {
-            const message = chatInput.value.trim();
-            if (message) {
-                const messageNew = document.createElement('p');
-                messageNew.textContent = message;
-                messageNew.className = 'chat_num chat_to';
-                activeChat.appendChild(messageNew);
-                chatInput.value = '';
+// 수신 메시지 처리
+async function onMessageReceived(payload) {
+    await findAndDisplayConnectedUsers(); // 연결된 사용자 목록 업데이트 및 사용자 연결 확인
 
-                // 마지막 메시지를 room_content에 업데이트
-                if (activeRoomContentElement) {
-                    activeRoomContentElement.textContent = message;
-                }
+    const message = JSON.parse(payload.body);
 
-                // 메시지 전송 후 버튼 비활성화
-                sendButton.classList.add('disabled');
+    // 메시지를 수신한 사용자가 선택된 사용자이거나 수신자가 나 자신인 경우에만 메시지를 표시
+    if (selectedUserId && selectedUserId === message.senderEmpNo) { // 사용자 확인
+        displayMessage(message.senderEmpNo, message.chatContent); // 메시지 출력
+    } else {
+        updateUserNotification(message.senderEmpNo); // 선택된 사용자가 아닌 경우 알림을 증가
+    }
 
-                // 새 메시지가 추가된 후 스크롤을 맨 밑으로 이동
-                activeChat.scrollTop = activeChat.scrollHeight;
-            }
-        }
+    // 선택된 사용자 활성화 처리
+    if (selectedUserId) {
+        document.querySelector(`#${selectedUserId}`).classList.add('active');
+    } else {
+        chatRoom.classList.add('hidden'); // 선택된 사용자가 아니면 채팅방 숨김
+    }
+}
+
+// 채팅 닫기 함수
+function closeChat() {
+    chatRoom.classList.add('hidden'); // 채팅창 비활성화
+    document.querySelector('.info_text').classList.remove('hidden'); // 안내 문구 활성화
+}
+
+// 로그아웃 처리
+function onLogout() {
+    stompClient.send("/app/user.disconnectUser", {}, // 로그아웃 유저 정보 전송
+        JSON.stringify({nickName: nickname, fullName: fullname, status: 'OFFLINE'}) // 오프라인
+    );
+    window.location.reload(); // 페이지 리로드
+}
+
+function onError() {
+    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+    connectingElement.style.color = 'red';
+}
+
+usernameForm.addEventListener('submit', connect, true); // 로그인 폼이 제출되면 소켓 연결
+// 메시지 전송: 클릭 or Enter
+sendButton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
     }
 });
-
-// 채팅창에서 즐찾 버튼 on/off
-document.addEventListener('DOMContentLoaded', function () {
-    const favoriteButton = document.getElementById('favoriteButton');
-    favoriteButton.addEventListener('click', function () {
-        const icon = this.querySelector('i');
-        if (icon.classList.contains('bi-star')) {
-            icon.classList.remove('bi-star');
-            icon.classList.add('bi-star-fill');
-        } else {
-            icon.classList.remove('bi-star-fill');
-            icon.classList.add('bi-star');
-        }
-    });
+// 채팅 닫기: 버튼 클릭 or ESC
+backButton.addEventListener('click', closeChat);
+document.addEventListener('keydown', function escListener(e) {
+    if (e.key === 'Escape') {
+        closeChat();
+        document.removeEventListener('keydown', escListener); // ESC 키 이벤트 리스너 제거 (메모리 누수 방지)
+    }
 });
-
-// 검색 기능
-document.addEventListener('DOMContentLoaded', function () {
-    // 검색 입력
-    const searchInputOrg = document.getElementById('searchInputOrg');
-    const searchInputFavorRoom = document.getElementById('searchInputFavorRoom');
-    const searchInputChatRoom = document.getElementById('searchInputChatRoom');
-
-    searchInputOrg.addEventListener('input', function () { // 검색 입력이 변경될 때마다 실행
-        const filter = this.value.toLowerCase(); // 검색어를 소문자로 변환하여 검색
-
-        <!-- 조직도 필터 -->
-        // 모든 부서 항목 순회
-        document.querySelectorAll('.org_dep_list > li').forEach(dep => {
-            const depName = dep.querySelector('.org_dep').textContent.toLowerCase(); // 현재 부서 이름을 소문자로 변환
-            const empNames = dep.querySelectorAll('.dep_emps_list li'); // 현재 부서의 모든 직원 목록
-
-            let depVisible = depName.includes(filter); // 부서 이름이 검색어를 포함하는지 확인
-            let empVisible = false; //직원 목록이 검색어 포함하는지 여부 추적
-
-            // 직원 필터
-            empNames.forEach(emp => {
-                const empName = emp.textContent.toLowerCase(); // 현재 직원 이름을 소문자로 변환
-                if (empName.includes(filter) || depVisible) { // 직원 이름 or 부서명이 검색어에 포함된 경우
-                    empVisible = true; // 직원 목록 표시
-                    emp.style.display = '';
-                } else { // 검색어에 포함되지 않은 경우, 숨김
-                    emp.style.display = 'none';
-                }
-            });
-
-            // 부서 및 직원 목록 표시 상태 조정
-            if (depVisible || empVisible){ // 부서 이름 or 직원 목록에 일치한 값이 있는 경우
-                dep.style.display = ''; // 부서 표시
-                dep.classList.add('open'); // 부서 항목에 open 클래스 추가하여 펼침 상태로 만듦
-                dep.querySelector('.dep_emps_list').style.maxHeight = dep.querySelector('.dep_emps_list').scrollHeight + 'px'; // 직원 목록의 최대 높이를 설정해, 목록이 보이도록 함
-            }else { // 부서 이름과 직원 목록에 일치한 값이 없는 경우
-                dep.style.display = 'none';
-            }
-
-            // 검색 입력값이 빈 문자열인 경우 부서 접기
-            if (filter === '') {
-                dep.classList.remove('open'); // 부서 항목에서 open 클래스 제거하여 접힘 상태로 만듦
-                dep.querySelector('.dep_emps_list').style.maxHeight = null; // 직원 목록의 최대 높이 초기화
-            }
-        });
-    });
-
-    // 즐겨찾기 목록 필터링
-    searchInputFavorRoom.addEventListener('input', function () {
-        const filter = this.value.toLowerCase();
-
-        document.querySelectorAll('#v-pills-favorites .chat_room').forEach(room => {
-            const roomName = room.querySelector('#v-pills-favorites .room_name').textContent.toLowerCase();
-            room.style.display = roomName.includes(filter) ? '' : 'none';
-        });
-    });
-
-    // 채팅방 목록 필터링
-    searchInputChatRoom.addEventListener('input', function () {
-        const filter = this.value.toLowerCase();
-
-        document.querySelectorAll('#v-pills-chatrooms .chat_room').forEach(room => {
-            const roomName = room.querySelector('#v-pills-chatrooms .room_name').textContent.toLowerCase();
-            room.style.display = roomName.includes(filter) ? '' : 'none';
-        });
-    });
-});
+// logout.addEventListener('click', onLogout, true); // 로그아웃 클릭 시, 로그아웃
+// window.onbeforeunload = () => onLogout(); // 페이지 로드 시, 로그아웃

@@ -45,6 +45,7 @@
     <style>
         /* 테이블 가운데 정렬 */
         #formContainer {
+            flex: 1;
             display: flex;
             justify-content: center;
         }
@@ -52,6 +53,47 @@
         .disabled {
             pointer-events: none;
         }
+
+        /* form-header와 formContainer를 포함하는 컨테이너 */
+        .form-section {
+            display: flex;
+            flex-direction: column; /* 수직 정렬을 위해 flex-direction을 column으로 설정 */
+            gap: 20px; /* 요소 간의 간격을 설정 */
+        }
+
+        /* form-header 스타일 */
+        .form-header {
+            display: flex;
+            flex-direction: column; /* 수직으로 배치 */
+            gap: 10px; /* 라벨과 입력란 사이의 간격 */
+        }
+
+        /* form-group 스타일 */
+        .form-group {
+            display: flex;
+            flex-direction: column; /* 수직으로 배치 */
+        }
+
+        /* 라벨 스타일 */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* 입력란 스타일 */
+        .form-control {
+            width: 100%; /* 입력란의 폭을 100%로 설정 */
+            padding: 10px; /* 입력란의 패딩 */
+            border: 1px solid #ccc; /* 입력란의 테두리 */
+            border-radius: 4px; /* 입력란의 테두리 모서리 둥글게 */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* 수직 정렬을 위해 flex-direction을 column으로 설정 */
+            height: 100vh; /* 화면 전체 높이로 설정 (옵션) */
+            padding: 20px; /* 패딩을 추가하여 여백 확보 (옵션) */
+        }
+
     </style>
 </head>
 <body>
@@ -328,10 +370,10 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a
                 </li>
             </ul>
         </li>
@@ -456,7 +498,18 @@
                             <h3>요청한 결재 문서</h3>
                         </div>
 
-                        <div id="formContainer" class="disabled"><!-- 추가한 속성있습니다 -->
+                        <div class="container">
+                        <div class="form-section">
+                            <div class="form-header">
+                                <div class="form-group">
+                                    <label for="docTitle">제목</label>
+                                    <input type="text" id="docTitle" class="form-control" placeholder="제목을 입력하세요" readonly>
+                                </div>
+                            </div>
+
+                            <div id="formContainer" class="disabled"><!-- 추가한 속성있습니다 -->
+                            </div>
+                        </div>
                         </div>
 
                         <!-- 버튼 추가 -->

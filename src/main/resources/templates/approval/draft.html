@@ -61,6 +61,7 @@
       <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
   </div> -->
+
   <!-- 검색바 끝 -->
 
   <nav class="header-nav ms-auto">
@@ -317,7 +318,7 @@
           <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
         </li>
         <li>
-          <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+          <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
         </li>
         <li>
           <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -452,19 +453,24 @@
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
-                <th data-type="date" data-format="YYYY/DD/MM">작성일</th>
+                <th>저장일</th>
                 <th>양식 종류</th>
-                <th>상태</th>
               </tr>
               </thead>
               <tbody>
+              <tr th:each="document : ${draftDocuments}">
+                <td th:text="${document.docNo}"></td>
+                <td th:text="${document.docTitle}"></td>
+                <td th:text="${document.senderName}"></td>
+                <td th:text="${document.draftDate}"></td>
+                <td th:text="${document.category}"></td>
+              </tr>
               <tr>
                 <td>7</td>
                 <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>14</td>
@@ -472,7 +478,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>15</td>
@@ -480,7 +485,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>16</td>
@@ -488,7 +492,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>17</td>
@@ -496,7 +499,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>18</td>
@@ -504,7 +506,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>19</td>
@@ -512,7 +513,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>20</td>
@@ -520,7 +520,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>21</td>
@@ -528,7 +527,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>22</td>
@@ -536,7 +534,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               <tr>
                 <td>23</td>
@@ -544,7 +541,6 @@
                 <td>이나리</td>
                 <td>2024-07-23</td>
                 <td>지출 결의서</td>
-                <td>임시</td>
               </tr>
               </tbody>
             </table>

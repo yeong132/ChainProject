@@ -32,55 +32,55 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-//    @PostMapping
-//    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-//        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-//    }
+    @PostMapping
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+    }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
-//        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
-//        return ResponseEntity.ok(updatedEmployee);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+        return ResponseEntity.ok(updatedEmployee);
+    }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-//        employeeService.deleteEmployee(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String departmentName,
-//            @RequestParam(required = false) String rankName) {
-//        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
-//        return ResponseEntity.ok(employees);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
-//            @RequestParam int page,
-//            @RequestParam int size) {
-//        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
-//        return ResponseEntity.ok(employeePage);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String rankName) {
+        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
+        return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
+            @RequestParam int page,
+            @RequestParam int size) {
+        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
+        return ResponseEntity.ok(employeePage);
+    }
     @GetMapping("/department/{departmentId}")
     public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
         List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
         return ResponseEntity.ok(employees);
     }
 
-//    @GetMapping("/{id}/permissions")
-//    public ResponseEntity<List<PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
-//        List<PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
-//        return ResponseEntity.ok(permissions);
-//    }
-//
-//    @PutMapping("/{id}/permissions")
-//    public ResponseEntity<Void> updateEmployeePermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
-//        employeeService.updateEmployeePermissions(id, permissionIds);
-//        return ResponseEntity.noContent().build();
-//    }
+    @GetMapping("/{id}/permissions")
+    public ResponseEntity<List<PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
+        List<PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
+        return ResponseEntity.ok(permissions);
+    }
+
+    @PutMapping("/{id}/permissions")
+    public ResponseEntity<Void> updateEmployeePermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
+        employeeService.updateEmployeePermissions(id, permissionIds);
+        return ResponseEntity.noContent().build();
+    }
 }
