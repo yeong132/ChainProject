@@ -440,6 +440,7 @@
     <div class="row gy-4 mb-3">
       <div class="col-xl-6">
         <button class="btn btn-primary" onclick="location.href='/report/register'">새 문서 작성</button>
+        <button class="btn btn-success" onclick="location.href='/report/temporary'">임시 보관함</button>
       </div>
     </div>
 
@@ -476,39 +477,6 @@
       </div>
     </section>
 
-    <!-- 임시 보관 문서 목록 -->
-    <section class="section">
-      <div class="row">
-
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">임시 보관 문서 리스트</h5>
-              <table class="table datatable table-hover">
-                <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>카테고리</th>
-                  <th>문서 명</th>
-                  <th>작성자</th>
-                  <th data-type="date" data-format="YYYY/DD/MM">작성일</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="report : ${temporaryReports}"th:onclick="|location.href='@{/report/detail/{reportNo}(reportNo=${report.reportNo})}'|">
-                  <td th:text="${report.reportNo}"></td>
-                  <td th:text="${report.reportCategory}"></td>
-                  <td th:text="${report.reportName}"></td>
-                  <td th:text="${report.reportAuthor}"></td>
-                  <td th:text="${report.reportUploadDate}"></td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- End #main -->

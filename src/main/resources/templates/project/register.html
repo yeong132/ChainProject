@@ -498,13 +498,13 @@
                                 </div>
                             </div>
 
-<!--                            <div class="row mb-3">-->
-<!--                                <label class="col-sm-2 col-form-label">즐겨찾기</label>-->
-<!--                                <div class="col-sm-10">-->
-<!--                                    <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this, event)"></i>-->
-<!--                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" value="false">-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">즐겨찾기</label>
+                                <div class="col-sm-10">
+                                    <i class="bi bi-star star-icon" id="favoriteIcon" onclick="toggleStar(this, event)"></i>
+                                    <input class="form-check-input" id="projectFavorite" name="projectFavorite" type="hidden" value="false">
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">내용</label>
@@ -811,10 +811,8 @@
             participantIds.delete(empNo.toString());
             // 화면에서 해당 항목 제거
             $(this).parent().remove();
-
             // 선택된 참여자 목록 필드 업데이트
             updateParticipantsField();
-
             // 드롭다운 초기화 및 갱신
             refreshEmployeeSelect();
         });
@@ -850,7 +848,7 @@
                 for (const departmentName in departments) {
                     const optgroup = $('<optgroup>').attr('label', departmentName);
                     departments[departmentName].forEach(employee => {
-                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rank}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
+                        const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
                         optgroup.append(option);
                     });
                     employeeSelect.append(optgroup);

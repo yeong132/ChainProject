@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>업무 문서 수정 </title>
+    <title>임시 업무 목록</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
@@ -425,200 +425,68 @@
   </aside>
   <!-- Sidebar 전체 끝 -->
     <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>업무 문서 수정</h1>
+      <h1>임시보관함 목록</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item"><a href="/report/list">Report</a></li>
-          <li class="breadcrumb-item active">Modify</li>
+          <li class="breadcrumb-item active">Report</li>
         </ol>
       </nav>
     </div>
 
+    <div class="row gy-4 mb-3">
+      <div class="col-xl-6">
+        <button class="btn btn-primary" onclick="location.href='/report/register'">새 문서 작성</button>
+        <button class="btn btn-success" onclick="location.href='/report/list'">문서 리스트</button>
+      </div>
+    </div>
+
+    <!-- 임시 보관 문서 목록 -->
     <section class="section">
       <div class="row">
+
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title" th:text="${report.isTemporary == true ? '임시보관함 문서' : '업무 문서'}"></h5>
-
-              <!-- General Form Elements -->
-              <form id="reportForm" th:action="@{/report/modify/{reportNo}(reportNo=${report.reportNo})}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="reportNo" th:value="${report.reportNo}">
-                <input type="hidden" name="isTemporary" id="isTemporary" th:value="${report.isTemporary}">
-                <input id="reportCategory" name="reportCategory" type="hidden" th:value="${report.reportCategory}">
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">문서 종류</label>
-                  <div class="col-sm-10">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" id="meeting" name="docType" type="radio" value="meeting" th:checked="${report.reportCategory == '회의록'}" disabled>
-                      <label class="form-check-label" for="meeting">회의록</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" id="paper" name="docType" type="radio" value="paper" th:checked="${report.reportCategory == '보고서'}" disabled>
-                      <label class="form-check-label" for="paper">보고서</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" id="diary" name="docType" type="radio" value="diary" th:checked="${report.reportCategory == '업무일지'}" disabled>
-                      <label class="form-check-label" for="diary">업무일지</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label" >제목</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="text" name="reportName" th:value="${report.reportName}">
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">작성자</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="text" name="reportAuthor" th:value="${report.reportAuthor}">
-                  </div>
-                </div>
-
-                <div class="row mb-3" th:if="${report.reportCategory == '회의록' || report.reportCategory == '보고서'}">
-                  <label class="col-sm-2 col-form-label" >참여자</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="text" name="reportParticipants" th:value="${report.reportParticipants}">
-                  </div>
-                </div>
-
-                <div class="row mb-3" th:if="${report.reportCategory == '회의록'}">
-                  <label class="col-sm-2 col-form-label">회의 시간</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="text" name="meetingTime" th:value="${report.meetingTime}">
-                  </div>
-                </div>
-
-                <div class="row mb-3" th:if="${report.reportCategory == '회의록'}">
-                  <label class="col-sm-2 col-form-label">회의 장소</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="text" name="meetingRoom" th:value="${report.meetingRoom}">
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">첨부 파일</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" id="formFile" type="file" name="reportFiles">
-                    <input name="existingReportFiles" th:value="${report.reportFiles}" type="hidden">
-                    <a target="_blank" th:href="@{${report.reportFiles}}">기존 파일 보기</a>
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">작성일</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" type="date" name="reportUploadDate" th:value="${report.reportUploadDate}">
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">내용</label>
-                  <div class="col-sm-10">
-                    <textarea id="froala" class="form-control" name="reportContent" th:text="${report.reportContent}"></textarea>
-                  </div>
-                </div>
-              </form><!-- End General Form Elements -->
-
-              <div class="row">
-                <div class="col-sm-12 text-end">
-                  <button class="btn btn-primary me-2" onclick="showModal(event)" type="button">저장</button>
-                  <button class="btn btn-secondary me-2" onclick="showWarningModal(event)" type="button">취소</button>
-                  <button class="btn btn-danger me-2" onclick="showDeleteModal(event)" type="button">삭제</button>
-                  <button class="btn btn-primary" onclick="showRegisterModal(event)" th:if="${report.isTemporary}" type="button">등록</button>
-                </div>
-              </div>
+              <h5 class="card-title">임시 보관 문서 리스트</h5>
+              <table class="table datatable table-hover">
+                <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>카테고리</th>
+                  <th>문서 명</th>
+                  <th>작성자</th>
+                  <th data-type="date" data-format="YYYY/DD/MM">작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="report : ${temporaryReports}"th:onclick="|location.href='@{/report/detail/{reportNo}(reportNo=${report.reportNo})}'|">
+                  <td th:text="${report.reportNo}"></td>
+                  <td th:text="${report.reportCategory}"></td>
+                  <td th:text="${report.reportName}"></td>
+                  <td th:text="${report.reportAuthor}"></td>
+                  <td th:text="${report.reportUploadDate}"></td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+
   <!-- End #main -->
 
 
 
 
-  <!------------------------------------------------------------저장 확인 모달 창 --------------------------------------------------------------------------->
-  <div aria-hidden="true" aria-labelledby="saveModalLabel" class="modal fade" id="saveModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="saveModalLabel">수정 저장 확인</h5>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
-        <div class="modal-body">
-          수정한 내용을 저장하시겠습니까 ?
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-danger" onclick="submitForm()" type="button">예</button>
-          <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!------------------------------------------------------------삭제 확인 모달 창 --------------------------------------------------------------------------->
-  <div aria-hidden="true" aria-labelledby="deleteModalLabel" class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
-        <div class="modal-body">
-          정말 삭제하시겠습니까?
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-danger" onclick="deleteReport()" type="button">예</button>
-          <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!------------------------------------------------------------ 목록 경고 모달 창 --------------------------------------------------------------------------->
-  <div aria-hidden="true" aria-labelledby="WarningModalLabel" class="modal fade" id="WarningModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="WarningModalLabel">경고</h5>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
-        <div class="modal-body">
-          현재 입력한 내용이 저장되지 않을 수 있습니다. 목록으로 돌아가시겠습니까?
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-danger" onclick="WarningAlerts()" type="button">예</button>
-          <button class="btn btn-primary" data-bs-dismiss="modal" type="button">아니요</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!------------------------------------------------------------ 임시보관 등록 모달 창 --------------------------------------------------------------------------->
-  <div aria-hidden="true" aria-labelledby="registerModalLabel" class="modal fade" id="registerModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="registerModalLabel">임시보관함 등록</h5>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
-        <div class="modal-body">
-          임시보관함에서 일반 문서로 등록하시겠습니까?
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" onclick="registerReport()" type="button">예</button>
-          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
+
+    <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
@@ -648,116 +516,6 @@
   </a>
   <!-- 채팅창 끝-->
 
-  <!-- 모달 JS -->
-<script>
-  // Froala Editor 초기화
-  $(document).ready(function() {
-    new FroalaEditor('#froala', {
-      language: 'ko',
-      heightMin: 300,
-      events: {
-        // Froala Editor가 초기화될 때 호출됩니다.
-        'initialized': function () {
-          // textarea의 값을 Froala Editor에 설정합니다.
-          this.html.set($('#froala').text());
-        },
-        // Froala Editor의 내용이 변경될 때 호출됩니다.
-        'contentChanged': function () {
-          // Froala Editor의 내용을 textarea에 설정합니다.
-          $('#froala').val(this.html.get());
-        }
-      }
-    });
-  });
-
-  // 저장 확인 모달 표시 함수
-  function showModal(event) {
-    event.preventDefault();
-    var saveModal = new bootstrap.Modal(document.getElementById('saveModal'));
-    saveModal.show();
-  }
-
-  // 폼 제출 함수
-  function submitForm() {
-    const form = document.getElementById('reportForm');
-    const formData = new FormData(form);
-
-    // 비활성화된 라디오 버튼 값을 설정
-    const selectedDocType = document.querySelector('input[name="docType"]:checked');
-    if (selectedDocType) {
-      formData.append('docType', selectedDocType.value);
-    }
-
-    fetch(form.action, {
-      method: 'POST',
-      body: formData
-    }).then(response => {
-      if (response.ok) {
-        window.location.href = '/report/list';
-      } else {
-        alert('저장에 실패했습니다.');
-      }
-    });
-  }
-
-  // 삭제 확인 모달 표시 함수
-  function showDeleteModal(event) {
-    event.preventDefault();
-    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-  }
-
-  // 보고서 삭제 함수
-  function deleteReport() {
-    const reportNo = document.querySelector('input[name="reportNo"]').value;
-    fetch(`/report/delete/${reportNo}`, {
-      method: 'DELETE'
-    }).then(response => {
-      if (response.ok) {
-        window.location.href = '/report/list';
-      } else {
-        alert('삭제에 실패했습니다.');
-      }
-    });
-  }
-
-  // 경고 모달 표시 함수
-  function showWarningModal(event) {
-    event.preventDefault();
-    var WarningModal = new bootstrap.Modal(document.getElementById('WarningModal'));
-    WarningModal.show();
-  }
-
-  // 경고 알림 처리 함수
-  function WarningAlerts() {
-    var WarningModal = bootstrap.Modal.getInstance(document.getElementById('WarningModal'));
-    WarningModal.hide();
-    WarningModal._element.addEventListener('hidden.bs.modal', function () {
-      window.location.href = '/report/list';
-    });
-  }
-
-  // 등록 확인 모달 표시 함수
-  function showRegisterModal(event) {
-    event.preventDefault();
-    var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-    registerModal.show();
-  }
-
-  // 보고서 등록 함수
-  function registerReport() {
-    document.getElementById('isTemporary').value = 'false';
-    submitForm();
-  }
-
-</script>
-
-
-
-
-
-
-
   <!-- Vendor JS Files -->
   <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -774,11 +532,5 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/wemaked.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!--  조직도 연동 -->
-  <script>
-
-  </script>
-
   </body>
 </html>
