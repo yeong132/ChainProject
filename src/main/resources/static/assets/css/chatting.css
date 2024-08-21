@@ -21,6 +21,50 @@ body {
     /* 모든 자식 요소의 높이를 컨테이너의 높이에 맞춤 */
     align-items: stretch;
 }
+/* 로그인 폼 */
+.user-form {
+    max-width: 400px;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: auto;
+}
+
+.user-form h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.user-form label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.user-form input {
+    width: 100%;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.user-form button {
+    padding: 12px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+/* /end 로그인 폼 */
+
+.hidden {
+    display: none !important;
+}
 
 /* 채팅창 전체 */
 .chat_container {
@@ -86,7 +130,6 @@ body {
 /* ---- 채팅방 생성 모달창 ---- */
 /* 모달 창 배경 */
 .chat_modal {
-    display: none; /* 기본적으로 숨김 */
     position: fixed;
     z-index: 1;
     left: 0;
@@ -211,16 +254,18 @@ body {
 }
 
 /* 조직도-사원 이름 */
-.dep_emps_list li a {
-    /*display: none !important;*/
+.dep_emps_list span {
     padding: 0 !important;
     color: #000000 !important;
     font-weight: 500 !important;
+    margin: 0;
+}
+.dep_emps_list span:hover{
+    cursor: pointer;
 }
 
-/* ----------------------- */
 /* 채팅방 목록 관련 */
-.chat_room {
+.chat_room_item {
     position: relative;
     display: flex;
     height: 70px;
@@ -228,16 +273,17 @@ body {
     background-color: #fff;
 }
 
-.chat_room:hover, .org_dep:hover, .dep_emps_list li:hover {
+.chat_room_item:hover, .org_dep:hover, .dep_emps_list li:hover {
     background-color: #f8f8f8;
+    cursor: pointer;
 }
 
-.chat_room:active, .org_dep:active, .dep_emps_list li:active {
+.chat_room_item:active, .org_dep:active, .dep_emps_list li:active {
     background-color: #d5ecff;
 }
 
 /* 채팅방 알람 표시 */
-.chat_room .chat_alarm {
+.chat_room_item .room_alarm {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -253,7 +299,6 @@ body {
     color: #fff;
 }
 
-
 .room_img {
     width: 50px;
     display: flex;
@@ -267,16 +312,16 @@ body {
     border-radius: 10px;
 }
 
-.chat_room ul {
+.chat_room_item ul {
     padding: 0;
 }
 
-.chat_room ul li {
+.chat_room_item ul li {
     padding: 0 5px 5px 5px;
 }
 
 /* --------채팅방 대화창--------- */
-.chat_chatting_container {
+.chat_room_container {
     background-color: #d5ecff;
     flex: 1; /* 남은 공간 모두 차지 */
     overflow-y: hidden;
@@ -291,11 +336,11 @@ body {
 }
 
 /* 방 선택 전까지 가림 */
-.chat_chatting {
-    display: none;
-}
+/*.chat_room {*/
+/*    display: none;*/
+/*}*/
 
-.chat_chatting.active {
+.chat_room {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -333,7 +378,7 @@ body {
 }
 
 /* 채팅 대화 영역 */
-.chat_content {
+.chat_area {
     display:flex;
     flex-direction:column;
     background-color: #d5ecff;
@@ -343,7 +388,7 @@ body {
 }
 
 /* 채팅 말풍선 */
-.chat_num {
+.chat_message {
     max-width: 80%;
     margin: 5px;
     padding: 10px;
@@ -351,15 +396,19 @@ body {
     background-color: #fff;
 }
 
-/* 받는 사람(로그인한 사용자) */
-.chat_to {
+.chat_message p {
+    margin: 0;
+}
+
+    /* 받는 사람(로그인한 사용자) */
+.chat_sender {
     margin-left: auto; /* 오른쪽 정렬 */
     width: max-content;
     background-color: #d1ffd1;
 }
 
 /* 보내는 사람 */
-.chat_from {
+.chat_receiver {
     margin-right: auto; /* 왼쪽 정렬 */
     text-align: left; /* 텍스트를 왼쪽 정렬 */
     width: max-content;

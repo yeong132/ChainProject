@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.zerock.chain.model.Status;
 
-/* 사원 - 채팅방 매핑 관리*/
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatEmpRoomsDTO {
-    private Long chatRoomNo; // 채팅방 번호
-    private Long empNo; // 참여 사원 번호
+public class ChatUserDTO {
+    private String nickName;
+    private String fullName;
+    private Status status;
 }
