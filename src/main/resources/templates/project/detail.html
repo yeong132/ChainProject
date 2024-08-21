@@ -618,10 +618,10 @@
         let participantIds = new Set();
 
         // 참여자 목록에 사원 추가하는 함수
-        function addParticipant(empNo, empName, empTitle, empDepartment) {
+        function addParticipant(empNo, empName, empRank, empDepartment) {
             const participantItem = $(`
                 <span class="badge bg-secondary me-2">
-                    ${empName} (${empTitle}/${empDepartment})
+                    ${empName} (${empRank}/${empDepartment})
                 </span>
             `);
             participantList.append(participantItem);
@@ -654,7 +654,7 @@
                 employees.forEach(employee => {
                     employeeMap[employee.empNo] = {
                         name: employee.lastName + employee.firstName,
-                        title: employee.title,
+                        rank: employee.rankName,
                         department: employee.departmentName
                     };
                 });
@@ -663,7 +663,7 @@
                 participantsArray.forEach(empNo => {
                     if (employeeMap[empNo]) {
                         participantIds.add(empNo);
-                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].title, employeeMap[empNo].department);
+                        addParticipant(empNo, employeeMap[empNo].name, employeeMap[empNo].rank, employeeMap[empNo].department);
                     } else {
                         console.warn(`Employee with empNo ${empNo} not found.`);
                     }

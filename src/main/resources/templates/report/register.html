@@ -874,7 +874,7 @@
         for (const departmentName in departments) {
           const optgroup = $('<optgroup>').attr('label', departmentName);
           departments[departmentName].forEach(employee => {
-            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-title="${employee.title}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}</option>`;
+            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rankName}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
             optgroup.append(option);
           });
           employeeSelect.append(optgroup);
@@ -886,17 +886,18 @@
     }
 
     // 참여자 목록에 사원을 추가하는 함수
-    function addParticipant(empNo, empName, empTitle, empDepartment) {
+    function addParticipant(empNo, empName, empRank, empDepartment) {
       if (!participantIds.has(empNo)) {
         participantIds.add(empNo);
         const participantItem = $(`
                 <span class="badge bg-secondary me-2">
-                    ${empName} (${empTitle}/${empDepartment})
+                    ${empName} (${empRank}/${empDepartment})
                     <i class="bi bi-x-circle remove-participant" data-emp-no="${empNo}"></i>
                 </span>
             `);
         participantList.append(participantItem);
         updateParticipantsField();
+        loadEmployeesForSelect(); // 목록 갱신
       }
     }
 
@@ -911,10 +912,10 @@
       const selectedOption = $(this).find('option:selected');
       const empNo = selectedOption.val();
       const empName = selectedOption.data('name');
-      const empTitle = selectedOption.data('title');  // 직급
+      const empRank = selectedOption.data('rank');  // 직급
       const empDepartment = selectedOption.data('department');  // 부서
       if (empNo && !participantIds.has(empNo)) {
-        addParticipant(empNo, empName, empTitle, empDepartment);
+        addParticipant(empNo, empName, empRank, empDepartment);
         $(this).val(''); // 선택 초기화
       }
     });
@@ -967,7 +968,7 @@
         for (const departmentName in departments) {
           const optgroup = $('<optgroup>').attr('label', departmentName);
           departments[departmentName].forEach(employee => {
-            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-title="${employee.title}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}</option>`;
+            const option = `<option value="${employee.empNo}" data-name="${employee.lastName}${employee.firstName}" data-rank="${employee.rank}" data-department="${employee.departmentName}">${employee.lastName}${employee.firstName}  (${employee.rankName})</option>`;
             optgroup.append(option);
           });
           employeeSelect.append(optgroup);
@@ -986,7 +987,6 @@
       updateParticipantsField();
     });
   });
-
 </script>
 
 
