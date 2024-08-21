@@ -38,10 +38,4 @@ public class ChatUserController {
         List<User> activeUsers = chatUserService.findActiveChatUsers(nickname);
         return ResponseEntity.ok(activeUsers);
     }
-
-//    // 연결된 사용자 불러오기(로그인 사용자)
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> findConnectedUsers() {
-//        return ResponseEntity.ok(userService.findConnectedUsers());
-//    }
 }

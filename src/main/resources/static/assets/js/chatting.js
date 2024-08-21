@@ -95,11 +95,6 @@ function setupSearchFilters() {
         applyFilter(searchInputOrg, '.org_dep_list > li', '.org_dep', '.dep_emps_list li');
     });
 
-    // 즐겨찾기
-    // searchInputFavorRoom.addEventListener('input', function () {
-    //     applyRoomFilter(searchInputFavorRoom, '#v-pills-favorites .chat_room_item');
-    // });
-
     // 방 목록
     searchInputChatRoom.addEventListener('input', function () {
         applyRoomFilter(searchInputChatRoom, '#v-pills-chatrooms .chat_room_item');

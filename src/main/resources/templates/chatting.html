@@ -47,13 +47,6 @@
                     data-bs-target="#v-pills-organization" type="button" role="tab"
                     aria-controls="v-pills-organization" aria-selected="false"><i class="bi bi-diagram-2-fill"></i>
             </button>
-            <!-- 즐겨찾기 버튼 -->
-<!--            나중에 지울 때, css에도 즐겨찾기 항목 지우기     -->
-<!--            <button class="menu_icon nav-link" id="v-pills-favorites-tab" data-bs-toggle="pill"-->
-<!--                    data-bs-target="#v-pills-favorites" type="button" role="tab"-->
-<!--                    aria-controls="v-pills-favorites" aria-selected="false"><i class="bi bi-star-fill"></i>-->
-<!--            </button>-->
-            <!-- 채팅방 버튼 -->
             <button class="menu_icon nav-link active" id="v-pills-chatrooms-tab" data-bs-toggle="pill"
                     data-bs-target="#v-pills-chatrooms" type="button" role="tab"
                     aria-controls="v-pills-chatrooms" aria-selected="true"><i class="bi bi-chat-dots-fill"></i>
@@ -111,13 +104,6 @@
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-<!--                <li>-->
-<!--                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">-->
-<!--                        <span class="chatroomFavorite">즐겨찾기 등록</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <hr class="dropdown-divider"/>-->
                 </li>
                 <li id="chatRoomExit">
                     <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
@@ -126,92 +112,6 @@
                 </li>
             </ul>
             <!-- /end 드롭 다운 메뉴 -->
-
-            <!-- 즐겨찾기 목록 -->
-            <!--<div class="chat_menu tab-pane" id="v-pills-favorites" role="tabpanel"
-                 aria-labelledby="v-pills-favorites-tab">
-                &lt;!&ndash; 검색 &ndash;&gt;
-                <div class="search">
-                    <input type="text" id="searchInputFavorRoom" placeholder=" 검색">
-                </div>
-                &lt;!&ndash; 방 목록 &ndash;&gt;
-                <div class="chat_list" alt="채팅방 즐겨찾기 목록">
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방1</li>
-                            <li class="room_content">내용1</li>
-                        </ul>
-                        <span class="room_alarm">41</span>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방2</li>
-                            <li class="room_content">내용2</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방3</li>
-                            <li class="room_content">내용3</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방4</li>
-                            <li class="room_content">내용4</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방5</li>
-                            <li class="room_content">내용5</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방6</li>
-                            <li class="room_content">내용6</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방7</li>
-                            <li class="room_content">내용7</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방8</li>
-                            <li class="room_content">내용8</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>-->
-            <!-- /end 즐겨찾기 목록 -->
 
             <!-- 채팅방 목록 -->
             <div class="chat_menu tab-pane show active" id="v-pills-chatrooms" role="tabpanel"
@@ -238,7 +138,6 @@
             <div id="chatHeader" class="chat_header">
                 <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
                 <span id="chatRoomName">Chat Room</span> <!-- 채팅방 이름 -->
-<!--                <button id="favoriteButton"><i class="bi bi-star"></i></button> &lt;!&ndash; 즐겨찾기 버튼 &ndash;&gt;-->
             </div>
             <!-- 채팅 대화 영역 -->
             <div class="chat_area" id="chatArea">

@@ -33,9 +33,5 @@ public class ChatUserService {
     public List<User> findActiveChatUsers(String nickname) {
         return chatRoomRepository.findActiveChatUsersByNickname(nickname);
     }
-
-//    public List<User> findConnectedUsers() {
-//        return repository.findAllByStatus(Status.ONLINE); // DB에서 온라인 상태인 유저 전체 반환
-//    }
 }
 
