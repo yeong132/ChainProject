@@ -15,6 +15,7 @@ import org.zerock.chain.model.SystemNotification;
 import org.zerock.chain.service.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -160,11 +161,17 @@ public class UserController {
 
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
-        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo,"프로젝트");
-        List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo,"공지사항");
-        List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo,"업무보고서");
+        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
+        List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
+        List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
         // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
+
+        // 모든 알림 리스트를 최신순으로 정렬합니다.
+        allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
 
         // 모든 알림에 시스템 알림을 추가합니다.
         model.addAttribute("allNotifications", allNotifications);
@@ -172,9 +179,9 @@ public class UserController {
         model.addAttribute("noticeNotifications", noticeNotifications);
         model.addAttribute("reportNotifications", reportNotifications);
         model.addAttribute("systemNotifications", systemNotifications);
-
         return "user/alarm";
     }
+
 
     // 알림 전체 삭제
     @PostMapping("/alarm/deleteAll")
