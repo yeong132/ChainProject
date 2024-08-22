@@ -502,6 +502,18 @@
                         <div class="tab-content pt-2" id="borderedTabContent">
                             <!-- ALL 탭 내용 -->
                             <div aria-labelledby="all-tab" class="tab-pane fade show active" id="all" role="tabpanel">
+                                <div class="alert alert-dismissible fade show"
+                                                                                                                           role="alert" th:each="systemNotification : ${systemNotifications}"
+                                                                                                                           th:data-category="${systemNotification.systemCategory}">
+                                <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
+                                <p th:text="${systemNotification.systemTitle}"></p>
+                                <hr>
+                                <p th:text="${systemNotification.systemContent}"></p>
+                                <form method="post" style="display:inline;"
+                                      th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
+                            </div>
                                 <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}">
                                     <p th:text="${notification.notificationType} "></p>
                                     <p th:text=" ${notification.notificationMessage}"></p>

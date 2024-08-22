@@ -15,6 +15,7 @@ import org.zerock.chain.model.SystemNotification;
 import org.zerock.chain.service.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -67,6 +68,10 @@ public class UserController {
     public String getAllQnasAndFaqs(Model model) {
         List<QnaDTO> qnaList = qnaService.getAllQnas();
         List<FavoriteQnaDTO> faqList = favoriteQnaService.getAllFAQs();
+
+        // qnaUploadDate를 기준으로 최신순으로 정렬
+        qnaList.sort(Comparator.comparing(QnaDTO::getQnaUploadDate).reversed());
+//        faqList.sort(Comparator.comparing(FavoriteQnaDTO::getFaqCreatedDate).reversed());
 
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("faqList", faqList);
@@ -148,7 +153,7 @@ public class UserController {
         systemNotification.setSystemCategory(systemCategory);
         systemNotification.setSystemTitle(systemTitle);
         systemNotification.setSystemContent(systemContent);
-        systemNotification.setSystemUploadDate(LocalDate.now());
+        systemNotification.setSystemUploadDate(LocalDateTime.now());
 
         systemNotificationService.saveSystemNotification(systemNotification);
         return "redirect:/user/alarm"; // 작성 후 알림 페이지로 리다이렉트
@@ -172,6 +177,8 @@ public class UserController {
         projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+
+        systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
 
         // 모든 알림에 시스템 알림을 추가합니다.
         model.addAttribute("allNotifications", allNotifications);

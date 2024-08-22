@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "system_notification")
@@ -31,7 +32,7 @@ public class SystemNotification {
     private String systemContent;
 
     @Column(name = "system_upload_date")
-    private LocalDate systemUploadDate;
+    private LocalDateTime systemUploadDate;
 
 
 }
