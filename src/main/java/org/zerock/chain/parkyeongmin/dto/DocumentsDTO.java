@@ -25,6 +25,7 @@ public class DocumentsDTO {
     private String filePath;          // 파일 경로
     private LocalDate reqDate;        // 요청, 저장일
     private LocalDate reReqDate;      // 재요청일
-    private String senderName;        // 엔티티에 없는 부분 sql로 작업할 것 - 걸재문서를 보낸 사람
     private String category;          // 양식 종류
+    private String senderName;        // 엔티티에 없는 부분 - 걸재문서를 보낸 사람
+    private String approversJson;     // 엔티티에 없는 부분 - 결재자 목록을 JSON 형식으로 저장하는 필드
 }

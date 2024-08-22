@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.model.Documents;
-import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 
