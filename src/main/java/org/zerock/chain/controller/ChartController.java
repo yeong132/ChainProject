@@ -13,6 +13,7 @@ import org.zerock.chain.dto.ProjectDTO;
 import org.zerock.chain.service.ChartService;
 import org.zerock.chain.service.ProjectService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -41,6 +42,8 @@ public class ChartController {
     @GetMapping("/OKR")
     public String showOkrCharts(Model model) {
         List<ChartDTO> charts = chartService.getAllCharts();
+        charts.sort(Comparator.comparing(ChartDTO::getChartUploadDate).reversed());
+
         model.addAttribute("charts", charts);
         return "chart/OKR";
     }
@@ -85,6 +88,7 @@ public class ChartController {
     public String showProjectCharts(Model model) {
         // 모든 프로젝트를 가져와서 모델에 추가
         List<ProjectDTO> projectDTOList = projectService.getAllProjects();
+        projectDTOList.sort(Comparator.comparing(ProjectDTO::getUploadDate).reversed());
         model.addAttribute("projects", projectDTOList);
         return "chart/project";
     }

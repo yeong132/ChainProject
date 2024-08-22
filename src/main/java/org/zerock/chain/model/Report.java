@@ -33,8 +33,7 @@ public class Report {
     private String reportAuthor;
 
     @Column(name = "report_upload_date")
-    @Temporal(TemporalType.DATE)
-    private LocalDate reportUploadDate;
+    private LocalDate reportUploadDate = LocalDate.now();
 
     @Column(name = "report_files")
     private String reportFiles;
