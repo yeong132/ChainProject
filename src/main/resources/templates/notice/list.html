@@ -457,8 +457,9 @@
                   <thead>
                   <tr>
                     <th class="icon-cell"></th> <!-- 아이콘 열 -->
-                    <th>문서 명</th>
+                    <th>제목</th>
                     <th>작성자</th>
+                    <th>파일</th>
                     <th data-type="date" data-format="YYYY/DD/MM">작성일</th>
                   </tr>
                   </thead>
@@ -468,6 +469,7 @@
                     <td class="icon-cell"><i class="bi bi-pin-angle-fill"></i></td>
                     <td th:text="${notice.noticeName}"></td>
                     <td th:text="${notice.noticeAuthor}"></td>
+                    <td th:text="${notice.noticeAuthor}"></td>
                     <td th:text="${notice.noticeCreatedDate}"></td>
                   </tr>
 
@@ -475,6 +477,7 @@
                   <tr th:each="notice : ${notices}" th:if="${!notice.noticePinned}" th:onclick="|location.href='@{/notice/detail/{noticeNo}(noticeNo=${notice.noticeNo})}'|" class="listTb">
                     <td class="icon-cell"></td>
                     <td th:text="${notice.noticeName}"></td>
+                    <td th:text="${notice.noticeAuthor}"></td>
                     <td th:text="${notice.noticeAuthor}"></td>
                     <td th:text="${notice.noticeCreatedDate}"></td>
                   </tr>
