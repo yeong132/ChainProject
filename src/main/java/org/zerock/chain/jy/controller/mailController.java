@@ -8,20 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/mail")
 @Log4j2
-public class MailController {
+public class mailController {
 
-/*
-    //메일수신함
+/*    //메일수신함
     @GetMapping("/receive")
     public String mailRecive() {
         return "mail/receive";
-    }
-*/
+    }*/
 
+/*
     //메일즐겨찾기함
     @GetMapping("highlight")
     public String mailHighlight() {
-        return "mail/highlight";
+        return "starred";
     }
 
     //메일중요수신함
@@ -29,6 +28,7 @@ public class MailController {
     public String mailImportant() {
         return "mail/important";
     }
+*/
 
 /*    //메일발신함
     @GetMapping("/send")
@@ -36,49 +36,50 @@ public class MailController {
         return "mail/send";
     }*/
 
-    //메일임시보관함
+/*    //메일임시보관함
     @GetMapping("/temporaryStorage")
     public String mailTemporaryStorage() {
-        return "mail/temporaryStorage";
-    }
+        return "draftsList";
+    }*/
 
-    /*//메일 휴지통
+/*    //메일 휴지통
     @GetMapping("/trash")
     public String mailTrash() {
         return "mail/trash";
-    }
-*/
+    }*/
 
+/*
     //내게 쓴 메일함
     @GetMapping("/receivetome")
     public String mailReicevetome() {
-        return "mail/receivetome";
-    }
+        return "myself";
+    }*/
 
 
-   /* //메일쓰기 작성함
+/*    //메일쓰기 작성함
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
-    }
-*/
+    }*/
 
+/*
     //내게쓰기 작성함
     @GetMapping("/composetome")
     public String mailComposetome() {
         return "mail/composetome";
-    }
+    }*/
 
     //메일 송신 완료 화면
     @GetMapping("/complete")
     public String mailComplete() {
         return "mail/complete";
     }
-/*    //메일 파일 읽기
+
+    //메일 파일 읽기
     @GetMapping("/mailRead")
     public String mailRead() {
         return "mail/mailRead";
-    }*/
+    }
 
 
 }

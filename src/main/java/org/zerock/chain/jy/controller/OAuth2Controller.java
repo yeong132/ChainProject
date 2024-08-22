@@ -36,17 +36,19 @@ public class OAuth2Controller {
 
         flow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, JSON_FACTORY, clientSecrets,
-                // OAuth2 권한 부여하기
+                // 모든 OAuth 범위를 추가
                 Arrays.asList(
                         GmailScopes.GMAIL_READONLY,
                         GmailScopes.GMAIL_MODIFY,
                         GmailScopes.GMAIL_METADATA,
                         GmailScopes.GMAIL_COMPOSE,
+                        GmailScopes.GMAIL_INSERT,
                         "https://mail.google.com/")
         )
                 .setAccessType("offline")
                 .build();
     }
+
 
     @GetMapping("/oauth2/authorize")
     public String authorize() {
