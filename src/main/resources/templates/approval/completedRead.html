@@ -51,8 +51,147 @@
             justify-content: center;
         }
 
-        .disabled {
-            pointer-events: none;
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            margin: 20px;
+        }
+
+        /* 테이블 스타일 */
+        #formContainer table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #formContainer table, #formContainer th, #formContainer td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            cursor: default;
+        }
+
+        /* 헤더 셀 스타일 */
+        #formContainer td[colspan="2"], #formContainer td[colspan="3"] {
+            text-align: center;
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+
+        #formContainer td[colspan="6"] {
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        /* 내부 테이블 스타일 */
+        #formContainer table table {
+            width: 100%;
+            margin: 0;
+            border: none;
+        }
+
+        #formContainer table table td {
+            border: 1px solid #ddd;
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+
+        /* 입력 필드 스타일 */
+        #formContainer input[type="text"],
+        #formContainer input[type="date"],
+        #formContainer input[type="time"],
+        #formContainer input[type="file"],
+        #formContainer textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #formContainer textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        #formContainer input[type="file"] {
+            padding: 5px;
+        }
+
+        /* 라벨 스타일 */
+        #formContainer td:first-child {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            width: 150px;
+        }
+
+        /* 특정 셀 스타일 */
+        #formContainer td[colspan="6"]:not(:first-child) {
+            text-align: left;
+        }
+
+        #formContainer td[colspan="6"] input[type="file"] {
+            width: auto;
+        }
+
+        /* 날짜, 시간 스타일 */
+        #formContainer input[type="date"],
+        #formContainer input[type="time"] {
+            display: inline-block;
+            width: auto;
+        }
+
+        #formContainer input[type="time"] + input[type="time"] {
+            margin-left: 10px;
+        }
+
+        #approverContainer {
+            display: flex;
+            width: 100%;
+            border: 1px solid #ddd; /* 테두리 */
+        }
+
+        /* 개별 셀 스타일 */
+        #approverContainer > div {
+            flex: 1; /* 비율을 동일하게 */
+            padding: 10px; /* 패딩 추가 */
+            border-left: 1px solid #ddd; /* 왼쪽 테두리 */
+            background-color: #f2f2f2; /* 배경색 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+            box-sizing: border-box; /* 패딩 포함한 박스 크기 계산 */
+        }
+
+        /* 첫 번째 셀의 왼쪽 테두리 없애기 */
+        #approverContainer > div:first-child {
+            border-left: none;
+        }
+
+        /* 두 번째 행의 스타일 */
+        #approverContainerNumbers {
+            display: flex;
+            width: 100%;
+            border-top: none; /* 위쪽 테두리 없애기 */
+        }
+
+        #approverContainerNumbers > div {
+            flex: 1;
+            padding: 10px;
+            border-left: 1px solid #ddd;
+            background-color: #ffffff; /* 두 번째 행은 흰색 배경 */
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* 첫 번째 셀의 왼쪽 테두리 없애기 */
+        #approverContainerNumbers > div:first-child {
+            border-left: none;
+        }
+
+        /* 전체 표에 대한 테두리 스타일 추가 */
+        #approverContainer, #approverContainerNumbers {
+            border-bottom: 1px solid #ddd; /* 전체 표 아래 테두리 */
         }
     </style>
 </head>
@@ -349,10 +488,13 @@
             </a>
             <ul id="sign-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
                 </li>
                 <li>
-                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/draft" class="active"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
                 </li>
             </ul>
         </li>
@@ -415,7 +557,7 @@
                     <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
@@ -442,7 +584,7 @@
 <!-- 여기서부터 메인에서 추가한 부분입니다! -->
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>완료된 결재 문서</h1>
+        <h1>전자결재 완료</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -460,11 +602,66 @@
                             <h3>완료된 결재 문서</h3>
                         </div>
 
-                        <div id="formContainer" class="disabled"><!-- 추가한 속성있습니다 -->
+                        <div id="formContainer">
+                            <table>
+                                <tr>
+                                    <!-- 첫 번째 셀: 연장근무신청서 -->
+                                    <td style="text-align: left; background-color: #FFFFFF;">연장근무신청서</td>
+
+                                    <!-- 두 번째 셀: 빈 공간 -->
+                                    <td colspan="2" style="background-color: #ffffff;"></td> <!-- 빈 흰색 공간 -->
+                                    <!-- 세 번째 셀: 결재자 정보 -->
+                                    <td colspan="3" style="text-align: right; padding: 0;">
+                                        <div id="approverContainer" style="display: flex; width: 100%;">
+                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">카리나 사원</div>
+                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">이사용 사원</div>
+                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">박라면 부사장</div>
+                                        </div>
+                                        <div id="approverContainerNumbers" style="display: flex; width: 100%;">
+                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">1</div>
+                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">2</div>
+                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">3</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color: #f2f2f2; width: 16.67%;">부서</td>
+                                    <td style="background-color: #ffffff; width: 16.67%;">업무지원</td>
+                                    <td style="background-color: #f2f2f2; width: 16.67%; font-weight: bold;">기안자</td>
+                                    <td style="background-color: #ffffff; width: 16.67%;">김희재</td>
+                                    <td style="background-color: #f2f2f2; width: 16.67%; font-weight: bold;">직급</td>
+                                    <td style="background-color: #ffffff; width: 16.67%;">부장</td>
+                                </tr>
+                                <tr>
+                                    <td>작성일</td>
+                                    <td colspan="5">2023-08-22</td>
+                                </tr>
+                                <tr>
+                                    <td>근무일시</td>
+                                    <td colspan="5">
+                                        <input type="date" placeholder="연도-월-일" readonly disabled>
+                                        <input type="time" readonly disabled>
+                                        ~
+                                        <input type="time" readonly disabled>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>제목</td>
+                                    <td colspan="5"><input type="text" readonly disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>내용</td>
+                                    <td colspan="5"><textarea readonly disabled></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>첨부파일</td>
+                                    <td colspan="5"><input type="file" disabled></td>
+                                </tr>
+                            </table>
                         </div>
 
                         <!-- 버튼 추가 -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end"><!-- 버튼의 오른쪽 정렬 -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3"><!-- 버튼의 오른쪽 정렬 -->
                             <button id="backBtn" class="btn btn-secondary">돌아가기</button>
                         </div>
 
@@ -519,21 +716,7 @@
 
 <script><!-- 추가한 스크립트입니다! -->
 document.addEventListener("DOMContentLoaded", function() {
-    // 'generalApproval.html' 파일 로드
-    fetch('../approval/generalApproval')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            // 'generalApproval.html'의 내용을 'formContainer'에 삽입
-            document.getElementById('formContainer').innerHTML = data;
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+
 });
 
 backBtn.addEventListener('click', () => {

@@ -41,11 +41,11 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 ======================================================== -->
-  <title>전자 결재 임시 문서함</title>
+  <title>임시 문서함</title>
 </head>
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header id="vheader" class="header fixed-top d-flex align-items-center">
   <div class="d-flex align-items-center justify-content-between">
     <a href="/" class="logo d-flex align-items-center">
       <img src="/assets/img/logo.png" alt=""/>
@@ -335,7 +335,10 @@
       </a>
       <ul id="sign-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+          <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
+        </li>
+        <li>
+          <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
         </li>
         <li>
           <a href="/approval/draft" class="active"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
@@ -401,7 +404,7 @@
           <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
         </li>
         <li>
-          <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+          <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
         </li>
         <li>
           <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
@@ -460,9 +463,12 @@
               <tbody>
               <tr th:each="document : ${draftDocuments}">
                 <td th:text="${document.docNo}"></td>
-                <td th:text="${document.docTitle}"></td>
+                <td>
+                  <a th:href="@{/approval/draftRead/{docNo}(docNo=${document.docNo}, category=${document.category})}"
+                     th:text="${document.docTitle}"></a>
+                </td>
                 <td th:text="${document.senderName}"></td>
-                <td th:text="${document.draftDate}"></td>
+                <td th:text="${document.reqDate}"></td>
                 <td th:text="${document.category}"></td>
               </tr>
               <tr>
@@ -580,6 +586,16 @@
   <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
 <!-- 채팅창 끝-->
+
+<script><!-- 추가한 스크립트 코드 입니다-->
+  document.addEventListener("DOMContentLoaded", function() {
+    const saveStatus = sessionStorage.getItem('saveStatus');
+    if (saveStatus) {
+      alert(saveStatus);  // 임시저장 메시지 표시
+      sessionStorage.removeItem('saveStatus');  // 메시지 표시 후 삭제
+    }
+  });
+</script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
