@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,6 +23,9 @@ public class Todo {
     @Column(name = "todo_no")
     private Long todoNo;
 
+    @Column(name = "emp_no")
+    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+
     @Column(name = "todo_content")
     private String todoContent;
 
@@ -34,18 +38,8 @@ public class Todo {
     @Column(name = "todo_favorite")
     private boolean todoFavorite;
 
-
-    @Column(name = "todo_created_date", updatable = false)
-    private LocalDateTime todoCreatedDate;
-
-    @PrePersist
-    protected void onCreate() {
-        this.todoCreatedDate = LocalDateTime.now();
-    }
-
-    public String getFormattedTodoCreatedDate() {
-        return this.todoCreatedDate != null ? this.todoCreatedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) : "";
-    }
+    @Column(name = "todo_created_date")
+    private LocalDate todoCreatedDate = LocalDate.now();
 
     public void setTodoStatus(boolean todoStatus) {
         this.todoStatus = todoStatus;
