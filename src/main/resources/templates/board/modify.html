@@ -451,6 +451,7 @@
                 <!-- General Form Elements -->
                 <form id="boardForm" method="post" th:action="@{/board/modify/{boardNo}(boardNo=${board.boardNo})}">
                   <input name="boardFiles" th:value="${board.boardFiles}" type="hidden">
+                  <input name="boardFiles" th:value="${board.boardLocation}" type="hidden">
 
 
                   <div class="row mb-3">
@@ -482,9 +483,12 @@
                   </div>
 
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" >위치</label>
+                    <label class="col-sm-1 col-form-label">위치</label>
                     <div class="col-sm-11">
-                      <input class="form-control" name="boardLocation" type="text"  th:value="${board.boardLocation}" >
+                      <input class="form-control" id="addressInput" name="addressInput" type="text" placeholder="주소를 입력하세요">
+                      <button type="button" class="btn btn-primary mt-2" onclick="searchAddress()">주소 검색</button>
+                      <input type="hidden" id="boardLocation" name="boardLocation" th:value="${board.boardLocation}">
+                      <div id="map" style="width:100%;height:300px;" class="mt-2"></div>
                     </div>
                   </div>
 
@@ -507,11 +511,12 @@
                     </div>
                   </div>
 
+
                   <div class="offset-sm-0">
                     <div class="col-sm-5">
                       <button class="btn btn-primary" type="button" onclick="showModal()">저장 </button>
-                      <button  type="button" class="btn btn-primary" onclick="showWarningModal()">목록</button>
-                      <button  type="button" class="btn btn-primary" onclick="showConfirmationModal()">삭제</button>
+                      <button type="button" class="btn btn-primary" onclick="showWarningModal()">목록</button>
+                      <button type="button" class="btn btn-primary" onclick="showConfirmationModal()">삭제</button>
                     </div>
                   </div>
                 </form>
@@ -705,5 +710,82 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/wemaked.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--지도 조회 및 등록 -->
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=12766682e96936ae9bd65d1f5a308dd8&libraries=services"></script>
+  <script>
+    var mapContainer = document.getElementById('map');
+    var map, marker;
+    let options;
+
+    // boardLocation 값이 존재하는 경우 해당 좌표로 지도 중심 설정
+    const locationValue = /*[[${board.boardLocation}]]*/ '35.8580767172927,128.64125595278'; // 예시 좌표값
+    if (locationValue) {
+      const coords = locationValue.split(',').map(coord => parseFloat(coord));
+      options = {
+        center: new kakao.maps.LatLng(coords[0], coords[1]), // 지도의 중심좌표.
+        level: 3 // 지도의 확대 레벨
+      };
+    } else {
+      options = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심좌표
+        level: 3
+      };
+    }
+
+    // 지도 생성 및 초기 위치 설정
+    map = new kakao.maps.Map(mapContainer, options);
+
+    // 기존 좌표가 있는 경우 마커 표시
+    if (locationValue) {
+      const coords = locationValue.split(',').map(coord => parseFloat(coord));
+      const markerPosition = new kakao.maps.LatLng(coords[0], coords[1]);
+      marker = new kakao.maps.Marker({
+        position: markerPosition,
+        map: map
+      });
+    }
+
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    function searchAddress() {
+      var address = document.getElementById('addressInput').value;
+      if (!address) {
+        alert('주소를 입력하세요.');
+        return;
+      }
+      geocoder.addressSearch(address, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+
+          // 기존 마커가 있으면 제거
+          if (marker) {
+            marker.setMap(null);
+          }
+
+          // 새로운 마커 생성
+          marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+
+          // 좌표값 갱신
+          document.getElementById('boardLocation').value = result[0].y + ',' + result[0].x;
+        } else {
+          alert('주소를 찾을 수 없습니다.');
+        }
+      });
+    }
+
+    // form 제출 시 주소 입력이 없는 경우 기존 좌표값 유지
+    function onSubmitForm() {
+      var address = document.getElementById('addressInput').value;
+      if (!address) {
+        document.getElementById('boardLocation').value = locationValue; // 기존 좌표값 유지
+      }
+      return true; // 폼 제출을 계속 진행
+    }
+  </script>
   </body>
 </html>
