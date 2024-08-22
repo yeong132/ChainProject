@@ -31,7 +31,7 @@ public class Notification {
     @Column(name = "notification_message")
     private String  notificationMessage;
 
-    @Column(name = "notification_date")
+    @Column(name = "notification_date", insertable = false, updatable = false)
     private LocalDateTime notificationDate;
 
     @Column(name = "is_read")

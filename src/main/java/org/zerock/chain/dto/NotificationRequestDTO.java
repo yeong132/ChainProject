@@ -1,5 +1,7 @@
 package org.zerock.chain.dto;
 
+import jakarta.persistence.Column;
+
 import java.time.LocalDateTime;
 
 public class NotificationRequestDTO {
