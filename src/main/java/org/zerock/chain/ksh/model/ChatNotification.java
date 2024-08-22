@@ -22,10 +22,10 @@ public class ChatNotification {
     private ChatMessage chatMessage;  // chat_message 테이블의 id를 참조
 
     @Column(name = "sender_emp_no")
-    private String senderEmpNo;
+    private Long senderEmpNo; // 발신자의 emp_no
 
     @Column(name = "recipient_emp_no")
-    private String recipientEmpNo;
+    private Long recipientEmpNo; // 수신자의 emp_no
 
     @Column(name = "chat_content")
     private String chatContent;

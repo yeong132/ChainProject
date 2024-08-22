@@ -14,7 +14,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, String
     List<ChatMessage> findByChatNo(String chatNo);
 
     // 읽지 않은 메시지를 조회하기 위한 메서드
-    List<ChatMessage> findByRecipientEmpNoAndIsReadFalse(String recipientEmpNo);
+    List<ChatMessage> findByRecipientEmpNoAndIsReadFalse(Long recipientEmpNo);
 
     // 메시지 읽음 처리하는 쿼리 추가 (Custom Query 필요)
     @Modifying

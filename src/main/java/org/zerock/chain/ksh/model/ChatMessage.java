@@ -24,10 +24,10 @@ public class ChatMessage {
     private String chatNo; // 방
 
     @Column(name = "sender_emp_no")
-    private String senderEmpNo; // 발신자
+    private Long senderEmpNo; // 발신자의 emp_no
 
     @Column(name = "recipient_emp_no")
-    private String recipientEmpNo; // 수신자
+    private Long recipientEmpNo; // 수신자의 emp_no
 
     @ManyToOne
     @JoinColumn(name = "chat_room_no", referencedColumnName = "id")

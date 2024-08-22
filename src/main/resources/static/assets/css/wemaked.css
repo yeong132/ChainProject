@@ -1,4 +1,13 @@
+.chat_open_popup .chat_alarm {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: auto;
+}
 
+.hidden {
+    display: none !important;
+}
 
 /* 별표 아이콘 스타일 */
 .star-icon {

@@ -19,6 +19,7 @@ import java.util.List;
 @Log4j2
 @Controller
 @RequiredArgsConstructor
+//@RequestMapping("/api/chat")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
@@ -27,10 +28,11 @@ public class ChatController {
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
+        // john/queue/messages
 
         // 클라이언트로 알림 전송
         messagingTemplate.convertAndSendToUser(
-                savedMsg.getRecipientEmpNo(), "/queue/messages",
+                String.valueOf(savedMsg.getRecipientEmpNo()), "/queue/messages",
                 ChatNotification.builder() // 채팅 알림
                         .chatMessage(savedMsg)
                         .senderEmpNo(savedMsg.getSenderEmpNo())
@@ -41,14 +43,14 @@ public class ChatController {
     }
 
     @GetMapping("/messages/{senderEmpNo}/{recipientEmpNo}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderEmpNo,
-                                                              @PathVariable String recipientEmpNo) {
+    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable Long senderEmpNo,
+                                                              @PathVariable Long recipientEmpNo) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderEmpNo, recipientEmpNo));
     }
     // 로그인 시 읽지 않은 메시지 불러오기
     @GetMapping("/messages/unread")
-    public ResponseEntity<List<ChatMessage>> getUnreadMessages(@RequestParam String recipientEmpNo) {
+    public ResponseEntity<List<ChatMessage>> getUnreadMessages(@RequestParam Long recipientEmpNo) {
         // unread 메시지 검색 로직 구현
         List<ChatMessage> unreadMessages = chatMessageService.getUnreadMessages(recipientEmpNo);
         return ResponseEntity.ok(unreadMessages);
