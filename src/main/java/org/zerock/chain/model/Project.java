@@ -53,7 +53,7 @@ public class Project {
     private boolean isTemporary;
 
     @Column(name = "upload_date")
-    private LocalDateTime uploadDate;
+    private LocalDateTime uploadDate = LocalDateTime.now();
 
 
     public void setProjectFavorite(boolean projectFavorite) {

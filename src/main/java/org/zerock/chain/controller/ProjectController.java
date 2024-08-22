@@ -28,10 +28,12 @@ public class ProjectController {
     // 프로젝트 전체 목록 조회
     @GetMapping("/history")
     public String historyGET(Model model) {
-        List<ProjectDTO> projects = projectService.getAllProjects();
-        List<ProjectDTO> temporaryProjects = projectService.getTemporaryProjects(); // 임시 보관 프로젝트 조회 추가
+        // 전체 프로젝트를 조회한 후 업로드 날짜(uploadDate) 기준으로 내림차순 정렬
+        List<ProjectDTO> projects = projectService.getAllProjects()
+                .stream()
+                .sorted(Comparator.comparing(ProjectDTO::getUploadDate).reversed())
+                .collect(Collectors.toList());
         model.addAttribute("projects", projects);
-        model.addAttribute("temporaryProjects", temporaryProjects); // 임시 보관 프로젝트 모델에 추가
         return "project/history";
     }
 

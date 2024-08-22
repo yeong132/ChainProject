@@ -24,7 +24,8 @@ public class ProjectRequestDTO {
     private boolean projectFavorite;
     private int projectProgress;
     private boolean isTemporary; // 임시 보관
-    private LocalDateTime uploadDate;
+    private LocalDateTime uploadDate = LocalDateTime.now();
+
 
 
     public void setIsTemporary(boolean isTemporary) {

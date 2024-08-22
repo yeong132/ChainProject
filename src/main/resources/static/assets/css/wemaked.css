@@ -1,3 +1,10 @@
+/*테이블 내에 임시보관 괄호 표시 */
+.temporary-text {
+    color: #bebdbd; /* 텍스트 색상을 빨간색으로 */
+    font-weight: bold; /* 텍스트를 굵게 */
+    margin-left: 5px; /* 프로젝트 이름과 간격을 추가 */
+/*    float: right; 텍스트를 오른쪽으로 정렬 */
+}
 
 
 /* 별표 아이콘 스타일 */

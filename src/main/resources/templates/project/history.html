@@ -456,42 +456,49 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">프로젝트 목록</h5>
-                        <table class="table datatable table-hover">
+                        <table class="table table-hover datatable" id="dataTable">
                             <thead>
-                            <tr>
-                                <th>프로젝트 이름</th>
+                            <tr id="title-name">
+                                <th>  </th>
+                                <th>프로젝트</th>
                                 <th>진행도</th>
                                 <th>시작일</th>
                                 <th>종료일</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="project : ${projects}"
-                                th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
-                                <td th:text="${project.projectName}"></td>
+                            <tr th:each="project : ${projects}" th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
+                                <td>
+                                    <i th:class="${project.projectFavorite} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"></i>
+                                </td>
+                                <td>
+                                    <span th:text="${project.projectName}"></span>
+                                    <span th:if="${project.isTemporary == true}" class="temporary-text">(임시보관)</span>
+                                </td>
                                 <td th:text="${project.projectProgress + '%'}"></td>
                                 <td th:text="${project.projectStartDate}"></td>
                                 <td th:text="${project.projectEndDate}"></td>
                             </tr>
                             </tbody>
                         </table>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
 </main>
 <!-- End #main -->
 
 
-<!-- 프로젝트 상세 정보 모달 -->
+<!-- 프로젝트 정보 모달 -->
 <div aria-hidden="true" aria-labelledby="projectDetailsModalLabel" class="modal fade" id="projectDetailsModal"
      tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="projectDetailsModalLabel">프로젝트 상세 정보</h5>
+                <h5 class="modal-title" id="projectDetailsModalLabel">프로젝트 정보</h5>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
@@ -503,6 +510,7 @@
                         id="modalProjectEndDate"></span></p>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-primary" id="detailPageButton">상세보기</button>
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
             </div>
         </div>
@@ -545,12 +553,13 @@
                 // projectContent의 <p> 태그를 제거하고 텍스트만 설정
                 const modalProjectContentElement = document.getElementById('modalProjectContent');
                 let rawContent = data.projectContent;
-
-                // <p>와 </p>를 빈 문자열로 대체
                 rawContent = rawContent.replace(/<\/?p>/g, '');
-
-                // 텍스트를 설정
                 modalProjectContentElement.textContent = rawContent;
+
+                // 수정페이지 버튼의 URL 설정
+                document.getElementById('detailPageButton').onclick = function() {
+                    window.location.href = '/project/detail/' + projectNo;
+                };
 
                 // 모달을 띄우기
                 const modal = new bootstrap.Modal(document.getElementById('projectDetailsModal'));
@@ -560,7 +569,6 @@
                 console.error('Error fetching project details:', error);
             });
     }
-
 </script>
 
 
