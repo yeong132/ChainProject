@@ -31,11 +31,17 @@ public class NoticeController {
     @GetMapping("/list")
     public String getAllNotices(Model model) {
         List<NoticeDTO> notices = noticeService.getAllNotices();
-        // 최신순 정렬
-        notices.sort(Comparator.comparing(NoticeDTO::getNoticeCreatedDate).reversed());
+
+        // 고정값 순서와 최신순으로 정렬
+        notices.sort(Comparator
+                .comparing(NoticeDTO::getNoticePinned).reversed() // 고정된 항목이 먼저 오도록 정렬
+                .thenComparing(Comparator.comparing(NoticeDTO::getNoticeCreatedDate).reversed())); // 그 다음 최신순으로 정렬
+
         model.addAttribute("notices", notices);
         return "notice/list";
     }
+
+
 
     // 개별 공지사항 상세 조회
     @GetMapping("/detail/{noticeNo}")
