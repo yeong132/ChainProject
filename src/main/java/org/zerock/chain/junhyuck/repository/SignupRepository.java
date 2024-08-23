@@ -1,7 +1,7 @@
 package org.zerock.chain.junhyuck.repository;
 
-import org.zerock.chain.junhyuck.model.Signup;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.zerock.chain.junhyuck.model.Signup;
 
 import java.util.Optional;
 
