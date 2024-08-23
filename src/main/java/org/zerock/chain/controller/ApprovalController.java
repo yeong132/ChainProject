@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.domain.DocumentsEntity;
-import org.zerock.chain.dto.*;
 import org.zerock.chain.service.DocumentsService;
 import org.zerock.chain.service.FormDataService;
 import org.zerock.chain.service.FormFieldsService;
@@ -38,7 +37,7 @@ public class ApprovalController {
     @GetMapping("/main")                                         // 보낸 문서함 페이지로 이동
     public String approvalMain(@RequestParam(value = "senderEmpNo", defaultValue = "1") Integer senderEmpNo, Model model) {
         // 보낸 문서함에 대한 문서 목록을 조회
-        List<SentDocumentsDTO> sentDocuments = documentsService.getSentDocuments(senderEmpNo);
+        List<org.zerock.chain.dto.SentDocumentsDTO> sentDocuments = documentsService.getSentDocuments(senderEmpNo);
         model.addAttribute("sentDocuments", sentDocuments);
         return "approval/main";
     }
@@ -46,7 +45,7 @@ public class ApprovalController {
     @GetMapping("/receive")                                      // 받은 문서함 페이지로 이동
     public String approvalReceive(@RequestParam(value = "receiverEmpNo", defaultValue = "1") Integer receiverEmpNo, Model model) {
         // 받은 문서함에 대한 문서 목록을 조회
-        List<ReceiveDocumentsDTO> receivedDocuments = documentsService.getReceivedDocuments(receiverEmpNo);
+        List<org.zerock.chain.dto.ReceiveDocumentsDTO> receivedDocuments = documentsService.getReceivedDocuments(receiverEmpNo);
         log.info(receivedDocuments);
         model.addAttribute("receivedDocuments", receivedDocuments);
         return "approval/receive";
@@ -55,7 +54,7 @@ public class ApprovalController {
     @GetMapping("/draft")                                        // 임시 문서함 페이지로 이동
     public String approvalDraft(Model model) {
         // 임시 문서함에 대한 문서 목록을 조회
-        List<DraftDocumentsDTO> draftDocuments = documentsService.getDraftDocuments();
+        List<org.zerock.chain.dto.DraftDocumentsDTO> draftDocuments = documentsService.getDraftDocuments();
         log.info(draftDocuments);
         model.addAttribute("draftDocuments", draftDocuments);
         return "approval/draft";
@@ -80,7 +79,7 @@ public class ApprovalController {
         model.addAttribute("category", category);
 
         // 추가적으로 필요하면 문서 정보를 조회하여 모델에 추가
-        DocumentsDTO document = documentsService.getDocumentById(docNo);
+        org.zerock.chain.dto.DocumentsDTO document = documentsService.getDocumentById(docNo);
         model.addAttribute("document", document);
         // 파일 파라미터를 모델에 추가
         model.addAttribute("file", file);
@@ -113,7 +112,7 @@ public class ApprovalController {
         model.addAttribute("category", category);
 
         // 양식 정보를 가져옴
-        List<FormFieldsDTO> formFields = formFieldsService.getFormFieldsByCategory(category);
+        List<org.zerock.chain.dto.FormFieldsDTO> formFields = formFieldsService.getFormFieldsByCategory(category);
         model.addAttribute("formFields", formFields);
 
         // 카테고리에 따라 템플릿 이름을 결정
@@ -122,7 +121,7 @@ public class ApprovalController {
     }
 
     @PostMapping("/submit")
-    public String submitForm(@RequestBody SubmitRequest submitRequest) {
+    public String submitForm(@RequestBody org.zerock.chain.dto.SubmitRequest submitRequest) {
 
         DocumentsEntity documentsEntity = new DocumentsEntity();
         documentsEntity.setDocTitle(submitRequest.getDocTitle()); // 제목 설정

@@ -4,8 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.zerock.chain.dto.EmployeeDTO;
-import org.zerock.chain.dto.PermissionDTO;
 import org.zerock.chain.service.EmployeeService;
 
 import java.util.List;
@@ -21,26 +19,26 @@ public class EmployeeController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+    public ResponseEntity<List<org.zerock.chain.dto.EmployeeDTO>> getAllEmployees() {
+        List<org.zerock.chain.dto.EmployeeDTO> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
-        EmployeeDTO employee = employeeService.getEmployeeById(id);
+    public ResponseEntity<org.zerock.chain.dto.EmployeeDTO> getEmployeeById(@PathVariable Long id) {
+        org.zerock.chain.dto.EmployeeDTO employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+    public ResponseEntity<org.zerock.chain.dto.EmployeeDTO> createEmployee(@RequestBody org.zerock.chain.dto.EmployeeDTO employeeDTO) {
+        org.zerock.chain.dto.EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
-        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
+    public ResponseEntity<org.zerock.chain.dto.EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody org.zerock.chain.dto.EmployeeDTO employeeDTO) {
+        org.zerock.chain.dto.EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 
@@ -51,30 +49,30 @@ public class EmployeeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
+    public ResponseEntity<List<org.zerock.chain.dto.EmployeeDTO>> searchEmployees(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) String rankName) {
-        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
+        List<org.zerock.chain.dto.EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping
-    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
+    public ResponseEntity<Page<org.zerock.chain.dto.EmployeeDTO>> getEmployeesPaged(
             @RequestParam int page,
             @RequestParam int size) {
-        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
+        Page<org.zerock.chain.dto.EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
         return ResponseEntity.ok(employeePage);
     }
     @GetMapping("/department/{departmentId}")
-    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
-        List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
+    public ResponseEntity<List<org.zerock.chain.dto.EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
+        List<org.zerock.chain.dto.EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/{id}/permissions")
-    public ResponseEntity<List<PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
-        List<PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
+    public ResponseEntity<List<org.zerock.chain.dto.PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
+        List<org.zerock.chain.dto.PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
         return ResponseEntity.ok(permissions);
     }
 

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.zerock.chain.dto.EmployeeDTO;
 import org.zerock.chain.model.Department;
 import org.zerock.chain.repository.DepartmentRepository;
 import org.zerock.chain.service.EmployeeService;
@@ -29,11 +28,11 @@ public class ChatPageController {
         List<Department> departments = departmentRepository.findAll();
 
         // 부서별로 사원들을 그룹화하여 저장할 맵
-        Map<String, List<EmployeeDTO>> departmentMap = new HashMap<>();
+        Map<String, List<org.zerock.chain.dto.EmployeeDTO>> departmentMap = new HashMap<>();
 
         // 각 부서에 속한 사원들을 가져와서 맵에 추가
         for (Department department : departments) {
-            List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(department.getDmpNo());
+            List<org.zerock.chain.dto.EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(department.getDmpNo());
             departmentMap.put(department.getDmpName(), employees);
         }
 

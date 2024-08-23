@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import org.zerock.chain.model.Department;
 import org.zerock.chain.model.Employee;
-import org.zerock.chain.model.Rank;
+import org.zerock.chain.pse.model.Rank;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,8 +4,6 @@ package org.zerock.chain.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.zerock.chain.dto.DepartmentDTO;
-import org.zerock.chain.dto.EmployeeDTO;
 import org.zerock.chain.model.Department;
 import org.zerock.chain.model.Employee;
 import org.zerock.chain.repository.DepartmentRepository;
@@ -32,10 +30,10 @@ public class DepartmentController {
 
     // 모든 부서 조회
     @GetMapping
-    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
-        List<DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
+    public ResponseEntity<List<org.zerock.chain.dto.DepartmentDTO>> getAllDepartments() {
+        List<org.zerock.chain.dto.DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
                 .map(department -> {
-                    DepartmentDTO dto = new DepartmentDTO();
+                    org.zerock.chain.dto.DepartmentDTO dto = new org.zerock.chain.dto.DepartmentDTO();
                     dto.setDmpNo(department.getDmpNo());
                     dto.setDmpName(department.getDmpName());
                     return dto;
@@ -46,9 +44,9 @@ public class DepartmentController {
 
     // 조직도 데이터를 제공하는 API 엔드포인트
     @GetMapping("/organization")
-    public ResponseEntity<List<DepartmentDTO>> getOrganizationStructure() {
-        List<DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
-                .map(department -> new DepartmentDTO(
+    public ResponseEntity<List<org.zerock.chain.dto.DepartmentDTO>> getOrganizationStructure() {
+        List<org.zerock.chain.dto.DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
+                .map(department -> new org.zerock.chain.dto.DepartmentDTO(
                         department.getDmpNo(),
                         department.getDmpName()
                 ))
@@ -58,8 +56,8 @@ public class DepartmentController {
 
     // 부서별 사원 목록 조회 추가
     @GetMapping("/{departmentId}/employees")
-    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
-        List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
+    public ResponseEntity<List<org.zerock.chain.dto.EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
+        List<org.zerock.chain.dto.EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -68,13 +66,13 @@ public class DepartmentController {
 
     // 부서 추가/수정
     @PostMapping
-    public ResponseEntity<DepartmentDTO> createOrUpdateDepartment(@RequestBody DepartmentDTO departmentDTO) {
+    public ResponseEntity<org.zerock.chain.dto.DepartmentDTO> createOrUpdateDepartment(@RequestBody org.zerock.chain.dto.DepartmentDTO departmentDTO) {
         Department department = new Department();
         department.setDmpNo(departmentDTO.getDmpNo());
         department.setDmpName(departmentDTO.getDmpName());
         Department savedDepartment = departmentRepository.save(department);
 
-        DepartmentDTO savedDepartmentDTO = new DepartmentDTO();
+        org.zerock.chain.dto.DepartmentDTO savedDepartmentDTO = new org.zerock.chain.dto.DepartmentDTO();
         savedDepartmentDTO.setDmpNo(savedDepartment.getDmpNo());
         savedDepartmentDTO.setDmpName(savedDepartment.getDmpName());
 
