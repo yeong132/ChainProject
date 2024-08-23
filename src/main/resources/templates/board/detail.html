@@ -477,12 +477,15 @@
                                 </div>
                             </div>
 
+
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" >위치</label>
+                                <label class="col-sm-1 col-form-label">위치</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text"  th:value="${board.boardLocation}" >
+                                    <input type="hidden" id="boardLocation" name="boardLocation">
+                                    <div id="map" style="width:100%;height:300px;" class="mt-2"></div>
                                 </div>
                             </div>
+
 
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">첨부 파일</label>
@@ -497,12 +500,11 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">내용</label>
+                                <label class="col-sm-1 col-form-label" >내용</label>
                                 <div class="col-sm-11">
-                                    <textarea id="froala"  th:value="${board.boardContent}"></textarea>
+                                    <textarea id="froala" name="boardContent"  th:text="${board.boardContent}"></textarea>
                                 </div>
                             </div>
-
 
                             <div class="offset-sm-0">
                                 <div class="col-sm-5">
@@ -577,5 +579,65 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--에디터 -->
+<script>
+    // Froala Editor 초기화
+    $(document).ready(function() {
+        new FroalaEditor('#froala', {
+            language: 'ko',
+            heightMin: 300,
+            events: {
+                // Froala Editor가 초기화될 때 호출됩니다.
+                'initialized': function () {
+                    // textarea의 값을 Froala Editor에 설정합니다.
+                    this.html.set($('#froala').text());
+                },
+                // Froala Editor의 내용이 변경될 때 호출됩니다.
+                'contentChanged': function () {
+                    // Froala Editor의 내용을 textarea에 설정합니다.
+                    $('#froala').val(this.html.get());
+                }
+            }
+        });
+    });
+</script>
+
+<!-- 지도 출력 및 마커 표시 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=12766682e96936ae9bd65d1f5a308dd8"></script>
+<script>
+    const container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+    let options;
+
+    // boardLocation 값이 존재하는 경우 해당 좌표로 지도 중심 설정
+    const locationValue = /*[[${board.boardLocation}]]*/ '35.8580767172927,128.64125595278'; // 예시 좌표값
+    if (locationValue) {
+        const coords = locationValue.split(',').map(coord => parseFloat(coord));
+        options = {
+            center: new kakao.maps.LatLng(coords[0], coords[1]), // 지도의 중심좌표.
+            level: 3 // 지도의 확대 레벨
+        };
+    } else {
+        options = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 기본 중심좌표
+            level: 3
+        };
+    }
+
+    let map = new kakao.maps.Map(container, options); // 지도 생성 및 객체 리턴
+
+    // 마커 생성
+    if (locationValue) {
+        const coords = locationValue.split(',').map(coord => parseFloat(coord));
+        const markerPosition  = new kakao.maps.LatLng(coords[0], coords[1]);
+        const marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+        marker.setMap(map); // 마커를 지도 위에 표시
+    }
+</script>
+
+
+
 </body>
 </html>

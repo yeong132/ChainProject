@@ -14,6 +14,7 @@ import org.zerock.chain.pse.dto.ReportRequestDTO;
 import org.zerock.chain.pse.service.FileService;
 import org.zerock.chain.pse.service.ReportService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -31,6 +32,7 @@ public class ReportController {
     @GetMapping("/list")
     public String listGET(Model model) {
         List<ReportDTO> reportList = reportService.getAllReports();
+        reportList.sort(Comparator.comparing(ReportDTO::getReportUploadDate).reversed());
         model.addAttribute("reportList", reportList);
         return "report/list";
     }
@@ -39,6 +41,7 @@ public class ReportController {
     @GetMapping("/temporary")
     public String temporaryGET(Model model) {
         List<ReportDTO> temporaryReports = reportService.getTemporaryReports(); // 임시 보관 문서 조회 추가
+        temporaryReports.sort(Comparator.comparing(ReportDTO::getReportUploadDate).reversed());
         model.addAttribute("temporaryReports", temporaryReports); // 임시 보관 문서 모델에 추가
         return "report/temporary";
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -50,6 +51,10 @@ public class Project {
 
     @Column(name = "is_temporary")  // 임시 보관 여부
     private boolean isTemporary;
+
+    @Column(name = "upload_date")
+    private LocalDateTime uploadDate = LocalDateTime.now();
+
 
     public void setProjectFavorite(boolean projectFavorite) {
         this.projectFavorite = projectFavorite;

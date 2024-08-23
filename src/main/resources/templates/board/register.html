@@ -465,7 +465,6 @@
                     <label class="col-sm-1 col-form-label">카테고리</label>
                     <div class="col-sm-11">
                       <select aria-label="Default select example" class="form-select" name="boardCategory" required >
-                        <option value="" disabled selected>카테고리</option>
                         <option value="결혼식">결혼식</option>
                         <option value="장례식">장례식</option>
                         <option value="기타">기타</option>
@@ -483,11 +482,16 @@
                   </div>
 
                   <div class="row mb-3">
-                    <label class="col-sm-1 col-form-label" >위치</label>
+                    <label class="col-sm-1 col-form-label">위치</label>
                     <div class="col-sm-11">
-                      <input class="form-control" name="boardLocation" type="text" placeholder="지도api" >
+                      <input class="form-control" id="addressInput" name="addressInput" type="text" placeholder="주소를 입력하세요">
+                      <button type="button" class="btn btn-primary mt-2" onclick="searchAddress()">주소 검색</button>
+                      <input type="hidden" id="boardLocation" name="boardLocation">
+                      <div id="map" style="width:100%;height:300px;" class="mt-2"></div>
                     </div>
                   </div>
+
+
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label">첨부 파일</label>
                     <div class="col-sm-11">
@@ -620,7 +624,6 @@
     }
   </script>
 
-
   <!-- Vendor JS Files -->
   <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -637,5 +640,37 @@
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/wemaked.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!--지도 -->
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=12766682e96936ae9bd65d1f5a308dd8&libraries=services"></script>
+  <script>
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+      center: new kakao.maps.LatLng(33.450701, 126.570667), // 초기 중심 좌표
+      level: 3
+    };
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    function searchAddress() {
+      var address = document.getElementById('addressInput').value;
+      geocoder.addressSearch(address, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          map.setCenter(coords);
+
+          var marker = new kakao.maps.Marker({
+            map: map,
+            position: coords
+          });
+
+          document.getElementById('boardLocation').value = result[0].y + ',' + result[0].x;
+        } else {
+          alert('주소를 찾을 수 없습니다.');
+        }
+      });
+    }
+  </script>
+
   </body>
 </html>

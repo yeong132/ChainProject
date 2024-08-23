@@ -16,7 +16,7 @@ public class ReportRequestDTO {
     private String reportCategory;
     private String reportContent;
     private String reportAuthor;
-    private LocalDate reportUploadDate;
+    private LocalDate reportUploadDate = LocalDate.now();
     private String reportFiles;
     private boolean isTemporary;
     private String reportParticipants;

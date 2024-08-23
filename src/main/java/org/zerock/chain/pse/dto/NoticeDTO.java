@@ -1,16 +1,18 @@
 package org.zerock.chain.pse.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NoticeDTO {
 
     private Long noticeNo;
-
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
-
+    private Integer empNo;
     private String noticeName;
     private String noticeContent;
     private Boolean noticePinned;

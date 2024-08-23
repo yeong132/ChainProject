@@ -83,9 +83,9 @@
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
+                    <span class="badge btn-secondary badge-number">4</span>
+                </a>
                 <!-- 알림창 아이콘 끝 -->
-
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                     <li class="dropdown-header">
                         4개의 새 알림이 있습니다
@@ -95,64 +95,26 @@
                         <hr class="dropdown-divider"/>
                     </li>
 
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
+                    <!-- 알림 데이터 출력 (최대 4개) -->
+                    <li th:each="notification, iterStat : ${allNotifications}" th:if="${iterStat.count <= 4}">
+                        <div class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h4 th:text="${notification.notificationType}">알림 유형</h4>
+                                <p th:text="${notification.notificationMessage}">알림 내용</p>
+                                <p class="notification-time" th:data-timestamp="${notification.notificationDate}">알림
+                                    시간</p>
+                            </div>
                         </div>
-                    </li>
-
-                    <li>
                         <hr class="dropdown-divider"/>
                     </li>
 
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
                     <li class="dropdown-footer">
                         <a href="/user/alarm">모든 알림 표시</a>
                     </li>
                 </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
             </li>
-            <!-- 알림 전체 끝 -->
+                <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon" href="/user/setting">
@@ -162,12 +124,11 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
-                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
+
+                <!-- 프로필 이미지 항목 끝 --><a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${fullName}">본인 이름</span> </a>
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
@@ -199,7 +160,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -502,102 +463,118 @@
                         <div class="tab-content pt-2" id="borderedTabContent">
                             <!-- ALL 탭 내용 -->
                             <div aria-labelledby="all-tab" class="tab-pane fade show active" id="all" role="tabpanel">
+                                <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:each="systemNotification : ${systemNotifications}">
+                                    <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
+                                    <p th:text="${systemNotification.systemTitle}"></p>
+                                    <hr>
+                                    <p th:text="${systemNotification.systemContent}"></p>
+                                    <span class="notification-time" th:data-timestamp="${systemNotification.systemUploadDate}"></span>
+                                    <form method="post" style="display:inline;" th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
+                                        <button aria-label="Close" class="btn-close" type="submit"></button>
+                                    </form>
+                                </div>
+
                                 <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}">
-                                    <p th:text="${notification.notificationType} "></p>
+                                    <a th:text="${notification.notificationType}"></a>
+                                        <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                    <hr>
                                     <p th:text=" ${notification.notificationMessage}"></p>
-                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
-                                        <button aria-label="Close" class="btn-close" type="submit"></button>
-                                    </form>
+                                        <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                            <button aria-label="Close" class="btn-close" type="submit"></button>
+                                        </form>
                                 </div>
                             </div>
-                            <!-------프로젝트 알림  목록 ----------------------->
-                            <div aria-labelledby="project-tab" class="tab-pane fade" id="project" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}">
-                                    <p th:text="'프로젝트 ' + ${notification.referenceId} "></p>
-                                    <p th:text="${notification.notificationMessage}"></p>
-                                    <!-- 상세보기 버튼 추가 -->
-                                    <a th:href="@{'/project/detail/' + ${notification.referenceId}}" class="btn btn-link">상세보기</a>
-                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
-                                        <button aria-label="Close" class="btn-close" type="submit"></button>
-                                    </form>
-                                </div>
+                        <!-------프로젝트 알림  목록 ----------------------->
+                        <div aria-labelledby="project-tab" class="tab-pane fade" id="project" role="tabpanel">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}">
+                                <a th:text="'프로젝트 ' + ${notification.referenceId} "></a>
+                                <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                <hr>
+                                <a th:text="${notification.notificationMessage}"></a>
+                                <span class="btn btn-link" th:href="@{'/project/detail/' + ${notification.referenceId}}">상세보기</span>
+                                <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
                             </div>
-                            <!------------- 업무 알림 목록 ----------------------->
-                            <div aria-labelledby="payment-tab" class="tab-pane fade" id="payment" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}">
-                                    <p th:text="'업무 '"></p>
-                                    <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
-                                    <!-- 상세보기 버튼 추가 -->
-                                    <a th:href="@{'/report/detail/' + ${notification.referenceId}}" class="btn btn-link">상세보기</a>
-                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
-                                        <button aria-label="Close" class="btn-close" type="submit"></button>
-                                    </form>
-                                </div>
+                        </div>
+                        <!------------- 업무 알림 목록 ----------------------->
+                        <div aria-labelledby="payment-tab" class="tab-pane fade" id="payment" role="tabpanel">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}">
+                                <a th:text="'업무 '"></a>
+                                <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                <hr>
+                                <a th:text="' 알림: ' + ${notification.notificationMessage}"></a>
+                                <span class="btn btn-link" th:href="@{'/report/detail/' + ${notification.referenceId}}">상세보기</span>
+                                <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
                             </div>
-                            <!------------ 공지사항 알림  목록 ----------------------->
-                            <div aria-labelledby="notice-tab" class="tab-pane fade" id="notice" role="tabpanel">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${noticeNotifications}">
-                                    <p th:text="'공지사항 ' + ${notification.referenceId} "></p>
-                                    <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
-                                    <!-- 상세보기 버튼 추가 -->
-                                    <a th:href="@{'/notice/detail/' + ${notification.referenceId}}" class="btn btn-link">상세보기</a>
-                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
-                                        <button aria-label="Close" class="btn-close" type="submit"></button>
-                                    </form>
-                                </div>
+                        </div>
+                        <!------------ 공지사항 알림  목록 ----------------------->
+                        <div aria-labelledby="notice-tab" class="tab-pane fade" id="notice" role="tabpanel">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                 th:each="notification : ${noticeNotifications}">
+                                <a th:text="'공지사항 ' + ${notification.referenceId} "></a>
+                                <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                <hr>
+                                <a th:text="' 알림: ' + ${notification.notificationMessage}"></a>
+                                <span class="btn btn-link" th:href="@{'/notice/detail/' + ${notification.referenceId}}">상세보기</span>
+                                <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
                             </div>
-                            <!-------------- 전자결제 알림 목록 -------------------------------->
-                            <div aria-labelledby="schedule-tab" class="tab-pane fade" id="schedule" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                                    A simple secondary alert—check it out!
-                                    <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
-                                            type="button"></button>
-                                </div>
+                        </div>
+                        <!-------------- 전자결제 알림 목록 -------------------------------->
+                        <div aria-labelledby="schedule-tab" class="tab-pane fade" id="schedule" role="tabpanel">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                A simple secondary alert—check it out!
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
+                                        type="button"></button>
                             </div>
-                            <!--------------- 계정 알림 목록 --------------------->
-                            <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                                    A simple secondary alert—check it out!
-                                    <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
-                                            type="button"></button>
-                                </div>
+                        </div>
+                        <!--------------- 계정 알림 목록 --------------------->
+                        <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
+                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                A simple secondary alert—check it out!
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
+                                        type="button"></button>
                             </div>
-                            <!--------------- 시스템알림  목록 ------------------------>
-                            <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
-                            <div class="alert alert-dismissible fade show"
-                                 role="alert" th:each="systemNotification : ${systemNotifications}"
-                                 th:data-category="${systemNotification.systemCategory}">
+                        </div>
+                        <!--------------- 시스템알림  목록 ------------------------>
+                        <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
+                            <div class="alert alert-dismissible fade show" role="alert"
+                                 th:data-category="${systemNotification.systemCategory}"
+                                 th:each="systemNotification : ${systemNotifications}">
                                 <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
                                 <p th:text="${systemNotification.systemTitle}"></p>
                                 <hr>
                                 <p th:text="${systemNotification.systemContent}"></p>
+                                <p class="notification-time"
+                                   th:data-timestamp="${systemNotification.systemUploadDate}"></p>
                                 <form method="post" style="display:inline;"
                                       th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
                                     <button aria-label="Close" class="btn-close" type="submit"></button>
                                 </form>
                             </div>
-                            </div>
-
                         </div>
+
                     </div>
                 </div>
-
             </div>
+
+        </div>
         </div>
 
-        <form id="deleteAllForm" method="post" action="/user/alarm/deleteAll">
+        <form action="/user/alarm/deleteAll" id="deleteAllForm" method="post">
             <!-- CSRF 토큰 등을 여기에 추가할 수 있습니다. (Spring Security 사용하는 경우) -->
         </form>
     </section>
 </main><!-- End #main -->
 
 
-
-
-
-
 <!---------- 삭제 모달 창 -------------------------->
-<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal" tabindex="-1">
+<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal"
+     tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -691,10 +668,12 @@
         var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         confirmationModal.show();
     }
+
     // 모든 알림을 삭제하는 함수
     function deleteAllAlerts() {
         document.getElementById('deleteAllForm').submit();
     }
+
     // 모달에서 '예'를 클릭했을 때 호출되는 함수
     function deleteAlerts() {
         deleteAllAlerts(); // 알림 삭제 함수 호출
@@ -708,10 +687,10 @@
         modal.show();
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var notifications = document.querySelectorAll('[data-category]');
 
-        notifications.forEach(function(notification) {
+        notifications.forEach(function (notification) {
             var category = notification.getAttribute('data-category');
 
             // 카테고리에 따라 클래스를 설정
@@ -762,5 +741,37 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- 시간 표시 -->
+<script>
+    function timeAgo(timestamp) {
+        const now = new Date();
+        const notificationTime = new Date(timestamp);
+        const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+        const minutes = Math.floor(diffInSeconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return '방금 전';
+        if (minutes < 60) return `${minutes}분 전`;
+        if (hours < 24) return `${hours}시간 전`;
+        return `${days}일 전`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const notificationTimes = document.querySelectorAll('.notification-time');
+
+        notificationTimes.forEach(function (element) {
+            const timestamp = element.getAttribute('data-timestamp');
+            if (timestamp) {
+                element.textContent = timeAgo(new Date(timestamp));
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>

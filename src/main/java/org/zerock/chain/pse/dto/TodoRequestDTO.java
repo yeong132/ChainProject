@@ -1,7 +1,6 @@
 package org.zerock.chain.pse.dto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 import lombok.Data;
 import lombok.Getter;
@@ -17,12 +16,9 @@ public class TodoRequestDTO {
     private String todoCategory;
     private boolean todoStatus;
     private boolean todoFavorite;
+    private LocalDate todoCreatedDate = LocalDate.now();
 
-    private LocalDateTime todoCreatedDate;
 
-    public String getFormattedTodoCreatedDate() {
-        return this.todoCreatedDate != null ? this.todoCreatedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) : "";
-    }
 
     }
 
