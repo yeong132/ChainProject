@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.zerock.chain.pse.model.Rank;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

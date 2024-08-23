@@ -10,6 +10,7 @@ import org.zerock.chain.imjongha.model.Department;
 import org.zerock.chain.imjongha.model.Employee;
 import org.zerock.chain.imjongha.repository.DepartmentRepository;
 import org.zerock.chain.imjongha.repository.EmployeeRepository;
+import org.zerock.chain.imjongha.service.EmployeeService;
 
 import java.util.List;
 import java.util.Map;

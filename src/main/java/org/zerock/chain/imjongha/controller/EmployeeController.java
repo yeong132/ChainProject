@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
 import org.zerock.chain.imjongha.dto.PermissionDTO;
+import org.zerock.chain.imjongha.service.EmployeeService;
 
 import java.util.List;
 

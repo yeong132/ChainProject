@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
 import org.zerock.chain.imjongha.model.Department;
 import org.zerock.chain.imjongha.repository.DepartmentRepository;
+import org.zerock.chain.imjongha.service.EmployeeService;
 
 import java.util.HashMap;
 import java.util.List;
