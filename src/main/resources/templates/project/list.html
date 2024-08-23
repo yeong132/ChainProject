@@ -622,56 +622,74 @@
 
     // 참여자 정보를 표시하는 코드
     $(document).ready(function () {
+        // 참여자 이름을 표시하는 함수
         function displayParticipants(container, participantNames) {
+            // 참여자 수가 2명 이상일 경우
             if (participantNames.length > 2) {
-                const displayedNames = participantNames.slice(0, 2).join(', ');
-                const remainingCount = participantNames.length - 2;
-                container.text(`${displayedNames} 외 ${remainingCount}인`);
+                const displayedNames = participantNames.slice(0, 2).join(', '); // 처음 두 명의 이름을 표시
+                const remainingCount = participantNames.length - 2; // 나머지 인원 수 계산
+                container.text(`${displayedNames} 외 ${remainingCount}인`); // "이름1, 이름2 외 X인" 형태로 표시
             } else {
-                container.text(participantNames.join(', '));
+                container.text(participantNames.join(', ')); // 2명 이하일 경우, 모든 이름을 표시
             }
         }
 
-        function processProjectParticipants(section) {
-            const projectElements = section.find('.project-participants');
-
-            projectElements.each(function () {
-                const participantsData = $(this).data('participants');
-                const participantContainer = $(this);
-
-                if (participantsData) {
-                    let participantsArray = Array.isArray(participantsData) ? participantsData
-                        : participantsData.split(',');
-
-                    $.getJSON('/api/employees/all', function (employees) {
-                        const employeeMap = {};
-                        employees.forEach(employee => {
-                            employeeMap[employee.empNo] = employee.lastName + employee.firstName;
-                        });
-
-                        const participantNames = participantsArray.map(empNo => employeeMap[empNo]).filter(Boolean);
-
-                        if (participantNames.length > 0) {
-                            displayParticipants(participantContainer, participantNames);
-                        } else {
-                            participantContainer.text("참여자 정보 없음");
-                        }
-
-                    }).fail(function () {
-                        console.error("Failed to fetch employee data.");
-                    });
+        // 프로젝트의 참여자 정보를 처리하는 함수
+        $(document).ready(function () {
+            // 참여자 이름을 표시하는 함수
+            function displayParticipants(container, participantNames) {
+                if (participantNames.length > 2) {
+                    const displayedNames = participantNames.slice(0, 2).join(', ');
+                    const remainingCount = participantNames.length - 2;
+                    container.text(`${displayedNames} 외 ${remainingCount}인`);
                 } else {
-                    console.warn("No participants data found for this project.");
+                    container.text(participantNames.join(', '));
                 }
-            });
-        }
+            }
 
-        // 일반 프로젝트 섹션 처리
-        processProjectParticipants($('.section.contact').first());
+            // 프로젝트의 참여자 정보를 처리하는 함수
+            function processProjectParticipants() {
+                const projectElements = $('.project-participants'); // 모든 프로젝트 참여자 요소를 선택
 
-        // 임시 보관 프로젝트 섹션 처리
-        processProjectParticipants($('#TsBox'));
+                projectElements.each(function () {
+                    const participantsData = $(this).data('participants'); // 참여자 데이터 가져오기
+                    const participantContainer = $(this);
+
+                    if (participantsData) {
+                        // participantsData가 문자열인 경우에는 split을 사용하여 배열로 변환
+                        let participantsArray = Array.isArray(participantsData) ? participantsData : participantsData.toString().split(',');
+
+                        // 서버에서 모든 직원 데이터를 가져와서 처리
+                        $.getJSON('/api/employees/all', function (employees) {
+                            const employeeMap = {};
+                            employees.forEach(employee => {
+                                employeeMap[employee.empNo] = employee.lastName + employee.firstName;
+                            });
+
+                            // 참여자 번호를 직원 이름으로 변환
+                            const participantNames = participantsArray.map(empNo => employeeMap[empNo]).filter(Boolean);
+
+                            if (participantNames.length > 0) {
+                                displayParticipants(participantContainer, participantNames);
+                            } else {
+                                participantContainer.text("참여자 정보 없음");
+                            }
+
+                        }).fail(function () {
+                            console.error("Failed to fetch employee data.");
+                        });
+                    } else {
+                        console.warn("No participants data found for this project.");
+                    }
+                });
+            }
+
+            // 모든 프로젝트 요소에 대해 참여자 정보를 처리
+            processProjectParticipants();
+        });
+
     });
+
 
 </script>
 
