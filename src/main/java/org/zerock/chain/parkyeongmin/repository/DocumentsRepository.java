@@ -22,4 +22,10 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 
     @Query("SELECT d.category FROM Documents d WHERE d.docNo = :docNo")
     String findCategoryByDocNo(@Param("docNo") int docNo);
+
+    // 특정 문서 번호와 사원 번호로 받은 문서를 조회하는 메서드
+    List<Documents> findByDocNoAndEmpNo(int docNo, Long empNo);
+
+    // 특정 결재자를 기반으로 받은 문서 목록을 조회하는 메서드
+    List<Documents> findByEmpNo(Long empNo);
 }

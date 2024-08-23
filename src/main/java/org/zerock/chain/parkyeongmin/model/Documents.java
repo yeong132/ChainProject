@@ -19,7 +19,10 @@ public class Documents {
     private Integer docNo;
 
     @Column(name = "logged_in_emp_no", nullable = false)
-    private Long loggedInEmpNo;
+    private Long loggedInEmpNo;         // 로그인한 사원 번호 << 얘가 기안하는 사원 번호
+
+    @Column(name = "receiver_emp_no")
+    private Long receiverEmpNo;         // 현재 문서를 받은 결재자 사원 번호
 
     @Column(name = "doc_title", nullable = false)
     private String docTitle;

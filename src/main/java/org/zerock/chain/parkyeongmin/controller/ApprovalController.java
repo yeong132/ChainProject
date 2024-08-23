@@ -91,21 +91,6 @@ public class ApprovalController {
         return "approval/rejectionRead";
     }
 
-    @GetMapping("/generalApproval")
-    public String approvalGeneralApproval() {
-        return "approval/generalApproval";
-    }
-
-    @GetMapping("/expense")
-    public String approvalExpense() {
-        return "approval/expense";
-    }
-
-    @GetMapping("/overTime")
-    public String approvalOverTime() {
-        return "approval/overTime";
-    }
-
     // 여기서 부터 document 관련 메서드 입니다!!
     @PostMapping("/create-document")
     public ResponseEntity<Map<String, Object>> createDocument(@ModelAttribute DocumentsDTO documentsDTO) {
@@ -191,16 +176,21 @@ public class ApprovalController {
 
     @GetMapping("/getAllEmployees")
     public ResponseEntity<Map<String, Object>> getAllEmployees() {
-        List<EmployeeDTO> employees = userService.getAllEmployees();
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 1인 사용자 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        try {
+            List<EmployeeDTO> employees = userService.getAllEmployees();
+            EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
 
-        // 반환할 데이터를 맵에 추가
-        Map<String, Object> response = new HashMap<>();
-        response.put("employees", employees);
-        response.put("loggedInUser", loggedInUser);
+            // 반환될 데이터를 맵에 추가
+            Map<String, Object> response = new HashMap<>();
+            response.put("employees", employees);
+            response.put("loggedInUser", loggedInUser);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Error occurred in getAllEmployees: ", e);
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping("/getEmployees")

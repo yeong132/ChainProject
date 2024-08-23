@@ -516,9 +516,9 @@
                                 <th>번호</th>
                                 <th>제목</th>
                                 <th>작성자</th>
+                                <th>상태</th>
                                 <th>작성일</th>
                                 <th>양식 종류</th>
-                                <th>상태</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -526,99 +526,33 @@
                                 <td th:text="${document.docNo}"></td>
                                 <td th:text="${document.docTitle}"></td>
                                 <td th:text="${document.senderName}"></td>
+                                <td th:text="${document.docStatus}"></td>
                                 <td th:text="${document.reqDate}"></td>
                                 <td th:text="${document.category}"></td>
                             </tr>
                             <tr>
-                                <td>2</td>
-                                <td><a href="../approval/rejectionRead">안타깝게도 반려된 결재입니다 다시
-                                    올려주세요</a></td>
+                                <td>900</td>
+                                <td><a href="/approval/adminRequest">첫번째 결재자가 받을 문서입니다</a></td>
                                 <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>반려</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td><a href="../approval/completedRead">축하합니다
-                                    결재완료됐습니다!</a></td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>완료</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>보고/시행문</td>
                                 <td>요청</td>
+                                <td>2024-07-23</td>
+                                <td>일반기안서</td>
                             </tr>
                             <tr>
-                                <td>5</td>
-                                <td><a href="../approval/adminRequest">관리자가 결재할 결재
-                                    문서입니다</a></td>
+                                <td>901</td>
+                                <td><a href="/approval/adminRequest">두번째 결재자 or 최종결재자가 받을 결재 문서입니다</a></td>
                                 <td>이나리</td>
+                                <td>진행 중</td>
                                 <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>요청</td>
+                                <td>일반기안서</td>
                             </tr>
                             <tr>
-                                <td>6</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
+                                <td>902</td>
+                                <td>모든 결재 관련자는 결재문서에서 결재 진행 상태를 알 수 있습니다.</td>
                                 <td>이나리</td>
+                                <td>요청 or 진행 중 or 반려 or 완료</td>
                                 <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>출장</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>회계/총무</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>휴가</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>요청</td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                                <td>요청</td>
+                                <td>일반기안서</td>
                             </tr>
                             </tbody>
                         </table><!-- 결재 테이블 부분 종료 -->
