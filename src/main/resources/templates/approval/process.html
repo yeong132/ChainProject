@@ -910,8 +910,9 @@
 </div>
 
 <script><!-- 추가한 스크립트입니다! -->
-document.addEventListener("DOMContentLoaded", function (e) {
-    e.stopPropagation();
+let approvers = [];  // 전역 변수로 선언
+
+document.addEventListener("DOMContentLoaded", function () {
     // 결재선 모달창 설정 부분
     const personSelection = document.getElementById('personSelection');
     const departmentList = document.getElementById('departmentList'); // departmentList의 올바른 참조 확인
@@ -981,10 +982,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
         const fileInput = document.querySelector('input[name="file"]');
         const file = fileInput ? fileInput.files[0] : null;
 
-        // 결재자 정보 수집
-        const approvers = getSelectedApprovers('approverContainerNumbers');
-        console.log('Selected Approvers:', approvers);
-
         const formData = new FormData();
         formData.append('docTitle', docTitle);
         formData.append('docBody', docBody);
@@ -996,9 +993,8 @@ document.addEventListener("DOMContentLoaded", function (e) {
         if (file) {
             formData.append('file', file);  // 파일이 있을 경우에만 추가
         }
-
-        // 결재자 정보를 formData에 추가
-        formData.append('approvers', JSON.stringify(approvers));
+        // 결재 테이블에 저장될 결재자 정보를 formData에 추가
+        formData.append('approversJson', JSON.stringify(approvers));
 
         // 서버에 결재 요청 (문서 생성 및 저장)
         fetch('/approval/create-document', {
@@ -1136,27 +1132,26 @@ document.addEventListener("DOMContentLoaded", function (e) {
             target.removeChild(checkbox.parentElement);
         });
     }
-
-    // 결재선 모달창에서 targetId에 해당하는 리스트에서 순서대로 체크박스가 있는 항목들을 읽어와서
-    // 결재시 필요한 empNo이랑 order값 얻어오는 함수
-    function getSelectedApprovers(targetId) {
-        const approvers = [];
-        const listItems = document.querySelectorAll(`#${targetId} ul li`);
-
-        listItems.forEach((item, index) => {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            if (checkbox) {
-                approvers.push({
-                    empNo: checkbox.value,  // empNo 값
-                    order: index + 1         // 순번 (index는 0부터 시작하므로 +1)
-                });
-            }
-        });
-
-        return approvers;
-    }
 });
 
+// 결재선 모달창에서 targetId에 해당하는 리스트에서 순서대로 체크박스가 있는 항목들을 읽어와서
+// 결재시 필요한 empNo이랑 order값 얻어오는 함수
+function getSelectedApprovers(targetId) {
+    const listItems = document.querySelectorAll(`#${targetId} ul li`);
+
+    listItems.forEach((item, index) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            approvers.push({
+                empNo: checkbox.value,  // empNo 값
+                approvalOrder: index + 1         // 순번 (index는 0부터 시작하므로 +1)
+            });
+        }
+    });
+    return approvers;
+}
+
+// 모달창에 결재선 등록 함수
 function setupApprovalProcess() {
     const approverContainer = document.getElementById('approverContainer');
     const approverContainerNumbers = document.getElementById('approverContainerNumbers');
@@ -1171,6 +1166,10 @@ function setupApprovalProcess() {
     registerBtn.addEventListener('click', function () {
         // 결재선 항목 처리
         const approvalItems = approvalLineModalUl.querySelectorAll('li');
+
+        // 전역 변수 approvers에 empNo이랑 approvalOrder 값 받아서 객체로 집어넣기 {empNo: '1', approvalOrder: 1}
+        approvers = getSelectedApprovers('approvalLineModal');
+        console.log('Selected Approvers:', approvers);
 
         // 기존 approverContainer 내용 제거
         approverContainer.innerHTML = '';

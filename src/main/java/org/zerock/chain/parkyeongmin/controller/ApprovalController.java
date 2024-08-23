@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.parkyeongmin.dto.*;
+import org.zerock.chain.parkyeongmin.model.Approval;
+import org.zerock.chain.parkyeongmin.model.Documents;
+import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
+import org.zerock.chain.parkyeongmin.service.ApprovalService;
 import org.zerock.chain.parkyeongmin.service.DocumentsService;
 import org.zerock.chain.parkyeongmin.service.FormService;
 import org.zerock.chain.parkyeongmin.service.UserService;
@@ -15,6 +19,7 @@ import org.zerock.chain.parkyeongmin.service.UserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -25,14 +30,20 @@ public class ApprovalController {
     private final DocumentsService documentsService;
     private final FormService formService;  // FormService 주입
     private final UserService userService;
+    private final ApprovalService approvalService;
+
+    @Autowired
+    private ApprovalRepository approvalRepository;
 
     @Autowired
     public ApprovalController(DocumentsService documentsService,
                               FormService formService,
-                              UserService userService) {
+                              UserService userService,
+                              ApprovalService approvalService) {
         this.documentsService = documentsService;
         this.formService = formService;
         this.userService = userService;
+        this.approvalService = approvalService;
     }
 
     @GetMapping("/main")  // 보낸 문서함 페이지로 이동
@@ -45,12 +56,22 @@ public class ApprovalController {
 
     @GetMapping("/receive")  // 받은 문서함 페이지로 이동
     public String approvalReceive(Model model) {
-        Long loggedInEmpNo = 1L;
-        List<ReceiveDocumentsDTO> receivedDocuments = documentsService.getReceivedDocuments(loggedInEmpNo);
+        Long loggedInEmpNo = 1L; // 예시로 설정한 로그인된 사용자의 사원 번호
+
+        // 특정 결재자가 연관된 모든 문서를 docNo 기준으로 최신순 조회
+        List<Approval> approvals = approvalRepository.findByEmployeeEmpNoOrderByDocumentsDocNoDesc(loggedInEmpNo);
+
+        // Approval 엔티티에서 DocumentsDTO로 변환
+        List<DocumentsDTO> receivedDocuments = approvals.stream()
+                .map(approval -> convertToDocumentsDTO(approval.getDocuments()))  // Approval 엔티티에서 Documents 엔티티로 접근
+                .collect(Collectors.toList());
+
         log.info(receivedDocuments.toString());
         model.addAttribute("receivedDocuments", receivedDocuments);
         return "approval/receive";
     }
+
+
 
     @GetMapping("/draft")  // 임시 문서함 페이지로 이동
     public String approvalDraft(Model model) {
@@ -101,6 +122,14 @@ public class ApprovalController {
         try {
             // 문서 저장 후 문서 번호 반환
             int docNo = documentsService.saveDocument(documentsDTO);
+            log.info("Saved document with docNo: {}", docNo);
+
+            // 반환된 docNo를 DocumentsDTO에 설정
+            documentsDTO.setDocNo(docNo);
+
+            // 결재 요청 처리
+            approvalService.requestApproval(documentsDTO);
+            log.info("Approval process completed for docNo: {}", docNo);
 
             response.put("docNo", docNo);
             return ResponseEntity.ok(response);
@@ -219,5 +248,21 @@ public class ApprovalController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete document");
         }
+    }
+
+    private DocumentsDTO convertToDocumentsDTO(Documents document) {
+        DocumentsDTO documentsDTO = new DocumentsDTO();
+
+        // Documents 엔티티의 필드를 DocumentsDTO에 복사
+        documentsDTO.setDocNo(document.getDocNo());
+        documentsDTO.setDocTitle(document.getDocTitle());
+        documentsDTO.setDocBody(document.getDocBody());
+//        documentsDTO.setSenderName(document.getSenderName()); // 예시로 sender의 이름을 가져옴
+        documentsDTO.setReqDate(document.getReqDate());
+        documentsDTO.setCategory(document.getCategory());
+        documentsDTO.setDocStatus(document.getDocStatus());
+        // 추가적인 필드가 있으면 여기에 추가
+
+        return documentsDTO;
     }
 }

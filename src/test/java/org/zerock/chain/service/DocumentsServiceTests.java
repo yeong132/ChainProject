@@ -4,6 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.zerock.chain.parkyeongmin.model.Documents;
+import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.service.DocumentsService;
 
 import java.time.LocalDate;
@@ -23,8 +25,6 @@ public class DocumentsServiceTests {
                 .docTitle("Test Document")
                 .docStatus("Requested")
                 .reqDate(LocalDate.now())
-                .senderEmpNo(1)
-                .receiverEmpNo(2)
                 .category("일반기안서")
                 .build();
 
