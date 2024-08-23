@@ -24,6 +24,12 @@
     transform: translateY(50%); /* 정밀한 중앙 조정 */
 }
 
+/*전체 알림 페이지 : 시간 표시 css */
+.notification-time {
+    font-size: 0.85em; /* 글씨 크기를 작게 조정 */
+    color: #6c757d; /* 회색 글씨 */
+    margin-right: 10px; /* 삭제 버튼과 약간의 간격을 줍니다 */
+}
 
 
 /* 별표 아이콘 스타일 */
