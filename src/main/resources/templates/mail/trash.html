@@ -6,7 +6,6 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
     <title>휴지통</title>
-
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
@@ -36,9 +35,7 @@
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
-
     <style>
-
         /* 드롭다운 메뉴 스타일 */
         .dropdown-menu {
             min-width: 8rem; /* 최소 너비 설정 */
@@ -84,112 +81,8 @@
     </div>
     <!-- 로고 끝 -->
 
-    <!-- <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- 검색바 끝 -->
-
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <!-- <li class="nav-item d-block d-lg-none">
-              <a class="nav-link nav-icon search-bar-toggle" href="#">
-                <i class="bi bi-search"></i>
-              </a>
-            </li> -->
-            <!-- 검색 아이콘 끝 -->
-
-            <li class="nav-item dropdown" id="commuteIcon">
-                <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                </div>
-            </li>
-            <!-- 출퇴근 아이콘 끝 -->
-
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
-            <!-- 알림 전체 끝 -->
-
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="/user/setting">
-                    <i class="bi bi-gear"></i>
-                </a>
-                <!-- 환경설정 아이콘 끝 -->
-            </li>
-            <!-- 환경설정 전체 끝 -->
-
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
@@ -252,54 +145,6 @@
 </header>
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
-
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -345,7 +190,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -416,22 +261,22 @@
             </a>
             <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/inbox"> <i class="bi bi-circle"></i><span>받은메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                    <a href="/mail/starred"> <i class="bi bi-circle"></i><span>별표메일함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/myself"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                    <a href="/mail/sent"> <i class="bi bi-circle"></i><span>발신함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/trash" class="active"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
@@ -459,7 +304,6 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
                 <li class="breadcrumb-item active">Trash</li>
             </ol>
         </nav>
@@ -476,8 +320,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-title">
-                        </div>
+                        <div class="card-title"></div>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
                             <thead>
@@ -489,34 +332,40 @@
                                             <button class="btn btn-light dropdown-toggle p-0" type="button"
                                                     id="dropdownMenuButton" data-bs-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="false">
-
                                                 ▼
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#" id="selectAllBtn">전체선택</a>
                                                 <a class="dropdown-item" href="#" id="deselectAllBtn">선택안함</a>
+                                                <a class="dropdown-item text-danger" href="#" id="deleteSelected">선택삭제</a>
                                             </div>
                                         </div>
                                     </div>
                                 </th>
-                                <th>From</th>
-                                <th>Subject</th>
-                                <th>Date</th>
+                                <th>보낸사람</th>
+                                <th>제목</th>
+                                <th>날짜</th>
+                                <th>삭제</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="message : ${messages}" class="listTb"
-                                th:data-message-id="${message.id}"
-                                onclick="rowClick(this)">
+                                th:data-message-id="${message.id}">
                                 <td>
                                     <div class="checkbox-star-container">
-                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
-                                        <i class="bi bi-trash-fill"></i>
+                                        <input type="checkbox" class="form-check-input trash-checkbox" th:value="${message.id}" onclick="event.stopPropagation();">
+                                        <i class="bi bi-trash-fill ms-2"></i>
                                     </div>
                                 </td>
                                 <td th:text="${message.from}">From</td>
                                 <td th:text="${message.subject}">Subject</td>
                                 <td th:text="${message.date}">Date</td>
+                                <td>
+                                    <!-- 개별 삭제 버튼 -->
+                                    <form th:action="@{/mail/trash/delete/{messageId}(messageId=${message.id})}" method="post" onsubmit="return confirm('이 메시지를 영구 삭제하시겠습니까?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -580,20 +429,8 @@
         window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
     }
 
-    function toggleStar(element, event) {
-        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
-        if (element.classList.contains('bi-star')) {
-            element.classList.remove('bi-star');
-            element.classList.add('bi-star-fill');
-        } else {
-            element.classList.remove('bi-star-fill');
-            element.classList.add('bi-star');
-        }
-    }
-
     // 전체 선택 체크박스 기능 구현
     document.getElementById('selectAll').addEventListener('change', function () {
-
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
@@ -602,7 +439,6 @@
 
     // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
     document.getElementById('selectAllBtn').addEventListener('click', function () {
-
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
@@ -611,7 +447,6 @@
     });
 
     document.getElementById('deselectAllBtn').addEventListener('click', function () {
-
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
@@ -619,6 +454,32 @@
         document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
     });
 
+    // 선택된 항목 일괄 삭제 기능
+    document.getElementById('deleteSelected').addEventListener('click', function () {
+        const selected = document.querySelectorAll('.trash-checkbox:checked');
+        if (selected.length === 0) {
+            alert('삭제할 메일을 선택해주세요.');
+            return;
+        }
+
+        if (confirm('선택한 메일을 영구 삭제하시겠습니까?')) {
+            const messageIds = Array.from(selected).map(checkbox => checkbox.value);
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/mail/trash/deleteSelected';
+
+            messageIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'messageIds';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
 </script>
 
 </body>

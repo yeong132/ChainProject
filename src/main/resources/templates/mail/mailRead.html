@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -17,10 +15,7 @@
 
     <!-- 폰트 설정  -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-    <link
-            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-            rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
 
     <!-- Vendor CSS Files -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -37,7 +32,7 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
     <style>
-
+        /* Custom styles */
         .card-title {
             display: flex;
             justify-content: space-between;
@@ -50,7 +45,6 @@
 
         .bi-star-fill {
             color: #ffd700;
-
         }
 
         .btn-custom {
@@ -60,19 +54,11 @@
     </style>
 
     <!-- =======================================================
-<<<<<<< HEAD
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
     * Updated: Apr 20 2024 with Bootstrap v5.3.3
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
-=======
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
->>>>>>> 5c1151928271d1537c00eeedf7dd08ff84f6f8c6
     ======================================================== -->
 </head>
 
@@ -350,7 +336,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -400,21 +386,6 @@
         <!-- 게시판 사이드바 끝 -->
 
         <li class="nav-item">
-
-            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-week"></i>
-                <span>일정</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 일정 사이드바 끝 -->
-
-        <li class="nav-item">
             <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-envelope"></i>
                 <span>이메일</span>
@@ -422,22 +393,22 @@
             </a>
             <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/inbox"> <i class="bi bi-circle"></i><span>받은메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                    <a href="/mail/starred"> <i class="bi bi-circle"></i><span>별표메일함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/myself"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                    <a href="/mail/sent"> <i class="bi bi-circle"></i><span>발신함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
@@ -464,7 +435,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/mail/receive">Email</a></li>
+                <li class="breadcrumb-item"><a href="/mail/inbox">Email</a></li>
                 <li class="breadcrumb-item active">Read</li>
             </ol>
         </nav>
@@ -477,28 +448,14 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
-                                <div>
-                                    <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
-
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary btn-custom me-2 mt-2">삭제</button>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary btn-custom me-2 mt-2">안읽음</button>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary btn-custom me-2 mt-2">이동</button>
-                                </div>
+                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
+                                <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
+                                <button class="btn btn-primary btn-custom me-2 mt-2">삭제</button>
+                                <button class="btn btn-primary btn-custom me-2 mt-2">안읽음</button>
+                                <button class="btn btn-primary btn-custom me-2 mt-2">이동</button>
                             </div>
-                            <div>
-                                <a href="#" class="btn btn-primary btn-custom mt-2">목록</a>
-                            </div>
+                            <a href="#" class="btn btn-primary btn-custom mt-2">목록</a>
                         </div>
-
 
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
@@ -521,27 +478,25 @@
                             </div>
                         </div>
 
-                        <hr>    <!-- 수평선으로  구분 -->
+                        <hr>    <!-- 수평선으로 구분 -->
 
-                        <!-- 메일 내용 -->
-                        <div class="mail-content">
-                            <div th:utext="${messageContent}"></div>
-
+                        <!-- 메일 내용: 원본 HTML 그대로 삽입 -->
+                        <div class="mail-content" th:utext="${messageContent}">
+                            <!-- 이메일 내용이 여기에 삽입됩니다 -->
                         </div>
-                        <!-- 메일 내용 끝 -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- 메일 내용 카드 끝 -->
 </main><!-- End main 끝 -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
+        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
         <!-- All the links in the footer should remain intact. -->
@@ -583,17 +538,8 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    // 별표 토글 기능 구현
-    function toggleStar(element) {
-        if (element.classList.contains('bi-star')) {
-            element.classList.remove('bi-star');
-            element.classList.add('bi-star-fill');
-        } else {
-            element.classList.remove('bi-star-fill');
-            element.classList.add('bi-star');
-        }
-    }
-</script>
+
+
+
 </body>
 </html>
