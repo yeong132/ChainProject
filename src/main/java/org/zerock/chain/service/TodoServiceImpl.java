@@ -81,6 +81,13 @@ public class TodoServiceImpl implements TodoService {
         todoRepository.save(todo);
     }
 
+    // 즐겨찾기 상태 업데이트
+    @Override
+    public void updateTodoFavoriteStatus(Long todoNo, boolean todoFavorite) {
+        Todo todo = todoRepository.findById(todoNo).orElseThrow(() -> new RuntimeException("Todo not found"));
+        todo.setTodoFavoriteStatus(todoFavorite);
+        todoRepository.save(todo);
+    }
 
 }
 

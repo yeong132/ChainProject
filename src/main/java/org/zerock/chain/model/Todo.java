@@ -44,5 +44,8 @@ public class Todo {
     public void setTodoStatus(boolean todoStatus) {
         this.todoStatus = todoStatus;
     }
+    public void setTodoFavoriteStatus(boolean todoFavorite) {
+        this.todoFavorite = todoFavorite;
+    }
 
 }

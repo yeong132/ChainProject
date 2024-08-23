@@ -9,6 +9,8 @@ import org.zerock.chain.dto.TodoRequestDTO;
 import org.zerock.chain.service.TodoService;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,23 +34,42 @@ public class TodoController {
     // 리스트 조회
     @GetMapping("/list")
     public String list(Model model) {
-        List<TodoDTO> todos = todoService.getAllTodos();
+        // 전체 목록을 최신순으로 정렬
+        List<TodoDTO> todos = todoService.getAllTodos().stream()
+                .sorted(Comparator.comparing(TodoDTO::getTodoCreatedDate).reversed())
+                .collect(Collectors.toList());
+
+        // 오늘 날짜만 필터링
+        LocalDate today = LocalDate.now();
+        List<TodoDTO> todayTodos = todos.stream()
+                .filter(todo -> todo.getTodoCreatedDate().equals(today))
+                .collect(Collectors.toList());
+
+        // 즐겨찾기 목록 필터링
         List<TodoDTO> favoriteTodos = todos.stream()
                 .filter(TodoDTO::isTodoFavorite)
                 .collect(Collectors.toList());
+
+        // 완료된 항목 필터링
         List<TodoDTO> completedTodos = todos.stream()
                 .filter(TodoDTO::isTodoStatus)
                 .collect(Collectors.toList());
+
+        // 진행 중인 항목 필터링
         List<TodoDTO> incompleteTodos = todos.stream()
                 .filter(todo -> !todo.isTodoStatus())
                 .collect(Collectors.toList());
 
         model.addAttribute("todos", todos);
+        model.addAttribute("todayTodos", todayTodos);  // 오늘 날짜 항목
         model.addAttribute("favoriteTodos", favoriteTodos);
         model.addAttribute("completedTodos", completedTodos);
         model.addAttribute("incompleteTodos", incompleteTodos);
+
         return "todo/list";
     }
+
+
 
     //  완료 리스트 삭제
     @GetMapping("/deleteCompleted")
@@ -63,5 +84,13 @@ public class TodoController {
         todoService.updateTodoStatus(todoNo, todoStatus);
         return "redirect:/todo/list";
     }
+
+    // 즐겨찾기 상태 업데이트
+    @PostMapping("/updateFavoriteStatus")
+    public String updateFavoriteStatus(@RequestParam("todoNo") Long todoNo, @RequestParam("todoFavorite") boolean todoFavorite) {
+        todoService.updateTodoFavoriteStatus(todoNo, todoFavorite);
+        return "redirect:/todo/list";
+    }
+
 
 }

@@ -18,7 +18,8 @@ public class TodoRequestDTO {
     private String todoCategory;
     private boolean todoStatus;
     private boolean todoFavorite;
-    private LocalDate todoCreatedDate;
+    private LocalDate todoCreatedDate = LocalDate.now();
+
 
 
     }

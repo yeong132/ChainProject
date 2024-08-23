@@ -13,4 +13,7 @@ public interface TodoService {
     List<TodoDTO> getIncompleteTodos(); // 미완료
     void updateTodoStatus(Long todoNo, boolean todoStatus); // 완료여부 상태 업데이트
     void deleteCompletedTodos(); // 완료항목 삭제
-}
+    void updateTodoFavoriteStatus(Long todoNo, boolean todoFavorite); // 즐겨찾기 상태 업데이트
+    }
+
+

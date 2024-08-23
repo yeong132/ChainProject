@@ -440,12 +440,9 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-2-5" th:each="project : ${projects}" th:if="${!project.isTemporary}">
-                            <div class="info-box card" style="cursor: pointer" onclick="handleCardClick(event)"
-                                 th:data-url="@{'/project/detail/' + ${project.projectNo}}">
+                            <div class="info-box card" style="cursor: pointer" onclick="handleCardClick(event)" th:data-url="@{'/project/detail/' + ${project.projectNo}}">
                                 <form method="post" th:action="@{/project/toggleFavorite}">
-                                    <i class="bi star-icon right-align-block"
-                                       onclick="event.stopPropagation(); this.closest('form').submit()"
-                                       th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <i class="bi star-icon right-align-block" onclick="event.stopPropagation(); this.closest('form').submit()" th:classappend="${project.projectFavorite} ? 'bi-star-fill' : 'bi-star'"></i>
                                     <input name="projectNo" th:value="${project.projectNo}" type="hidden"/>
                                     <input name="projectFavorite" th:value="${!project.projectFavorite}" type="hidden"/>
                                 </form>
