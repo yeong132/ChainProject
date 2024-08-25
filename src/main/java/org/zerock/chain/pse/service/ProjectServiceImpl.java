@@ -30,7 +30,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final ModelMapper modelMapper;
 
     @Override   // 프로젝트 생성 등록 메서드
-
     public Long register(ProjectDTO projectDTO) {
         log.info("projectDTO ==" + projectDTO);
         Project project = modelMapper.map(projectDTO, Project.class);
