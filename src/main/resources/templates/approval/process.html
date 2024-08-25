@@ -668,13 +668,13 @@
       </a>
       <ul id="sign-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
           <li>
-              <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
+              <a href="/approval/main" class="active"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
           </li>
           <li>
               <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
           </li>
           <li>
-              <a href="/approval/draft" class="active"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+              <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
           </li>
       </ul>
     </li>
@@ -1144,7 +1144,7 @@ function getSelectedApprovers(targetId) {
         if (checkbox) {
             approvers.push({
                 empNo: checkbox.value,  // empNo 값
-                approvalOrder: index + 1         // 순번 (index는 0부터 시작하므로 +1)
+                approvalOrder: index + 1  // 순번 (index는 0부터 시작하므로 +1)
             });
         }
     });

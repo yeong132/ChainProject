@@ -21,6 +21,15 @@ public class Documents {
     @Column(name = "logged_in_emp_no", nullable = false)
     private Long loggedInEmpNo;         // 로그인한 사원 번호 = 결재를 요청하는 사원의 번호
 
+    @Column(name = "sender_name", nullable = false)
+    private String senderName;          // 문서 작성자의 이름
+
+    @Column(name = "sender_dmp_name")
+    private String senderDmpName; // 작성자 부서명
+
+    @Column(name = "sender_rank_name")
+    private String senderRankName; // 작성자 직급명
+
     @Column(name = "doc_title", nullable = false)
     private String docTitle;
 

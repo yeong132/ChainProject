@@ -6,7 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
+import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
+import org.zerock.chain.parkyeongmin.model.Employee;
+import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
 import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 
@@ -23,13 +26,16 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
 
     private final DocumentsRepository documentsRepository;
     private final EmployeesRepository employeesRepository;
+    private final ApprovalRepository approvalRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService; // 파일 저장 서비스를 주입
 
     @Override
     public DocumentsDTO getDocumentById(int docNo) {
         Documents document = documentsRepository.findById(docNo).orElseThrow(() -> new RuntimeException("Document not found"));
-        return modelMapper.map(document, DocumentsDTO.class);
+        DocumentsDTO dto = modelMapper.map(document, DocumentsDTO.class);
+
+        return dto;
     }
 
     @Override
@@ -47,15 +53,6 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
 
                     return dto;
                 })
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DocumentsDTO> getReceivedDocuments(Long loggedInEmpNo) {
-        // 받은 문서 목록을 조회하여 DTO로 변환
-        List<Documents> documents = documentsRepository.findReceivedDocuments(loggedInEmpNo);
-        return documents.stream()
-                .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -86,10 +83,28 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                 documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
             }
 
+            // 로그인한 사용자의 EmpNo를 설정 (예시: 1L 대신 실제 값 사용)
+            Long loggedInEmpNo = 1L;  // 임시로 1L로 설정, 나중에 실제 로그인한 사용자 정보로 대체
+            documentsDTO.setLoggedInEmpNo(loggedInEmpNo);  // DTO에 설정
+
+            // 로그인한 사용자의 정보를 Employees 테이블에서 조회
+            Employee employee = employeesRepository.findById(loggedInEmpNo)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // 작성자 이름, 부서명, 직급명 설정
+            String senderName = employee.getLastName() + employee.getFirstName();
+            String senderDmpName = employee.getDepartment().getDmpName();
+            String senderRankName = employee.getRank().getRankName();
+
+            log.info("senderName: {}, senderDmpName: {}, senderRankName: {}", senderName, senderDmpName, senderRankName);
+
             // Documents 엔티티를 먼저 생성하고 저장
             Documents documents = Documents.builder()
                     .reqDate(LocalDate.now())
-                    .loggedInEmpNo(1L)  // 임시로 1L로 설정 (로그인 기능이랑 병합되면 이걸로 바꾸기 >> loggedInEmpNo)
+                    .loggedInEmpNo(loggedInEmpNo)
+                    .senderName(senderName)                  // 작성자를 저장
+                    .senderDmpName(senderDmpName) // 작성자 부서명
+                    .senderRankName(senderRankName) // 작성자 직급명
                     .docStatus(documentsDTO.getDocStatus())  // 요청된 상태를 사용
                     .category(documentsDTO.getCategory())    // 클라이언트가 보낸 카테고리 설정
                     .docTitle(documentsDTO.getDocTitle())    // 문서 제목을 설정
@@ -154,5 +169,40 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
 
         // 문서 삭제
         documentsRepository.deleteById(docNo);
+    }
+
+    // time Stamp documents테이블에 div태그로 저장된 컬럼 업데이트할 때 쓰는 메서드
+    @Override
+    public void updateTimeStampHtml(int docNo, String timeStampHtml) {
+        Documents document = documentsRepository.findById(docNo)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        document.setTimeStampHtml(timeStampHtml);  // time_stamp_html 컬럼 업데이트
+        documentsRepository.save(document);
+    }
+
+    // 결재순서 가져오는 메서드
+    @Override
+    @Transactional(readOnly = true)
+    public DocumentsDTO getDocumentWithApprovalOrder(int docNo, Long empNo) {
+        // 문서 조회
+        Documents document = documentsRepository.findById(docNo)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        // DocumentsDTO로 변환
+        DocumentsDTO dto = modelMapper.map(document, DocumentsDTO.class);
+
+        // 로그인한 사용자의 결재 순서 가져오기
+        Approval approval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
+        if (approval != null) {
+            dto.setApprovalOrder(approval.getApprovalOrder());      // 결재 순번 추가
+            dto.setApprovalStatus(approval.getApprovalStatus());    // 결재 진행 상태 추가
+            dto.setRejectionReason(approval.getRejectionReason());  // 반려 사유 추가
+        } else {
+            dto.setApprovalOrder(-1);     // 결재선에 포함되지 않은 경우
+            dto.setApprovalStatus("N/A"); // 결재선에 포함되지 않은 경우 기본값 설정
+        }
+
+        return dto;
     }
 }

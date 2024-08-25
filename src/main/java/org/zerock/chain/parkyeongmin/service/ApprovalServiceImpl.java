@@ -2,10 +2,10 @@ package org.zerock.chain.parkyeongmin.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.zerock.chain.parkyeongmin.dto.ApprovalDTO;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
@@ -81,16 +81,30 @@ public class ApprovalServiceImpl implements ApprovalService {
         log.info("Assigned document {} to first approver with empNo: {}", documentsDTO.getDocNo(), firstEmpNo);
     }
 
-    @Override
+    @Override  // 결재자가 승인하면 그 승인이 작동되는 메서드
     public void approveDocument(int docNo, Long empNo) {
+        // 문서 조회
+        Documents document = documentsRepository.findById(docNo)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
         Approval approval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
 
         if (approval != null) {
             approval.setApprovalDate(LocalDateTime.now());
             approval.setApprovalStatus("승인");  // 승인 상태로 변경
             approvalRepository.save(approval);
+        }
 
-            // 다음 결재자로 이동
+        // 다음 결재자를 찾기 전에 현재 결재가 최종 결재인지 확인
+        List<Approval> approvals = approvalRepository.findByDocumentsDocNo(docNo);
+        boolean allApproved = approvals.stream()
+                .allMatch(a -> "승인".equals(a.getApprovalStatus()));
+
+        if (allApproved) {
+            // 모든 결재가 승인되었으므로 문서를 완료로 설정
+            finalizeDocument(docNo);
+        } else {
+            // 최종 결재가 아니므로 다음 결재자로 이동
             moveToNextApprover(docNo, approval.getApprovalOrder() + 1);
         }
     }
@@ -100,17 +114,22 @@ public class ApprovalServiceImpl implements ApprovalService {
         Approval approval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
 
         if (approval != null) {
-            approval.setApprovalDate(LocalDateTime.now());
             approval.setApprovalStatus("반려");  // 반려 상태로 변경
             approval.setRejectionReason(rejectionReason);
             approvalRepository.save(approval);
+
+            // 문서의 상태도 반려로 변경
+            Documents document = documentsRepository.findById(docNo)
+                    .orElseThrow(() -> new RuntimeException("Document not found"));
+            document.setDocStatus("반려");
+            documentsRepository.save(document);
 
             // 반려 처리 (작성자에게 알림 등)
             handleRejection(docNo);
         }
     }
 
-    @Override
+    @Override       // 다음 결재자가 있다면 해야될 기능 처리
     public void moveToNextApprover(int docNo, int nextOrder) {
         Approval nextApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, nextOrder);
 
@@ -120,7 +139,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
             Documents document = documentsRepository.findById(docNo)
                     .orElseThrow(() -> new RuntimeException("Document not found"));
-            document.setDocStatus("진행중");
+            document.setDocStatus("진행 중");
             documentsRepository.save(document);
         } else {
             // 다음 결재자가 없으면, 문서를 최종 완료 상태로 변경
@@ -128,18 +147,18 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
     }
 
-    @Override
+    @Override // 마지막 결재자에게 문서가 넘어가면 완료 처리
     public void finalizeDocument(int docNo) {
         Documents document = documentsRepository.findById(docNo)
                 .orElseThrow(() -> new RuntimeException("Document not found"));
 
-        document.setDocStatus("결재 완료");
+        document.setDocStatus("완료");
         documentsRepository.save(document);
 
         System.out.println("Document No: " + docNo + " has been finalized.");
     }
 
-    // 문서를 첫 번째 결재자에게 할당하는 메서드 << 사실 필요없는데 위에 메서드에 들어가서 빨간줄 뜨니까 주말에 수정해보자
+    // 문서를 첫 번째 결재자에게 할당하는 메서드
     private void assignDocumentToApprover(int docNo, Long empNo) {
         // 문서를 조회
         Documents document = documentsRepository.findById(docNo)
@@ -164,5 +183,56 @@ public class ApprovalServiceImpl implements ApprovalService {
         // 문서 반려 시 처리할 로직을 구현합니다.
         // 예를 들어, 작성자에게 알림을 보내거나, 문서 상태를 변경하는 등의 작업을 할 수 있습니다.
         System.out.println("Document No: " + docNo + " has been rejected.");
+    }
+
+    @Override
+    public boolean isFirstApprovalApproved(int docNo) {
+        // 첫 번째 결재자의 상태를 조회
+        Approval firstApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, 1);
+
+        if (firstApproval != null) {
+            String approvalStatus = firstApproval.getApprovalStatus();
+            log.info("First approval status for docNo {}: {}", docNo, approvalStatus); // 로그 추가
+
+            // 첫 번째 결재자가 승인한 경우 true 반환
+            return "승인".equals(approvalStatus);
+        }
+
+        log.info("No first approval found for docNo {}", docNo); // 로그 추가
+        // 결재 정보가 없거나 승인이 아닌 경우 false 반환
+        return false;
+    }
+
+    @Override
+    public boolean isCurrentApprover(int docNo, Long empNo) {
+        // 현재 사용자의 Approval 정보 조회
+        Approval currentApproval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
+
+        if (currentApproval != null) {
+            int currentOrder = currentApproval.getApprovalOrder();
+
+            // 이전 결재자의 승인 여부 확인
+            if (currentOrder > 1) {
+                Approval previousApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, currentOrder - 1);
+
+                // 이전 결재자가 승인 또는 반려했을 때만 현재 결재자가 승인/반려 버튼을 볼 수 있음
+                if (previousApproval != null && ("승인".equals(previousApproval.getApprovalStatus()))) {
+                    return "대기".equals(currentApproval.getApprovalStatus());
+                } else {
+                    return false;
+                }
+            } else {
+                // 첫 번째 결재자라면 이전 결재자가 없으므로 바로 승인/반려 가능
+                return "대기".equals(currentApproval.getApprovalStatus());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isDocumentApprover(int docNo, Long empNo) {
+        // 해당 문서의 결재자 목록에서 현재 사용자가 포함되어 있는지 확인
+        Approval approval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
+        return approval != null;
     }
 }

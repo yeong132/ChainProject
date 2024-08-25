@@ -21,10 +21,10 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public EmployeeDTO getLoggedInUserDetails() {
+    public EmployeeDTO getLoggedInUserDetails() { // 로그인 기능 구현 시 Long loggedInEmpNo을 ()에 넣기
         try {
-            // 임시로 emp_no가 1인 사용자를 가져옴
-            Employee employee = employeesRepository.findById(1L)
+            // 임시로 emp_no가 3인 사용자를 가져옴               받은 문서함 왔다갔다 테스트할때 여기 값 바꾸기
+            Employee employee = employeesRepository.findById(2L)  // 로그인 기능 구현 시 3L -> loggedInEmpNo으로
                     .orElseThrow(() -> {
                         log.error("User with emp_no 1 not found");
                         return new RuntimeException("User not found");

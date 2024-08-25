@@ -43,12 +43,12 @@
     ======================================================== -->
     <title>요청된 결재 문서</title>
     <style>
-        body {
+        /*body {
             font-family: Arial, sans-serif;
             font-size: 14px;
             color: #333;
             margin: 20px;
-        }
+        }*/
 
         /* 테이블 스타일 */
         #formContainer table {
@@ -614,7 +614,6 @@
                         </div>
 
                         <div id="container">
-
                             <!-- process.html에서 작성한 문서가 동적으로 추가될 부분입니다-->
                         </div>
 
@@ -677,7 +676,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data) {
                 const documentData = data.document;
-                const loggedInUser = data.loggedInUser;
+                const isFirstApprovalApproved = data.isFirstApprovalApproved; // 수정된 부분
 
                 // 데이터를 HTML 폼에 삽입
                 document.querySelector('input[name="docTitle"]').value = documentData.docTitle;
@@ -697,10 +696,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 const approverNo = document.getElementById('approverContainerNumbers');
                 approverNo.innerHTML = documentData.approverNoHtml;
 
-                // 로그인된 사용자의 정보를 폼에 삽입
-                document.getElementById('dmpName').textContent = loggedInUser.dmpName || '';
-                document.getElementById('senderName').textContent = `${loggedInUser.lastName}${loggedInUser.firstName}` || '';
-                document.getElementById('rankName').textContent = loggedInUser.rankName || '';
+                // 문서 작성자 정보를 폼에 삽입
+                document.getElementById('dmpName').textContent = documentData.senderDmpName || '';
+                document.getElementById('senderName').textContent = documentData.senderName || '';
+                document.getElementById('rankName').textContent = documentData.senderRankName || '';
+
 
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
@@ -726,6 +726,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 inputs.forEach(input => {
                     input.setAttribute('disabled', true);  // select 등의 필드를 위한 처리
                 });
+
+                console.log('Document Data:', documentData); // 전체 데이터 확인
+                console.log('isFirstApprovalApproved:', isFirstApprovalApproved); // 로그 추가
+
+                if (isFirstApprovalApproved) {
+                    document.getElementById('cancelBtn').style.display = 'none';
+                }
             } else {
                 console.error('Document or User data is missing');
             }

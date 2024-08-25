@@ -5,9 +5,10 @@ import org.springframework.stereotype.Repository;
 import org.zerock.chain.parkyeongmin.model.Approval;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface ApprovalRepository extends JpaRepository<Approval, Integer> {
+public interface ApprovalRepository extends JpaRepository<Approval, Long> {
 
     // 특정 결재자의 모든 문서를 docNo로 최신순으로 조회
     List<Approval> findByEmployeeEmpNoOrderByDocumentsDocNoDesc(Long empNo);

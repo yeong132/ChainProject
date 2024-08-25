@@ -17,4 +17,13 @@ public interface ApprovalService {
 
     // 문서를 최종 승인 상태로 변경하는 메서드
     void finalizeDocument(int docNo);
+
+    // 첫 번째 결재자가 승인했는지 여부를 판단하는 메서드
+    boolean isFirstApprovalApproved(int docNo);
+
+    // 현재 결재자의 결재 순서로 승인,반려 버튼을 숨기기 위해 쓰는 메서드
+    boolean isCurrentApprover(int docNo, Long empNo);
+
+    // 해당 문서의 결재자에 현재 사용자가 포함되어 있는지 확인
+    boolean isDocumentApprover(int docNo, Long empNo);
 }
