@@ -1,5 +1,5 @@
-// 알림창 시간 표시
 
+// 알림창 시간 표시
 function timeAgo(timestamp) {
     const now = new Date();
     const notificationTime = new Date(timestamp);

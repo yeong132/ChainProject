@@ -32,6 +32,15 @@ public class ChartController {
         this.projectService = projectService;
     }
 
+    // 차트 데이터를 JSON으로 반환하는 메서드
+    @GetMapping("/data")
+    @ResponseBody
+    public ResponseEntity<List<ChartDTO>> getChartData() {
+        List<ChartDTO> charts = chartService.getAllCharts();
+        return ResponseEntity.ok(charts); // JSON 형식으로 차트 데이터 반환
+    }
+
+
     // 차트 메인 페이지
     @GetMapping("/main")
     public String showMainPage(Model model) {
@@ -78,10 +87,11 @@ public class ChartController {
 
     // 차트 삭제
     @PostMapping("/delete/{chartNo}")
-    public String deleteChart(@RequestParam Long chartNo) {
+    public String deleteChart(@PathVariable Long chartNo) {
         chartService.deleteChart(chartNo);
         return "redirect:/chart/OKR";
     }
+
 
     // 프로젝트 차트 조회
     @GetMapping("/project")
