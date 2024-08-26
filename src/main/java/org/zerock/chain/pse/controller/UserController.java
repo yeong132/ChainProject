@@ -188,6 +188,17 @@ public class UserController {
         return "user/alarm";
     }
 
+    // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트
+    @GetMapping("/alarm/read/{notificationNo}")
+    public String readNotificationAndRedirect(@PathVariable Long notificationNo) {
+        Notification notification = notificationService.getNotificationById(notificationNo);
+        notificationService.markAsRead(notificationNo);
+
+        // 리다이렉트 URL을 동적으로 가져옴
+        String redirectUrl = notification.getRedirectUrl();
+        return "redirect:" + redirectUrl;
+    }
+
 
     // 알림 전체 삭제
     @PostMapping("/alarm/deleteAll")

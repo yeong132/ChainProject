@@ -7,6 +7,7 @@ import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.repository.NotificationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -33,5 +34,22 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void deleteNotification(Long notificationNo) {
         notificationRepository.deleteById(notificationNo);
+    }
+
+    @Override
+    @Transactional  // 읽음 표시
+    public void markAsRead(Long notificationNo) {
+        Optional<Notification> notificationOpt = notificationRepository.findById(notificationNo);
+        if (notificationOpt.isPresent()) {
+            Notification notification = notificationOpt.get();
+            notification.setIsRead(true);
+            notificationRepository.save(notification);
+        }
+    }
+
+    @Override   // 개별 조회(링크 이동)
+    public Notification getNotificationById(Long notificationNo) {
+        return notificationRepository.findById(notificationNo)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
     }
 }
