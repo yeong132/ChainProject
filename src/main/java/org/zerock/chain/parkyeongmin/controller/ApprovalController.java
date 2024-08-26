@@ -11,6 +11,7 @@ import org.zerock.chain.parkyeongmin.dto.*;
 import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
 import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
+import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 import org.zerock.chain.parkyeongmin.service.ApprovalService;
 import org.zerock.chain.parkyeongmin.service.DocumentsService;
@@ -37,6 +38,8 @@ public class ApprovalController {
     private ApprovalRepository approvalRepository;
     @Autowired
     private EmployeesRepository employeesRepository;
+    @Autowired
+    private DocumentsRepository documentsRepository;
 
     @Autowired
     public ApprovalController(DocumentsService documentsService,
@@ -59,7 +62,7 @@ public class ApprovalController {
 
     @GetMapping("/receive")  // 받은 문서함 페이지로 이동
     public String approvalReceive(Model model) {
-        Long loggedInEmpNo = 2L; // 예시로 설정한 로그인된 사용자의 사원 번호 < 여기서 번호 바꾸면서 실험 ㄱㄱ
+        Long loggedInEmpNo = 4L; // 예시로 설정한 로그인된 사용자의 사원 번호 < 여기서 번호 바꾸면서 실험 ㄱㄱ
 
         // 특정 결재자가 연관된 모든 문서를 docNo 기준으로 최신순 조회
         List<Approval> approvals = approvalRepository.findByEmployeeEmpNoOrderByDocumentsDocNoDesc(loggedInEmpNo);
@@ -84,19 +87,9 @@ public class ApprovalController {
         return "approval/draft";
     }
 
-    @GetMapping("/adminRequest")
-    public String approvalAdminRequest() {
-        return "approval/adminRequest";
-    }
-
     @GetMapping("/process")
     public String approvalProcess(Model model) {
         return "approval/process";
-    }
-
-    @GetMapping("/rejectionRead")
-    public String approvalRejectionRead() {
-        return "approval/rejectionRead";
     }
 
     // 여기서 부터 document 관련 메서드 입니다!!
@@ -222,16 +215,16 @@ public class ApprovalController {
         EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
 
         // 문서 정보 및 결재 순서 조회, 코드 테스트를 위해 잠시 2L >> loggedInUser.getEmpNo() 다하면 다시 변경
-        DocumentsDTO document = documentsService.getDocumentWithApprovalOrder(docNo, 2L);
+        DocumentsDTO document = documentsService.getDocumentWithApprovalOrder(docNo, 4L);
 
         // 첫 번째 결재자가 승인했는지 여부 확인
         boolean isFirstApprovalApproved = approvalService.isFirstApprovalApproved(docNo);
 
         // 현재 결재순서인 자만 결재 승인, 결재 반려 버튼이 보이게하는 변수
-        boolean isCurrentApprover = approvalService.isCurrentApprover(docNo, 2L);
+        boolean isCurrentApprover = approvalService.isCurrentApprover(docNo, 4L);
 
         // 사용자가 해당 문서의 결재자인지 확인
-        boolean isDocumentApprover = approvalService.isDocumentApprover(docNo, 2L);
+        boolean isDocumentApprover = approvalService.isDocumentApprover(docNo, 4L);
 
         // 반환할 데이터를 맵에 추가
         Map<String, Object> response = new HashMap<>();
@@ -315,7 +308,7 @@ public class ApprovalController {
         EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
 
         // 결재 승인 처리 (문서 상태 변경)
-        approvalService.approveDocument(docNo, 2L); // 임시로 테스트하기 위해 2L>>loggedInUser.getEmpNo()로 바꿀것
+        approvalService.approveDocument(docNo, 4L); // 임시로 테스트값>>loggedInUser.getEmpNo()로 바꿀것
 
         documentsService.updateTimeStampHtml(docNo, timeStampHtml);
 
@@ -343,5 +336,78 @@ public class ApprovalController {
         notificationService.sendNotification(notificationMessage);*/
 
         return ResponseEntity.ok("Document rejected successfully");
+    }
+
+    // 보낸 문서 상태별 문서 건수 조회 메서드
+    @GetMapping("/statusCounts")
+    @ResponseBody
+    public DocumentStatusCountDTO getCountByStatus() {
+        // 로그인한 사용자의 정보를 가져옴
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+
+        Long loggedInEmpNo = 1L; // 실제로는 loggedInUser.getEmpNo로 바꿀 것
+        DocumentStatusCountDTO counts = documentsService.getDocumentStatusCountsForUser(loggedInEmpNo);
+        log.info("Returning counts: " + counts);
+        return counts;
+    }
+
+    // 결재자가 받은 문서의 대기,승인,반려 문서 건수 조회 메서드
+    @GetMapping("/approvalStatusCounts")
+    @ResponseBody
+    public Map<String, Integer> getCountByApprovalStatus() {
+        // 로그인한 사용자의 정보를 가져옴
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        Long loggedInEmpNo = 4L; // 실제로는 loggedInUser.getEmpNo로 바꿀 것
+        int pendingCount = approvalService.countPendingApprovals(loggedInEmpNo);
+        int approvedCount = approvalService.countApprovedApprovals(loggedInEmpNo);
+        int rejectedCount = approvalService.countRejectedDocumentsForApprover(loggedInEmpNo);
+
+        Map<String, Integer> counts = new HashMap<>();
+        counts.put("pendingCount", pendingCount);
+        counts.put("approvedCount", approvedCount);
+        counts.put("rejectedCount", rejectedCount);
+        log.info("Returning counts: " + counts);
+        return counts;
+    }
+
+    // 보낸문서함의 결재 상태별 목록 조회
+    @GetMapping("/documentsByStatusPage")
+    @ResponseBody
+    public List<DocumentsDTO> getDocumentsByStatus(@RequestParam("docStatus") String docStatus) {
+        // 로그인한 사용자의 정보를 가져옴
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        Long loggedInEmpNo = 1L; // 실제로는 loggedInUser.getEmpNo로 바꿀 것
+
+        log.info("Fetching documents for empNo: " + loggedInEmpNo + " with status: " + docStatus);
+        List<DocumentsDTO> documents = documentsService.getDocumentsByStatus(loggedInEmpNo, docStatus);
+        log.info("Returning documents: " + documents);
+        return documents;
+    }
+
+    // 받은 문서함의 대기 중인 문서 필터링
+    @GetMapping("/pendingDocuments")
+    @ResponseBody
+    public List<DocumentsDTO> getPendingDocuments() {
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        Long loggedInEmpNo = 4L;  // loggedInUser.getEmpNo();
+        return documentsService.getPendingDocumentsForUser(loggedInEmpNo);
+    }
+
+    // 받은 문서함의 승인된 문서 필터링
+    @GetMapping("/approvedDocuments")
+    @ResponseBody
+    public List<DocumentsDTO> getApprovedDocuments() {
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        Long loggedInEmpNo = 4L; // loggedInUser.getEmpNo();
+        return documentsService.getApprovedDocumentsForUser(loggedInEmpNo);
+    }
+
+    // 받은 문서함의 반려된 문서 필터링
+    @GetMapping("/rejectedDocuments")
+    @ResponseBody
+    public List<DocumentsDTO> getRejectedDocuments() {
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        Long loggedInEmpNo = 4L; // loggedInUser.getEmpNo();
+        return documentsService.getRejectedDocumentsForUser(loggedInEmpNo);
     }
 }

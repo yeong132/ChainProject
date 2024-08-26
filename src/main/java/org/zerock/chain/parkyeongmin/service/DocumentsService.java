@@ -1,6 +1,7 @@
 package org.zerock.chain.parkyeongmin.service;
 
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
+import org.zerock.chain.parkyeongmin.dto.DocumentStatusCountDTO;
 
 import java.util.List;
 
@@ -25,4 +26,14 @@ public interface DocumentsService <T extends DocumentsDTO> {
     T getDocumentById(int docNo);
     // 문서 조회 및 결재 순서 포함 메서드
     DocumentsDTO getDocumentWithApprovalOrder(int docNo, Long empNo);
+    // 보낸 문서 상태별 문서 건수 조회
+    DocumentStatusCountDTO getDocumentStatusCountsForUser(Long empNo);
+    // 보낸 문서 상태별 문서 목록 조회
+    List<DocumentsDTO> getDocumentsByStatus(Long loggedInEmpNo, String docStatus);
+    // 대기중인 문서 필터링
+    List<DocumentsDTO> getPendingDocumentsForUser(Long empNo);
+    // 승인한 문서 필터링
+    List<DocumentsDTO> getApprovedDocumentsForUser(Long empNo);
+    // 반려된 문서 필터링
+    List<DocumentsDTO> getRejectedDocumentsForUser(Long empNo);
 }

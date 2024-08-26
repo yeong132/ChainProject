@@ -649,7 +649,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
-                            <h3>결재 대기 문서</h3>
+                            <h3 th:text="'문서번호  '+${document.docNo}"></h3>
                         </div>
 
                         <div id="container">
@@ -822,14 +822,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 // docStatus가 '완료'인 경우 페이지와 카드 제목 변경
                 if (documentData.docStatus === '완료') {
                     const pageTitle = document.querySelector('.pagetitle h1');
-                    const cardTitle = document.querySelector('.card-title h3');
 
                     if (pageTitle && pageTitle.textContent.includes('대기')) {
                         pageTitle.textContent = pageTitle.textContent.replace('대기', '완료');
-                    }
-
-                    if (cardTitle && cardTitle.textContent.includes('대기')) {
-                        cardTitle.textContent = cardTitle.textContent.replace('대기', '완료');
                     }
                 }
 

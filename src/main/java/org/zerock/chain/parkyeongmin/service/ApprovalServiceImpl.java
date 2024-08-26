@@ -235,4 +235,20 @@ public class ApprovalServiceImpl implements ApprovalService {
         Approval approval = approvalRepository.findByDocumentsDocNoAndEmployeeEmpNo(docNo, empNo);
         return approval != null;
     }
+
+    @Override  // 결재자의 받은 문서함에 대기상태 문서개수 조회
+    public int countPendingApprovals(Long empNo) {
+        return approvalRepository.countPendingApprovalsByEmpNo(empNo);
+    }
+
+    @Override  // 결재자의 받은 문서함에 승인상태 문서개수 조회
+    public int countApprovedApprovals(Long empNo) {
+        return approvalRepository.countApprovedApprovalsByEmpNo(empNo);
+    }
+
+    @Override  // 결재자의 받은 문서함에 반려상태 문서개수 조회
+    public int countRejectedDocumentsForApprover(Long empNo) {
+        return approvalRepository.countRejectedDocumentsForApprover(empNo);
+    }
+
 }

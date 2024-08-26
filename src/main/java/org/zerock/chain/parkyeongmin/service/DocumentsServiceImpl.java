@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.chain.parkyeongmin.dto.DocumentStatusCountDTO;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
@@ -83,8 +84,8 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                 documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
             }
 
-            // 로그인한 사용자의 EmpNo를 설정 (예시: 1L 대신 실제 값 사용)
-            Long loggedInEmpNo = 1L;  // 임시로 1L로 설정, 나중에 실제 로그인한 사용자 정보로 대체
+            // 로그인한 사용자의 EmpNo를 설정 (예시: 임시값 대신 실제 값 사용)
+            Long loggedInEmpNo = 1L;  // 임시로 설정, 나중에 실제 로그인한 사용자 정보로 대체
             documentsDTO.setLoggedInEmpNo(loggedInEmpNo);  // DTO에 설정
 
             // 로그인한 사용자의 정보를 Employees 테이블에서 조회
@@ -132,7 +133,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
 
         // 기존 문서를 데이터베이스에서 찾음
         Optional<Documents> optionalDocument = documentsRepository.findById(documentsDTO.getDocNo());
-        if (!optionalDocument.isPresent()) {
+        if (optionalDocument.isEmpty()) {
             throw new Exception("Document not found");
         }
 
@@ -163,7 +164,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
     public void deleteDocument(int docNo) throws Exception {
         // 문서를 데이터베이스에서 찾음
         Optional<Documents> optionalDocument = documentsRepository.findById(docNo);
-        if (!optionalDocument.isPresent()) {
+        if (optionalDocument.isEmpty()) {
             throw new Exception("Document not found");
         }
 
@@ -204,5 +205,63 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
         }
 
         return dto;
+    }
+
+    @Override
+    public DocumentStatusCountDTO getDocumentStatusCountsForUser(Long empNo) {
+        int requestsCount = documentsRepository.countByDocStatusAndEmpNo("요청", empNo);
+        int inProgressCount = documentsRepository.countByDocStatusAndEmpNo("진행 중", empNo);
+        int rejectedCount = documentsRepository.countByDocStatusAndEmpNo("반려", empNo);
+        int completedCount = documentsRepository.countByDocStatusAndEmpNo("완료", empNo);
+
+        log.info("requestsCount: " + requestsCount);
+        log.info("inProgressCount: " + inProgressCount);
+        log.info("rejectedCount: " + rejectedCount);
+        log.info("completedCount: " + completedCount);
+
+        // 빌더 패턴 대신 생성자를 사용하여 객체 생성
+        return new DocumentStatusCountDTO(requestsCount, inProgressCount, rejectedCount, completedCount);
+    }
+
+    @Override  // 상태별 문서목록을 조회
+    public List<DocumentsDTO> getDocumentsByStatus(Long loggedInEmpNo, String docStatus) {
+        // 상태별 문서 목록을 조회하여 DTO로 변환
+        List<Documents> documents = documentsRepository.findDocumentsByStatusAndEmpNo(loggedInEmpNo, docStatus);
+
+        return documents.stream()
+                .map(doc -> {
+                    DocumentsDTO dto = modelMapper.map(doc, DocumentsDTO.class);
+
+                    // senderName을 employees 테이블에서 조회하여 설정
+                    String senderName = employeesRepository.findFullNameByEmpNo(doc.getLoggedInEmpNo());
+                    dto.setSenderName(senderName);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override  // 받은문서함의 대기중인 문서 필터링
+    public List<DocumentsDTO> getPendingDocumentsForUser(Long empNo) {
+        List<Documents> documents = documentsRepository.findPendingDocumentsByEmpNo(empNo);
+        return documents.stream()
+                .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override  // 받은문서함의 승인한 문서 필터링
+    public List<DocumentsDTO> getApprovedDocumentsForUser(Long empNo) {
+        List<Documents> documents = documentsRepository.findApprovedDocumentsByEmpNo(empNo);
+        return documents.stream()
+                .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override  // 받은문서함의 반려된 문서 필터링(이 때 다른 결재자가 반려된 문서여도 필터링)
+    public List<DocumentsDTO> getRejectedDocumentsForUser(Long empNo) {
+        List<Documents> documents = documentsRepository.findRejectedDocumentsIncludingOthers(empNo);
+        return documents.stream()
+                .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
+                .collect(Collectors.toList());
     }
 }
