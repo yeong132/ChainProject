@@ -406,8 +406,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">작성자</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control board-author-id" name="boardAuthor"
-                                           required th:value="${session.empNo}" type="hidden">
+                                    <input class="form-control board-author-id" name="boardAuthor" required th:value="${session.empNo}" type="hidden">
                                     <input class="form-control board-author-name" readonly type="text">
                                 </div>
                             </div>
@@ -415,8 +414,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">위치</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" id="addressInput" name="addressInput" placeholder="주소를 입력하세요"
-                                           type="text">
+                                    <input class="form-control" id="addressInput" name="addressInput" placeholder="주소를 입력하세요" type="text">
                                     <button class="btn btn-primary mt-2" onclick="searchAddress()" type="button">주소 검색
                                     </button>
                                     <input id="boardLocation" name="boardLocation" type="hidden">
