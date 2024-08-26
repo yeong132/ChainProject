@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    List<Notification> findByEmpNoAndNotificationType(int empNo, String notificationType); // 알림 타입별 조회
-    List<Notification> findByEmpNo(int empNo); // 사원 번호로 모든 알림 조회
-    void deleteByEmpNo(int empNo);  // 사원 번호로 모든 알림 삭제
+    List<Notification> findByEmpNoAndNotificationType(Long empNo, String notificationType); // 알림 타입별 조회
+    List<Notification> findByEmpNo(Long empNo); // 사원 번호로 모든 알림 조회
+    void deleteByEmpNo(Long empNo);  // 사원 번호로 모든 알림 삭제
     Optional<Notification> findById(Long notificationNo); // 알림 번호로 개별 조회
 }

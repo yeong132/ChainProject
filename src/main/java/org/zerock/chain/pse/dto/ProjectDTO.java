@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
@@ -17,7 +15,7 @@ public class ProjectDTO {
     private Long projectNo;
     private String projectName;
 
-    private Integer empNo = 1; // 기본값 설정
+    private Long empNo;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectStartDate;

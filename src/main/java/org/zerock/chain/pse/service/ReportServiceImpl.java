@@ -1,10 +1,13 @@
 package org.zerock.chain.pse.service;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.chain.pse.dto.ReportDTO;
 import org.zerock.chain.pse.dto.ReportRequestDTO;
@@ -26,10 +29,21 @@ public class ReportServiceImpl implements ReportService {
 
     @Override   // 생성 등록
     public ReportDTO createReport(ReportDTO reportDTO) {
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+
+        // DTO에서 엔티티로 매핑
         Report report = modelMapper.map(reportDTO, Report.class);
+        // 가져온 사원번호를 엔티티에 설정
+        report.setEmpNo(empNo);
+        // 저장
         Report savedReport = reportRepository.save(report);
+        // 엔티티에서 DTO로 매핑하여 반환
         return modelMapper.map(savedReport, ReportDTO.class);
     }
+
 
     @Override    // 전체 목록 조회
     public List<ReportDTO> getAllReports() {

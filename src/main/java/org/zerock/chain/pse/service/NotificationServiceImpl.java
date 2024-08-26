@@ -10,24 +10,29 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationServiceImpl extends BaseService<Notification> implements NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
 
     @Override
-    public List<Notification> getNotificationsByType(int empNo, String type) {
-        return notificationRepository.findByEmpNoAndNotificationType(empNo, type);
-    }
-
-    @Override
-    public List<Notification> getAllNotifications(int empNo) {
+    protected List<Notification> getAllItemsByEmpNo(Long empNo) {
         return notificationRepository.findByEmpNo(empNo);
     }
 
     @Override
+    public List<Notification> getNotificationsByType(Long empNo, String type) {
+        return getItemsByEmpNo(empNo, empNoParam -> notificationRepository.findByEmpNoAndNotificationType(empNoParam, type));
+    }
+
+    @Override
+    public List<Notification> getAllNotifications(Long empNo) {
+        return getItemsByEmpNo(empNo, this::getAllItemsByEmpNo);
+    }
+
+    @Override
     @Transactional
-    public void deleteAllNotifications(int empNo) {
+    public void deleteAllNotifications(Long empNo) {
         notificationRepository.deleteByEmpNo(empNo);
     }
 

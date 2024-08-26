@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public class NotificationDTO {
 
     private long notificationNo;
-    private Integer empNo;
+    private Long empNo;
+
     private String notificationType;
     private long referenceId;
     private String  notificationMessage;

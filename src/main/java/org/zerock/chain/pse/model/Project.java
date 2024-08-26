@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "project")
@@ -23,7 +23,7 @@ public class Project {
     private String projectName;
 
     @Column(name = "emp_no")
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     @Column(name = "project_start_date")
     private LocalDate projectStartDate;

@@ -1,10 +1,13 @@
 package org.zerock.chain.pse.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.zerock.chain.pse.dto.CommentDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaRequestDTO;
@@ -161,7 +164,10 @@ public class UserController {
     // 알림 페이지로 이동
     @GetMapping("/alarm")
     public String userAlarm(Model model) {
-        int empNo = 1; // 예시 사원번호
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
 
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
@@ -203,7 +209,10 @@ public class UserController {
     // 알림 전체 삭제
     @PostMapping("/alarm/deleteAll")
     public String deleteAllNotifications() {
-        int empNo = 1; // 예시 사원번호
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
 
         // 일반 알림 삭제
         notificationService.deleteAllNotifications(empNo);

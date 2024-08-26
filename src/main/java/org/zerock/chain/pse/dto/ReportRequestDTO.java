@@ -11,7 +11,7 @@ public class ReportRequestDTO {
 
     private String reportName;
 
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     private String reportCategory;
     private String reportContent;
