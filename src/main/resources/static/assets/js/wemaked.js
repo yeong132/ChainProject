@@ -1,3 +1,32 @@
+// 알림창 시간 표시
+
+function timeAgo(timestamp) {
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    return `${days}일 전`;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationTimes = document.querySelectorAll('.notification-time');
+
+    notificationTimes.forEach(function (element) {
+        const timestamp = element.getAttribute('data-timestamp');
+        if (timestamp) {
+            element.textContent = timeAgo(new Date(timestamp));
+        }
+    });
+});
+
+
 // <button onClick="chatOpenPopup()">메신저</button>
 
 let stompClient = null; // 클라이언트 객체 생성
@@ -5,7 +34,7 @@ const empNo = sessionStorage.getItem('empNo');
 const chatAlarm = document.querySelector('#chatAlarm');
 
 // 소켓 연결
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     if (empNo) {
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
@@ -79,11 +108,11 @@ async function displayUnreadMessages() {
 // 안 읽은 채팅 수 카운트
 function updateUserNotification(senderEmpNo) {
     // if (empNo == senderEmpNo) {
-        // 현재 알림 숫자 값을 가져오고, 증가
-        let currentCount = parseInt(chatAlarm.textContent) || 0;
+    // 현재 알림 숫자 값을 가져오고, 증가
+    let currentCount = parseInt(chatAlarm.textContent) || 0;
 
-        chatAlarm.textContent = (++currentCount).toString(); // 증가된 숫자 설정
-        chatAlarm.classList.remove('hidden');
+    chatAlarm.textContent = (++currentCount).toString(); // 증가된 숫자 설정
+    chatAlarm.classList.remove('hidden');
     // }
 }
 
@@ -146,6 +175,7 @@ function chatOpenPopup() {
         }
     }
 }
+
 // -- 메신저 end
 
 

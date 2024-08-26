@@ -24,7 +24,7 @@
                         <div>
                             <h4 th:text="${notification.notificationType}">알림 유형</h4>
                             <p th:text="${notification.notificationMessage}">알림 내용</p>
-                            <p class="notification-time" th:data-timestamp="${notification.notificationDate}">알림 시간</p>
+                            <span class="notification-time" th:data-timestamp="${notification.notificationDate}">알림 시간</span>
                         </div>
                     </div>
                 </a>
@@ -33,3 +33,32 @@
         </ul>
     </li>
 </div>
+
+<!-- 시간 표시 -->
+<script>
+    function timeAgo(timestamp) {
+        const now = new Date();
+        const notificationTime = new Date(timestamp);
+        const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+        const minutes = Math.floor(diffInSeconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return '방금 전';
+        if (minutes < 60) return `${minutes}분 전`;
+        if (hours < 24) return `${hours}시간 전`;
+        return `${days}일 전`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const notificationTimes = document.querySelectorAll('.notification-time');
+
+        notificationTimes.forEach(function (element) {
+            const timestamp = element.getAttribute('data-timestamp');
+            if (timestamp) {
+                element.textContent = timeAgo(new Date(timestamp));
+            }
+        });
+    });
+</script>

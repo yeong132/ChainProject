@@ -91,61 +91,7 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-            <li class="nav-item dropdown pe-3">
-
-                <!-- 프로필 이미지 항목 끝 --><a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${fullName}">본인 이름</span> </a>
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
@@ -729,35 +675,6 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-<!-- 시간 표시 -->
-<script>
-    function timeAgo(timestamp) {
-        const now = new Date();
-        const notificationTime = new Date(timestamp);
-        const diffInSeconds = Math.floor((now - notificationTime) / 1000);
-
-        const minutes = Math.floor(diffInSeconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        if (minutes < 1) return '방금 전';
-        if (minutes < 60) return `${minutes}분 전`;
-        if (hours < 24) return `${hours}시간 전`;
-        return `${days}일 전`;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const notificationTimes = document.querySelectorAll('.notification-time');
-
-        notificationTimes.forEach(function (element) {
-            const timestamp = element.getAttribute('data-timestamp');
-            if (timestamp) {
-                element.textContent = timeAgo(new Date(timestamp));
-            }
-        });
-    });
-</script>
 
 
 </body>
