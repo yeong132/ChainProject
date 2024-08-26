@@ -42,7 +42,6 @@ public class NoticeController {
     }
 
 
-
     // 개별 공지사항 상세 조회
     @GetMapping("/detail/{noticeNo}")
     public String getNoticeBynoticeNo(@PathVariable("noticeNo") Long noticeNo, Model model) {
@@ -76,7 +75,7 @@ public class NoticeController {
             redirectAttributes.addFlashAttribute("errorMessage", "공지사항을 찾을 수 없습니다.");
             return "redirect:/notice/list";
         }
-        model.addAttribute("noticeRequestDTO", notice);  // 여기서도 일관성 있게 사용
+        model.addAttribute("notice", notice);  // 여기서도 일관성 있게 사용
         return "notice/modify";
     }
 

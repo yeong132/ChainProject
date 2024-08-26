@@ -402,7 +402,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label" >작성자</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text"  th:value="${board.boardAuthor}">
+                                    <input id="boardAuthorInput"  class="form-control" readonly type="text"  th:value="${board.boardAuthor}">
                                 </div>
                             </div>
 
@@ -566,7 +566,43 @@
     }
 </script>
 
+<!-- 사원번호로 작성자 이름 출력 -->
+<script>
+    $(document).ready(function () {
+        // 작성자 사원 번호를 처리하는 함수
+        function processBoardAuthor() {
+            const boardAuthorInput = $('#boardAuthorInput'); // 작성자 입력 요소 선택
+            const empNo =boardAuthorInput.val(); // 작성자 사원번호를 가져옴
 
+            if (empNo) {
+                // 서버에서 모든 직원 데이터를 가져옴
+                $.getJSON('/api/employees/all', function (employees) {
+                    const employeeMap = {};
+
+                    // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
+                    employees.forEach(employee => {
+                        employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
+                    });
+
+                    // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+                    if (employeeMap[empNo]) {
+                        boardAuthorInput.val(employeeMap[empNo]); // 사원이름으로 텍스트 변경
+                    } else {
+                        boardAuthorInput.val("정보 없음");
+                    }
+                }).fail(function () {
+                    console.error("Failed to fetch employee data.");
+                    boardAuthorInput.val("정보 없음");
+                });
+            } else {
+                boardAuthorInput.val("정보 없음");
+            }
+        }
+
+        // 페이지 로드 시 작성자 사원 번호를 처리
+        processBoardAuthor();
+    });
+</script>
 
 </body>
 </html>

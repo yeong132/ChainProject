@@ -375,7 +375,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">공자사항</h5>
+                        <h5 class="card-title">공지사항</h5>
 
                         <form id="noticeForm" method="post"
                               th:action="@{/notice/modify/{noticeNo}(noticeNo=${notice.noticeNo})}">
@@ -404,8 +404,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">제목</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" name="noticeName" th:value="${notice.noticeName}"
-                                           type="text">
+                                    <input class="form-control" name="noticeName" th:value="${notice.noticeName}" type="text">
                                 </div>
                             </div>
 
@@ -413,18 +412,17 @@
                                 <label class="col-sm-1 col-form-label">작성자</label>
                                 <div class="col-sm-11">
                                     <input id="noticeAuthorInput" class="form-control" readonly type="text" th:value="${notice.noticeAuthor}">
+                                    <input name="noticeAuthor" type="hidden" th:value="${notice.noticeAuthor}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">첨부 파일</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" id="formFile" name="noticeFiles" th:value="${notice.noticeFiles}"
-                                           type="file">
+                                    <input class="form-control" id="formFile" name="noticeFiles" th:value="${notice.noticeFiles}" type="file">
                                     <div th:if="${notice.noticeFiles != null}">
                                         <p>첨부된 파일:
-                                            <a download th:href="@{${notice.noticeFiles}}"
-                                               th:text="${notice.noticeFiles}"></a>
+                                            <a download th:href="@{${notice.noticeFiles}}" th:text="${notice.noticeFiles}"></a>
                                         </p>
                                     </div>
                                 </div>
@@ -433,8 +431,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">내용</label>
                                 <div class="col-sm-11">
-                                    <textarea class="form-control" id="froala" name="noticeContent"
-                                              th:text="${notice.noticeContent}"></textarea>
+                                    <textarea class="form-control" id="froala" name="noticeContent" th:text="${notice.noticeContent}"></textarea>
                                 </div>
                             </div>
 
