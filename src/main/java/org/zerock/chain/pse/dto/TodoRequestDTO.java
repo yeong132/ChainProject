@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+
 @Data
 public class TodoRequestDTO {
 
     private Long todoNo;
+    private Long empNo;
     private String todoContent;
     private String todoCategory;
     private boolean todoStatus;
