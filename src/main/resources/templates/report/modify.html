@@ -409,7 +409,7 @@
                   <label class="col-sm-2 col-form-label">작성자</label>
                   <div class="col-sm-10">
                     <!-- 로그인한 사원번호를 숨겨진 필드에 저장 -->
-                    <input class="form-control" type="hidden" name="reportAuthor" th:value="${session.empNo}" readonly id="reportAuthorId">
+                    <input class="form-control" type="hidden" name="reportAuthor" th:value="${report.reportAuthor}" readonly id="reportAuthorId">
                     <!-- 사원이름을 표시할 필드 -->
                     <input class="form-control mt-2" type="text" id="reportAuthorName" readonly>
                   </div>
@@ -843,6 +843,7 @@
       });
     });
   </script>
+
   <!-- 사원번호로 작성자 이름 출력 -->
   <script>
     $(document).ready(function () {
@@ -875,5 +876,6 @@
       processReportAuthors();
     });
   </script>
+
   </body>
 </html>

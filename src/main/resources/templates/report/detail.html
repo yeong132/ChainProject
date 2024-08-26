@@ -400,10 +400,11 @@
                                 </div>
                             </div>
 
+                            <!-- 작성자 필드 -->
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">작성자</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" readonly type="text" th:value="${report.reportAuthor}">
+                                    <input class="form-control reportAuthor" readonly type="text" th:value="${report.reportAuthor}">
                                 </div>
                             </div>
 
@@ -417,8 +418,6 @@
                                     <!-- 선택된 사원 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
-
-
 
                             <div class="row mb-3" th:if="${report.reportCategory == '회의록'}">
                                 <label class="col-sm-2 col-form-label">회의 시간</label>
@@ -589,6 +588,40 @@
     });
 </script>
 
+<!-- 사원번호로 작성자 이름 출력 -->
+<script>
+    $(document).ready(function () {
+        function processReportAuthors() {
+            const reportAuthorElements = $('.reportAuthor'); // 모든 작성자 요소 선택
 
+            // 서버에서 모든 직원 데이터를 가져옴
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
+
+                // 사원 번호를 키, 성+이름을 값으로 하는 객체를 생성
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = `${employee.lastName} ${employee.firstName}`;
+                });
+
+                reportAuthorElements.each(function () {
+                    const empNo = $(this).val(); // 작성자 사원번호를 가져옴
+                    const authorContainer = $(this);
+
+                    // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+                    if (employeeMap[empNo]) {
+                        authorContainer.val(employeeMap[empNo]); // 사원이름으로 필드 값 설정
+                    } else {
+                        authorContainer.val("정보 없음");
+                    }
+                });
+            }).fail(function () {
+                console.error("Failed to fetch employee data.");
+            });
+        }
+
+        // 페이지 로드 시 모든 작성자 정보를 처리
+        processReportAuthors();
+    });
+</script>
 </body>
 </html>
