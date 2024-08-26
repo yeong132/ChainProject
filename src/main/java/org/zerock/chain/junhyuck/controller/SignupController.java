@@ -70,11 +70,12 @@ public class SignupController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             Long empNo = userDetails.getEmpNo();
 
-            // 세션에 empNo를 저장
-            session.setAttribute("empNo", empNo);
+            Signup user = signupRepository.findByEmpNo(empNo)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            // 모델에 추가하여 뷰로 전달
-            model.addAttribute("empNo", empNo);
+            // fullName을 가져와서 모델에 추가
+            model.addAttribute("fullName", user.getFullName());
+            model.addAttribute("empNo", user.getEmpNo());
         }
         return "index"; // index.html 템플릿으로 이동
     }

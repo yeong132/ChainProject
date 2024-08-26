@@ -42,4 +42,9 @@ public class Signup {
     private LocalDate hireDate;
 
     // 기타 필요한 필드들...
+
+    // firstName과 lastName을 합쳐 fullName을 반환하는 메서드 추가
+    public String getFullName() {
+        return lastName + " " + firstName;
+    }
 }
