@@ -350,12 +350,10 @@
                                     <div class="form-check">
                                         <input checked class="form-check-input" data-tab="home" id="home-1" name="home" type="radio" value="1">
                                         <label class="form-check-label" for="home-1">월간 달성률</label>
-                                        <span>월별로 달성한 비율: 전체 대비 100프로 비율(건수)</span>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" data-tab="home" id="home-2" name="home" type="radio" value="2">
                                         <label class="form-check-label" for="home-2">월별 진행률</label>
-                                        <span>월별 진행 비율: 전체 대비 퍼센트 비율(건수)</span>
                                     </div>
                                 </div>
                             </div>
@@ -580,9 +578,13 @@
                     <input class="form-control" id="searchGoal" placeholder="목표를 검색하세요" type="text">
                 </div>
 
-                <div class="mb-3" id="goalList">
-                    <!-- 목표 리스트가 여기에 로드됨 -->
+                <div id="goalList">
+                    <div class="form-check" th:each="chart : ${charts}">
+                        <input class="form-check-input goal-checkbox" type="checkbox" th:value="${chart.chartNo}" th:id="'goal-' + ${chart.chartNo}" th:data-goal-name="${chart.chartName}">
+                        <label class="form-check-label" th:for="'goal-' + ${chart.chartNo}" th:text="${chart.chartName}"></label>
+                    </div>
                 </div>
+
 
                 <div>
                     <h5>선택한 목표들:</h5>
