@@ -583,6 +583,7 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
                 <button class="btn btn-primary" id="saveOkrChanges" type="button">저장</button>
+                <button class="btn btn-danger"  id="deleteOkrChart" type="button">삭제</button>
             </div>
         </div>
     </div>
@@ -737,7 +738,7 @@
                 console.error('Error fetching OKR detail:', error);
             });
     }
-
+    // 저장 버튼 클릭 시, 수정된 데이터를 서버로 전송
     document.getElementById('saveOkrChanges').addEventListener('click', function () {
         const form = document.getElementById('okrUpdateForm');
         const formData = new FormData(form);
@@ -762,6 +763,32 @@
                 console.error('Error updating OKR:', error);
                 alert('업데이트 중 오류가 발생했습니다.');
             });
+    });
+
+    // 삭제 버튼 클릭 시, 목표 차트를 삭제
+    document.getElementById('deleteOkrChart').addEventListener('click', function () {
+        const chartNo = document.getElementById('modalChartNo').value;
+
+        if (confirm('정말 이 목표 차트를 삭제하시겠습니까?')) {
+            fetch('/chart/delete/' + chartNo, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('OKR 목표 차트가 삭제되었습니다.');
+                        location.reload(); // 페이지 새로고침
+                    } else {
+                        throw new Error('삭제 중 오류 발생');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting OKR:', error);
+                    alert('삭제 중 오류가 발생했습니다.');
+                });
+        }
     });
 </script>
 
