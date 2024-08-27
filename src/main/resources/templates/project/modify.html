@@ -468,43 +468,44 @@
                             </div>
 
                             <!-- 진행 상황 체크리스트 및 라벨 -->
+                            <!-- 진행도 라벨 및 진행도 (%) 출력 -->
                             <fieldset class="row mb-3 mt-5">
-                                <h6>진행 상황 라벨 및 수정</h6>
-                                <legend class="col-form-label col-sm-2 pt-0"></legend>
-                                <div class="col-sm-10">
+                                <h6>진행도 (%)</h6>
+                                <label class="col-form-label col-sm-2 pt-0"></label>
+                                <div class="col-sm-10" id="progressLabelsContainer">
                                     <div class="form-check">
-                                        <input class="form-check-input" id="progress1" name="chartProgress" type="radio" value="20"
-                                               onclick="updateProgress()" th:checked="${project.projectProgress == 20}">
+                                        <input class="form-check-input" id="progress1" name="chartProgress" type="checkbox" value="20"
+                                               th:checked="${project.projectProgress >= 20}">
                                         <label class="form-check-label" for="progress1">
-                                            <span id="label1" th:text="${project.progressLabels[0]} + ' (20%)'">작업 1 (20%)</span>
+                                            <span id="label1" th:text="${project.progressLabels[0]}"></span>
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" id="progress2" name="chartProgress" type="radio" value="40"
-                                               onclick="updateProgress()" th:checked="${project.projectProgress == 40}">
+                                        <input class="form-check-input" id="progress2" name="chartProgress" type="checkbox" value="20"
+                                               th:checked="${project.projectProgress >= 40}">
                                         <label class="form-check-label" for="progress2">
-                                            <span id="label2" th:text="${project.progressLabels[1]} + ' (40%)'">작업 2 (40%)</span>
+                                            <span id="label2" th:text="${project.progressLabels[1]}"></span>
                                         </label>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" id="progress3" name="chartProgress" type="radio" value="60"
-                                               onclick="updateProgress()" th:checked="${project.projectProgress == 60}">
+                                    <div class="form-check ">
+                                        <input class="form-check-input" id="progress3" name="chartProgress" type="checkbox" value="20"
+                                               th:checked="${project.projectProgress >= 60}">
                                         <label class="form-check-label" for="progress3">
-                                            <span id="label3" th:text="${project.progressLabels[2]} + ' (60%)'">작업 3 (60%)</span>
+                                            <span id="label3" th:text="${project.progressLabels[2]}"></span>
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" id="progress4" name="chartProgress" type="radio" value="80"
-                                               onclick="updateProgress()" th:checked="${project.projectProgress == 80}">
+                                        <input class="form-check-input" id="progress4" name="chartProgress" type="checkbox" value="20"
+                                               th:checked="${project.projectProgress >= 80}">
                                         <label class="form-check-label" for="progress4">
-                                            <span id="label4" th:text="${project.progressLabels[3]} + ' (80%)'">작업 4 (80%)</span>
+                                            <span id="label4" th:text="${project.progressLabels[3]}"></span>
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" id="progress5" name="chartProgress" type="radio" value="100"
-                                               onclick="updateProgress()" th:checked="${project.projectProgress == 100}">
+                                        <input class="form-check-input" id="progress5" name="chartProgress" type="checkbox" value="20"
+                                               th:checked="${project.projectProgress >= 100}">
                                         <label class="form-check-label" for="progress5">
-                                            <span id="label5" th:text="${project.progressLabels[4]} + ' (100%)'">작업 5 (100%)</span>
+                                            <span id="label5" th:text="${project.progressLabels[4]}"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -636,27 +637,63 @@
 <!-- 모달, 즐겨찾기 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // 서버로부터 가져온 진행도 라벨 값
-        var progressLabelsString = document.getElementById('progressLabels').value;  // 서버로부터의 값
-        var progressLabelsArray = progressLabelsString.split(',');
+        // 진행도 라벨 데이터를 담고 있는 숨겨진 필드 찾기
+        var progressLabelsField = document.getElementById('progressLabels');
 
-        // 진행도 라벨을 각 스팬에 설정
-        for (var i = 0; i < progressLabelsArray.length; i++) {
-            var labelElement = document.getElementById('label' + (i + 1));
-            if (labelElement) {
-                labelElement.textContent = progressLabelsArray[i].trim() + ' (' + ((i + 1) * 20) + '%)';
+        // 해당 필드가 존재하는지 확인
+        if (progressLabelsField) {
+            var progressLabelsString = progressLabelsField.value;
+
+            // 쉼표로 구분된 문자열을 배열로 변환
+            var progressLabelsArray = progressLabelsString.split(',');
+
+            // 각 라벨을 적절한 위치에 출력
+            for (var i = 0; i < progressLabelsArray.length; i++) {
+                var labelElement = document.getElementById('label' + (i + 1));
+                if (labelElement) {
+                    labelElement.textContent = progressLabelsArray[i].trim();
+                }
             }
+        } else {
+            console.error('Progress labels field not found.');
         }
 
         // 기존의 진행도를 설정
         var existingProgress = document.getElementById('projectProgress').value;
         if (existingProgress) {
-            var progressRadio = document.querySelector('input[name="chartProgress"][value="' + existingProgress + '"]');
-            if (progressRadio) {
-                progressRadio.checked = true;
-            }
+            var progressCheckboxes = document.querySelectorAll('input[name="chartProgress"]');
+
+            // 각 체크박스를 순회하며 기존의 진행도를 반영
+            progressCheckboxes.forEach(function (checkbox) {
+                if (parseInt(existingProgress) >= parseInt(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+
             updateProgress(); // 현재 진행도를 반영
         }
+
+        // 라벨값 저장 및 진행도 업데이트
+        function updateProgress() {
+            let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            let totalProgress = 0;
+
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    totalProgress += parseInt(checkbox.value);
+                }
+            });
+
+            document.getElementById('projectProgress').value = totalProgress;
+            document.getElementById('progress-bar').style.width = totalProgress + '%';
+            document.getElementById('progress-bar').setAttribute('aria-valuenow', totalProgress);
+            document.getElementById('progress-bar').textContent = totalProgress + '%'; // 진행도 바에 텍스트 업데이트
+        }
+
+        // 체크박스 클릭 시 진행도 업데이트
+        document.querySelectorAll('input[name="chartProgress"]').forEach(function (checkbox) {
+            checkbox.addEventListener('click', updateProgress);
+        });
     });
 
     //즐겨찾기 토글 함수
