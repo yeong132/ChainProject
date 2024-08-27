@@ -327,7 +327,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">카테고리 필터링</h5>
+                        <h5 class="card-title">카테고리</h5>
                         <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button aria-controls="home" aria-selected="true" class="nav-link active"
@@ -349,11 +349,11 @@
                                     <!-- 필터 1 -->
                                     <div class="form-check">
                                         <input checked class="form-check-input" data-tab="home" id="home-1" name="home" type="radio" value="1">
-                                        <label class="form-check-label" for="home-1">월간 달성률</label>
+                                        <label class="form-check-label" for="home-1">월간 달성 차트</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" data-tab="home" id="home-2" name="home" type="radio" value="2">
-                                        <label class="form-check-label" for="home-2">월별 진행률</label>
+                                        <label class="form-check-label" for="home-2">월별 진행 차트</label>
                                     </div>
                                 </div>
                             </div>
@@ -363,11 +363,11 @@
                                     <!-- 필터 2 -->
                                     <div class="form-check">
                                         <input class="form-check-input" data-tab="profile" id="profile-1" name="profile" type="radio" value="3">
-                                        <label class="form-check-label" for="profile-1">달성률</label>
+                                        <label class="form-check-label" for="profile-1">월간 달성 차트</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" data-tab="profile" id="profile-2" name="profile" type="radio" value="4">
-                                        <label class="form-check-label" for="profile-2">진행률</label>
+                                        <label class="form-check-label" for="profile-2">월별 진행 차트</label>
                                     </div>
                                 </div>
                             </div>
@@ -532,21 +532,59 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="chartDetailForm" method="post" action="/chart/update">
-                    <!-- Chart No (Hidden Field) -->
-                    <input type="hidden" id="chartNo" name="chartNo">
-
+                <!-- 모달 내부의 폼 -->
+                <form id="chartModifyForm" method="post" th:action="@{/chart/update}">
                     <div class="mb-3">
-                        <label class="form-label">차트 이름</label>
-                        <input class="form-control" id="chartName" name="chartName" type="text">
+                        <label class="form-label">목표</label>
+                        <input class="form-control" name="chartName" placeholder="목표를 입력하세요" type="text">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">카테고리</label>
-                        <input class="form-control" id="chartCategory" name="chartCategory" type="text">
+                        <select class="form-select" name="chartCategory">
+                            <option selected>카테고리를 선택하세요</option>
+                            <option value="개인">개인 목표</option>
+                            <option value="부서">부서 목표</option>
+                        </select>
+                    </div>
+                    <div class=" mb-3">
+                        <label class="form-label">시작일/종료일</label>
+                        <input class="form-control" name="chartStartDate" required type="date">
+                        <input class="form-control" name="chartEndDate" required type="date">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">진행도</label>
-                        <input class="form-control" id="chartProgress" name="chartProgress" type="text">
+                        <label class="form-label">내용</label>
+                        <input class="form-control" name="chartContent" placeholder="추가 설명란" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">진행도 (%)</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="progress20" name="chartProgress" type="radio"
+                                       value="20">
+                                <input class="form-control" name="progressLabel20" placeholder="20% 라벨 입력" type="text">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="progress40" name="chartProgress" type="radio"
+                                       value="40">
+                                <input class="form-control" name="progressLabel40" placeholder="40% 라벨 입력" type="text">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="progress60" name="chartProgress" type="radio"
+                                       value="60">
+                                <input class="form-control" name="progressLabel60" placeholder="60% 라벨 입력" type="text">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="progress80" name="chartProgress" type="radio"
+                                       value="80">
+                                <input class="form-control" name="progressLabel80" placeholder="80% 라벨 입력" type="text">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="progress100" name="chartProgress" type="radio"
+                                       value="100">
+                                <input class="form-control" name="progressLabel100" placeholder="100% 라벨 입력"
+                                       type="text">
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -555,12 +593,15 @@
                     <input id="deleteChartNo" name="chartNo" type="hidden">
                     <button class="btn btn-danger" type="submit">삭제</button>
                 </form>
-                <button class="btn btn-primary" form="chartDetailForm" type="submit">저장</button>
+                <button class="btn btn-primary" form="chartModifyForm" type="submit">저장</button>
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <!-- 목표 간 비교 차트 모달 -->
 <div aria-hidden="true" aria-labelledby="compareChartModalLabel" class="modal fade" id="compareChartModal"
@@ -620,8 +661,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- ======= Footer ======= -->
 <footer class="footer" id="footer">
     <div class="copyright">
