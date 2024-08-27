@@ -973,7 +973,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data) {
                 const documentData = data.document;
-                const loggedInUser = data.loggedInUser;
 
                 // 데이터를 HTML 폼에 삽입
                 document.querySelector('input[name="docTitle"]').value = documentData.docTitle;
@@ -993,10 +992,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const approverNo = document.getElementById('approverContainerNumbers');
                 approverNo.innerHTML = documentData.approverNoHtml;
 
-                // 로그인된 사용자의 정보를 폼에 삽입
-                document.getElementById('dmpName').textContent = loggedInUser.dmpName || '';
-                document.getElementById('senderName').textContent = `${loggedInUser.lastName}${loggedInUser.firstName}` || '';
-                document.getElementById('rankName').textContent = loggedInUser.rankName || '';
+                // 문서 작성자 정보를 폼에 삽입
+                document.getElementById('dmpName').textContent = documentData.senderDmpName || '';
+                document.getElementById('senderName').textContent = documentData.senderName || '';
+                document.getElementById('rankName').textContent = documentData.senderRankName || '';
 
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {

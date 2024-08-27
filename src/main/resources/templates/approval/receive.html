@@ -618,7 +618,8 @@
             .then(response => response.json())
             .then(data => {
                 // 대기 중인 결재 수를 업데이트
-                document.getElementById('pendingCount').innerText = `${data.pendingCount}건`;
+                document.get
+                ElementById('pendingCount').innerText = `${data.pendingCount}건`;
 
                 // 승인한 결재 수를 업데이트
                 document.getElementById('approvedCount').innerText = `${data.approvedCount}건`;

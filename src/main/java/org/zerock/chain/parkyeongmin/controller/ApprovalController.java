@@ -51,7 +51,8 @@ public class ApprovalController {
 
     @GetMapping("/main")  // 보낸 문서함 페이지로 이동
     public String approvalMain(Model model) {
-        Long loggedInEmpNo = 1L;
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();;
         List<SentDocumentsDTO> sentDocuments = documentsService.getSentDocuments(loggedInEmpNo);
         model.addAttribute("sentDocuments", sentDocuments);
         return "approval/main";
@@ -59,11 +60,11 @@ public class ApprovalController {
 
     @GetMapping("/receive")  // 받은 문서함 페이지로 이동
     public String approvalReceive(Model model) {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 지금은 getLoggedInUserDetails에 임시로 설정해둔 값이 나옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 로그인한 사용자가 결재자 또는 참조자인 문서를 docNo 기준으로 최신순 조회
-        List<Approval> approvals = approvalRepository.findByEmployeeOrRefEmployee(loggedInUser.getEmpNo());
+        List<Approval> approvals = approvalRepository.findByEmployeeOrRefEmployee(loggedInEmpNo);
 
         // Approval 엔티티에서 DocumentsDTO로 변환
         List<DocumentsDTO> receivedDocuments = approvals.stream()
@@ -78,7 +79,8 @@ public class ApprovalController {
 
     @GetMapping("/draft")  // 임시 문서함 페이지로 이동
     public String approvalDraft(Model model) {
-        Long loggedInEmpNo = 1L;
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
         List<DraftDocumentsDTO> draftDocuments = documentsService.getDraftDocuments(loggedInEmpNo);
         log.info(draftDocuments.toString());
         model.addAttribute("draftDocuments", draftDocuments);
@@ -124,14 +126,11 @@ public class ApprovalController {
     @GetMapping("/draftRead/{docNo}")
     public String draftReadDocument(@PathVariable("docNo") int docNo,
                                Model model) {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 1인 사용자 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+
 
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
 
-        // 모델에 사용자 정보를 추가
-        model.addAttribute("loggedInUser", loggedInUser);
         // 모델에 문서 데이터를 추가
         model.addAttribute("document", document);
 
@@ -142,14 +141,12 @@ public class ApprovalController {
     @GetMapping("/read/{docNo}")
     public String readDocument(@PathVariable("docNo") int docNo,
                                Model model) {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 1인 사용자 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
 
-        // 모델에 사용자 정보를 추가
-        model.addAttribute("loggedInUser", loggedInUser);
         // 모델에 문서 데이터를 추가
         model.addAttribute("document", document);
 
@@ -180,14 +177,12 @@ public class ApprovalController {
                                             @RequestParam("source") String source,
                                             Model model) {
         log.info("Source: {}", source);
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 3인 사용자 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
 
-        // 모델에 사용자 정보를 추가
-        model.addAttribute("loggedInUser", loggedInUser);
         // 모델에 문서 데이터를 추가
         model.addAttribute("document", document);
         // 출처 페이지 정보 추가
@@ -213,25 +208,24 @@ public class ApprovalController {
 
     @GetMapping("/getDocumentData/{docNo}")
     public ResponseEntity<Map<String, Object>> getDocumentData(@PathVariable("docNo") int docNo) {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 3인 사용자 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 문서 정보 및 결재 순서 조회
-        DocumentsDTO document = documentsService.getDocumentWithApprovalOrder(docNo, loggedInUser.getEmpNo());
+        DocumentsDTO document = documentsService.getDocumentWithApprovalOrder(docNo, loggedInEmpNo);
 
         // 첫 번째 결재자가 승인했는지 여부 확인
         boolean isFirstApprovalApproved = approvalService.isFirstApprovalApproved(docNo);
 
         // 현재 결재순서인 자만 결재 승인, 결재 반려 버튼이 보이게하는 변수
-        boolean isCurrentApprover = approvalService.isCurrentApprover(docNo, loggedInUser.getEmpNo());
+        boolean isCurrentApprover = approvalService.isCurrentApprover(docNo, loggedInEmpNo);
 
         // 사용자가 해당 문서의 결재자인지 확인
-        boolean isDocumentApprover = approvalService.isDocumentApprover(docNo, loggedInUser.getEmpNo());
+        boolean isDocumentApprover = approvalService.isDocumentApprover(docNo, loggedInEmpNo);
 
         // 반환할 데이터를 맵에 추가
         Map<String, Object> response = new HashMap<>();
         response.put("document", document);
-        response.put("loggedInUser", loggedInUser);
         response.put("isFirstApprovalApproved", isFirstApprovalApproved);
         response.put("isCurrentApprover", isCurrentApprover);
         response.put("rejectionReason", document.getRejectionReason());  // 반려 사유 추가
@@ -306,11 +300,11 @@ public class ApprovalController {
     // 결재 승인버튼을 누르면 timeStamp가 업데이트되는 메서드입니다!!
     @PostMapping("/approve/{docNo}")
     public String approveDocument(@PathVariable("docNo") int docNo, @RequestParam("timeStampHtml") String timeStampHtml) {
-        // 로그인한 사용자의 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 결재 승인 처리 (문서 상태 변경)
-        approvalService.approveDocument(docNo, loggedInUser.getEmpNo());
+        approvalService.approveDocument(docNo, loggedInEmpNo);
 
         documentsService.updateTimeStampHtml(docNo, timeStampHtml);
 
@@ -344,10 +338,9 @@ public class ApprovalController {
     @GetMapping("/statusCounts")
     @ResponseBody
     public DocumentStatusCountDTO getCountByStatus() {
-        // 로그인한 사용자의 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
-        Long loggedInEmpNo = 1L; // 실제로는 loggedInUser.getEmpNo로 바꿀 것
         DocumentStatusCountDTO counts = documentsService.getDocumentStatusCountsForUser(loggedInEmpNo);
         log.info("Returning counts: " + counts);
         return counts;
@@ -357,9 +350,8 @@ public class ApprovalController {
     @GetMapping("/approvalStatusCounts")
     @ResponseBody
     public Map<String, Integer> getCountByApprovalStatus() {
-        // 로그인한 사용자의 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = loggedInUser.getEmpNo();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
         int pendingCount = approvalService.countPendingApprovals(loggedInEmpNo);
         int approvedCount = approvalService.countApprovedApprovals(loggedInEmpNo);
         int rejectedCount = approvalService.countRejectedDocumentsForApprover(loggedInEmpNo);
@@ -378,9 +370,8 @@ public class ApprovalController {
     @GetMapping("/documentsByStatusPage")
     @ResponseBody
     public List<DocumentsDTO> getDocumentsByStatus(@RequestParam("docStatus") String docStatus) {
-        // 로그인한 사용자의 정보를 가져옴
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = 1L; // 실제로는 loggedInUser.getEmpNo로 바꿀 것
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         log.info("Fetching documents for empNo: " + loggedInEmpNo + " with status: " + docStatus);
         List<DocumentsDTO> documents = documentsService.getDocumentsByStatus(loggedInEmpNo, docStatus);
@@ -392,8 +383,9 @@ public class ApprovalController {
     @GetMapping("/pendingDocuments")
     @ResponseBody
     public List<DocumentsDTO> getPendingDocuments() {
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = loggedInUser.getEmpNo();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
+
         return documentsService.getPendingDocumentsForUser(loggedInEmpNo);
     }
 
@@ -401,8 +393,9 @@ public class ApprovalController {
     @GetMapping("/approvedDocuments")
     @ResponseBody
     public List<DocumentsDTO> getApprovedDocuments() {
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = loggedInUser.getEmpNo();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
+
         return documentsService.getApprovedDocumentsForUser(loggedInEmpNo);
     }
 
@@ -410,8 +403,9 @@ public class ApprovalController {
     @GetMapping("/rejectedDocuments")
     @ResponseBody
     public List<DocumentsDTO> getRejectedDocuments() {
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = loggedInUser.getEmpNo();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
+
         return documentsService.getRejectedDocumentsForUser(loggedInEmpNo);
     }
 
@@ -419,8 +413,9 @@ public class ApprovalController {
     @GetMapping("/referencesDocuments")
     @ResponseBody
     public List<DocumentsDTO> getReferencesDocuments() {
-        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
-        Long loggedInEmpNo = loggedInUser.getEmpNo();
+        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
+        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
+
         return documentsService.getReferencesDocumentsForUser(loggedInEmpNo);
     }
 }

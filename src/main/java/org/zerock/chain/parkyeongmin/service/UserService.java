@@ -2,10 +2,13 @@ package org.zerock.chain.parkyeongmin.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.parkyeongmin.dto.EmployeeDTO;
 import org.zerock.chain.parkyeongmin.model.Employee;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
+import org.zerock.chain.pse.model.CustomUserDetails;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +26,9 @@ public class UserService {
 
     public EmployeeDTO getLoggedInUserDetails() { // 로그인 기능 구현 시 Long loggedInEmpNo을 ()에 넣기
         try {
-            // 임시값으로 사용자를 가져옴               받은 문서함,반려 테스트할때 여기 값 바꾸기
-            Employee employee = employeesRepository.findById(4L)  // 로그인 기능 구현 시 임시값 -> loggedInEmpNo으로
+            Long loggedInEmpNo = getLoggedInUserEmpNo();
+
+            Employee employee = employeesRepository.findById(loggedInEmpNo)
                     .orElseThrow(() -> {
                         log.error("User with emp_no 1 not found");
                         return new RuntimeException("User not found");
@@ -80,6 +84,16 @@ public class UserService {
         } catch (Exception e) {
             log.error("Error occurred while retrieving all employees", e);
             throw e;
+        }
+    }
+
+    public Long getLoggedInUserEmpNo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            return userDetails.getEmpNo();  // 사원 번호 반환
+        } else {
+            throw new RuntimeException("로그인된 사용자 정보를 가져올 수 없습니다.");
         }
     }
 }

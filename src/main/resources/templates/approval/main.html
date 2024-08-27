@@ -910,7 +910,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data) {
                 console.log("Received data:", data); // 여기서 데이터 확인
 
-
                 // 결재 진행 상태 카드에 각 상태별 문서의 건수를 표시
                 document.getElementById('requestsCount').innerText = `${data.requestsCount}건`;
                 document.getElementById('inProgressCount').innerText = `${data.inProgressCount}건`;

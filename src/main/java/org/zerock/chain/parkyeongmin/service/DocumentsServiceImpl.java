@@ -30,6 +30,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
     private final ApprovalRepository approvalRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService; // 파일 저장 서비스를 주입
+    private final UserService userService; // 사용자 정보 서비스
 
     @Override
     public DocumentsDTO getDocumentById(int docNo) {
@@ -84,8 +85,8 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                 documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
             }
 
-            // 로그인한 사용자의 EmpNo를 설정 (예시: 임시값 대신 실제 값 사용)
-            Long loggedInEmpNo = 1L;  // 임시로 설정, 나중에 실제 로그인한 사용자 정보로 대체
+            // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
+            Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
             documentsDTO.setLoggedInEmpNo(loggedInEmpNo);  // DTO에 설정
 
             // 로그인한 사용자의 정보를 Employees 테이블에서 조회
