@@ -59,11 +59,9 @@ const ChartModuleHome = (function () {
             },
             tooltip: {
                 y: {
-                    formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-                        const percentage = w.config.series[seriesIndex].name;
-                        const totalValue = w.globals.seriesTotals[dataPointIndex];
-                        const count = totalValue > 0 ? Math.round((value / 100) * totalValue) : 0;
-                        return `${percentage} : ${count}건`;
+                    formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+                        const actualCount = w.globals.series[seriesIndex].data[dataPointIndex];
+                        return `${actualCount}건`;
                     }
                 }
             }
@@ -74,14 +72,19 @@ const ChartModuleHome = (function () {
         if (chartEntities && chartEntities.length > 0) {
             let newData = [];
             let colors = [];
+            let achievedCounts = [];
 
             if (category === '1') {
-                // '부서' 월간 달성률 (누적 달성률) - 연두색 통일
-                newData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '부서'), false);
+                // '부서' 월간 달성률 (누적 달성률)
+                const progressData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '부서'), false);
+                newData = progressData.monthlyData;
+                achievedCounts = progressData.achievedCounts;
                 colors = ['#93e6b7']; // 연두색 통일
             } else if (category === '2') {
                 // '부서' 월별 진행률 (각 진행도에 따른 비율 계산)
-                newData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '부서'));
+                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '부서'));
+                newData = distributionData.monthlyData;
+                achievedCounts = distributionData.totalCounts; // 여기서 achievedCounts는 totalCounts로 대체됩니다.
 
                 const series = [
                     { name: '0%', data: newData.map(item => item[0]) },
@@ -96,7 +99,14 @@ const ChartModuleHome = (function () {
 
                 chart.updateOptions({
                     series: series,
-                    colors: colors
+                    colors: colors,
+                    tooltip: {
+                        y: {
+                            formatter: function (value, { dataPointIndex }) {
+                                return `${achievedCounts[dataPointIndex]}건`; // 실제 데이터 개수 출력
+                            }
+                        }
+                    }
                 });
                 return;
             } else {
@@ -108,7 +118,14 @@ const ChartModuleHome = (function () {
                 series: [{
                     data: newData
                 }],
-                colors: colors
+                colors: colors,
+                tooltip: {
+                    y: {
+                        formatter: function (value, { dataPointIndex }) {
+                            return `${achievedCounts[dataPointIndex]}건`; // 실제 데이터 개수 출력
+                        }
+                    }
+                }
             });
         } else {
             console.error('유효하지 않은 데이터: chartEntities가 정의되지 않았거나 비어 있습니다.');
@@ -120,6 +137,7 @@ const ChartModuleHome = (function () {
         updateChart
     };
 })();
+
 // 라디오 3번 4번
 const ChartModuleProfile = (function () {
     function initChart() {
@@ -154,11 +172,9 @@ const ChartModuleProfile = (function () {
             },
             tooltip: {
                 y: {
-                    formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
-                        const percentage = w.config.series[seriesIndex].name;
-                        const totalValue = w.globals.seriesTotals[dataPointIndex];
-                        const count = totalValue > 0 ? Math.round((value / 100) * totalValue) : 0;
-                        return `${percentage} : ${count}건`;
+                    formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+                        const actualCount = w.globals.series[seriesIndex].data[dataPointIndex];
+                        return `${actualCount}건`;
                     }
                 }
             }
@@ -169,29 +185,41 @@ const ChartModuleProfile = (function () {
         if (chartEntities && chartEntities.length > 0) {
             let newData = [];
             let colors = [];
+            let achievedCounts = [];
 
             if (category === '3') {
-                // '개인' 월간 달성률 (누적 달성률) - 노란색 통일
-                newData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '개인'), false);
+                // '개인' 월간 달성률 (누적 달성률)
+                const progressData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '개인'), false);
+                newData = progressData.monthlyData;
+                achievedCounts = progressData.achievedCounts;
                 colors = ['#eed348']; // 노란색 통일
             } else if (category === '4') {
                 // '개인' 월별 진행률 (각 진행도에 따른 비율 계산)
-                newData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '개인'));
+                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '개인'));
+                newData = distributionData.monthlyData;
+                achievedCounts = distributionData.totalCounts; // 여기서 achievedCounts는 totalCounts로 대체됩니다.
 
                 const series = [
                     { name: '0%', data: newData.map(item => item[0]) },
                     { name: '20%', data: newData.map(item => item[1]) },
                     { name: '40%', data: newData.map(item => item[2]) },
-                    { name: '60%', data: newData.map(item[3]) },
-                    { name: '80%', data: newData.map(item[4]) },
-                    { name: '100%', data: newData.map(item[5]) }
+                    { name: '60%', data: newData.map(item => item[3]) },
+                    { name: '80%', data: newData.map(item => item[4]) },
+                    { name: '100%', data: newData.map(item => item[5]) }
                 ];
 
                 colors = ['#f16fc7', '#eed348', '#93e6b7', '#e4b8ff', '#58d68d', '#3498db'];
 
                 chart.updateOptions({
                     series: series,
-                    colors: colors
+                    colors: colors,
+                    tooltip: {
+                        y: {
+                            formatter: function (value, { dataPointIndex }) {
+                                return `${achievedCounts[dataPointIndex]}건`; // 실제 데이터 개수 출력
+                            }
+                        }
+                    }
                 });
                 return;
             } else {
@@ -203,7 +231,14 @@ const ChartModuleProfile = (function () {
                 series: [{
                     data: newData
                 }],
-                colors: colors
+                colors: colors,
+                tooltip: {
+                    y: {
+                        formatter: function (value, { dataPointIndex }) {
+                            return `${achievedCounts[dataPointIndex]}건`; // 실제 데이터 개수 출력
+                        }
+                    }
+                }
             });
         } else {
             console.error('유효하지 않은 데이터: chartEntities가 정의되지 않았거나 비어 있습니다.');
@@ -272,7 +307,7 @@ function calculateProgressData(chartEntities, isCumulative) {
         }
     }
 
-    return monthlyData;
+    return { monthlyData, achievedCounts };
 }
 
 function calculateProgressDistribution(chartEntities) {
@@ -299,7 +334,7 @@ function calculateProgressDistribution(chartEntities) {
         }
     }
 
-    return monthlyData;
+    return { monthlyData, totalCounts };
 }
 
 
