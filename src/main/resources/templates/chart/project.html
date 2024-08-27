@@ -414,6 +414,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
+                <button class="btn btn-primary"  id="viewProjectDetails"  type="button">상세보기</button>
             </div>
         </div>
     </div>
@@ -439,6 +440,8 @@
 
 <!--상세보기 모달 -->
 <script>
+    let currentProjectNo;
+
     function showProjectDetails(projectNo) {
         // 서버에서 projectNo를 이용해 데이터를 가져옵니다.
         fetch('/chart/project/details/' + projectNo)
@@ -462,6 +465,9 @@
                 // 텍스트를 설정
                 modalProjectContentElement.textContent = rawContent;
 
+                // 현재 프로젝트 번호를 전역 변수에 저장
+                currentProjectNo = projectNo;
+
                 // 모달을 띄우기
                 const modal = new bootstrap.Modal(document.getElementById('projectDetailsModal'));
                 modal.show();
@@ -471,6 +477,11 @@
             });
     }
 
+    document.getElementById('viewProjectDetails').addEventListener('click', function () {
+        if (currentProjectNo) {
+            window.location.href = '/project/detail/' + currentProjectNo;
+        }
+    });
 </script>
 
 
