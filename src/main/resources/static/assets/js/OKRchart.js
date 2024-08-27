@@ -207,26 +207,28 @@ function calculateProgressDistribution(chartEntities) {
 
     chartEntities.forEach(entity => {
         const startDate = new Date(entity.chartStartDate);
-        const month = startDate.getMonth();
+        const month = startDate.getMonth(); // 월 인덱스 (0 = January)
 
-        totalCounts[month] += 1;
+        totalCounts[month] += 1; // 각 월의 목표 개수 증가
 
-        const progressIndex = Math.floor(entity.chartProgress / 20);
+        const progressIndex = Math.floor(entity.chartProgress / 20); // 진행도를 20% 단위로 나누기
         if (progressIndex >= 0 && progressIndex < 6) {
-            monthlyData[month][progressIndex] += 1;
+            monthlyData[month][progressIndex] += 1; // 각 진행도 구간에 목표 추가
         }
     });
 
     for (let i = 0; i < 12; i++) {
         if (totalCounts[i] > 0) {
             for (let j = 0; j < 6; j++) {
-                monthlyData[i][j] = (monthlyData[i][j] / totalCounts[i]) * 100;
+                monthlyData[i][j] = (monthlyData[i][j] / totalCounts[i]) * 100; // 비율 계산
             }
         }
     }
 
     return monthlyData;
 }
+
+
 // 5. modalModule.js : 모달 차트 관리 (모달 및 날짜 초기화 )
 const ModalModule = (function () {
     function initFlatpickr() {
