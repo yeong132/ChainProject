@@ -27,12 +27,15 @@ public interface ApprovalService {
     // 해당 문서의 결재자에 현재 사용자가 포함되어 있는지 확인
     boolean isDocumentApprover(int docNo, Long empNo);
 
-    // 결재자의 받은 문서함에 대기상태 문서개수 조회
+    // 로그인한 사용자(결재자)의 받은 문서함에 대기상태 문서 수 조회
     int countPendingApprovals(Long empNo);
 
-    // 결재자의 받은 문서함에 승인상태 문서개수 조회
+    // 로그인한 사용자(결재자)의 받은 문서함에 승인상태 문서 수 조회
     int countApprovedApprovals(Long empNo);
 
-    // 결재자의 받은 문서함에 반려상태 문서개수 조회
+    // 로그인한 사용자(결재자)의 받은 문서함에 반려상태 문서 수 조회
     int countRejectedDocumentsForApprover(Long empNo);
+
+    // 로그인한 사용자(참조자)의 받은 문서함에 반려상태 문서 수 조회
+    int countReferencesDocumentsForUser(Long empNo);
 }

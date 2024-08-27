@@ -36,4 +36,6 @@ public interface DocumentsService <T extends DocumentsDTO> {
     List<DocumentsDTO> getApprovedDocumentsForUser(Long empNo);
     // 반려된 문서 필터링
     List<DocumentsDTO> getRejectedDocumentsForUser(Long empNo);
+    // 참조된 문서 필터링
+    List<DocumentsDTO> getReferencesDocumentsForUser(Long empNo);
 }

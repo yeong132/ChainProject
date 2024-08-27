@@ -198,7 +198,15 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
         if (approval != null) {
             dto.setApprovalOrder(approval.getApprovalOrder());      // 결재 순번 추가
             dto.setApprovalStatus(approval.getApprovalStatus());    // 결재 진행 상태 추가
-            dto.setRejectionReason(approval.getRejectionReason());  // 반려 사유 추가
+
+            // 해당 문서의 모든 결재자들의 반려 사유를 확인
+            List<Approval> approvals = approvalRepository.findByDocumentsDocNo(docNo);
+            for (Approval app : approvals) {
+                if (app.getRejectionReason() != null && !app.getRejectionReason().isEmpty()) {
+                    dto.setRejectionReason(app.getRejectionReason());  // 반려 사유가 있는 경우 설정
+                    break; // 첫 번째 반려 사유를 찾으면 종료
+                }
+            }
         } else {
             dto.setApprovalOrder(-1);     // 결재선에 포함되지 않은 경우
             dto.setApprovalStatus("N/A"); // 결재선에 포함되지 않은 경우 기본값 설정
@@ -260,6 +268,14 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
     @Override  // 받은문서함의 반려된 문서 필터링(이 때 다른 결재자가 반려된 문서여도 필터링)
     public List<DocumentsDTO> getRejectedDocumentsForUser(Long empNo) {
         List<Documents> documents = documentsRepository.findRejectedDocumentsIncludingOthers(empNo);
+        return documents.stream()
+                .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override  // 받은문서함의 참조된 문서 필터링
+    public List<DocumentsDTO> getReferencesDocumentsForUser(Long empNo) {
+        List<Documents> documents = documentsRepository.findReferencedDocumentsByEmpNo(empNo);
         return documents.stream()
                 .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
                 .collect(Collectors.toList());

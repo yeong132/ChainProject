@@ -457,10 +457,10 @@
             <div class="col-lg-12">
                 <div class="row">
                     <!-- 결재 대기 카드 -->
-                    <div class="col-xxl-4 col-md-6">
+                    <div class="col-xxl-3 col-md-6">
                         <div id="pendingDocumentsCard" class="card info-card sales-card clickable-card">
                             <div class="card-body">
-                                <h5 class="card-title">대기 중인 결재</h5>
+                                <h5 class="card-title">대기 중인 결재문서</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -475,10 +475,10 @@
                     </div>
                     <!-- 결재 대기 카드 끝 -->
                     <!-- 결재 승인 카드 시작 -->
-                    <div class="col-xxl-4 col-xl-12">
+                    <div class="col-xxl-3 col-xl-12">
                         <div id="approvedDocumentsCard" class="card info-card revenue-card clickable-card">
                             <div class="card-body">
-                                <h5 class="card-title">승인한 결재</h5>
+                                <h5 class="card-title">승인한 결재문서</h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-person-fill-check"></i>
@@ -492,10 +492,10 @@
                     </div>
                     <!-- 결재 승인 카드 끝 -->
                     <!-- 결재 반려 카드 시작 -->
-                    <div class="col-xxl-4 col-md-6">
+                    <div class="col-xxl-3 col-md-6">
                         <div id="rejectedDocumentsCard" class="card info-card customers-card clickable-card">
                             <div class="card-body">
-                                <h5 class="card-title">반려된 결재</h5>
+                                <h5 class="card-title">반려된 결재문서</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -508,6 +508,24 @@
                             </div>
                         </div>
                     </div><!-- 결재 반려 카드 끝 -->
+                    <!-- 결재 참조 카드 -->
+                    <div class="col-xxl-3 col-md-6">
+                        <div id="referencesDocumentsCard" class="card info-card sales-card clickable-card">
+                            <div class="card-body">
+                                <h5 class="card-title">참조된 결재문서</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-fill-up"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h4 id="referencesCount">0건</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 결재 참조 카드 끝 -->
                 </div><!-- 12 부분 안에 row 끝 -->
             </div><!-- 12로 나누는 부분 끝 -->
         </div><!-- row 끝 -->
@@ -607,6 +625,9 @@
 
                 // 반려된 결재 수를 업데이트
                 document.getElementById('rejectedCount').innerText = `${data.rejectedCount}건`;
+
+                // 참조된 문서 수를 업데이트
+                document.getElementById('referencesCount').innerText = `${data.referencesCount}건`;
             })
             .catch(error => console.error('Error fetching approval status counts:', error));
 
@@ -620,6 +641,10 @@
 
         document.getElementById('rejectedDocumentsCard').addEventListener('click', function() {
             fetchDocuments('/approval/rejectedDocuments');
+        });
+
+        document.getElementById('referencesDocumentsCard').addEventListener('click', function() {
+            fetchDocuments('/approval/referencesDocuments');
         });
 
         function fetchDocuments(url) {

@@ -910,7 +910,9 @@
 </div>
 
 <script><!-- 추가한 스크립트입니다! -->
-let approvers = [];  // 전역 변수로 선언
+// 전역 변수로 선언
+let approvers = [];
+let references = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     // 결재선 모달창 설정 부분
@@ -982,6 +984,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const fileInput = document.querySelector('input[name="file"]');
         const file = fileInput ? fileInput.files[0] : null;
 
+        // 결재선이 비어있는지 확인
+        if (!approvalLineHtml || approvalLineHtml.trim() === '') {
+            alert('결재선을 설정해주십시오.');
+            return; // 서버로 요청 중단
+        }
+
         const formData = new FormData();
         formData.append('docTitle', docTitle);
         formData.append('docBody', docBody);
@@ -995,6 +1003,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         // 결재 테이블에 저장될 결재자 정보를 formData에 추가
         formData.append('approversJson', JSON.stringify(approvers));
+        // 참조자 정보를 formData에 JSON 형식으로 추가
+        formData.append('referencesJson', JSON.stringify(references));
 
         // 서버에 결재 요청 (문서 생성 및 저장)
         fetch('/approval/create-document', {
@@ -1014,9 +1024,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 여기서부터 임시저장 버튼 눌렀을 때의 코드입니다!
     // 1분 후에 자동으로 임시저장 버튼 클릭(click)
-    setTimeout(function () {
+    /*setTimeout(function () {
         document.getElementById('draftBtn').click();
-    }, 60000); // 60,000ms = 1분
+    }, 120000);*/ // 60,000ms = 1분
 
     document.getElementById('draftBtn').addEventListener('click', function (e) {
         e.preventDefault(); // 기본 동작 막기
@@ -1056,6 +1066,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (file) {
             formData.append('file', file);
         }
+
+        // 결재 테이블에 저장될 결재자 정보를 formData에 추가
+        formData.append('approversJson', JSON.stringify(approvers));
 
         fetch('/approval/create-document', {
             method: 'POST',
@@ -1151,6 +1164,21 @@ function getSelectedApprovers(targetId) {
     return approvers;
 }
 
+// 결재시 필요한 empNo<< 참조자 번호로 쓸것을 얻어오는 함수
+function getSelectedReference(targetId) {
+    const listItems = document.querySelectorAll(`#${targetId} ul li`);
+
+    listItems.forEach((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            references.push({
+                refEmpNo: checkbox.value,  // empNo 값
+            });
+        }
+    });
+    return references;
+}
+
 // 모달창에 결재선 등록 함수
 function setupApprovalProcess() {
     const approverContainer = document.getElementById('approverContainer');
@@ -1166,10 +1194,15 @@ function setupApprovalProcess() {
     registerBtn.addEventListener('click', function () {
         // 결재선 항목 처리
         const approvalItems = approvalLineModalUl.querySelectorAll('li');
+        // 전역 변수 approvers 배열을 초기화하여 결재선 설정을 누를때 마다 이전 데이터를 삭제
+        approvers = [];
+        references = [];
 
         // 전역 변수 approvers에 empNo이랑 approvalOrder 값 받아서 객체로 집어넣기 {empNo: '1', approvalOrder: 1}
         approvers = getSelectedApprovers('approvalLineModal');
+        reference = getSelectedReference('referenceLineModal');
         console.log('Selected Approvers:', approvers);
+        console.log('Selected References:', references);
 
         // 기존 approverContainer 내용 제거
         approverContainer.innerHTML = '';

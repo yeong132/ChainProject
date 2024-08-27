@@ -13,19 +13,21 @@ import java.util.Optional;
 @Repository
 public interface ApprovalRepository extends JpaRepository<Approval, Long> {
 
-    // 특정 결재자의 모든 문서를 docNo로 최신순으로 조회
-    List<Approval> findByEmployeeEmpNoOrderByDocumentsDocNoDesc(Long empNo);
+    // 로그인한 사용자가 결재자 또는 참조자인 문서를 docNo 기준으로 최신순 조회
+    @Query("SELECT a FROM Approval a " +
+            "LEFT JOIN a.employee e " +   // 결재자 조인
+            "LEFT JOIN a.refEmployee re " + // 참조자 조인
+            "WHERE e.empNo = :empNo OR re.empNo = :empNo " +
+            "ORDER BY a.documents.docNo DESC")
+    List<Approval> findByEmployeeOrRefEmployee(@Param("empNo") Long empNo);
 
     // 결재자가 어떤 순서에 있든 자신에게 지정된 모든 결재 문서를 조회
     Approval findByDocumentsDocNoAndEmployeeEmpNo(int docNo, Long empNo);
 
-    // 특정 결재자(empNo)가 현재 결재할 차례인 문서 조회
-    List<Approval> findByEmployeeEmpNoAndApprovalStatus(Long empNo, String approvalStatus);
-
-    // 특정 문서 번호와 결재 순서로 결재 내역을 조회
+    // approvals에서 특정 문서 번호와 결재 순서로 결재 내역을 조회
     Approval findByDocumentsDocNoAndApprovalOrder(int docNo, int approvalOrder);
 
-    // 특정 문서 번호의 모든 결재 내역을 조회 (결재선 조회 시 사용 가능)
+    // approvals에서 특정 문서 번호의 모든 결재 내역을 조회 (결재선 조회 시 사용 가능)
     List<Approval> findByDocumentsDocNo(int docNo);
 
     // 로그인한 결재자별로 대기 상태인 문서 개수 조회
@@ -45,4 +47,9 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
             "    WHERE a2.documents.docNo = a1.documents.docNo AND a2.approvalStatus = '반려'" +
             ")")
     int countRejectedDocumentsForApprover(@Param("empNo") Long empNo);
+
+    // 로그인한 사용자가 참조자인 문서의 수를 조회하는 쿼리
+    @Query("SELECT COUNT(a) FROM Approval a " +
+            "WHERE a.refEmployee.empNo = :empNo AND a.approvalStatus = '참조'")
+    int countReferencedDocumentsForUser(@Param("empNo") Long empNo);
 }

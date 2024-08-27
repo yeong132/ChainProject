@@ -42,10 +42,7 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
             "JOIN Approval a ON d.docNo = a.documents.docNo " +
             "WHERE a.employee.empNo = :empNo " +
             "AND a.approvalStatus = '승인' " +
-            "AND NOT EXISTS (" +
-            "    SELECT 1 FROM Approval a2 " +
-            "    WHERE a2.documents = d AND a2.approvalStatus = '반려'" +
-            ") ORDER BY d.docNo DESC")
+            "ORDER BY d.docNo DESC")
     List<Documents> findApprovedDocumentsByEmpNo(@Param("empNo") Long empNo);
 
     // 반려된 문서 필터링
@@ -58,4 +55,11 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
             ") " +
             "ORDER BY d.docNo DESC")
     List<Documents> findRejectedDocumentsIncludingOthers(@Param("empNo") Long empNo);
+
+    // 참조자로 지정된 문서만 필터링하는 쿼리
+    @Query("SELECT d FROM Documents d " +
+            "JOIN Approval a ON d.docNo = a.documents.docNo " +
+            "WHERE a.refEmployee.empNo = :empNo AND a.approvalStatus = '참조' " +
+            "ORDER BY d.docNo DESC")
+    List<Documents> findReferencedDocumentsByEmpNo(@Param("empNo") Long empNo);
 }

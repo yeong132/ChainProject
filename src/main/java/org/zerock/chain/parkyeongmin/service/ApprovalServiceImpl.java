@@ -31,18 +31,16 @@ public class ApprovalServiceImpl implements ApprovalService {
     public void requestApproval(DocumentsDTO documentsDTO) {
         // approverJson을 파싱하여 List<Map<String, Object>>로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Map<String, Object>> approvers;
+        List<Map<String, Object>> approvers;  // 결재자 번호와 결재 순서를 저장할 리스트
+        List<Map<String, Object>> references;  // 참조자 번호를 저장할 리스트
 
         try {
             approvers = objectMapper.readValue(documentsDTO.getApproversJson(), new TypeReference<>() {});
             log.info("Parsed approvers: {}", approvers);
+            references = objectMapper.readValue(documentsDTO.getReferencesJson(), new TypeReference<>() {});
+            log.info("Parsed references: {}", references);
         } catch (Exception e) {
             throw new RuntimeException("Error parsing approverJson", e);
-        }
-
-        if (approvers.isEmpty()) {
-            log.warn("Approval line is empty. Throwing exception.");
-            throw new RuntimeException("Approval line is empty. Please set up the approval line.");
         }
 
         // 결재선의 결재자들을 저장 (DocStatus는 변경하지 않음)
@@ -64,12 +62,34 @@ public class ApprovalServiceImpl implements ApprovalService {
 
             // Approval 객체 생성 및 설정
             Approval approval = new Approval();
-            approval.setDocuments(document);    // 문서 객체 설정
-            approval.setEmployee(employee);     // 사원 객체 설정
+            approval.setDocuments(document);    // 문서 번호 설정
+            approval.setEmployee(employee);     // 결재자 사원번호 설정
             approval.setApprovalOrder(approvalOrder);
             approval.setApprovalStatus("대기");  // 초기 상태는 대기
+
             approvalRepository.save(approval);
             log.info("Saved approval: {}", approval);
+        }
+
+        // 참조자가 여러 명일 경우, 각각에 대해 별도의 Approval 객체 생성 및 저장
+        if (!references.isEmpty()) {
+            for (Map<String, Object> reference : references) {
+                // 문서와 사원 객체를 조회하여 설정
+                Documents document = documentsRepository.findById(documentsDTO.getDocNo())
+                        .orElseThrow(() -> new RuntimeException("Document not found"));
+                log.info("Found document: {}", document);
+
+                Long refEmpNo = Long.valueOf(reference.get("refEmpNo").toString());
+                Employee refEmployee = employeesRepository.findById(refEmpNo)
+                        .orElseThrow(() -> new RuntimeException("Referenced employee not found"));
+                Approval refApproval = new Approval();
+                refApproval.setDocuments(document);    // 문서 번호 설정
+                refApproval.setRefEmployee(refEmployee);  // 참조자 설정
+                refApproval.setApprovalOrder(null);  // 참조자는 결재 순서가 없으므로 null로 설정
+                refApproval.setApprovalStatus("참조");  // 참조자 상태 설정
+                approvalRepository.save(refApproval);
+                log.info("Saved reference approval: {}", refApproval);
+            }
         }
 
         // 첫 번째 결재자에게 문서 할당
@@ -171,9 +191,6 @@ public class ApprovalServiceImpl implements ApprovalService {
             throw new RuntimeException("Approval not found for the given document and approver.");
         }
 
-        // Approval 객체에 필요한 로직 추가 (예: 문서 할당 상태 변경 등)
-        // ...
-
         // 문서를 첫 번째 결재자에게 할당했다고 로그 출력
         System.out.println("Document No: " + docNo + " has been assigned to the first approver with empNo: " + empNo);
     }
@@ -236,19 +253,23 @@ public class ApprovalServiceImpl implements ApprovalService {
         return approval != null;
     }
 
-    @Override  // 결재자의 받은 문서함에 대기상태 문서개수 조회
+    @Override  // 결재자의 받은 문서함에 대기상태 문서 수 조회
     public int countPendingApprovals(Long empNo) {
         return approvalRepository.countPendingApprovalsByEmpNo(empNo);
     }
 
-    @Override  // 결재자의 받은 문서함에 승인상태 문서개수 조회
+    @Override  // 결재자의 받은 문서함에 승인상태 문서 수 조회
     public int countApprovedApprovals(Long empNo) {
         return approvalRepository.countApprovedApprovalsByEmpNo(empNo);
     }
 
-    @Override  // 결재자의 받은 문서함에 반려상태 문서개수 조회
+    @Override  // 결재자의 받은 문서함에 반려상태 문서 수 조회
     public int countRejectedDocumentsForApprover(Long empNo) {
         return approvalRepository.countRejectedDocumentsForApprover(empNo);
     }
 
+    @Override  // 로그인한 사용자(참조자)의 받은 문서함에 참조된 문서 수 조회
+    public int countReferencesDocumentsForUser(Long empNo) {
+        return approvalRepository.countReferencedDocumentsForUser(empNo);
+    }
 }

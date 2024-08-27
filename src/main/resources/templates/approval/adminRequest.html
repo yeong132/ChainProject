@@ -726,6 +726,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalCancelBtn = document.getElementById('modalCancelBtn');
     const modalRejectBtn = document.getElementById('modalRejectBtn');
     const listBtn = document.getElementById('listBtn');
+    const modalTextarea = document.getElementById('rejectMessage'); // 모달 안의 반려 메시지 입력 필드 선택
 
     // URL에서 'category' 파라미터의 값을 가져옴
     const category = getQueryParam('category');
@@ -894,7 +895,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 modalRejectBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
 
-                    const rejectMessage = document.getElementById('rejectMessage').value;
+                    const rejectMessage = document.getElementById('rejectMessage').value.trim();
+
+                    // 반려 메시지가 비어 있는지 확인
+                    if (rejectMessage === '') {
+                        alert('반려 메시지를 적어주세요.');
+                        modalTextarea.focus(); // 반려 메시지 입력 필드에 포커스 맞추기
+                        return; // 반려 처리 중단
+                    }
 
                     // empNo를 서버에서 가져옴
                     fetch('/approval/getEmployees')

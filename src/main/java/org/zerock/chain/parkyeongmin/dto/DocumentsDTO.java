@@ -31,6 +31,7 @@ public class DocumentsDTO {
     private LocalDate reReqDate;      // 재요청일
     private String category;          // 양식 종류
     private String approversJson;     // 엔티티에 없는 부분 - 결재자 목록을 JSON 형식으로 저장하는 필드
+    private String referencesJson;     // 엔티티에 없는 부분 - 참조자 번호를 JSON 형식으로 저장하는 필드
     private int approvalOrder;        // 다른 엔티티 부분 - 결재 순서
     private String approvalStatus;    // 다른 엔티티 부분 - 결재 상태
     private String rejectionReason;   // 다른 엔티티 부분 - 반려 사유
