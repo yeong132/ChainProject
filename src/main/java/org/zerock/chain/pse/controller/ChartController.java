@@ -53,24 +53,9 @@ public class ChartController {
         return ResponseEntity.ok(response); // JSON 형식으로 차트와 프로젝트 데이터 반환
     }
 
-
-
     // 차트 메인 페이지
     @GetMapping("/main")
     public String showMainPage(Model model) {
-        // OKR 차트 데이터를 가져옴
-        List<ChartDTO> charts = chartService.getAllCharts();
-        charts.sort(Comparator.comparing(ChartDTO::getChartUploadDate).reversed());
-
-        // 프로젝트 차트 데이터를 가져옴
-        List<ProjectDTO> projectDTOList = projectService.getAllProjects();
-        projectDTOList.sort(Comparator.comparing(ProjectDTO::getUploadDate).reversed());
-
-        // 모델에 데이터를 추가
-        model.addAttribute("projects", projectDTOList);
-        model.addAttribute("charts", charts);
-
-        // main.html 템플릿 반환
         return "chart/main";
     }
 
@@ -84,6 +69,18 @@ public class ChartController {
         return "chart/OKR";
     }
 
+    // OKR 목표 상세 정보 조회
+    @GetMapping("/okr/detail/{chartNo}")
+    @ResponseBody
+    public ResponseEntity<ChartDTO> getOkrDetail(@PathVariable Long chartNo) {
+        ChartDTO chartDTO = chartService.getChartById(chartNo);
+        if (chartDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(chartDTO);
+    }
+
+
     // 차트 생성 등록
     @PostMapping("/create")
     public String createChart(ChartRequestDTO chartRequestDTO) {
@@ -92,17 +89,25 @@ public class ChartController {
         return "redirect:/chart/OKR";
     }
 
+    // OKR 목표 업데이트
+    @PostMapping("/okr/update")
+    public ResponseEntity<String> updateOkrChart(@RequestBody ChartRequestDTO chartDTO) {
+        try {
+            // 기존 데이터를 조회해서 author 값을 유지
+            ChartDTO existingChart = chartService.getChartById(chartDTO.getChartNo());
+            if (existingChart != null) {
+                // 기존의 author를 유지하여 DTO에 설정
+                chartDTO.setChartAuthor(existingChart.getChartAuthor());
+            }
 
-    // 차트 상세 정보 조회 및 수정 모달 표시
-    @GetMapping("/detail/{chartNo}")
-    @ResponseBody
-    public ResponseEntity<ChartDTO> getChartDetail(@PathVariable Long chartNo) {
-        ChartDTO chartDTO = chartService.getChartById(chartNo);
-        if (chartDTO == null) {
-            return ResponseEntity.notFound().build(); // 404 Not Found 반환
+            // 나머지 업데이트 처리
+            chartService.updateChart(chartDTO.getChartNo(), chartDTO);
+            return ResponseEntity.ok("OKR chart updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating OKR chart");
         }
-        return ResponseEntity.ok(chartDTO); // 200 OK와 함께 데이터 반환
     }
+
 
 
     // 차트 수정 등록

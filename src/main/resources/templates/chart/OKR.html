@@ -409,7 +409,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="pinned-row" data-bs-target="#chartDetailModal" data-bs-toggle="modal" data-id="${chart.chartNo}" th:each="chart : ${charts}">
+                            <tr class="pinned-row" data-bs-toggle="modal" th:each="chart : ${charts}" th:onclick="'showOkrDetail(' + ${chart.chartNo} + ')'">
                                 <td th:text="${chart.chartName}"></td>
                                 <td th:text="${chart.chartCategory}"></td>
                                 <td th:text="${chart.chartProgress + '%'}"></td>
@@ -523,78 +523,66 @@
         </div>
     </div>
 </div>
-<!-- 차트 상세 및 수정 모달 -->
-<div aria-hidden="true" aria-labelledby="chartDetailModalLabel" class="modal fade" id="chartDetailModal" tabindex="-1">
+
+<!-- 목표 상세 정보 모달 -->
+<div aria-hidden="true" aria-labelledby="okrDetailModalLabel" class="modal fade" id="okrDetailModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="chartDetailModalLabel">차트 상세 정보</h5>
+                <h5 class="modal-title" id="okrDetailModalLabel">OKR 목표 상세 정보</h5>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <!-- 모달 내부의 폼 -->
-                <form id="chartModifyForm" method="post" th:action="@{/chart/update}">
+                <form id="okrUpdateForm">
+                    <input type="hidden" id="modalChartNo" name="chartNo">
+
                     <div class="mb-3">
                         <label class="form-label">목표</label>
-                        <input class="form-control" name="chartName" placeholder="목표를 입력하세요" type="text">
+                        <input type="text" class="form-control" id="modalOkrName" name="chartName" readonly>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">카테고리</label>
-                        <select class="form-select" name="chartCategory">
-                            <option selected>카테고리를 선택하세요</option>
-                            <option value="개인">개인 목표</option>
-                            <option value="부서">부서 목표</option>
-                        </select>
-                    </div>
-                    <div class=" mb-3">
-                        <label class="form-label">시작일/종료일</label>
-                        <input class="form-control" name="chartStartDate" required type="date">
-                        <input class="form-control" name="chartEndDate" required type="date">
+                        <input type="text" class="form-control" id="modalOkrCategory" name="chartCategory" readonly>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">내용</label>
-                        <input class="form-control" name="chartContent" placeholder="추가 설명란" type="text">
+                        <input type="text" class="form-control" id="modalOkrContent" name="chartContent">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">기간</label>
+                        <input class="form-control" id="modalOkrStartDate" name="chartStartDate" required type="date">
+                        <input class="form-control" id="modalOkrEndDate" name="chartEndDate" required type="date">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">진행도 (%)</label>
                         <div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress20" name="chartProgress" type="radio"
-                                       value="20">
-                                <input class="form-control" name="progressLabel20" placeholder="20% 라벨 입력" type="text">
+                                <input class="form-check-input" id="progress1" name="chartProgress" type="radio" value="20">
+                                <label class="form-check-label" for="progress20">20%<span id="label20"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress40" name="chartProgress" type="radio"
-                                       value="40">
-                                <input class="form-control" name="progressLabel40" placeholder="40% 라벨 입력" type="text">
+                                <input class="form-check-input" id="progress2" name="chartProgress" type="radio" value="40">
+                                <label class="form-check-label" for="progress40">40%<span id="label40"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress60" name="chartProgress" type="radio"
-                                       value="60">
-                                <input class="form-control" name="progressLabel60" placeholder="60% 라벨 입력" type="text">
+                                <input class="form-check-input" id="progress3" name="chartProgress" type="radio" value="60">
+                                <label class="form-check-label" for="progress60">60%<span id="label60"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress80" name="chartProgress" type="radio"
-                                       value="80">
-                                <input class="form-control" name="progressLabel80" placeholder="80% 라벨 입력" type="text">
+                                <input class="form-check-input" id="progress4" name="chartProgress" type="radio" value="80">
+                                <label class="form-check-label" for="progress80">80% <span id="label80"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress100" name="chartProgress" type="radio"
-                                       value="100">
-                                <input class="form-control" name="progressLabel100" placeholder="100% 라벨 입력"
-                                       type="text">
+                                <input class="form-check-input" id="progress5" name="chartProgress" type="radio" value="100">
+                                <label class="form-check-label" for="progress100">100%<span id="label100"></span></label>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <form id="deleteChartForm" method="post" th:action="@{/chart/delete/{chartNo}}">
-                    <input id="deleteChartNo" name="chartNo" type="hidden">
-                    <button class="btn btn-danger" type="submit">삭제</button>
-                </form>
-                <button class="btn btn-primary" form="chartModifyForm" type="submit">저장</button>
                 <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
+                <button class="btn btn-primary" id="saveOkrChanges" type="button">저장</button>
             </div>
         </div>
     </div>
@@ -711,6 +699,73 @@
 
 <!--그래프 및 모달 관련 주석 -->
 <script src="/assets/js/OKRchart.js"></script>
+<!--상세보기 모달-->
+<script>
+    function showOkrDetail(chartNo) {
+        // 서버에서 chartNo를 이용해 데이터를 가져옵니다.
+        fetch('/chart/okr/detail/' + chartNo)
+            .then(response => response.json())
+            .then(data => {
+                // 데이터 가져오기 성공 시, 모달에 정보 설정
+                document.getElementById('modalChartNo').value = data.chartNo;
+                document.getElementById('modalOkrName').value = data.chartName;
+                document.getElementById('modalOkrCategory').value = data.chartCategory;
+                document.getElementById('modalOkrContent').value = data.chartContent;
+                document.getElementById('modalOkrStartDate').value = data.chartStartDate;
+                document.getElementById('modalOkrEndDate').value = data.chartEndDate;
+
+                // 각 진행도 라벨을 설정 (수정 불가)
+                document.getElementById('label20').textContent = data.progressLabel20;
+                document.getElementById('label40').textContent = data.progressLabel40;
+                document.getElementById('label60').textContent = data.progressLabel60;
+                document.getElementById('label80').textContent = data.progressLabel80;
+                document.getElementById('label100').textContent = data.progressLabel100;
+
+                // 진행도 설정
+                const progressRadios = document.getElementsByName('chartProgress');
+                progressRadios.forEach(radio => {
+                    if (radio.value == data.chartProgress) {
+                        radio.checked = true;
+                    }
+                });
+
+                // 모달을 띄우기
+                const modal = new bootstrap.Modal(document.getElementById('okrDetailModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error fetching OKR detail:', error);
+            });
+    }
+
+    // 저장 버튼 클릭 시, 수정된 데이터를 서버로 전송
+    document.getElementById('saveOkrChanges').addEventListener('click', function () {
+        const form = document.getElementById('okrUpdateForm');
+        const formData = new FormData(form);
+        const chartData = Object.fromEntries(formData.entries());
+
+        fetch('/chart/okr/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chartData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('OKR 목표가 성공적으로 업데이트되었습니다.');
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    throw new Error('업데이트 중 오류 발생');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating OKR:', error);
+                alert('업데이트 중 오류가 발생했습니다.');
+            });
+    });
+</script>
+
 
 
 </body>
