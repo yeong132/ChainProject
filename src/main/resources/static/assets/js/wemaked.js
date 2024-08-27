@@ -270,17 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// 체크박스 진행도가 차는 자스-
-function updateProgress() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-    const totalProgress = Array.from(checkboxes).reduce((acc, checkbox) => acc + parseInt(checkbox.value), 0);
-    const progressBar = document.getElementById('progress-bar');
-    progressBar.style.width = totalProgress + '%';
-    progressBar.setAttribute('aria-valuenow', totalProgress);
-    progressBar.textContent = totalProgress + '%';
-    // 숨겨진 입력 필드를 총 진행률 값으로 업데이트
-    document.getElementById('projectProgress').value = totalProgress;
-}
+
 
 // 테이블에 링크 적용하기
 function rowClick(url) {

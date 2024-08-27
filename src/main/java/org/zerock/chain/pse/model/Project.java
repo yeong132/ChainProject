@@ -55,6 +55,8 @@ public class Project {
     @Column(name = "upload_date")
     private LocalDateTime uploadDate = LocalDateTime.now();
 
+    @Column(name = "progress_labels")
+    private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장
 
     public void setProjectFavorite(boolean projectFavorite) {
         this.projectFavorite = projectFavorite;

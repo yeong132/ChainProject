@@ -23,6 +23,7 @@ public class ProjectRequestDTO {
     private int projectProgress;
     private boolean isTemporary; // 임시 보관
     private LocalDateTime uploadDate = LocalDateTime.now();
+    private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장
 
 
 
@@ -35,4 +36,11 @@ public class ProjectRequestDTO {
     public void setProjectProgress(Integer projectProgress) {
         this.projectProgress = projectProgress;
     }
+
+    // 각 라벨을 받을 필드 추가
+    private String progressLabel20 = "20";
+    private String progressLabel40 = "40";
+    private String progressLabel60 = "60";
+    private String progressLabel80 = "80";
+    private String progressLabel100 = "100";
 }

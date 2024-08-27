@@ -33,25 +33,34 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         return projectRepository.findByEmpNo(empNo);
     }
 
-    @Override
+    @Override // 프로젝트 생성
     public Long register(ProjectDTO projectDTO) {
         // 세션에서 사원번호(empNo) 가져오기
         Long empNo = getEmpNoFromSession();
-
         // DTO에서 엔티티로 매핑
         Project project = modelMapper.map(projectDTO, Project.class);
         // 가져온 사원번호를 엔티티에 설정
         project.setEmpNo(empNo);
-
         log.info("Mapped Project entity: " + project);
+
+        // Process progress labels 리스트로 라벨 저장
+        String labelsString = String.join(",",
+                projectDTO.getProgressLabel20(),
+                projectDTO.getProgressLabel40(),
+                projectDTO.getProgressLabel60(),
+                projectDTO.getProgressLabel80(),
+                projectDTO.getProgressLabel100()
+        );
+        project.setProgressLabels(labelsString);
 
         // 저장 및 프로젝트 번호 반환
         Long projectNo = projectRepository.save(project).getProjectNo();
-
         return projectNo;
     }
 
-    @Override
+
+
+    @Override // 프로젝트 수정
     public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
         Optional<Project> result = projectRepository.findById(projectNo);
         Project existingProject = result.orElseThrow(() -> new NoSuchElementException("Project not found"));

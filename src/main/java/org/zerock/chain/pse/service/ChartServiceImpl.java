@@ -39,7 +39,7 @@ public class ChartServiceImpl extends BaseService<Chart> implements ChartService
 
         Chart chart = modelMapper.map(chartRequestDTO, Chart.class);
 
-        // Process progress labels
+        // Process progress labels 리스트로 라벨 저장
         String labelsString = String.join(",",
                 chartRequestDTO.getProgressLabel20(),
                 chartRequestDTO.getProgressLabel40(),
