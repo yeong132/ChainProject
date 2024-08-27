@@ -558,23 +558,23 @@
                         <div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" id="progress1" name="chartProgress" type="radio" value="20">
-                                <label class="form-check-label" for="progress20">20%<span id="label20"></span></label>
+                                <label class="form-check-label" for="progress1"><span id="label1"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" id="progress2" name="chartProgress" type="radio" value="40">
-                                <label class="form-check-label" for="progress40">40%<span id="label40"></span></label>
+                                <label class="form-check-label" for="progress2"><span id="label2"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" id="progress3" name="chartProgress" type="radio" value="60">
-                                <label class="form-check-label" for="progress60">60%<span id="label60"></span></label>
+                                <label class="form-check-label" for="progress3"><span id="label3"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress4" name="chartProgress" type="radio" value="80">
-                                <label class="form-check-label" for="progress80">80% <span id="label80"></span></label>
+                                <input class="form-check-input" id="progress4" name="chartProgress" type="radio" value="60">
+                                <label class="form-check-label" for="progress4"><span id="label4"></span></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" id="progress5" name="chartProgress" type="radio" value="100">
-                                <label class="form-check-label" for="progress100">100%<span id="label100"></span></label>
+                                <input class="form-check-input" id="progress5" name="chartProgress" type="radio" value="60">
+                                <label class="form-check-label" for="progress5"><span id="label5"></span></label>
                             </div>
                         </div>
                     </div>
@@ -587,7 +587,6 @@
         </div>
     </div>
 </div>
-
 
 
 
@@ -702,11 +701,9 @@
 <!--상세보기 모달-->
 <script>
     function showOkrDetail(chartNo) {
-        // 서버에서 chartNo를 이용해 데이터를 가져옵니다.
         fetch('/chart/okr/detail/' + chartNo)
             .then(response => response.json())
             .then(data => {
-                // 데이터 가져오기 성공 시, 모달에 정보 설정
                 document.getElementById('modalChartNo').value = data.chartNo;
                 document.getElementById('modalOkrName').value = data.chartName;
                 document.getElementById('modalOkrCategory').value = data.chartCategory;
@@ -715,11 +712,14 @@
                 document.getElementById('modalOkrEndDate').value = data.chartEndDate;
 
                 // 각 진행도 라벨을 설정 (수정 불가)
-                document.getElementById('label20').textContent = data.progressLabel20;
-                document.getElementById('label40').textContent = data.progressLabel40;
-                document.getElementById('label60').textContent = data.progressLabel60;
-                document.getElementById('label80').textContent = data.progressLabel80;
-                document.getElementById('label100').textContent = data.progressLabel100;
+                const labels = data.progressLabels.split(','); // progressLabels는 문자열로 전달된 배열입니다.
+                if (labels.length === 5) {
+                    document.getElementById('label1').textContent = labels[0];
+                    document.getElementById('label2').textContent = labels[1];
+                    document.getElementById('label3').textContent = labels[2];
+                    document.getElementById('label4').textContent = labels[3];
+                    document.getElementById('label5').textContent = labels[4];
+                }
 
                 // 진행도 설정
                 const progressRadios = document.getElementsByName('chartProgress');
@@ -738,7 +738,6 @@
             });
     }
 
-    // 저장 버튼 클릭 시, 수정된 데이터를 서버로 전송
     document.getElementById('saveOkrChanges').addEventListener('click', function () {
         const form = document.getElementById('okrUpdateForm');
         const formData = new FormData(form);
@@ -765,6 +764,7 @@
             });
     });
 </script>
+
 
 
 

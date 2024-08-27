@@ -49,9 +49,43 @@ public class ChartServiceImpl extends BaseService<Chart> implements ChartService
         );
         chart.setProgressLabels(labelsString);
 
+        // chartProgress가 100이면 noticePinned를 true로 설정, 그렇지 않으면 false
+        int chartProgress = Integer.parseInt(chartRequestDTO.getChartProgress());
+        chart.setNoticePinned(chartProgress == 100);
+
         chart = chartRepository.save(chart);
         return modelMapper.map(chart, ChartDTO.class);
     }
+
+    @Override   // 수정 등록
+    public ChartDTO updateChart(Long chartNo, ChartRequestDTO chartRequestDTO) {
+        Long empNo = getEmpNoFromSession();
+        Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
+
+        // 기존 chartAuthor 값을 유지
+        chartRequestDTO.setChartAuthor(chart.getChartAuthor());
+
+        modelMapper.map(chartRequestDTO, chart);
+
+        // Process progress labels
+        String labelsString = String.join(",",
+                chartRequestDTO.getProgressLabel20(),
+                chartRequestDTO.getProgressLabel40(),
+                chartRequestDTO.getProgressLabel60(),
+                chartRequestDTO.getProgressLabel80(),
+                chartRequestDTO.getProgressLabel100()
+        );
+        chart.setProgressLabels(labelsString);
+
+        // chartProgress가 100이면 noticePinned를 true로 설정, 그렇지 않으면 false
+        int chartProgress = Integer.parseInt(chartRequestDTO.getChartProgress());
+        chart.setNoticePinned(chartProgress == 100);
+
+        chart = chartRepository.save(chart);
+        return modelMapper.map(chart, ChartDTO.class);
+    }
+
 
     @Override   // 전체 차트 조회
     public List<ChartDTO> getAllCharts() {
@@ -67,28 +101,6 @@ public class ChartServiceImpl extends BaseService<Chart> implements ChartService
         Long empNo = getEmpNoFromSession();
         Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
-        return modelMapper.map(chart, ChartDTO.class);
-    }
-
-    @Override   // 수정 등록
-    public ChartDTO updateChart(Long chartNo, ChartRequestDTO chartRequestDTO) {
-        Long empNo = getEmpNoFromSession();
-        Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
-
-        modelMapper.map(chartRequestDTO, chart);
-
-        // Process progress labels
-        String labelsString = String.join(",",
-                chartRequestDTO.getProgressLabel20(),
-                chartRequestDTO.getProgressLabel40(),
-                chartRequestDTO.getProgressLabel60(),
-                chartRequestDTO.getProgressLabel80(),
-                chartRequestDTO.getProgressLabel100()
-        );
-
-        chart.setProgressLabels(labelsString);
-        chart = chartRepository.save(chart);
         return modelMapper.map(chart, ChartDTO.class);
     }
 

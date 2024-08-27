@@ -132,9 +132,10 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         return filePath;
     }
 
+    // 세션에 저장된 사원번호 가져오기
     private Long getEmpNoFromSession() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
-        return (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+        return (Long) session.getAttribute("empNo");
     }
 }
