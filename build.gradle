@@ -74,12 +74,12 @@ dependencies {
 
 
     // QueryDSL
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-    annotationProcessor  (
-            "jakarta.persistence:jakarta.persistence-api",
-            "jakarta.annotation:jakarta.annotation-api",
-            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
-    )
+//    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+//    annotationProcessor  (
+//            "jakarta.persistence:jakarta.persistence-api",
+//            "jakarta.annotation:jakarta.annotation-api",
+//            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+//    )
 
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -137,11 +137,11 @@ sourceSets {
     }
 }
 
-tasks.named('clean') {
-    doFirst {
-        delete fileTree(dir: 'build/generated', include: '/*.java')
-    }
-}
+//tasks.named('clean') {
+//    doFirst {
+//        delete fileTree(dir: 'build/generated', include: '/*.java')
+//    }
+//}
 
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
