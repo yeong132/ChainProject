@@ -142,10 +142,10 @@ sourceSets {
 //        delete fileTree(dir: 'build/generated', include: '/*.java')
 //    }
 //}
-
-tasks.withType(JavaCompile) {
-    options.annotationProcessorPath = configurations.annotationProcessor
-    doFirst {
-        delete fileTree(dir: 'build/generated/sources/annotationProcessor/java/main', include: '/*.java')
-    }
-}
+//
+//tasks.withType(JavaCompile) {
+//    options.annotationProcessorPath = configurations.annotationProcessor
+//    doFirst {
+//        delete fileTree(dir: 'build/generated/sources/annotationProcessor/java/main', include: '/*.java')
+//    }
+//}

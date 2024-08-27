@@ -1,7 +1,7 @@
 // 1. main.js : 새로고침시, 초기 차트 설정 및 라디오 갱신
 document.addEventListener('DOMContentLoaded', function () {
-    // 차트 초기화 및 이벤트 리스너 설정
-    const initialChart = ChartModule.initChart(); // 초기 차트 데이터 제공
+    // ChartModuleHome 1번 값으로 초기 차트 설정
+    const initialChart = ChartModuleHome.initChart(); // 초기 차트 데이터 제공
     initialChart.render();
 
     // 서버에서 차트 데이터를 가져와서 적용
@@ -12,13 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         success: function(data) {
             console.log('서버로부터 받은 데이터:', data);
 
-            // 페이지 로드 시 체크된 라디오 버튼의 값으로 차트를 업데이트
-            const checkedRadio = document.querySelector('input:checked');
-            if (checkedRadio) {
-                const tab = checkedRadio.dataset.tab;
-                const category = checkedRadio.value;
-                ChartModule.updateChart(initialChart, tab, category, data);
-            }
+            // 페이지 로드 시 home 1번 라디오 버튼의 값으로 차트를 업데이트
+            ChartModuleHome.updateChart(initialChart, '1', data);
 
             // 차트 라디오 버튼 이벤트 리스너 설정
             EventListenerModule.attachChartRadioListeners(initialChart, data);
@@ -30,16 +25,17 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // 2. chartModule.js : 라디오 차트 생성 및 업데이트
-const ChartModule = (function () {
+// 라디오 1번 2번
+const ChartModuleHome = (function () {
     function initChart() {
         return new ApexCharts(document.querySelector("#barChart"), {
-            series: [], // 빈 데이터로 초기화
+            series: [],
             chart: {
                 type: 'bar',
                 height: 350,
-                stacked: true, // 스택드 바 차트로 설정
+                stacked: true,
                 toolbar: {
-                    show: false // 다운로드 옵션 비활성화
+                    show: false
                 }
             },
             plotOptions: {
@@ -74,16 +70,16 @@ const ChartModule = (function () {
         });
     }
 
-    function updateChart(chart, tab, category, chartEntities) {
+    function updateChart(chart, category, chartEntities) {
         if (chartEntities && chartEntities.length > 0) {
             let newData = [];
             let colors = [];
 
-            if (tab === 'home' && category === '1') {
+            if (category === '1') {
                 // '부서' 월간 달성률 (누적 달성률) - 연두색 통일
                 newData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '부서'), false);
                 colors = ['#93e6b7']; // 연두색 통일
-            } else if (tab === 'home' && category === '2') {
+            } else if (category === '2') {
                 // '부서' 월별 진행률 (각 진행도에 따른 비율 계산)
                 newData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '부서'));
 
@@ -103,11 +99,82 @@ const ChartModule = (function () {
                     colors: colors
                 });
                 return;
-            } else if (tab === 'profile' && category === '3') {
+            } else {
+                console.error('유효하지 않은 데이터: 카테고리를 찾을 수 없습니다');
+                return;
+            }
+
+            chart.updateOptions({
+                series: [{
+                    data: newData
+                }],
+                colors: colors
+            });
+        } else {
+            console.error('유효하지 않은 데이터: chartEntities가 정의되지 않았거나 비어 있습니다.');
+        }
+    }
+
+    return {
+        initChart,
+        updateChart
+    };
+})();
+// 라디오 3번 4번
+const ChartModuleProfile = (function () {
+    function initChart() {
+        return new ApexCharts(document.querySelector("#barChart"), {
+            series: [],
+            chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 5,
+                    horizontal: true
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                max: 100
+            },
+            yaxis: {
+                max: 100
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
+                        const percentage = w.config.series[seriesIndex].name;
+                        const totalValue = w.globals.seriesTotals[dataPointIndex];
+                        const count = totalValue > 0 ? Math.round((value / 100) * totalValue) : 0;
+                        return `${percentage} : ${count}건`;
+                    }
+                }
+            }
+        });
+    }
+
+    function updateChart(chart, category, chartEntities) {
+        if (chartEntities && chartEntities.length > 0) {
+            let newData = [];
+            let colors = [];
+
+            if (category === '3') {
                 // '개인' 월간 달성률 (누적 달성률) - 노란색 통일
                 newData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '개인'), false);
                 colors = ['#eed348']; // 노란색 통일
-            } else if (tab === 'profile' && category === '4') {
+            } else if (category === '4') {
                 // '개인' 월별 진행률 (각 진행도에 따른 비율 계산)
                 newData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '개인'));
 
@@ -115,7 +182,7 @@ const ChartModule = (function () {
                     { name: '0%', data: newData.map(item => item[0]) },
                     { name: '20%', data: newData.map(item => item[1]) },
                     { name: '40%', data: newData.map(item => item[2]) },
-                    { name: '60%', data: newData.map(item => item[3]) },
+                    { name: '60%', data: newData.map(item[3]) },
                     { name: '80%', data: newData.map(item[4]) },
                     { name: '100%', data: newData.map(item[5]) }
                 ];
@@ -128,7 +195,7 @@ const ChartModule = (function () {
                 });
                 return;
             } else {
-                console.error('유효하지 않은 데이터: 탭 또는 카테고리를 찾을 수 없습니다');
+                console.error('유효하지 않은 데이터: 카테고리를 찾을 수 없습니다');
                 return;
             }
 
@@ -149,14 +216,20 @@ const ChartModule = (function () {
     };
 })();
 
+
 // 3. eventListenerModule.js : 라디오 버튼에 맞는 탭 차트 업데이트
-const EventListenerModule = (function (ChartModule) {
+const EventListenerModule = (function (ChartModuleHome, ChartModuleProfile) {
     function attachChartRadioListeners(chart, chartEntities) {
         document.querySelectorAll('.form-check-input').forEach(input => {
             input.addEventListener('change', event => {
                 const tab = event.target.dataset.tab;
                 const category = event.target.value;
-                ChartModule.updateChart(chart, tab, category, chartEntities);
+
+                if (tab === 'home') {
+                    ChartModuleHome.updateChart(chart, category, chartEntities);
+                } else if (tab === 'profile') {
+                    ChartModuleProfile.updateChart(chart, category, chartEntities);
+                }
             });
         });
     }
@@ -164,7 +237,8 @@ const EventListenerModule = (function (ChartModule) {
     return {
         attachChartRadioListeners
     };
-})(ChartModule);
+})(ChartModuleHome, ChartModuleProfile);
+
 
 // 4. chartDataCalculation.js : 라디오 차트 계산
 function calculateProgressData(chartEntities, isCumulative) {
