@@ -30,9 +30,7 @@ public class ReportServiceImpl implements ReportService {
     @Override   // 생성 등록
     public ReportDTO createReport(ReportDTO reportDTO) {
         // 세션에서 사원번호(empNo) 가져오기
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession();
-        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+        Long empNo = getEmpNoFromSession();
 
         // DTO에서 엔티티로 매핑
         Report report = modelMapper.map(reportDTO, Report.class);
@@ -43,7 +41,6 @@ public class ReportServiceImpl implements ReportService {
         // 엔티티에서 DTO로 매핑하여 반환
         return modelMapper.map(savedReport, ReportDTO.class);
     }
-
 
     @Override    // 전체 목록 조회
     public List<ReportDTO> getAllReports() {
@@ -71,6 +68,12 @@ public class ReportServiceImpl implements ReportService {
     public void updateReport(Long reportNo, ReportRequestDTO reportRequestDTO) {
         Optional<Report> result = reportRepository.findById(reportNo);
         Report report = result.orElseThrow();
+
+        // 기존 사원번호를 유지
+        Long existingEmpNo = report.getEmpNo();
+        reportRequestDTO.setEmpNo(existingEmpNo);
+
+        // DTO를 엔티티로 매핑하여 업데이트
         modelMapper.map(reportRequestDTO, report);
         reportRepository.save(report);
     }
@@ -98,4 +101,9 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.deleteById(reportNo);
     }
 
+    private Long getEmpNoFromSession() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        return (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+    }
 }

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -50,6 +49,25 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         Long projectNo = projectRepository.save(project).getProjectNo();
 
         return projectNo;
+    }
+
+    @Override
+    public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
+        Optional<Project> result = projectRepository.findById(projectNo);
+        Project existingProject = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
+
+        // 기존 사원번호(empNo)를 유지
+        Long existingEmpNo = existingProject.getEmpNo();
+        projectRequestDTO.setEmpNo(existingEmpNo);
+
+        // 기존 uploadDate를 유지하는 로직 추가
+        if (!existingProject.isTemporary()) {
+            projectRequestDTO.setUploadDate(existingProject.getUploadDate());
+        }
+
+        // DTO를 엔티티로 매핑하여 업데이트
+        modelMapper.map(projectRequestDTO, existingProject);
+        projectRepository.save(existingProject);
     }
 
     @Override
@@ -91,21 +109,6 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         Optional<Project> result = projectRepository.findById(projectNo);
         Project project = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
         return modelMapper.map(project, ProjectDTO.class);
-    }
-
-    @Override
-    public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
-        Optional<Project> result = projectRepository.findById(projectNo);
-        Project existingProject = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        // 기존 uploadDate를 유지하는 로직 추가
-        if (!existingProject.isTemporary()) {
-            projectRequestDTO.setUploadDate(existingProject.getUploadDate());
-        }
-
-        // DTO를 엔티티로 매핑하여 업데이트
-        modelMapper.map(projectRequestDTO, existingProject);
-        projectRepository.save(existingProject);
     }
 
     @Override

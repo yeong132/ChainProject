@@ -76,6 +76,7 @@ public class ReportController {
             reportRequestDTO.setReportFiles(existingReportFiles);
         }
 
+        // 사원번호는 서비스에서 유지하도록 설정
         reportService.updateReport(reportNo, reportRequestDTO);
         return "redirect:/report/list";
     }

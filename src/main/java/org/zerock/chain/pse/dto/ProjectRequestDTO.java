@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -12,8 +13,8 @@ public class ProjectRequestDTO {
     private Long projectNo;
     private Long empNo;
     private String projectName;
-    private String projectStartDate;
-    private String projectEndDate;
+    private LocalDate projectStartDate;
+    private LocalDate projectEndDate;
     private String dmpNo;
     private String participants;
     private String projectContent;
