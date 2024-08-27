@@ -42,7 +42,7 @@ public class Chart {
     private Boolean noticePinned = false;   // 완료 여부
 
     @Column(name = "chart_upload_date")
-    private LocalDate reportUploadDate= LocalDate.now();    // 생성일
+    private LocalDate chartUploadDate= LocalDate.now();    // 생성일
 
     @Column(name = "chart_author")
     private String chartAuthor  ;  //  작성자

@@ -12,7 +12,9 @@ import org.zerock.chain.pse.repository.ProjectRepository;
 import org.zerock.chain.pse.model.Project;
 
 import java.io.File;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +30,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final ModelMapper modelMapper;
 
     @Override   // 프로젝트 생성 등록 메서드
-
     public Long register(ProjectDTO projectDTO) {
         log.info("projectDTO ==" + projectDTO);
         Project project = modelMapper.map(projectDTO, Project.class);
@@ -81,10 +82,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Override  // 특정 프로젝트 수정 기능
     public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
         Optional<Project> result = projectRepository.findById(projectNo);
-        Project project = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
-        modelMapper.map(projectRequestDTO, project);
-        projectRepository.save(project);
+        Project existingProject = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
+
+        // 기존 uploadDate를 유지하는 로직 추가
+        if (!existingProject.isTemporary()) {
+            projectRequestDTO.setUploadDate(existingProject.getUploadDate());
+        }
+
+        // DTO를 엔티티로 매핑하여 업데이트
+        modelMapper.map(projectRequestDTO, existingProject);
+        projectRepository.save(existingProject);
     }
+
 
     @Override   // 프로젝트 삭제 기능
     public void deleteProject(Long projectNo) {

@@ -3,12 +3,14 @@ package org.zerock.chain.pse.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.zerock.chain.pse.dto.TodoDTO;
 import org.zerock.chain.pse.dto.TodoRequestDTO;
 import org.zerock.chain.pse.model.Todo;
 import org.zerock.chain.pse.repository.TodoRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // 등록, 조회, 삭제 메서드 구현
@@ -79,6 +81,13 @@ public class TodoServiceImpl implements TodoService {
         todoRepository.save(todo);
     }
 
+    // 즐겨찾기 상태 업데이트
+    @Override
+    public void updateTodoFavoriteStatus(Long todoNo, boolean todoFavorite) {
+        Todo todo = todoRepository.findById(todoNo).orElseThrow(() -> new RuntimeException("Todo not found"));
+        todo.setTodoFavoriteStatus(todoFavorite);
+        todoRepository.save(todo);
+    }
 
 }
 

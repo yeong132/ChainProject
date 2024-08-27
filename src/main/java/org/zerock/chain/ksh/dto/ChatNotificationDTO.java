@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatNotificationDTO {
     private Long id;
-    private String senderEmpNo;
-    private String recipientEmpNo;
+    private Long senderEmpNo;
+    private Long recipientEmpNo;
     private String chatContent;
 }

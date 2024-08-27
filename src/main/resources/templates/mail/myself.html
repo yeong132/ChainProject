@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>발신함</title>
+    <title>내게 쓴 메일함</title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
@@ -378,7 +378,7 @@
                     <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
                 </li>
                 <li>
-                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
                     <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
@@ -449,22 +449,22 @@
             </a>
             <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/inbox"> <i class="bi bi-circle"></i><span>받은메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                    <a href="/mail/starred"> <i class="bi bi-circle"></i><span>별표메일함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/myself" class="active"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/send" class="active"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                    <a href="/mail/sent"> <i class="bi bi-circle"></i><span>발신함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
@@ -484,86 +484,68 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
-<!-- 메인 몸통 -->
+<!--메인 몸통-->
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>발신함</h1>
+        <h1>내게 쓴 메일함</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/mail/recieve">Email</a></li>
-                <li class="breadcrumb-item active">Send</li>
+                <li class="breadcrumb-item"><a href="/mail/totalEmail">Email</a></li>
+                <li class="breadcrumb-item active">Myself</li>
             </ol>
         </nav>
-        <div class="offset-sm-0">
-            <div class="col-sm-3">
-                <button class="btn btn-primary" onclick="location.href='/mail/compose'" type="button">메일 쓰기</button>
-                <button class="btn btn-primary" onclick="location.href='/mail/composetome'" type="button">내게 쓰기</button>
-            </div>
-        </div>
     </div>
 
+    <!-- 내게 쓴 메일 리스트 섹션 -->
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-title">
-                        </div>
-                        <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
                             <thead>
-                            <tr id="title-name">
+                            <tr>
                                 <th>
                                     <div class="custom-checkbox-dropdown">
                                         <input type="checkbox" id="selectAll">
                                         <div class="dropdown ms-2">
-                                            <button class="btn btn-light dropdown-toggle p-0" type="button"
-                                                    id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false">
-
+                                            <button class="btn btn-light dropdown-toggle p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 ▼
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#" id="selectAllBtn">전체선택</a>
-                                                <a class="dropdown-item" href="#" id="deselectAllBtn">선택안함</a>
-                                                <a class="dropdown-item" href="#" id="markAsStarredBtn">별표</a>
-                                                <a class="dropdown-item" href="#" id="unmarkAsStarredBtn">별표없음</a>
+                                                <a class="dropdown-item" href="#" id="deselectAllBtn">선택해제</a>
+                                                <a class="dropdown-item" href="#" id="markAsStarredBtn">별표표시</a>
+                                                <a class="dropdown-item" href="#" id="unmarkAsStarredBtn">별표아님</a>
+                                                <a class="dropdown-item" href="#" id="markAsImportantBtn">중요메일함으로 이동</a>
+                                                <a class="dropdown-item" href="#" id="moveToTrashBtn">휴지통으로 이동</a>
                                             </div>
                                         </div>
                                     </div>
                                 </th>
-                                <th>To</th>
-                                <th>Subject</th>
-                                <th>Date</th>
+                                <th>보낸 사람</th>
+                                <th>제목</th>
+                                <th>날짜</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- 발신 메일 리스트 데이터 바인딩 -->
-                            <tr th:each="message : ${messages}" class="listTb"
-                                th:data-message-id="${message.id}"
-                                onclick="rowClick(this)">
-                                <td>
+                            <tr th:each="message : ${messages}" th:data-message-id="${message.id}">
+                                <th>
                                     <div class="checkbox-star-container">
-                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
-                                        <i class="bi bi-star star-icon"
-                                           th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'"
-                                           onclick="toggleStar(this, event)">
-                                        </i>
+                                        <input type="checkbox">
+                                        <i th:class="${message.starred} ? 'bi-star-fill star-icon' : 'bi-star star-icon'" onclick="toggleStar(this)"></i>
                                     </div>
-                                </td>
-                                <td th:text="${message.to}">To</td>
-                                <td th:text="${message.subject}">Subject</td>
-                                <td th:text="${message.date}">Date</td>
+                                </th>
+                                <td th:text="${message.from}">보낸 사람</td>
+                                <td><a th:href="@{'/mail/view'(messageId=${message.id})}" th:text="${message.subject}">메일 제목</a></td>
+                                <td th:text="${message.date}">날짜</td>
                             </tr>
-
-                            <!-- 메시지가 없을 경우 -->
-                            <tr th:if="${messages.empty}">
-                                <td colspan="4">No sent emails found.</td>
+                            <tr th:if="${#lists.isEmpty(messages)}">
+                                <td colspan="4">No emails found in your myself folder.</td>
                             </tr>
                             </tbody>
                         </table>
-                        <!-- 테이블 끝 -->
                     </div>
                 </div>
             </div>
@@ -571,34 +553,87 @@
     </section>
 </main>
 
+<!-- 중요 메일함 이동 알림 모달 -->
+<div class="modal fade" id="importantModal" tabindex="-1" aria-labelledby="importantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importantModalLabel">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>다음 이메일이 중요 메일함으로 성공적으로 이동되었습니다:)</p>
+                <ul id="importantList">
+                    <!-- 이메일 제목이 여기에 추가됩니다 -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 중요 메일함 이동 알림 모달 끝 -->
+
+<!-- 이미 중요 메일함에 있음 알림 모달 -->
+<div class="modal fade" id="alreadyImportantModal" tabindex="-1" aria-labelledby="alreadyImportantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alreadyImportantModalLabel">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>다음 이메일은 이미 중요 메일함에 있습니다:(</p>
+                <ul id="alreadyImportantList">
+                    <!-- 이메일 제목이 여기에 추가됩니다 -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 이미 중요 메일함에 있음 알림 모달 끝 -->
+
+<!-- 휴지통 이동 경고 모달 -->
+<div class="modal fade" id="moveToTrashModal" tabindex="-1" aria-labelledby="moveToTrashModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveToTrashModalLabel">휴지통으로 이동</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 휴지통으로 이동하겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmMoveToTrash" data-bs-dismiss="modal">네</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 휴지통 이동 경고 모달 끝 -->
+
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
+        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer>
 <!-- Footer 끝 -->
 
 <!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
+<!-- 맨위로 가기 -->
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
 </a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
+<!-- 맨위로 가기 끝 -->
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -618,24 +653,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    function rowClick(element) {
-        const messageId = element.getAttribute('data-message-id');
-        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
-    }
-
-    function toggleStar(element, event) {
-        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
-
-        if (element.classList.contains('bi-star')) {
-            element.classList.remove('bi-star');
-            element.classList.add('bi-star-fill');
-        } else {
-            element.classList.remove('bi-star-fill');
-            element.classList.add('bi-star');
-        }
-    }
-
-    // 전체 선택 체크박스 기능 구현
+    // 전체 선택 기능
     document.getElementById('selectAll').addEventListener('change', function () {
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
@@ -643,13 +661,13 @@
         });
     });
 
-    // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
+    // 드롭다운 메뉴의 전체 선택/해제 기능
     document.getElementById('selectAllBtn').addEventListener('click', function () {
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
         });
-        document.getElementById('selectAll').checked = true; // 드롭다운 옆 체크박스도 체크
+        document.getElementById('selectAll').checked = true;
     });
 
     document.getElementById('deselectAllBtn').addEventListener('click', function () {
@@ -657,46 +675,184 @@
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
-        document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
+        document.getElementById('selectAll').checked = false;
     });
 
-    // 별표 드롭다운 메뉴와 연동
+    // 별표 토글 기능 및 서버에 상태 업데이트
+    function toggleStar(element) {
+        const row = element.closest('tr');
+        const messageId = row.getAttribute('data-message-id');
+        let isStarred = element.classList.contains('bi-star-fill');
+
+        // 토글 상태 변경
+        if (isStarred) {
+            element.classList.remove('bi-star-fill');
+            element.classList.add('bi-star');
+        } else {
+            element.classList.remove('bi-star');
+            element.classList.add('bi-star-fill');
+        }
+
+        // 서버에 별표 상태 변경 요청
+        $.ajax({
+            url: '/mail/toggleStar',
+            type: 'POST',
+            data: JSON.stringify({messageId: messageId, starred: !isStarred}),
+            contentType: 'application/json',
+            success: function (response) {
+                console.log('Starred status updated successfully.');
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to update starred status:', error);
+            }
+        });
+    }
+
+    // 별표 표시 기능
     document.getElementById('markAsStarredBtn').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]:checked');
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const starIcon = row.querySelector('.star-icon');
+            const messageId = row.getAttribute('data-message-id');
 
-        const stars = document.querySelectorAll('#dataTable .star-icon');
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        stars.forEach((star, index) => {
-            if (star.classList.contains('bi-star-fill')) {
-                checkboxes[index].checked = true;
-            } else {
-                checkboxes[index].checked = false;
+            if (starIcon.classList.contains('bi-star')) {
+                starIcon.classList.remove('bi-star');
+                starIcon.classList.add('bi-star-fill');
+
+                // 서버에 별표 상태 변경 요청
+                $.ajax({
+                    url: '/mail/toggleStar',
+                    type: 'POST',
+                    data: JSON.stringify({messageId: messageId, starred: true}),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log('Starred status updated successfully.');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to update starred status:', error);
+                    }
+                });
             }
         });
     });
 
-
+    // 별표 아님 기능
     document.getElementById('unmarkAsStarredBtn').addEventListener('click', function () {
-
-        const stars = document.querySelectorAll('#dataTable .star-icon');
         const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        stars.forEach((star, index) => {
-            if (star.classList.contains('bi-star')) {
-                checkboxes[index].checked = true;
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const starIcon = row.querySelector('.star-icon');
+
+            // 별표가 없는 이메일에 대해서만 체크박스 선택
+            if (!starIcon.classList.contains('bi-star-fill')) {
+                checkbox.checked = true;
             } else {
-                checkboxes[index].checked = false;
+                checkbox.checked = false;
             }
         });
     });
 
-    // 체크박스 클릭 시 이벤트 전파 방지 및 선택/해제 기능 구현
-    document.querySelectorAll('.checkbox-star-container input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('click', function(event) {
-            event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
+    // 중요 메일함으로 이동 기능
+    document.getElementById('markAsImportantBtn').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]:checked');
+        const messageIds = [];
+
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const messageId = row.getAttribute('data-message-id');
+            messageIds.push(messageId);
         });
+
+        if (messageIds.length > 0) {
+            $.ajax({
+                url: '/mail/markAsImportant',
+                type: 'POST',
+                data: JSON.stringify(messageIds),
+                contentType: 'application/json',
+                success: function (response) {
+                    let alreadyImportant = false;
+                    let markedAsImportant = false;
+
+                    // 응답 결과에 따라 모달을 띄움
+                    if (response.alreadyImportant && response.alreadyImportant.length > 0) {
+                        alreadyImportant = true;
+                        const alreadyImportantList = document.getElementById('alreadyImportantList');
+                        alreadyImportantList.innerHTML = ''; // 기존 리스트 초기화
+
+                        response.alreadyImportant.forEach(title => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = title;
+                            alreadyImportantList.appendChild(listItem);
+                        });
+
+                        var alreadyImportantModal = new bootstrap.Modal(document.getElementById('alreadyImportantModal'));
+                        alreadyImportantModal.show();
+                    }
+
+                    if (response.markedAsImportant && response.markedAsImportant.length > 0) {
+                        markedAsImportant = true;
+                        const importantList = document.getElementById('importantList');
+                        importantList.innerHTML = ''; // 기존 리스트 초기화
+
+                        response.markedAsImportant.forEach(title => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = title;
+                            importantList.appendChild(listItem);
+                        });
+
+                        var importantModal = new bootstrap.Modal(document.getElementById('importantModal'));
+                        importantModal.show();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to mark as important:', error);
+                }
+            });
+        } else {
+            alert("먼저 메일을 선택해주세요.");
+        }
     });
 
+    // 휴지통으로 이동 기능
+    document.getElementById('moveToTrashBtn').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]:checked');
+        const messageIds = [];
+
+        if (checkboxes.length === 0) {
+            alert('먼저 메일을 선택하세요.');
+            return;
+        }
+
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const messageId = row.getAttribute('data-message-id');
+            messageIds.push(messageId);
+        });
+
+        // 모달 표시
+        $('#moveToTrashModal').modal('show');
+
+        document.getElementById('confirmMoveToTrash').onclick = function() {
+            // 서버에 TRASH 라벨로 이동 요청
+            $.ajax({
+                url: '/mail/moveToTrash',
+                type: 'POST',
+                data: JSON.stringify(messageIds),
+                contentType: 'application/json',
+                success: function(response) {
+                    // 화면에서 해당 이메일 제거
+                    checkboxes.forEach(checkbox => {
+                        checkbox.closest('tr').remove();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to move messages to trash:', error);
+                }
+            });
+        };
+    });
 </script>
 
 </body>
 </html>
-

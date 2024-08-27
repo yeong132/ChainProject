@@ -21,10 +21,10 @@ public class ChatRoom {
     private String chatNo; // 방
 
     @Column(name = "sender_emp_no")
-    private String senderEmpNo; // 발신자
+    private Long senderEmpNo; // 발신자의 emp_no
 
     @Column(name = "recipient_emp_no")
-    private String recipientEmpNo; // 수신자
+    private Long recipientEmpNo; // 수신자의 emp_no
 
     @Column(name = "unread_count", nullable = false)
     private int unreadCount = 0; // 읽지 않은 메시지 수

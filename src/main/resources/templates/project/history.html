@@ -5,86 +5,51 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>전체 메일함</title>
+    <title>프로젝트 히스토리</title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
     <!-- 폰트 설정  -->
-    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
     <!-- Vendor CSS Files -->
-    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
 
-    <style>
-        /* 드롭다운 메뉴 스타일 */
-        .dropdown-menu {
-            min-width: 8rem; /* 최소 너비 설정 */
-        }
-
-        /* 체크박스와 드롭다운 버튼을 하나로 묶는 스타일 */
-        .custom-checkbox-dropdown {
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-checkbox-dropdown input[type="checkbox"] {
-            margin-right: 5px;
-        }
-
-        /* 별표 아이콘 스타일 */
-        .star-icon {
-            cursor: pointer;
-        }
-
-        /* 체크박스와 별표 아이콘을 가깝게 배치하기 위한 스타일 */
-        .checkbox-star-container {
-            display: flex; /* flexbox를 사용하여 요소를 가로로 배치 */
-            align-items: center; /* 요소를 세로축 중앙에 정렬 */
-        }
-
-        .checkbox-star-container input[type="checkbox"] {
-            margin-right: 15px; /* 체크박스와 별표 사이의 간격을 설정 */
-        }
-
-        /* 별표 아이콘 색상 설정 */
-        .bi-star-fill {
-            color: #ffd700 /* 별표 아이콘을 노란색으로 설정 */
-        }
-
-        /* 마우스커서 표시 */
-        .listTb {
-            cursor: pointer;
-        }
-
-    </style>
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
 </head>
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -110,13 +75,13 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
                     <i class="bi bi-bell"></i>
                     <span class="badge btn-secondary badge-number">4</span> </a>
                 <!-- 알림창 아이콘 끝 -->
@@ -199,8 +164,8 @@
 
 
             <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
+                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
                     <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
                 <!-- 프로필 이미지 항목 끝 -->
 
@@ -267,7 +232,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
 
 
@@ -276,9 +241,9 @@
                 출근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
                     아니오
                 </button>
             </div>
@@ -290,16 +255,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <div id="currentTimes">현재 시간:</div>
                 퇴근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
                 </button>
             </div>
         </div>
@@ -309,7 +274,7 @@
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<aside class="sidebar" id="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item ">
             <a class="nav-link dash collapsed" href="/">
@@ -325,7 +290,7 @@
                 <span>기본 사항</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
@@ -340,12 +305,12 @@
         <!-- 기본사항 끝 -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-clipboard-data"></i>
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse show" data-bs-parent="#sidebar-nav" id="work-nav">
                 <li>
                     <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
@@ -356,7 +321,7 @@
                     <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
                 </li>
                 <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                    <a class="active" href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
                 </li>
             </ul>
         </li>
@@ -368,7 +333,7 @@
                 <span>전자결재</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
@@ -385,7 +350,7 @@
                 <span>게시판</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
                 <li>
                     <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
@@ -408,7 +373,7 @@
                 <span>일정</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
                 </li>
@@ -417,14 +382,14 @@
         <!-- 일정 사이드바 끝 -->
 
         <li class="nav-item">
-            <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-envelope"></i>
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
                 <li>
-                    <a href="/mail/receive" class="active"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
                 <li>
                     <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
@@ -459,87 +424,102 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
-<!-- 메인 몸통 -->
-<main id="main" class="main">
+<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+<main class="main" id="main">
     <div class="pagetitle">
-        <h1>전체 메일함</h1>
+        <h1>프로젝트 목록</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Email</li>
+                <li class="breadcrumb-item"><a href="/project/list">Project</a></li>
+                <li class="breadcrumb-item active">history</li>
             </ol>
         </nav>
-        <div class="offset-sm-0">
-            <div class="col-sm-3">
-                <button class="btn btn-primary" onclick="location.href='/mail/compose'" type="button">메일 쓰기</button>
-                <button class="btn btn-primary" onclick="location.href='/mail/composetome'" type="button">내게 쓰기</button>
-            </div>
-        </div>
     </div>
 
     <section class="section">
         <div class="row">
+            <!-- 프로젝트 데이터를 숨긴 필드로 저장 -->
+            <div id="projectData" style="display:none;">
+                <input class="projectName" th:each="project : ${projects}" th:value="${project.projectName}"
+                       type="hidden"/>
+                <input class="projectProgress" th:each="project : ${projects}" th:value="${project.projectProgress}"
+                       type="hidden"/>
+                <input class="projectStartDate" th:each="project : ${projects}" th:value="${project.projectStartDate}"
+                       type="hidden"/>
+                <input class="projectEndDate" th:each="project : ${projects}" th:value="${project.projectEndDate}"
+                       type="hidden"/>
+            </div>
+
+            <!-- 프로젝트 목록을 보여주는 테이블 -->
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="card-title">
-                        </div>
-                        <!-- Table with stripped rows -->
+                        <h5 class="card-title">프로젝트 목록</h5>
                         <table class="table table-hover datatable" id="dataTable">
                             <thead>
                             <tr id="title-name">
-                                <th>
-                                    <div class="custom-checkbox-dropdown">
-                                        <input type="checkbox" id="selectAll">
-                                        <div class="dropdown ms-2">
-                                            <button class="btn btn-light dropdown-toggle p-0" type="button"
-                                                    id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false">
-                                                ▼
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#" id="selectAllBtn">전체선택</a>
-                                                <a class="dropdown-item" href="#" id="deselectAllBtn">선택안함</a>
-                                                <a class="dropdown-item" href="#" id="markAsStarredBtn">별표</a>
-                                                <a class="dropdown-item" href="#" id="unmarkAsStarredBtn">별표없음</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th>From</th>
-                                <th>Subject</th>
-                                <th>Date</th>
+                                <th>  </th>
+                                <th>프로젝트</th>
+                                <th>진행도</th>
+                                <th>시작일</th>
+                                <th>종료일</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb"
-                                th:data-message-id="${message.id}"
-                                onclick="rowClick(this)">
+                            <tr th:each="project : ${projects}" th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
                                 <td>
-                                    <div class="checkbox-star-container">
-                                        <input type="checkbox" class="form-check-input" onclick="event.stopPropagation();">
-                                        <i class="bi bi-star star-icon"
-                                           th:classappend="${message.starred} ? 'bi-star-fill' : 'bi-star'"
-                                           onclick="toggleStar(this, event)">
-                                        </i>
-                                    </div>
+                                    <i th:class="${project.projectFavorite} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"></i>
                                 </td>
-                                <td th:text="${message.from}">From</td>
-                                <td th:text="${message.subject}">Subject</td>
-                                <td th:text="${message.date}">Date</td>
+                                <td>
+                                    <span th:text="${project.projectName}"></span>
+                                    <span th:if="${project.isTemporary == true}" class="temporary-text">(임시보관)</span>
+                                </td>
+                                <td th:text="${project.projectProgress + '%'}"></td>
+                                <td th:text="${project.projectStartDate}"></td>
+                                <td th:text="${project.projectEndDate}"></td>
                             </tr>
                             </tbody>
                         </table>
-                        <!-- 테이블 끝 -->
+
+
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
+<!-- End #main -->
 
+
+<!-- 프로젝트 정보 모달 -->
+<div aria-hidden="true" aria-labelledby="projectDetailsModalLabel" class="modal fade" id="projectDetailsModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectDetailsModalLabel">프로젝트 정보</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>프로젝트 이름 :</strong> <span id="modalProjectName"></span></p>
+                <p><strong>부서 및 참여자 :</strong> <span id="modalParticipants"></span> / <span id="modalDmpNo"></span></p>
+                <p><strong>내용 :</strong> <span id="modalProjectContent"></span></p>
+                <p><strong>진행도 :</strong> <span id="modalProjectProgress"></span></p>
+                <p><strong>기간 :</strong> <span id="modalProjectStartDate"></span> ~ <span
+                        id="modalProjectEndDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="detailPageButton">상세보기</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------======= 고정 Footer ======= ------------------------------------------->
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer" id="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
@@ -554,14 +534,52 @@
 </footer>
 <!-- Footer 끝 -->
 
+
+<!--상세보기 모달 -->
+<script>
+    function showProjectDetails(projectNo) {
+        // 서버에서 projectNo를 이용해 데이터를 가져옵니다.
+        fetch('/chart/project/details/' + projectNo)
+            .then(response => response.json())
+            .then(data => {
+                // 데이터 가져오기 성공 시, 모달에 정보 설정
+                document.getElementById('modalProjectName').textContent = data.projectName;
+                document.getElementById('modalDmpNo').textContent = data.dmpNo;
+                document.getElementById('modalParticipants').textContent = data.participants;
+                document.getElementById('modalProjectProgress').textContent = data.projectProgress + '%';
+                document.getElementById('modalProjectStartDate').textContent = data.projectStartDate;
+                document.getElementById('modalProjectEndDate').textContent = data.projectEndDate;
+
+                // projectContent의 <p> 태그를 제거하고 텍스트만 설정
+                const modalProjectContentElement = document.getElementById('modalProjectContent');
+                let rawContent = data.projectContent;
+                rawContent = rawContent.replace(/<\/?p>/g, '');
+                modalProjectContentElement.textContent = rawContent;
+
+                // 수정페이지 버튼의 URL 설정
+                document.getElementById('detailPageButton').onclick = function() {
+                    window.location.href = '/project/detail/' + projectNo;
+                };
+
+                // 모달을 띄우기
+                const modal = new bootstrap.Modal(document.getElementById('projectDetailsModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error fetching project details:', error);
+            });
+    }
+</script>
+
+
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
     <i class="bi bi-arrow-up-short"></i>
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
@@ -576,104 +594,13 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
+<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    function rowClick(element) {
-        const messageId = element.getAttribute('data-message-id');
-        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
-    }
-
-
-
-    function toggleStar(element, event) {
-        event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
-        if (element.classList.contains('bi-star')) {
-            element.classList.remove('bi-star');
-            element.classList.add('bi-star-fill');
-        } else {
-            element.classList.remove('bi-star-fill');
-            element.classList.add('bi-star');
-        }
-    }
-
-    // 메시지 행 클릭 시 이동하는 함수
-    function handleCardClick(event) {
-        // 체크박스나 별표 아이콘을 클릭한 경우, 이벤트 전파를 막고 함수를 종료합니다.
-        if (event.target.closest('input[type="checkbox"], i.star-icon')) {
-            event.stopPropagation();
-            return;
-        }
-
-        // 그 외의 경우는 카드 전체를 클릭한 것으로 처리합니다.
-        var url = event.currentTarget.getAttribute('data-url');
-        window.location.href = url;
-    }
-
-    // 전체 선택 체크박스 기능 구현
-    document.getElementById('selectAll').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
-
-    // 드롭다운 메뉴의 전체 선택 및 선택 해제 기능 구현
-    document.getElementById('selectAllBtn').addEventListener('click', function () {
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
-        document.getElementById('selectAll').checked = true; // 드롭다운 옆 체크박스도 체크
-    });
-
-    document.getElementById('deselectAllBtn').addEventListener('click', function () {
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        document.getElementById('selectAll').checked = false; // 드롭다운 옆 체크박스도 체크 해제
-    });
-
-    // 별표 드롭다운 메뉴와 연동
-    document.getElementById('markAsStarredBtn').addEventListener('click', function () {
-        const stars = document.querySelectorAll('#dataTable .star-icon');
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        stars.forEach((star, index) => {
-            if (star.classList.contains('bi-star-fill')) {
-                checkboxes[index].checked = true;
-            } else {
-                checkboxes[index].checked = false;
-            }
-        });
-    });
-
-    document.getElementById('unmarkAsStarredBtn').addEventListener('click', function () {
-        const stars = document.querySelectorAll('#dataTable .star-icon');
-        const checkboxes = document.querySelectorAll('#dataTable tbody input[type="checkbox"]');
-        stars.forEach((star, index) => {
-            if (star.classList.contains('bi-star')) {
-                checkboxes[index].checked = true;
-            } else {
-                checkboxes[index].checked = false;
-            }
-        });
-    });
-
-    // 체크박스 클릭 시 이벤트 전파 방지 및 선택/해제 기능 구현
-    document.querySelectorAll('.checkbox-star-container input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('click', function(event) {
-            event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 함
-        });
-    });
-
-</script>
-
 </body>
 </html>
+

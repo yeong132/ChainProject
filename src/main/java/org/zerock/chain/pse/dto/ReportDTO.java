@@ -24,7 +24,7 @@ public class ReportDTO {
 
     // 날짜 형식 변환 어노테이션 사용
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate reportUploadDate;  // 작성일
+    private LocalDate reportUploadDate = LocalDate.now();
 
     private String reportFiles; // 첨부파일
     private boolean isTemporary = false;    // 임시보관여부

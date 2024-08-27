@@ -18,13 +18,16 @@ public class ChatRoomController {
     private final ChatMessageService chatMessageService;
 
     @PostMapping("/markAsRead")
-    public ResponseEntity<Void> markMessagesAsRead(@RequestBody Map<String, String> request) {
-        String senderEmpNo = request.get("senderEmpNo");
-        String recipientEmpNo = request.get("recipientEmpNo");
+    public ResponseEntity<Void> markMessagesAsRead(@RequestBody Map<String, Long> request) {
+        try {
+            Long senderEmpNo = request.get("senderEmpNo");
+            Long recipientEmpNo = request.get("recipientEmpNo");
+            // ChatRoomService에서 처리하는 대신, ChatMessageService로 이동
+            chatMessageService.markMessagesAsRead(senderEmpNo, recipientEmpNo);
+            return ResponseEntity.ok().build();
 
-        // ChatRoomService에서 처리하는 대신, ChatMessageService로 이동
-        chatMessageService.markMessagesAsRead(senderEmpNo, recipientEmpNo);
+        } catch (Exception e){}
 
-        return ResponseEntity.ok().build();
+        return null;
     }
 }

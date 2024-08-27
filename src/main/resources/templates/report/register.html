@@ -431,7 +431,7 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item"><a href="/work/list">Work</a></li>
+          <li class="breadcrumb-item"><a href="/report/list">Report</a></li>
           <li class="breadcrumb-item active">Register</li>
         </ol>
       </nav>
@@ -475,10 +475,11 @@
                         <input class="form-control" name="reportName" placeholder="회의록 제목" required type="text">
                       </div>
                     </div>
+
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">작성자</label>
                       <div class="col-sm-10">
-                        <input class="form-control" name="reportAuthor" placeholder="본인 고정" required type="text">
+                        <input class="form-control" name="reportAuthor" type="text" th:value="${session.empNo}">
                       </div>
                     </div>
 
@@ -539,16 +540,11 @@
                         <input class="form-control" name="reportName" placeholder="보고서 제목" required type="text">
                       </div>
                     </div>
-                    <div class="row mb-3">
-                      <label class="col-sm-2 col-form-label">참여자</label>
-                      <div class="col-sm-10">
-                        <input class="form-control" name="reportParticipants" placeholder="참석자/직급/부서" required type="text">
-                      </div>
-                    </div>
+
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label">작성자</label>
                       <div class="col-sm-10">
-                        <input class="form-control" name="reportAuthor" placeholder="본인 고정" required type="text">
+                        <input class="form-control" name="reportAuthor"  type="text" th:text="${fullName}">
                       </div>
                     </div>
                     <div class="row mb-3">
@@ -828,7 +824,6 @@
       updateForm();
     });
   </script>
-
 
 
   <!-- Vendor JS Files -->

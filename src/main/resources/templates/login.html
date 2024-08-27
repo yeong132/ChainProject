@@ -68,7 +68,7 @@
 <!--                    <p class="text-center small">사원번호와 비밀번호를 입력하세요.</p>-->
                   </div>
 
-                  <form class="row g-3 needs-validation justify-content-sm-center pb-2" novalidate method="post" action="/login">
+                  <form class="row g-3 needs-validation justify-content-sm-center pb-2" novalidate method="post" action="/login" id="usernameForm">
                     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
 
                     <div class="col-8">
@@ -135,7 +135,21 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
   </a>
+<script>
+  function connect(event) {
+    event.preventDefault(); // 폼 제출로 인한 페이지 리로딩 방지
 
+    const empNo = document.querySelector('#yourEmpNo').value.trim();
+    const password = document.querySelector('#yourPassword').value.trim();
+
+    if (empNo && password) {
+      sessionStorage.setItem('empNo', empNo); // 세션 스토리지에 empNo 저장
+      // 로그인 폼을 제출하여 서버에 인증 요청을 전송
+      document.querySelector('#usernameForm').submit();
+    }
+  }
+  document.querySelector('#usernameForm').addEventListener('submit', connect); // 로그인 폼이 제출되면 소켓 연결
+</script>
   <!-- Vendor JS Files -->
   <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

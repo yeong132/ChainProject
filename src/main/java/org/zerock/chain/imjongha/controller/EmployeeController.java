@@ -3,12 +3,18 @@ package org.zerock.chain.imjongha.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
 import org.zerock.chain.imjongha.dto.PermissionDTO;
 import org.zerock.chain.imjongha.service.EmployeeService;
+import org.zerock.chain.pse.model.CustomUserDetails;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -66,6 +72,7 @@ public class EmployeeController {
         Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
         return ResponseEntity.ok(employeePage);
     }
+
     @GetMapping("/department/{departmentId}")
     public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
         List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
@@ -82,5 +89,30 @@ public class EmployeeController {
     public ResponseEntity<Void> updateEmployeePermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
         employeeService.updateEmployeePermissions(id, permissionIds);
         return ResponseEntity.noContent().build();
+    }
+
+    // 박성은 추가 코드
+    @GetMapping("/employee-info")
+    public ResponseEntity<Map<String, String>> employeeInfo(HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, String> response = new HashMap<>();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            response.put("username", authentication.getName()); // 사원이름
+
+            // 세션에서 사원번호 가져오기
+            Object empNo = request.getSession().getAttribute("empNo");
+            if (empNo != null) {
+                response.put("empNo", empNo.toString());
+            } else {
+                response.put("empNo", "N/A");
+            }
+        } else {
+            response.put("empNo", "N/A");
+            response.put("username", "N/A");
+        }
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.ksh.model.ChatMessage;
 import org.zerock.chain.ksh.model.ChatNotification;
-import org.zerock.chain.ksh.model.User;
+import org.zerock.chain.imjongha.model.Employee;
 import org.zerock.chain.ksh.repository.ChatMessageRepository;
 import org.zerock.chain.ksh.repository.ChatNotificationRepository;
 import org.zerock.chain.ksh.repository.ChatRoomRepository;
@@ -23,8 +23,9 @@ public class ChatMessageService {
 
     public ChatMessage save(ChatMessage chatMessage) {
         var chatRoom = chatRoomService
-                .getChatRoom(chatMessage.getSenderEmpNo(), chatMessage.getRecipientEmpNo(), true)  // 채팅방을 가져옴 (createNewRoomIfNotExists를 true로 설정)
-                .orElseThrow(() -> new IllegalStateException("채팅방을 생성할 수 없습니다.")); // 예외 처리 하기
+                // 채팅방을 가져옴 (createNewRoomIfNotExists를 true로 설정)
+                .getChatRoom(chatMessage.getSenderEmpNo(), chatMessage.getRecipientEmpNo(), true)
+                .orElseThrow(() -> new IllegalStateException("채팅방을 생성할 수 없습니다.")); // 예외 처리
 
         chatMessage.setChatNo(chatRoom.getChatNo()); // chatNo 설정
         chatMessage.setChatRoom(chatRoom); // chatRoomNo 설정
@@ -48,11 +49,11 @@ public class ChatMessageService {
     }
 
     // 현재 사용자의 대화 중인 사용자 목록 반환
-    public List<User> findActiveChatUsers(String nickname) {
-        return chatRoomRepository.findActiveChatUsersByNickname(nickname);
+    public List<Employee> findActiveChatUsers(Long empNo) {
+        return chatRoomRepository.findActiveChatUsersByEmpNo(empNo);
     }
 
-    public List<ChatMessage> findChatMessages(String senderEmpNo, String recipientEmpNo) {
+    public List<ChatMessage> findChatMessages(Long senderEmpNo, Long recipientEmpNo) {
         var chatNo = chatRoomService.getChatRoomNo(
                 senderEmpNo,
                 recipientEmpNo,
@@ -61,13 +62,13 @@ public class ChatMessageService {
     }
 
     // 로그인 시 읽지 않은 메시지 불러오기
-    public List<ChatMessage> getUnreadMessages(String recipientEmpNo) {
+    public List<ChatMessage> getUnreadMessages(Long recipientEmpNo) {
         return messageRepository.findByRecipientEmpNoAndIsReadFalse(recipientEmpNo);
     }
 
     // 메시지 읽음 처리 & 메시지 수 초기화
     @Transactional
-    public void markMessagesAsRead(String senderEmpNo, String recipientEmpNo) {
+    public void markMessagesAsRead(Long senderEmpNo, Long recipientEmpNo) {
         var chatRoom = chatRoomService.getChatRoom(senderEmpNo, recipientEmpNo, false);
 
         chatRoom.ifPresent(room -> {
