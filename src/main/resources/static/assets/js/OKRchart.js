@@ -4,25 +4,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialChart = ChartModuleHome.initChart(); // 초기 차트 데이터 제공
     initialChart.render();
 
-    // 서버에서 차트 데이터를 가져와서 적용
+    // 서버에서 차트 및 프로젝트 데이터를 가져와서 적용
     $.ajax({
         url: '/chart/data',
         method: 'GET',
         dataType: 'json',
-        success: function (data) {
-            console.log('서버로부터 받은 데이터:', data);
+        success: function (response) {
+            console.log('서버로부터 받은 데이터:', response);
+
+            // 서버로부터 받은 데이터에서 차트와 프로젝트 데이터를 분리
+            const chartData = response.charts;
+            const projectData = response.projects;
 
             // 페이지 로드 시 home 1번 라디오 버튼의 값으로 차트를 업데이트
-            ChartModuleHome.updateChart(initialChart, '1', data);
+            ChartModuleHome.updateChart(initialChart, '1', chartData, projectData);
 
             // 차트 라디오 버튼 이벤트 리스너 설정
-            EventListenerModule.attachChartRadioListeners(initialChart, data);
+            EventListenerModule.attachChartRadioListeners(initialChart, chartData, projectData);
         },
         error: function (xhr, status, error) {
             console.error('차트 데이터를 가져오는데 실패했습니다:', error);
         }
     });
 });
+
 
 // 2. chartModule.js : 라디오 차트 생성 및 업데이트
 // 라디오 1번 2번

@@ -17,10 +17,7 @@ import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.service.ChartService;
 import org.zerock.chain.pse.service.ProjectService;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/chart")
@@ -41,15 +38,39 @@ public class ChartController {
     // 차트 데이터를 JSON으로 반환하는 메서드
     @GetMapping("/data")
     @ResponseBody
-    public ResponseEntity<List<ChartDTO>> getChartData() {
+    public ResponseEntity<Map<String, Object>> getChartData() {
+        // 차트 데이터를 가져옴
         List<ChartDTO> charts = chartService.getAllCharts();
-        return ResponseEntity.ok(charts); // JSON 형식으로 차트 데이터 반환
+
+        // 프로젝트 데이터를 가져옴
+        List<ProjectDTO> projects = projectService.getAllProjects();
+
+        // 데이터를 Map에 담아서 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("charts", charts);
+        response.put("projects", projects);
+
+        return ResponseEntity.ok(response); // JSON 형식으로 차트와 프로젝트 데이터 반환
     }
+
 
 
     // 차트 메인 페이지
     @GetMapping("/main")
     public String showMainPage(Model model) {
+        // OKR 차트 데이터를 가져옴
+        List<ChartDTO> charts = chartService.getAllCharts();
+        charts.sort(Comparator.comparing(ChartDTO::getChartUploadDate).reversed());
+
+        // 프로젝트 차트 데이터를 가져옴
+        List<ProjectDTO> projectDTOList = projectService.getAllProjects();
+        projectDTOList.sort(Comparator.comparing(ProjectDTO::getUploadDate).reversed());
+
+        // 모델에 데이터를 추가
+        model.addAttribute("projects", projectDTOList);
+        model.addAttribute("charts", charts);
+
+        // main.html 템플릿 반환
         return "chart/main";
     }
 
@@ -108,6 +129,7 @@ public class ChartController {
         model.addAttribute("projects", projectDTOList);
         return "chart/project";
     }
+
     @GetMapping("/project/details/{projectNo}")
     public ResponseEntity<ProjectDTO> getProjectDetails(@PathVariable Long projectNo) {
         ProjectDTO project = projectService.getProjectById(projectNo);
