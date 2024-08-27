@@ -397,6 +397,7 @@
                         <h5 class="card-title">OKR 목표 리스트</h5>
 
                         <!-- Table with stripped rows -->
+                        <!-- Table with stripped rows -->
                         <table class="table datatable table-hover">
                             <thead>
                             <tr>
@@ -408,8 +409,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="pinned-row" data-bs-target="#chartDetailModal" data-bs-toggle="modal"
-                                data-id="${chart.chartNo}" th:each="chart : ${charts}">
+                            <tr class="pinned-row" data-bs-target="#chartDetailModal" data-bs-toggle="modal" data-id="${chart.chartNo}" th:each="chart : ${charts}">
                                 <td th:text="${chart.chartName}"></td>
                                 <td th:text="${chart.chartCategory}"></td>
                                 <td th:text="${chart.chartProgress + '%'}"></td>
@@ -418,6 +418,7 @@
                             </tr>
                             </tbody>
                         </table>
+
                         <!-- End Table with stripped rows -->
 
                     </div>
@@ -472,16 +473,15 @@
                             <option value="부서">부서 목표</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="chartPeriod">기간 설정</label>
-                        <input class="form-control" id="chartPeriod" placeholder="기간을 선택하세요" readonly type="text">
+                    <div class=" mb-3">
+                        <label class="form-label">시작일/종료일</label>
+                            <input class="form-control" name="chartStartDate" required type="date">
+                            <input class="form-control" name="chartEndDate" required type="date">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">내용</label>
                         <input class="form-control" name="chartContent" placeholder="추가 설명란" type="text">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">진행도 (%)</label>
                         <div>
@@ -513,10 +513,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- 숨겨진 필드 추가 -->
-                    <input id="chartStartDate" name="chartStartDate" type="hidden">
-                    <input id="chartEndDate" name="chartEndDate" type="hidden">
                 </form>
 
             </div>
@@ -536,7 +532,9 @@
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
-                <form id="chartDetailForm" method="post">
+                <form id="chartDetailForm" method="post" action="/chart/update">
+                    <!-- Chart No (Hidden Field) -->
+                    <input type="hidden" id="chartNo" name="chartNo">
 
                     <div class="mb-3">
                         <label class="form-label">차트 이름</label>
@@ -548,7 +546,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">진행도</label>
-                        <input class="form-control" id="chartProgress" name="chartProgress"  type="text">
+                        <input class="form-control" id="chartProgress" name="chartProgress" type="text">
                     </div>
                 </form>
             </div>
@@ -563,6 +561,7 @@
         </div>
     </div>
 </div>
+
 <!-- 목표 간 비교 차트 모달 -->
 <div aria-hidden="true" aria-labelledby="compareChartModalLabel" class="modal fade" id="compareChartModal"
      tabindex="-1">
@@ -575,19 +574,37 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label class="form-label" for="searchGoal">목표 검색</label>
-                    <input class="form-control" id="searchGoal" placeholder="목표를 검색하세요" type="text">
+                    <input class="form-control" id="searchGoal" placeholder="목표이름을 검색하세요" type="text">
                 </div>
 
                 <div id="goalList">
-                    <div class="form-check" th:each="chart : ${charts}">
-                        <input class="form-check-input goal-checkbox" type="checkbox" th:value="${chart.chartNo}" th:id="'goal-' + ${chart.chartNo}" th:data-goal-name="${chart.chartName}">
-                        <label class="form-check-label" th:for="'goal-' + ${chart.chartNo}" th:text="${chart.chartName}"></label>
-                    </div>
+                    <!-- 테이블 형식으로 목표 목록 표시 -->
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>선택</th>
+                            <th>목표 이름</th>
+                            <th>카테고리</th>
+                            <th>진행도</th>
+                            <th>시작일</th>
+                            <th>종료일</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goalTableBody">
+                        <!-- 여기에서 목표 목록이 동적으로 로드됩니다. -->
+                        </tbody>
+                    </table>
                 </div>
 
+                <!-- 페이지네이션 -->
+                <nav>
+                    <ul class="pagination" id="pagination">
+                        <!-- 페이지 번호가 여기에 동적으로 추가됩니다. -->
+                    </ul>
+                </nav>
 
                 <div>
-                    <h5>선택한 목표들:</h5>
+                    <h5>선택한 목표 :</h5>
                     <ul id="selectedGoals">
                         <!-- 선택된 목표들이 여기에 표시됨 -->
                     </ul>
@@ -596,8 +613,9 @@
                 <div id="compareChart"></div> <!-- 차트를 렌더링할 곳 -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
                 <button class="btn btn-primary" id="compareButton" type="button">비교하기</button>
+                <button class="btn btn-warning" id="resetButton" type="button">취소</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
             </div>
         </div>
     </div>
@@ -619,11 +637,6 @@
 </footer>
 <!-- Footer 끝 -->
 
-
-
-<!-- 기간 설정 필요한 라이브러리 추가 -->
-<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
 <!-- 채팅창 및 맨위로 가기 -->

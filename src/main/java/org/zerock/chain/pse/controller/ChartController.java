@@ -3,6 +3,10 @@ package org.zerock.chain.pse.controller;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +17,10 @@ import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.service.ChartService;
 import org.zerock.chain.pse.service.ProjectService;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/chart")
@@ -107,4 +113,33 @@ public class ChartController {
         ProjectDTO project = projectService.getProjectById(projectNo);
         return ResponseEntity.ok(project);
     }
+
+    // 차트 비교
+    @PostMapping("/compare")
+    @ResponseBody
+    public ResponseEntity<List<ChartDTO>> compareCharts(@RequestBody List<Long> chartIds) {
+        List<ChartDTO> chartData = chartService.getChartsByIds(chartIds);
+        return ResponseEntity.ok(chartData);
+    }
+
+    // 페이지네이션 관련
+    @GetMapping("/goals")
+    public ResponseEntity<Page<ChartDTO>> getGoals(@RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<ChartDTO> goalsPage = chartService.getGoals(pageable);
+        return ResponseEntity.ok(goalsPage);
+    }
+
+    @GetMapping("/goalCount")
+    public ResponseEntity<Map<String, Integer>> getGoalCount() {
+        try {
+            int totalItems = chartService.getTotalGoalCount();
+            return ResponseEntity.ok(Collections.singletonMap("totalItems", totalItems));
+        } catch (Exception e) {
+            log.error("Error occurred while fetching goal count", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
 }

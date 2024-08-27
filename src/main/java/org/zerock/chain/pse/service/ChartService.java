@@ -1,6 +1,8 @@
 package org.zerock.chain.pse.service;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.zerock.chain.pse.dto.ChartDTO;
 import org.zerock.chain.pse.dto.ChartRequestDTO;
 
@@ -13,4 +15,9 @@ public interface ChartService {
     ChartDTO createChart(ChartRequestDTO chartRequestDTO);    // 생성
     ChartDTO updateChart(Long chartNo, ChartRequestDTO chartRequestDTO);    // 수정
     void deleteChart(Long chartNo);    // 삭제
+    List<ChartDTO> getChartsByIds(List<Long> chartIds); // 차트 비교
+
+    // 페이지네이션
+    Page<ChartDTO> getGoals(Pageable pageable);
+    int getTotalGoalCount();
 }

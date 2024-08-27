@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -98,10 +100,36 @@ public class ChartServiceImpl extends BaseService<Chart> implements ChartService
         chartRepository.delete(chart);
     }
 
-    // Method to get employee number from session
+    // 차트 비교
+    @Override
+    public List<ChartDTO> getChartsByIds(List<Long> chartIds) {
+        Long empNo = getEmpNoFromSession();
+        List<Chart> charts = chartRepository.findAllById(chartIds).stream()
+                .filter(chart -> chart.getChartAuthor().equals(empNo))
+                .collect(Collectors.toList());
+
+        return charts.stream()
+                .map(chart -> modelMapper.map(chart, ChartDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+    // 세션에서 직원 번호를 가져오는 메서드
     private Long getEmpNoFromSession() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
         return (Long) session.getAttribute("empNo");
     }
+
+    // 페이지네이션 관련
+    @Override
+    public Page<ChartDTO> getGoals(Pageable pageable) {
+        return chartRepository.findAll(pageable).map(chart -> modelMapper.map(chart, ChartDTO.class));
+    }
+    @Override
+    public int getTotalGoalCount() {
+        return (int) chartRepository.count();
+    }
+
+
 }
