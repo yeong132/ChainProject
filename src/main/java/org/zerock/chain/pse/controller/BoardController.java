@@ -40,7 +40,9 @@ public class BoardController {
     // 경조사  문서  개별  확인 페이지
     @GetMapping("/detail/{boardNo}")
     public String boardDetail(@PathVariable("boardNo") Long boardNo, Model model) {
-        model.addAttribute("board", boardService.getBoardById(boardNo));
+        BoardDTO boardDTO = boardService.getBoardById(boardNo);
+        System.out.println("Board Location: " + boardDTO.getBoardLocation());
+        model.addAttribute("board", boardDTO);
         return "board/detail";
     }
 

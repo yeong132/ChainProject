@@ -648,7 +648,7 @@
     let options;
 
     // boardLocation 값이 존재하는 경우 해당 좌표로 지도 중심 설정
-    const locationValue = /*[[${board.boardLocation}]]*/ '35.8580767172927,128.64125595278'; // 예시 좌표값
+    const locationValue = "[[${board.boardLocation}]]"; // 예시 좌표값
     if (locationValue) {
       const coords = locationValue.split(',').map(coord => parseFloat(coord));
       options = {

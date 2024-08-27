@@ -7,7 +7,7 @@ import org.zerock.chain.pse.dto.BoardRequestDTO;
 import org.zerock.chain.pse.model.Board;
 import org.zerock.chain.pse.repository.BoardRepository;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,11 +44,21 @@ public class BoardServiceImpl  implements  BoardService{
 
     @Override   // 게시글 수정
     public BoardDTO updateBoard(Long boardNo, BoardRequestDTO boardRequestDTO) {
+        // 게시글 조회
         Board board = boardRepository.findById(boardNo)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid board ID"));
 
+        // boardCategory를 명시적으로 덮어쓰기
+        if (boardRequestDTO.getBoardCategory() != null && !boardRequestDTO.getBoardCategory().isEmpty()) {
+            board.setBoardCategory(boardRequestDTO.getBoardCategory().trim());
+        }
+
+        // 나머지 필드들은 ModelMapper를 통해 업데이트
         modelMapper.map(boardRequestDTO, board);
+
+        // 변경된 게시글 저장
         board = boardRepository.save(board);
+
         return modelMapper.map(board, BoardDTO.class);
     }
 
