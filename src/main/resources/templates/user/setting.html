@@ -576,16 +576,33 @@
 
 <!-- 모달 및 스크립트 -->
 <script>
-    document.getElementById('notificationSettingsForm').addEventListener('change', function (event) {
-        const checkbox = event.target;
-        const notificationType = checkbox.id;
-        const enabled = checkbox.checked;
+    // 페이지가 로드될 때 로컬스토리지에서 값을 불러와 체크박스를 설정합니다.
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationSettingsForm = document.getElementById('notificationSettingsForm');
+        const checkboxes = notificationSettingsForm.querySelectorAll('input[type="checkbox"]');
 
-        if (!enabled) {
-            showConfirmationModal(notificationType);
-        } else {
-            updateNotificationSetting(notificationType, enabled);
-        }
+        checkboxes.forEach(checkbox => {
+            const savedValue = localStorage.getItem(checkbox.id);
+            if (savedValue !== null) {
+                checkbox.checked = savedValue === 'true'; // 로컬스토리지에서 불러온 값에 따라 체크박스 상태 설정
+            }
+        });
+
+        // 체크박스가 변경될 때 로컬스토리지에 값을 저장하고 서버에 업데이트 요청을 보냅니다.
+        notificationSettingsForm.addEventListener('change', function (event) {
+            const checkbox = event.target;
+            const notificationType = checkbox.id;
+            const enabled = checkbox.checked;
+
+            // 로컬스토리지에 체크박스 상태 저장
+            localStorage.setItem(notificationType, enabled);
+
+            if (!enabled) {
+                showConfirmationModal(notificationType);
+            } else {
+                updateNotificationSetting(notificationType, enabled);
+            }
+        });
     });
 
     function showConfirmationModal(notificationType) {
@@ -631,6 +648,7 @@
         xhr.send(JSON.stringify({ empNo: empNo, notificationType: type, enabled: enabled }));
     }
 </script>
+
 
 
 
