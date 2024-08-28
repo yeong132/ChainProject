@@ -46,6 +46,8 @@ public class GmailService {
     private static long credentialExpiryTime;
     private static final long CACHE_DURATION_MS = 3600 * 1000; // 1시간 (3600초)
 
+    private static final String UPLOAD_DIR = "C:/upload/";
+
     // Singleton 패턴 적용: 외부에서 객체 생성을 하지 못하도록 기본 생성자를 private으로 설정
     private GmailService() {
     }
@@ -115,7 +117,7 @@ public class GmailService {
             Session session = Session.getDefaultInstance(props, null);
             MimeMessage email = new MimeMessage(session);
 
-            // 이메일의 발신자, 수신자, 제목, 내용을 설정.
+            // 이메일의 발신자, 수신자, 제목, 내용을 설정
             email.setFrom(new InternetAddress("your-email@gmail.com"));
             email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipientEmail));
             email.setSubject(subject);
@@ -131,11 +133,15 @@ public class GmailService {
             // 첨부파일 추가
             if (filePaths != null && !filePaths.isEmpty()) {
                 for (String filePath : filePaths) {
-                    log.info("Adding attachment to email: {}", filePath);
+                    Path fileAbsolutePath = Paths.get(filePath).isAbsolute()
+                            ? Paths.get(filePath)
+                            : Paths.get(UPLOAD_DIR, filePath).normalize();
+
+                    log.info("Adding attachment to email: {}", fileAbsolutePath.toString());
                     MimeBodyPart attachmentPart = new MimeBodyPart();
-                    DataSource source = new FileDataSource(filePath);
+                    DataSource source = new FileDataSource(fileAbsolutePath.toString());
                     attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName(Paths.get(filePath).getFileName().toString());
+                    attachmentPart.setFileName(fileAbsolutePath.getFileName().toString());
                     multipart.addBodyPart(attachmentPart);
                 }
             } else {
@@ -145,16 +151,16 @@ public class GmailService {
             // 이메일의 본문을 multipart로 설정
             email.setContent(multipart);
 
-            // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩.
+            // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             email.writeTo(buffer);
             String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
 
-            // Gmail API를 사용하여 이메일을 전송.
+            // Gmail API를 사용하여 이메일을 전송
             Message message = new Message();
             message.setRaw(encodedEmail);
 
-            service.users().messages().send("me", message).execute();  // "me"는 인증된 사용자를 나타냄.
+            service.users().messages().send("me", message).execute();  // "me"는 인증된 사용자를 나타냄
             log.info("Email sent successfully to: {}", recipientEmail);
         } catch (MessagingException e) {
             log.error("Failed to create email message: {}", e.getMessage());
@@ -164,6 +170,8 @@ public class GmailService {
             throw new Exception("Failed to send email", e);
         }
     }
+
+
 
 
     public Optional<String> getHeader(List<MessagePartHeader> headers, String name) {

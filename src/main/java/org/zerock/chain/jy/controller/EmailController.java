@@ -72,13 +72,12 @@ public class EmailController {
     @Autowired  // GmailService를 자동으로 주입받음.
     private GmailService gmailService;
 
+    private static final String UPLOAD_DIR = "C:/upload/";
 
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
     }
-
-    private static final String UPLOAD_DIR = "C:/upload/";
 
     @PostMapping("/send")
     public String sendEmail(
@@ -92,71 +91,75 @@ public class EmailController {
             Model model) {
         log.info("sendEmail called with recipient: {}, subject: {}", recipientEmail, subject);
         try {
-            // 기존 첨부파일 삭제 처리
-            if (deleteAttachments != null && !deleteAttachments.isEmpty()) {
-                for (String fileName : deleteAttachments) {
-                    Path filePath = Paths.get(UPLOAD_DIR + fileName);
-                    Files.deleteIfExists(filePath);
-                    log.info("Deleted attachment: {}", fileName);
-                }
-            }
-
             // 첨부파일 저장 경로 리스트 생성
             List<String> filePaths = new ArrayList<>();
 
-            // 기존 첨부파일 추가
-            if (existingAttachments != null && !existingAttachments.isEmpty()) {
-                filePaths.addAll(existingAttachments);
-                log.info("Added existing attachments to filePaths: {}", existingAttachments);
+            // 기존 첨부파일 처리
+            if (existingAttachments != null) {
+                for (String existingAttachment : existingAttachments) {
+                    Path path = resolveFilePath(existingAttachment);
+                    filePaths.add(path.toString());
+                    log.info("Added existing attachment: {}", path.toString());
+                }
             }
 
             // 새로운 첨부파일 추가
-            if (attachments != null && !attachments.isEmpty()) {
+            if (attachments != null) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
-                        log.info("Processing attachment: {}", fileName);
-                        Path path = Paths.get(UPLOAD_DIR + fileName);
-                        log.info("Saving attachment to path: {}", path.toString());
-                        Files.write(path, attachment.getBytes());
-                        filePaths.add(path.toString());
-                        log.info("Attachment saved successfully: {}", path.toString());
-                    } else {
-                        log.warn("Empty attachment found: {}", attachment.getOriginalFilename());
+                        Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
+                        // 이미 파일이 존재하는지 확인
+                        if (!filePaths.contains(path.toString())) {
+                            Files.write(path, attachment.getBytes());
+                            filePaths.add(path.toString());
+                            log.info("Attachment saved: {}", path.toString());
+                        }
                     }
                 }
             }
 
-            log.info("Final filePaths list before sending email: {}", filePaths);
-
             // 이메일 전송
             gmailService.sendMail(recipientEmail, subject, message, filePaths);
-
-            log.info("Email sent successfully to: {}", recipientEmail);
 
             // 이메일 전송 후 초안 삭제
             if (draftId != null && !draftId.isEmpty()) {
                 gmailService.deleteDraft("me", draftId);
-                log.info("Draft deleted successfully: {}", draftId);
+                log.info("Draft deleted: {}", draftId);
             }
 
             model.addAttribute("success", "Email sent successfully!");
         } catch (Exception e) {
             log.error("Error sending email", e);
             model.addAttribute("error", "Error sending email: " + e.getMessage());
+            return "mail/compose";
         }
         return "mail/complete";
     }
 
 
+    @GetMapping("/complete")
+    public String mailComplete() {
+        return "mail/complete";
+    }
 
+
+    
+    // 경로를 처리하는 메서드
+    private Path resolveFilePath(String fileName) {
+        Path path = Paths.get(fileName).normalize();
+        if (!path.isAbsolute()) {
+            path = Paths.get(UPLOAD_DIR, fileName).normalize();
+        }
+        return path;
+    }
 
     @PostMapping("/uploadImage")
     public ResponseEntity<?> uploadImage(@RequestParam("image") String imageData) {
         try {
             String base64Image = imageData.split(",")[1];
-            byte[] imageBytes = Base64.decodeBase64(base64Image); // Apache Commons Codec 사용
-            String fileName = UUID.randomUUID().toString() + ".png"; // 고유한 파일명 생성
+            byte[] imageBytes = Base64.decodeBase64(base64Image);
+            String fileName = UUID.randomUUID().toString() + ".png";
             Path path = Paths.get(UPLOAD_DIR + fileName);
             Files.write(path, imageBytes);
             log.info("Image uploaded successfully: {}", path.toString());
@@ -179,14 +182,13 @@ public class EmailController {
             model.addAttribute("subject", draftMessage.getSubject());
             model.addAttribute("message", draftMessage.getBody());
 
-            // 첨부파일 리스트를 모델에 추가
             List<String> attachments = draftMessage.getAttachments();
             if (attachments != null && !attachments.isEmpty()) {
                 log.info("Attachments found: {}", attachments);
                 model.addAttribute("attachments", attachments);
             } else {
                 log.info("No attachments found or attachments list is empty.");
-                model.addAttribute("attachments", Collections.emptyList());
+                model.addAttribute("attachments", List.of());
             }
 
             return "mail/compose";
@@ -196,7 +198,6 @@ public class EmailController {
             return "error";
         }
     }
-
 
 
 
@@ -415,16 +416,16 @@ public class EmailController {
             if (attachments != null && !attachments.isEmpty()) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
-
-                        // 첨부파일 이름과 크기를 로그에 기록
-                        log.info("Attachment received: name = {}, size = {} bytes",
-                                attachment.getOriginalFilename(),
-                                attachment.getSize());
-
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
-                        Path path = Paths.get(UPLOAD_DIR + fileName);
-                        Files.write(path, attachment.getBytes());
-                        filePaths.add(path.toString());  // 절대 경로로 저장
+                        Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
+
+                        // 이미 파일 경로가 리스트에 존재하지 않는 경우에만 추가
+                        if (!filePaths.contains(path.toString())) {
+                            Files.write(path, attachment.getBytes());
+                            filePaths.add(path.toString());  // 절대 경로로 저장
+                            log.info("Attachment saved: name = {}, path = {}, size = {} bytes",
+                                    fileName, path.toString(), attachment.getSize());
+                        }
                     }
                 }
             }
@@ -438,6 +439,7 @@ public class EmailController {
         }
         return "mail/compose";  // 임시저장 후에도 compose 페이지로 리다이렉트
     }
+
 
 
 
