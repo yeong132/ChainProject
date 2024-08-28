@@ -39,9 +39,6 @@ public class Documents {
     @Column(name = "req_date")
     private LocalDate reqDate;
 
-    @Column(name = "re_req_date")
-    private LocalDate reReqDate;
-
     @Column(name = "category")
     private String category;
 

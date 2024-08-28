@@ -24,7 +24,8 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public EmployeeDTO getLoggedInUserDetails() { // 로그인 기능 구현 시 Long loggedInEmpNo을 ()에 넣기
+    // 로그인한 사용자 정보 들고오기
+    public EmployeeDTO getLoggedInUserDetails() {
         try {
             Long loggedInEmpNo = getLoggedInUserEmpNo();
 
@@ -55,6 +56,7 @@ public class UserService {
         }
     }
 
+    // 모달창에서 결재선 설정하는 부분에 모든 직원의 정보가 필요하기에 모든 직원 정보 들고 오는 메서드
     public List<EmployeeDTO> getAllEmployees() {
         try {
             List<Employee> employees = employeesRepository.findAll();
@@ -87,6 +89,7 @@ public class UserService {
         }
     }
 
+    // 로그인한 사용자의 사원번호를 들고옴
     public Long getLoggedInUserEmpNo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {

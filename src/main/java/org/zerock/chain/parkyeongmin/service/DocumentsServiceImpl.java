@@ -132,6 +132,9 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
     @Override
     public void updateDocument(DocumentsDTO documentsDTO) throws Exception {
 
+        // 결재자 정보 삭제
+        approvalRepository.deleteByDocumentsDocNo(documentsDTO.getDocNo());
+
         // 기존 문서를 데이터베이스에서 찾음
         Optional<Documents> optionalDocument = documentsRepository.findById(documentsDTO.getDocNo());
         if (optionalDocument.isEmpty()) {

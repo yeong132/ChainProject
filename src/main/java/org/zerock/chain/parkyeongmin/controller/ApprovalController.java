@@ -157,7 +157,7 @@ public class ApprovalController {
     @GetMapping("/adminRequest/{docNo}")
     public String adminRequestDocument(@PathVariable("docNo") int docNo,
                                        Model model) {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 1인 사용자 정보를 가져옴
+        // 로그인한 사용자의 정보를 가져옵니다.
         EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
 
         // 문서 정보 조회
@@ -255,7 +255,7 @@ public class ApprovalController {
 
     @GetMapping("/getEmployees")
     public ResponseEntity<EmployeeDTO> getLoggedInUserDetails() {
-        // 원래는 로그인한 사용자의 정보를 가져오는건데 임시로 emp_no가 1인 사용자 정보를 가져옴
+        // 로그인한 사용자의 정보를 가져옵니다
         EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
 
         return ResponseEntity.ok(loggedInUser);
@@ -264,7 +264,10 @@ public class ApprovalController {
     @PostMapping("/update-document")
     public ResponseEntity<String> updateDocument(@ModelAttribute DocumentsDTO documentsDTO) {
         try {
+
+            // 문서 업데이트
             documentsService.updateDocument(documentsDTO);
+
             return ResponseEntity.ok("Document updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update document");

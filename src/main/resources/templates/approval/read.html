@@ -701,18 +701,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('senderName').textContent = documentData.senderName || '';
                 document.getElementById('rankName').textContent = documentData.senderRankName || '';
 
-
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
                     const fileInput = document.getElementById('file');
                     const fullPath = documentData.filePath;
 
                     // 경로에서 파일 이름만 추출
-                    const fileName = fullPath.split('_').pop(); // 파일명 추출 (고유 ID 뒤에 있는 부분)
+                    const fileName = fullPath.substring(fullPath.lastIndexOf('\\') + 1); // 윈도우 경로의 경우
 
-                    const fileLink = document.createElement('span');
+                    const fileLink = document.createElement('a');
                     fileLink.textContent = fileName;
                     fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
+                    fileLink.href = fullPath; // 파일 경로를 href로 설정
+                    fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
                     // 파일 선택 필드의 부모 요소에 파일 링크를 추가
                     fileInput.parentNode.appendChild(fileLink);

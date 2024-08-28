@@ -633,7 +633,6 @@
                             <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
                         </li>
                     </ul>
-                    </div>
                 </li>
             </ul>
         </li>
@@ -1000,14 +999,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
                     const fileInput = document.getElementById('file');
-                    const fullPath = documentData.filePath;
+                    console.log("filePath: " + documentData.filePath);
 
-                    // 경로에서 파일 이름만 추출
-                    const fileName = fullPath.split('_').pop(); // 파일명 추출 (고유 ID 뒤에 있는 부분)
+                    // 파일 경로에서 \를 /로 변경
+                    let originalPath = documentData.filePath;
+                    // URL 인코딩
+                    let encodedPath = encodeURIComponent(originalPath);
+                    // 다운로드 URL 생성
+                    const downloadUrl = `/download?filePath=${encodedPath}`;
 
-                    const fileLink = document.createElement('span');
+                    // 파일 이름 추출
+                    const fileName = originalPath.substring(originalPath.lastIndexOf('\\') + 1);
+                    console.log("fileName: "+fileName);
+
+                    // 다운로드 링크 생성
+                    const fileLink = document.createElement('a');
                     fileLink.textContent = fileName;
                     fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
+                    fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
+                    // fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
                     // 파일 선택 필드의 부모 요소에 파일 링크를 추가
                     fileInput.parentNode.appendChild(fileLink);
@@ -1211,6 +1221,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const fileInput = document.querySelector('input[name="file"]');
         const file = fileInput ? fileInput.files[0] : null;
 
+        // 결재선이 비어있는지 확인
+        if (!approvalLineHtml || approvalLineHtml.trim() === '') {
+            alert('결재선을 설정해주십시오.');
+            return; // 서버로 요청 중단
+        }
+
         const formData = new FormData();
         formData.append('docNo', docNo);  // 문서 번호 추가
         formData.append('docTitle', docTitle);
@@ -1241,9 +1257,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 여기서부터 임시저장 버튼 눌렀을 때의 코드입니다!
     // 1분 후에 자동으로 임시저장 버튼 클릭(submit)
-    setInterval(function () {
+    /*setInterval(function () {
         document.getElementById('draftBtn').click();
-    }, 60000); // 60,000ms = 1분
+    }, 60000); // 60,000ms = 1분*/
 
     document.getElementById('draftBtn').addEventListener('click', function (e) {
         e.preventDefault(); // 기본 동작 막기

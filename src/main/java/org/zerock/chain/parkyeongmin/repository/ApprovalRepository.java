@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.zerock.chain.parkyeongmin.model.Approval;
-import org.zerock.chain.parkyeongmin.model.Documents;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ApprovalRepository extends JpaRepository<Approval, Long> {
@@ -52,4 +50,11 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
     @Query("SELECT COUNT(a) FROM Approval a " +
             "WHERE a.refEmployee.empNo = :empNo AND a.approvalStatus = '참조'")
     int countReferencedDocumentsForUser(@Param("empNo") Long empNo);
+
+    // 특정 문서 번호에 관련된 모든 사원의 ID를 가져옵니다.
+    @Query("SELECT DISTINCT a.employee.empNo FROM Approval a WHERE a.documents.docNo = :docNo")
+    List<Long> findAllRelatedEmpNosByDocNo(@Param("docNo") int docNo);
+
+    // 특정 문서 번호에 해당하는 결재자 정보 삭제
+    void deleteByDocumentsDocNo(int docNo);
 }
