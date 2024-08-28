@@ -182,6 +182,17 @@ function chatOpenPopup() {
 // Froala Editor 한국어 적용
 var editor = new FroalaEditor('#froala', {
     language: 'ko',
+    htmlRemoveTags: ['p'], // <p> 태그만 제거
+    enter: FroalaEditor.ENTER_BR,   // Enter 키를 누르면 <br> 태그로 변환
+
+    // 이미지 업로드 옵션 추가
+    imageUploadURL: '/upload_image', // 이미지 업로드를 처리하는 엔드포인트
+    imageUploadParams: {
+        id: 'my_editor'  // 추가 파라미터를 전달할 수 있음
+    },
+    imageUploadMethod: 'POST',
+    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+    imageMaxSize: 5 * 1024 * 1024, // 최대 이미지 파일 크기: 5MB
 });
 
 // 출퇴근 Modal용
