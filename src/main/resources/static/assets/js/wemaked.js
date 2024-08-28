@@ -258,17 +258,17 @@ function showSuccessAlert() {
 }
 
 //  그래프 저장 자스
-document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const data = myChart.data.datasets[0].data;
-            const index = Array.from(checkboxes).indexOf(checkbox);
-            data[index] = checkbox.checked ? parseInt(checkbox.value) : 0;
-            myChart.update();
-        });
-    });
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+//     checkboxes.forEach(checkbox => {
+//         checkbox.addEventListener('change', () => {
+//             const data = myChart.data.datasets[0].data;
+//             const index = Array.from(checkboxes).indexOf(checkbox);
+//             data[index] = checkbox.checked ? parseInt(checkbox.value) : 0;
+//             myChart.update();
+//         });
+//     });
+// });
 
 
 
