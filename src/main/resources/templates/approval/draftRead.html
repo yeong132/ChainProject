@@ -1017,7 +1017,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     fileLink.textContent = fileName;
                     fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
                     fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
-                    // fileLink.download = fileName; // 다운로드시 파일 이름 설정
+                    fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
                     // 파일 선택 필드의 부모 요소에 파일 링크를 추가
                     fileInput.parentNode.appendChild(fileLink);

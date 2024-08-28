@@ -17,5 +17,4 @@ public interface NoticeService {
     NoticeDTO updateNotice(Long noticeNo, NoticeRequestDTO noticeRequestDTO);
     // 공지사항 삭제
     void deleteNotice(Long noticeNo);
-
 }

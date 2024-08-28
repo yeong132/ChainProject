@@ -787,15 +787,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
                     const fileInput = document.getElementById('file');
-                    const fullPath = documentData.filePath;
+                    // 파일 경로 저장
+                    let originalPath = documentData.filePath;
+                    // URL 인코딩
+                    let encodedPath = encodeURIComponent(originalPath);
+                    // 다운로드 URL 생성
+                    const downloadUrl = `/download?filePath=${encodedPath}`;
 
-                    // 경로에서 파일 이름만 추출
-                    const fileName = fullPath.substring(fullPath.lastIndexOf('\\') + 1); // 윈도우 경로의 경우
+                    // 파일 이름 추출
+                    const fileName = originalPath.substring(originalPath.lastIndexOf('\\') + 1);
+                    console.log("fileName: "+fileName);
 
+                    // 다운로드 링크 생성
                     const fileLink = document.createElement('a');
                     fileLink.textContent = fileName;
                     fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
-                    fileLink.href = fullPath; // 파일 경로를 href로 설정
+                    fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
                     fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
                     // 파일 선택 필드의 부모 요소에 파일 링크를 추가
