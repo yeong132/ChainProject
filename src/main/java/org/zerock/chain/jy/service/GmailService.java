@@ -131,12 +131,15 @@ public class GmailService {
             // 첨부파일 추가
             if (filePaths != null && !filePaths.isEmpty()) {
                 for (String filePath : filePaths) {
+                    log.info("Adding attachment to email: {}", filePath);
                     MimeBodyPart attachmentPart = new MimeBodyPart();
                     DataSource source = new FileDataSource(filePath);
                     attachmentPart.setDataHandler(new DataHandler(source));
                     attachmentPart.setFileName(Paths.get(filePath).getFileName().toString());
                     multipart.addBodyPart(attachmentPart);
                 }
+            } else {
+                log.info("No attachments to add to the email.");
             }
 
             // 이메일의 본문을 multipart로 설정
@@ -161,6 +164,7 @@ public class GmailService {
             throw new Exception("Failed to send email", e);
         }
     }
+
 
     public Optional<String> getHeader(List<MessagePartHeader> headers, String name) {
         return headers.stream()

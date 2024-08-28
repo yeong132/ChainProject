@@ -107,6 +107,7 @@ public class EmailController {
             // 기존 첨부파일 추가
             if (existingAttachments != null && !existingAttachments.isEmpty()) {
                 filePaths.addAll(existingAttachments);
+                log.info("Added existing attachments to filePaths: {}", existingAttachments);
             }
 
             // 새로운 첨부파일 추가
@@ -114,12 +115,19 @@ public class EmailController {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
+                        log.info("Processing attachment: {}", fileName);
                         Path path = Paths.get(UPLOAD_DIR + fileName);
+                        log.info("Saving attachment to path: {}", path.toString());
                         Files.write(path, attachment.getBytes());
                         filePaths.add(path.toString());
+                        log.info("Attachment saved successfully: {}", path.toString());
+                    } else {
+                        log.warn("Empty attachment found: {}", attachment.getOriginalFilename());
                     }
                 }
             }
+
+            log.info("Final filePaths list before sending email: {}", filePaths);
 
             // 이메일 전송
             gmailService.sendMail(recipientEmail, subject, message, filePaths);
@@ -139,6 +147,7 @@ public class EmailController {
         }
         return "mail/complete";
     }
+
 
 
 
@@ -162,25 +171,22 @@ public class EmailController {
     public String editDraft(@PathVariable("draftId") String draftId, Model model) {
         log.info("editDraft called with draftId: {}", draftId);
         try {
-            // 초안 메세지 불러오기
             MessageDTO draftMessage = gmailService.getDraftById("me", draftId);
             log.info("Draft message fetched: {}", draftMessage);
 
-            // 모델에 초안 메세지의 속성 추가
             model.addAttribute("draftId", draftId);
             model.addAttribute("recipientEmail", draftMessage.getTo());
             model.addAttribute("subject", draftMessage.getSubject());
             model.addAttribute("message", draftMessage.getBody());
 
-            // 첨부파일 리스트 가져오기
+            // 첨부파일 리스트를 모델에 추가
             List<String> attachments = draftMessage.getAttachments();
-
             if (attachments != null && !attachments.isEmpty()) {
-                log.info("Attachments found: {}", attachments); // 첨부파일이 있을 경우
+                log.info("Attachments found: {}", attachments);
                 model.addAttribute("attachments", attachments);
             } else {
-                log.info("No attachments found or attachments list is empty."); // 첨부파일이 없을 경우
-                model.addAttribute("attachments", Collections.emptyList()); // 빈 리스트 전달
+                log.info("No attachments found or attachments list is empty.");
+                model.addAttribute("attachments", Collections.emptyList());
             }
 
             return "mail/compose";
@@ -409,6 +415,12 @@ public class EmailController {
             if (attachments != null && !attachments.isEmpty()) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
+
+                        // 첨부파일 이름과 크기를 로그에 기록
+                        log.info("Attachment received: name = {}, size = {} bytes",
+                                attachment.getOriginalFilename(),
+                                attachment.getSize());
+
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
                         Path path = Paths.get(UPLOAD_DIR + fileName);
                         Files.write(path, attachment.getBytes());
