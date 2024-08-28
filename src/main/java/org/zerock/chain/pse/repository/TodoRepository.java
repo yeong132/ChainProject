@@ -8,9 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
-    // 즐겨찾기, 완료 상태에 따른 항목 조회 메서드 추가
-    List<Todo> findByTodoFavoriteTrue();
-    List<Todo> findByTodoStatusFalse();
-    List<Todo> findByTodoStatusTrue();
-    List<Todo> findByTodoStatus(boolean todoStatus);
+    List<Todo> findByEmpNo(Long empNo);
+    List<Todo> findByEmpNoAndTodoFavorite(Long empNo, boolean todoFavorite);
+    List<Todo> findByEmpNoAndTodoStatus(Long empNo, boolean todoStatus);
 }

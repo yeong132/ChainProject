@@ -11,12 +11,12 @@ public class ReportRequestDTO {
 
     private String reportName;
 
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     private String reportCategory;
     private String reportContent;
     private String reportAuthor;
-    private LocalDate reportUploadDate;
+    private LocalDate reportUploadDate = LocalDate.now();
     private String reportFiles;
     private boolean isTemporary;
     private String reportParticipants;

@@ -1,10 +1,13 @@
 package org.zerock.chain.pse.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.zerock.chain.pse.dto.CommentDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaRequestDTO;
@@ -14,7 +17,8 @@ import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.service.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -66,6 +70,10 @@ public class UserController {
     public String getAllQnasAndFaqs(Model model) {
         List<QnaDTO> qnaList = qnaService.getAllQnas();
         List<FavoriteQnaDTO> faqList = favoriteQnaService.getAllFAQs();
+
+        // qnaUploadDate를 기준으로 최신순으로 정렬
+        qnaList.sort(Comparator.comparing(QnaDTO::getQnaUploadDate).reversed());
+//        faqList.sort(Comparator.comparing(FavoriteQnaDTO::getFaqCreatedDate).reversed());
 
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("faqList", faqList);
@@ -147,7 +155,7 @@ public class UserController {
         systemNotification.setSystemCategory(systemCategory);
         systemNotification.setSystemTitle(systemTitle);
         systemNotification.setSystemContent(systemContent);
-        systemNotification.setSystemUploadDate(LocalDate.now());
+        systemNotification.setSystemUploadDate(LocalDateTime.now());
 
         systemNotificationService.saveSystemNotification(systemNotification);
         return "redirect:/user/alarm"; // 작성 후 알림 페이지로 리다이렉트
@@ -156,15 +164,26 @@ public class UserController {
     // 알림 페이지로 이동
     @GetMapping("/alarm")
     public String userAlarm(Model model) {
-        int empNo = 1; // 예시 사원번호
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
 
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
-        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo,"프로젝트");
-        List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo,"공지사항");
-        List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo,"업무보고서");
+        List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
+        List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
+        List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
         // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
+
+        // 모든 알림 리스트를 최신순으로 정렬합니다.
+        allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+
+        systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
 
         // 모든 알림에 시스템 알림을 추가합니다.
         model.addAttribute("allNotifications", allNotifications);
@@ -172,14 +191,28 @@ public class UserController {
         model.addAttribute("noticeNotifications", noticeNotifications);
         model.addAttribute("reportNotifications", reportNotifications);
         model.addAttribute("systemNotifications", systemNotifications);
-
         return "user/alarm";
     }
+
+    // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트
+    @GetMapping("/alarm/read/{notificationNo}")
+    public String readNotificationAndRedirect(@PathVariable Long notificationNo) {
+        Notification notification = notificationService.getNotificationById(notificationNo);
+        notificationService.markAsRead(notificationNo);
+
+        // 리다이렉트 URL을 동적으로 가져옴
+        String redirectUrl = notification.getRedirectUrl();
+        return "redirect:" + redirectUrl;
+    }
+
 
     // 알림 전체 삭제
     @PostMapping("/alarm/deleteAll")
     public String deleteAllNotifications() {
-        int empNo = 1; // 예시 사원번호
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
 
         // 일반 알림 삭제
         notificationService.deleteAllNotifications(empNo);

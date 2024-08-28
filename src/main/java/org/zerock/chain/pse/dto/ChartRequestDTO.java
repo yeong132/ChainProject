@@ -19,7 +19,7 @@ public class ChartRequestDTO {
     private String chartCategory;  // 카테고리
     private String chartProgress;  // 진행도
     private Boolean noticePinned;  // 완료 여부
-    private String chartAuthor;    // 작성자
+    private Long chartAuthor;  //  작성자 (사원번호)
     private Long projectNo;        // 프로젝트 번호
 
     // 각 라벨을 받을 필드 추가

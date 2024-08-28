@@ -19,7 +19,7 @@ public class ChartDTO {
     private String chartCategory;  // 카테고리
     private String chartProgress;  // 진행도
     private Boolean noticePinned;  // 완료 여부
-    private LocalDate reportUploadDate; // 생성일
-    private String chartAuthor;    // 작성자
+    private LocalDate chartUploadDate; // 생성일
+    private Long chartAuthor;  //  작성자 (사원번호)
     private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장
 }

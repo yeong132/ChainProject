@@ -1,3 +1,32 @@
+
+// 알림창 시간 표시
+function timeAgo(timestamp) {
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    return `${days}일 전`;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationTimes = document.querySelectorAll('.notification-time');
+
+    notificationTimes.forEach(function (element) {
+        const timestamp = element.getAttribute('data-timestamp');
+        if (timestamp) {
+            element.textContent = timeAgo(new Date(timestamp));
+        }
+    });
+});
+
+
 // <button onClick="chatOpenPopup()">메신저</button>
 let stompClient = null; // 소켓 클라이언트 객체 생성
 const empNo = sessionStorage.getItem('empNo');
@@ -226,6 +255,17 @@ function onLogout() {
 // Froala Editor 한국어 적용
 var editor = new FroalaEditor('#froala', {
     language: 'ko',
+    htmlRemoveTags: ['p'], // <p> 태그만 제거
+    enter: FroalaEditor.ENTER_BR,   // Enter 키를 누르면 <br> 태그로 변환
+
+    // 이미지 업로드 옵션 추가
+    imageUploadURL: '/upload_image', // 이미지 업로드를 처리하는 엔드포인트
+    imageUploadParams: {
+        id: 'my_editor'  // 추가 파라미터를 전달할 수 있음
+    },
+    imageUploadMethod: 'POST',
+    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+    imageMaxSize: 5 * 1024 * 1024, // 최대 이미지 파일 크기: 5MB
 });
 
 // 출퇴근 Modal용

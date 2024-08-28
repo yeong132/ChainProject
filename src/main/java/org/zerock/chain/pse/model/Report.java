@@ -17,7 +17,7 @@ public class Report {
     private Long reportNo;
 
     @Column(name = "emp_no")
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     @Column(name = "report_name", length = 255, nullable = false)
     private String reportName;
@@ -32,8 +32,7 @@ public class Report {
     private String reportAuthor;
 
     @Column(name = "report_upload_date")
-    @Temporal(TemporalType.DATE)
-    private LocalDate reportUploadDate;
+    private LocalDate reportUploadDate = LocalDate.now();
 
     @Column(name = "report_files")
     private String reportFiles;

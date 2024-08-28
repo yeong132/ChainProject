@@ -25,7 +25,7 @@ public class Board {
     @Column(name = "board_name")    // 제목
     private String boardName;
 
-    @Column(name = "board_content") // 내용
+    @Column(name = "board_content", columnDefinition = "LONGTEXT") // 내용
     private String boardContent;
 
     @Column(name = "board_location")  // 지도위치 api 연동 예정

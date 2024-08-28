@@ -80,78 +80,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -467,7 +396,8 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">작성자</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control" name="qnaAuthor" placeholder="본인 고정" required type="text">
+                                    <input class="form-control qna-author-id" name="qnaAuthor" required th:value="${session.empNo}" type="hidden">
+                                    <input class="form-control qna-author-name" readonly type="text">
                                 </div>
                             </div>
 
@@ -617,5 +547,37 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 작성자 고정 값 출력 -->
+<script>
+    $(document).ready(function () {
+        function processQnaAuthors() {
+            const empNo = $('.qna-author-id').val(); // 로그인한 사원번호 가져오기
+            const qnaNameField = $('.qna-author-name'); // 사원이름을 표시할 필드
+
+            // 서버에서 모든 직원 데이터를 가져옴
+            $.getJSON('/api/employees/all', function (employees) {
+                let employeeName = '정보 없음';
+
+                // 사원 번호와 일치하는 사원이름 찾기
+                employees.forEach(employee => {
+                    console.log(`Comparing ${employee.empNo} with ${empNo}`);
+                    if (String(employee.empNo) === String(empNo)) {
+                        employeeName = `${employee.lastName} ${employee.firstName}`;
+                    }
+                });
+
+                // 사원이름을 필드에 설정
+                qnaNameField.val(employeeName);
+            }).fail(function () {
+                console.error("Failed to fetch employee data.");
+            });
+        }
+
+        // 페이지 로드 시 작성자 정보를 처리
+        processQnaAuthors();
+    });
+</script>
+
 </body>
 </html>

@@ -80,78 +80,7 @@
         </li>
         <!-- 출퇴근 아이콘 끝 -->
 
-        <li class="nav-item dropdown">
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge btn-secondary badge-number">4</span> </a>
-          <!-- 알림창 아이콘 끝 -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              4개의 새 알림이 있습니다
-              <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-            <li class="dropdown-footer">
-              <a href="/user/alarm">모든 알림 표시</a>
-            </li>
-          </ul>
-          <!-- 알림 드롭다운 목록 끝 -->
-        </li>
+        <th:block th:include="fragments/notifications :: notifications"></th:block>
         <!-- 알림 전체 끝 -->
 
         <li class="nav-item dropdown">
@@ -479,9 +408,13 @@
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">작성자</label>
                   <div class="col-sm-10">
-                    <input class="form-control" type="text" name="reportAuthor" th:value="${report.reportAuthor}">
+                    <!-- 로그인한 사원번호를 숨겨진 필드에 저장 -->
+                    <input class="form-control" type="hidden" name="reportAuthor" th:value="${report.reportAuthor}" readonly id="reportAuthorId">
+                    <!-- 사원이름을 표시할 필드 -->
+                    <input class="form-control mt-2" type="text" id="reportAuthorName" readonly>
                   </div>
                 </div>
+
 
                 <!-- 프로젝트 참여자 데이터를 숨겨진 HTML 요소의 데이터 속성으로 전달 -->
                 <div hidden id="reportData" th:data-participants="${report.reportParticipants}"></div>
@@ -911,6 +844,38 @@
     });
   </script>
 
+  <!-- 사원번호로 작성자 이름 출력 -->
+  <script>
+    $(document).ready(function () {
+      // 업무의 작성자 정보를 처리하는 함수
+      function processReportAuthors() {
+        const empNo = $('#reportAuthorId').val(); // 로그인한 사원번호 가져오기
+        const authorNameField = $('#reportAuthorName'); // 사원이름을 표시할 필드
+
+        // 서버에서 모든 직원 데이터를 가져옴
+        $.getJSON('/api/employees/all', function (employees) {
+          const employeeMap = {};
+
+          // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
+          employees.forEach(employee => {
+            employeeMap[employee.empNo] = `${employee.lastName} ${employee.firstName}`;
+          });
+
+          // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+          if (employeeMap[empNo]) {
+            authorNameField.val(employeeMap[empNo]); // 사원이름으로 필드 값 설정
+          } else {
+            authorNameField.val("정보 없음");
+          }
+        }).fail(function () {
+          console.error("Failed to fetch employee data.");
+        });
+      }
+
+      // 페이지 로드 시 작성자 정보를 처리
+      processReportAuthors();
+    });
+  </script>
 
   </body>
 </html>

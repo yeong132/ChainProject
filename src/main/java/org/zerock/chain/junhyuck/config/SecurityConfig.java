@@ -1,6 +1,6 @@
 package org.zerock.chain.junhyuck.config;
 
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +10,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.zerock.chain.junhyuck.service.CustomUserDetailsService;
+import org.zerock.chain.pse.model.CustomUserDetails;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import java.io.IOException;
 
@@ -31,37 +33,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/signup", "/assets/**").permitAll()
-                        .anyRequest().authenticated() // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+                        .requestMatchers("/signup", "/assets/**", "/uploads/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("emp_no")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(authenticationSuccessHandler())
                         .permitAll()
                 )
                 .rememberMe((rememberMe) -> rememberMe
-                        .key("uniqueAndSecret") // Remember Me 기능에 사용될 키
-                        .tokenValiditySeconds(86400) // Remember Me 토큰의 유효 시간 (예: 1일 = 86400초)
-                        .rememberMeParameter("remember-me") // 체크박스의 name 속성
-                )
-                .sessionManagement(session -> session
-                        .sessionFixation().migrateSession() // 세션 고정 보호를 위해 세션을 새로운 것으로 교체
+                        .tokenRepository(persistentTokenRepository()) // remember-me 토큰을 저장할 리포지토리
+                        .tokenValiditySeconds(1209600) // remember-me 기능 유지 시간 (2주)
+                        .key("uniqueAndSecret") // 고유 키 설정
+                        .userDetailsService(customUserDetailsService()) // UserDetailsService 설정
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 시 JSESSIONID와 함께 remember-me 쿠키도 삭제
-                        .addLogoutHandler(new CustomLogoutHandler()) // 직접 정의한 핸들러 추가
+                        .deleteCookies("JSESSIONID", "remember-me")
                         .permitAll()
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        return new InMemoryTokenRepositoryImpl(); // In-Memory 방식으로 remember-me 토큰 저장
     }
 
     @Bean
@@ -70,30 +74,16 @@ public class SecurityConfig {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                                 Authentication authentication) throws IOException, ServletException {
-                // 로그인 성공 시 메인 페이지로 리다이렉트
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                HttpSession session = request.getSession();
+                session.setAttribute("empNo", userDetails.getEmpNo());
                 response.sendRedirect("/");
             }
         };
     }
 
-    // 커스텀 로그아웃 핸들러
-    public class CustomLogoutHandler implements LogoutHandler {
-
-        @Override
-        public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-            // 세션 무효화
-            if (request.getSession() != null) {
-                request.getSession().invalidate();
-            }
-
-            // JSESSIONID 쿠키 삭제
-            Cookie cookie = new Cookie("JSESSIONID", null);
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-
-            // SecurityContext 초기화
-            new SecurityContextLogoutHandler().logout(request, response, authentication);
-        }
+    @Bean
+    public CustomUserDetailsService customUserDetailsService() {
+        return new CustomUserDetailsService();
     }
 }

@@ -80,78 +80,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -163,61 +92,7 @@
             <!-- 환경설정 전체 끝 -->
 
 
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
-                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
@@ -467,36 +342,31 @@
                                 </button>
                             </li>
                         </ul>
+
                         <div class="tab-content pt-2" id="borderedTabContent">
-                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home"
-                                 role="tabpanel">
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home" role="tabpanel">
                                 <div class="form-check">
                                     <!-- 필터 1 -->
                                     <div class="form-check">
-                                        <input checked class="form-check-input" data-tab="home" id="home-1" name="home"
-                                               type="radio" value="1">
+                                        <input checked class="form-check-input" data-tab="home" id="home-1" name="home" type="radio" value="1">
                                         <label class="form-check-label" for="home-1">월간 달성률</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" data-tab="home" id="home-2" name="home"
-                                               type="radio"
-                                               value="2">
-                                        <label class="form-check-label" for="home-2">현재 진행률</label>
+                                        <input class="form-check-input" data-tab="home" id="home-2" name="home" type="radio" value="2">
+                                        <label class="form-check-label" for="home-2">월별 진행률</label>
                                     </div>
                                 </div>
                             </div>
-                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile"
-                                 role="tabpanel">
+
+                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile" role="tabpanel">
                                 <div class="form-check">
                                     <!-- 필터 2 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" data-tab="profile" id="profile-1" name="profile"
-                                               type="radio" value="1">
+                                        <input class="form-check-input" data-tab="profile" id="profile-1" name="profile" type="radio" value="3">
                                         <label class="form-check-label" for="profile-1">달성률</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" data-tab="profile" id="profile-2" name="profile"
-                                               type="radio" value="2">
+                                        <input class="form-check-input" data-tab="profile" id="profile-2" name="profile" type="radio" value="4">
                                         <label class="form-check-label" for="profile-2">진행률</label>
                                     </div>
                                 </div>
@@ -598,9 +468,8 @@
                         <label class="form-label">카테고리</label>
                         <select class="form-select" name="chartCategory">
                             <option selected>카테고리를 선택하세요</option>
-                            <option value="Category1">카테고리 1</option>
-                            <option value="Category2">카테고리 2</option>
-                            <option value="Category3">카테고리 3</option>
+                            <option value="개인">개인 목표</option>
+                            <option value="부서">부서 목표</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -709,9 +578,13 @@
                     <input class="form-control" id="searchGoal" placeholder="목표를 검색하세요" type="text">
                 </div>
 
-                <div class="mb-3" id="goalList">
-                    <!-- 목표 리스트가 여기에 로드됨 -->
+                <div id="goalList">
+                    <div class="form-check" th:each="chart : ${charts}">
+                        <input class="form-check-input goal-checkbox" type="checkbox" th:value="${chart.chartNo}" th:id="'goal-' + ${chart.chartNo}" th:data-goal-name="${chart.chartName}">
+                        <label class="form-check-label" th:for="'goal-' + ${chart.chartNo}" th:text="${chart.chartName}"></label>
+                    </div>
                 </div>
+
 
                 <div>
                     <h5>선택한 목표들:</h5>
@@ -731,7 +604,6 @@
 </div>
 
 
-<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
 <footer class="footer" id="footer">
     <div class="copyright">
@@ -747,290 +619,6 @@
 </footer>
 <!-- Footer 끝 -->
 
-<!--그래프 및 모달 관련 주석 -->
-<script>
-    // main.js
-    document.addEventListener('DOMContentLoaded', function () {
-        // 차트 초기화 및 이벤트 리스너 설정
-        const initialData = ChartModule.initChart([40, 30, 48, 40, 20, 80, 60, 100, 25, 30]); // 초기 차트 데이터 제공
-        initialData.render();
-
-        // Flatpickr 초기화
-        ModalModule.initFlatpickr();
-
-        // 모달 및 차트 라디오 버튼 관련 이벤트 리스너 추가
-        EventListenerModule.attachChartRadioListeners(initialData);
-
-        // 목표 비교 기능 초기화
-        const goals = [
-            {id: 1, name: '목표 1', progress: [40, 60, 80]},
-            {id: 2, name: '목표 2', progress: [20, 50, 70]},
-            {id: 3, name: '목표 3', progress: [10, 30, 60]},
-            {id: 4, name: '목표 4', progress: [50, 70, 90]}
-        ];
-        GoalComparisonModule.initGoalComparison(goals);
-    });
-
-    // chartModule.js
-    const ChartModule = (function () {
-        // 차트 데이터 (샘플 데이터)
-        const chartData = {
-            'home': {
-                1: [40, 30, 48, 40, 20, 80, 60, 100, 25, 30],
-                2: [30, 30, 30, 70, 40, 55, 60, 90, 50, 10]
-            },
-            'profile': {
-                1: [20, 50, 40, 90, 50, 60, 75, 15, 50, 40],
-                2: [10, 30, 40, 20, 45, 50, 60, 90, 70, 70]
-            }
-        };
-
-        // 데이터 값에 따른 색상을 반환하는 함수
-        function getColor(value) {
-            if (value >= 80) return '#f16fc7';
-            if (value >= 60) return '#eed348';
-            return '#93e6b7';
-        }
-
-        // 데이터 배열에 따른 색상 배열을 생성하는 함수
-        function generateColors(data) {
-            return data.map(getColor);
-        }
-
-        // 차트를 초기화하는 함수
-        function initChart(initialData) {
-            return new ApexCharts(document.querySelector("#barChart"), {
-                series: [{
-                    data: initialData,
-                    color: function ({value}) {
-                        return getColor(value);
-                    }
-                }],
-                chart: {
-                    type: 'bar',
-                    height: 350
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 5,
-                        horizontal: true
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                        'United States', 'China', 'Germany'
-                    ],
-                    max: 100
-                },
-                yaxis: {
-                    max: 100
-                }
-            });
-        }
-
-        // 차트를 업데이트하는 함수
-        function updateChart(chart, tab, category) {
-            if (chartData[tab] && chartData[tab][category]) {
-                const newData = chartData[tab][category];
-                chart.updateOptions({
-                    series: [{
-                        data: newData,
-                        color: function ({value}) {
-                            return getColor(value);
-                        }
-                    }],
-                    colors: generateColors(newData)
-                });
-            } else {
-                console.error('유효하지 않은 데이터: 탭 또는 카테고리를 찾을 수 없습니다');
-            }
-        }
-
-        return {
-            initChart,
-            updateChart
-        };
-    })();
-
-    // modalModule.js
-    const ModalModule = (function () {
-        // flatpickr 초기화 함수 (기간 설정을 위한 날짜 선택 라이브러리)
-        function initFlatpickr() {
-            const chartPeriodInput = document.getElementById('chartPeriod');
-            const chartStartDateInput = document.getElementById('chartStartDate');
-            const chartEndDateInput = document.getElementById('chartEndDate');
-
-            flatpickr(chartPeriodInput, {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                onChange: function (selectedDates, dateStr) {
-                    const dates = dateStr.split(" to ");
-                    chartStartDateInput.value = dates[0];
-                    chartEndDateInput.value = dates[1];
-                }
-            });
-        }
-
-        // 목표 차트 생성 모달 열기
-        function showCreateChartModal() {
-            const goalChartModal = new bootstrap.Modal(document.getElementById('goalChartModal'));
-            goalChartModal.show();
-        }
-
-        // 목표 비교 차트 모달 열기
-        function showCompareChartModal() {
-            const compareChartModal = new bootstrap.Modal(document.getElementById('compareChartModal'));
-            compareChartModal.show();
-        }
-
-        return {
-            initFlatpickr,
-            showCreateChartModal,
-            showCompareChartModal
-        };
-    })();
-
-    // eventListenerModule.js
-    const EventListenerModule = (function (ChartModule) {
-        // 차트 라디오 버튼에 이벤트 리스너를 붙이는 함수
-        function attachChartRadioListeners(chart) {
-            document.querySelectorAll('.form-check-input').forEach(input => {
-                input.addEventListener('change', event => {
-                    const tab = event.target.dataset.tab;
-                    const category = event.target.value;
-                    ChartModule.updateChart(chart, tab, category);
-                });
-            });
-        }
-
-        return {
-            attachChartRadioListeners
-        };
-    })(ChartModule);
-
-    // goalComparisonModule.js
-    const GoalComparisonModule = (function () {
-        let selectedGoals = [];
-
-        // 목표 비교 그래프 모달 초기화 및 이벤트 리스너 추가
-        function initGoalComparison(goals) {
-            const goalList = document.getElementById('goalList');
-            goalList.innerHTML = goals.map(goal => `
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="${goal.id}" id="goal-${goal.id}">
-            <label class="form-check-label" for="goal-${goal.id}">${goal.name}</label>
-        </div>
-    `).join('');
-
-            goals.forEach(goal => {
-                document.getElementById(`goal-${goal.id}`).addEventListener('change', function () {
-                    if (this.checked) {
-                        if (selectedGoals.length < 3) {
-                            selectedGoals.push(goal);
-                        } else {
-                            this.checked = false;
-                            alert('최대 3개의 목표만 선택할 수 있습니다.');
-                        }
-                    } else {
-                        selectedGoals = selectedGoals.filter(g => g.id !== goal.id);
-                    }
-
-                    document.getElementById('selectedGoals').innerHTML = selectedGoals.map(g => `<li>${g.name}</li>`).join('');
-                });
-            });
-
-            document.getElementById('compareButton').addEventListener('click', function () {
-                if (selectedGoals.length === 0) {
-                    alert('비교할 목표를 선택하세요.');
-                    return;
-                }
-
-                const chartNames = selectedGoals.map(goal => goal.name);
-                const progressData = selectedGoals.map(goal => ({name: goal.name, data: goal.progress}));
-
-                const compareChart = new ApexCharts(document.querySelector("#compareChart"), {
-                    series: progressData,
-                    chart: {
-                        type: 'bar',
-                        height: 350
-                    },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            columnWidth: '55%',
-                            endingShape: 'rounded'
-                        }
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        show: true,
-                        width: 2,
-                        colors: ['transparent']
-                    },
-                    xaxis: {
-                        categories: chartNames,
-                    },
-                    yaxis: {
-                        title: {
-                            text: '% (퍼센트)'
-                        }
-                    },
-                    fill: {
-                        opacity: 1
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function (val) {
-                                return val + "%"
-                            }
-                        }
-                    }
-                });
-
-                compareChart.render();
-            });
-
-            document.getElementById('searchGoal').addEventListener('input', function () {
-                const query = this.value.toLowerCase();
-                const filteredGoals = goals.filter(goal => goal.name.toLowerCase().includes(query));
-
-                goalList.innerHTML = filteredGoals.map(goal => `
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="${goal.id}" id="goal-${goal.id}">
-                <label class="form-check-label" for="goal-${goal.id}">${goal.name}</label>
-            </div>
-        `).join('');
-
-                filteredGoals.forEach(goal => {
-                    document.getElementById(`goal-${goal.id}`).addEventListener('change', function () {
-                        if (this.checked) {
-                            if (selectedGoals.length < 3) {
-                                selectedGoals.push(goal);
-                            } else {
-                                this.checked = false;
-                                alert('최대 3개의 목표만 선택할 수 있습니다.');
-                            }
-                        } else {
-                            selectedGoals = selectedGoals.filter(g => g.id !== goal.id);
-                        }
-
-                        document.getElementById('selectedGoals').innerHTML = selectedGoals.map(g => `<li>${g.name}</li>`).join('');
-                    });
-                });
-            });
-        }
-
-        return {
-            initGoalComparison
-        };
-    })();
-
-</script>
 
 
 <!-- 기간 설정 필요한 라이브러리 추가 -->
@@ -1067,6 +655,12 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!--그래프 및 모달 관련 주석 -->
+<script src="/assets/js/OKRchart.js"></script>
+
+
 </body>
 </html>
 

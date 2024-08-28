@@ -60,78 +60,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -142,61 +71,7 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown" href="#">
-                    <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img.jpg"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
@@ -366,25 +241,25 @@
             </a>
             <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
                 <li>
-                    <a href="/mail/receive"> < i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/highlight"> < i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/important"> < i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/tome"> < i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                    <a href="/mail/tome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/temporaryStorage"> < i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/send"> < i class="bi bi-circle"></i><span>발신함</span> </a>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
                 </li>
                 <li>
-                    <a href="/mail/trash"> < i class="bi bi-circle"></i><span>휴지통</span> </a>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
                 </li>
             </ul>
         </li>
@@ -415,7 +290,8 @@
     <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
     <section class="section">
         <div class="row">
-            <div class="col-lg-5">
+
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
                         <h5></h5>
@@ -428,24 +304,32 @@
                             </li>
                         </ul>
 
-                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent"
-                             style="height: 300px">
-                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home"
-                                 role="tabpanel">
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent" style="height: 300px">
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home" role="tabpanel">
                                 <div class="accordion accordion-flush" id="star-group-1">
+
                                     <div class="row mb-5 mt-3">
                                         <!-- 서버에서 불러온 즐겨찾기 항목을 여기에 출력 -->
                                         <div class="activity-item d-flex" th:each="todo : ${favoriteTodos}">
                                             <div class="form-check mt-2">
                                                 <form method="post" th:action="@{/todo/updateStatus}">
                                                     <input type="hidden" name="todoNo" th:value="${todo.todoNo}">
-                                                    <input type="hidden" name="todoStatus"
-                                                           th:value="${!todo.todoStatus}">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           th:checked="${todo.todoStatus}"
-                                                           onclick="this.closest('form').submit()">
+                                                    <input type="hidden" name="todoStatus" th:value="${!todo.todoStatus}">
+                                                    <input class="form-check-input" type="checkbox" th:checked="${todo.todoStatus}" onclick="this.closest('form').submit()">
                                                 </form>
-                                                <div class="activity-content">[[${todo.todoContent}]]</div>
+                                                <div class="activity-content" th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                    <div>
+                                                        <!-- 즐겨찾기 아이콘 -->
+                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <span style="color: rgba(130,130,130,0.68);">[</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">]</span>
+                                                        <span th:text="${todo.todoContent}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);">(</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">)</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -457,13 +341,19 @@
                 </div>
             </div>
 
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <h5></h5>
                         <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button aria-controls="home" aria-selected="true" class="nav-link active"
+                                <button aria-controls="today" aria-selected="true" class="nav-link active"
+                                        data-bs-target="#bordered-today" data-bs-toggle="tab" id="today-tab" role="tab"
+                                        type="button"> To Day *
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="home" aria-selected="true" class="nav-link"
                                         data-bs-target="#bordered-home" data-bs-toggle="tab" id="home-tab" role="tab"
                                         type="button">전체보기
                                 </button>
@@ -481,69 +371,113 @@
                                 </button>
                             </li>
                         </ul>
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="borderedTabContent" style="height: 300px">
+                            <div aria-labelledby="today-tab" class="tab-pane fade show active" id="bordered-today" role="tabpanel">
+                                <div class="accordion accordion-flush" id="faq-group-4">
+                                    <div class="row mb-5 mt-3"id="today-todos-container">
+                                        <!-- 오늘 날짜 콘텐츠 -->
+                                        <div class="activity-item d-flex" th:each="todo : ${todayTodos}">
+                                            <div class="form-check mt-2">
+                                                <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
+                                                    <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
+                                                    <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
+                                                    <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
+                                                </form>
+                                                <div class="activity-content" th:class="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                    <div>
+                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <span style="color: rgba(130,130,130,0.68);">[</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">]</span>
+                                                        <span th:text="${todo.todoContent}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);">(</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="borderedTabContent"
-                             style="height: 300px">
-                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home"
-                                 role="tabpanel">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div aria-labelledby="home-tab" class="tab-pane fade" id="bordered-home" role="tabpanel">
                                 <div class="accordion accordion-flush" id="faq-group-1">
                                     <div class="row mb-5 mt-3">
                                         <!-- 전체보기 콘텐츠 -->
-                                        <div class="activity-item d-flex" th:each="todo : ${todos}"
-                                             th:if="${!todo.todoFavorite}">
+                                        <div class="activity-item d-flex" th:each="todo : ${todos}">
                                             <div class="form-check mt-2">
-                                                <form method="post" th:action="@{/todo/updateStatus}"
-                                                      th:id="'statusForm-' + ${todo.todoNo}">
+                                                <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
                                                     <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
-                                                    <input name="todoStatus" th:value="${!todo.todoStatus}"
-                                                           type="hidden">
-                                                    <input class="form-check-input" th:checked="${todo.todoStatus}"
-                                                           th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
-                                                           type="checkbox">
+                                                    <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
+                                                    <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
                                                 </form>
-                                                <div class="activity-content">
-                                                    <p th:text="${todo.todoContent + ' (' + todo.formattedTodoCreatedDate + ')'}"></p>
+                                                <div class="activity-content" th:class="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                    <div>
+                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <span style="color: rgba(130,130,130,0.68);">[</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">]</span>
+                                                        <span th:text="${todo.todoContent}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);">(</span>
+                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color:rgba(130,130,130,0.68);">)</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div aria-labelledby="progg-tab" class="tab-pane fade" id="bordered-progg" role="tabpanel">
                                 <div class="row mb-5 mt-3">
                                     <!-- 진행 중 콘텐츠 -->
-                                    <div class="activity-item d-flex" th:each="todo : ${incompleteTodos}"
-                                         th:if="${!todo.todoFavorite}">
+                                    <div class="activity-item d-flex" th:each="todo : ${incompleteTodos}">
                                         <div class="form-check mt-2">
-                                            <form method="post" th:action="@{/todo/updateStatus}"
-                                                  th:id="'statusForm-' + ${todo.todoNo}">
+                                            <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
                                                 <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
                                                 <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                <input class="form-check-input" th:checked="${todo.todoStatus}"
-                                                       th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
-                                                       type="checkbox">
+                                                <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
                                             </form>
-                                            <div class="activity-content">[[${todo.todoContent}]]</div>
+                                            <div class="activity-content">
+                                                <div>
+                                                    <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                    <span style="color: rgba(130,130,130,0.68);">[</span>
+                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                    <span style="color:rgba(130,130,130,0.68);">]</span>
+                                                    <span th:text="${todo.todoContent}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);">(</span>
+                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                    <span style="color:rgba(130,130,130,0.68);">)</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div aria-labelledby="suss-tab" class="tab-pane fade" id="bordered-suss" role="tabpanel">
                                 <div class="row mb-5 mt-3">
                                     <!-- 완료된 콘텐츠 -->
                                     <div class="activity-item d-flex" th:each="todo : ${completedTodos}">
                                         <div class="form-check mt-2">
-                                            <form method="post" th:action="@{/todo/updateStatus}"
-                                                  th:id="'statusForm-' + ${todo.todoNo}">
+                                            <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
                                                 <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
                                                 <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                <input class="form-check-input" th:checked="${todo.todoStatus}"
-                                                       th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
-                                                       type="checkbox">
+                                                <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
                                             </form>
-                                            <div class="activity-content">[[${todo.todoContent}]]</div>
+                                            <div class="activity-content" th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                <div>
+                                                    <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                    <span style="color: rgba(130,130,130,0.68);">[</span>
+                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                    <span style="color:rgba(130,130,130,0.68);">]</span>
+                                                    <span th:text="${todo.todoContent}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);">(</span>
+                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                    <span style="color:rgba(130,130,130,0.68);">)</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <button class="btn btn-danger" onclick="showDeleteAllConfirmationModal(event)"
@@ -552,8 +486,6 @@
                                     </button>
                                 </div>
                             </div>
-                            <!-- 완료 항목의 삭제 버튼 -->
-
                         </div>
                     </div>
                 </div>
@@ -588,7 +520,7 @@
                             <button class="btn btn-primary" onclick="showConfirmationModal()" type="button">
                                 등록
                             </button>
-                            <button class="btn btn-danger" type="reset">삭제</button>
+                            <button class="btn btn-warning" type="reset">취소</button>
                         </div>
                     </form>
                 </div>
@@ -639,7 +571,7 @@
     </div>
 </div>
 
-<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
+
 <!-- ======= Footer ======= -->
 <footer class="footer" id="footer">
     <div class="copyright">
@@ -717,5 +649,34 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- 즐겨찾기 상태 업데이트 -->
+<script>
+    function toggleFavorite(todoNo, newFavoriteStatus) {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/todo/updateFavoriteStatus";
+
+        const todoNoInput = document.createElement("input");
+        todoNoInput.type = "hidden";
+        todoNoInput.name = "todoNo";
+        todoNoInput.value = todoNo;
+
+        const favoriteStatusInput = document.createElement("input");
+        favoriteStatusInput.type = "hidden";
+        favoriteStatusInput.name = "todoFavorite";
+        favoriteStatusInput.value = newFavoriteStatus;
+
+        form.appendChild(todoNoInput);
+        form.appendChild(favoriteStatusInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+</script>
+
+
 </body>
 </html>

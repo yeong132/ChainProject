@@ -7,6 +7,7 @@ import org.zerock.chain.pse.dto.FavoriteQnaDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaRequestDTO;
 import org.zerock.chain.pse.model.FavoriteQna;
 import org.zerock.chain.pse.repository.FavoriteQnaRepository;
+import org.zerock.chain.pse.service.FavoriteQnaService;
 
 import java.util.List;
 import java.util.stream.Collectors;

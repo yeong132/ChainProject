@@ -1,7 +1,12 @@
 package org.zerock.chain.pse.service;
 
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.zerock.chain.pse.dto.ChartDTO;
 import org.zerock.chain.pse.dto.ChartRequestDTO;
 import org.zerock.chain.pse.model.Chart;
@@ -11,23 +16,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ChartServiceImpl implements ChartService {
+@Log4j2
+@RequiredArgsConstructor
+public class ChartServiceImpl extends BaseService<Chart> implements ChartService {
 
-    private final ModelMapper modelMapper;
     private final ChartRepository chartRepository;
-    private final ProjectService projectService;
+    private final ModelMapper modelMapper;
 
-    public ChartServiceImpl(ModelMapper modelMapper, ChartRepository chartRepository, ProjectService projectService) {
-        this.modelMapper = modelMapper;
-        this.chartRepository = chartRepository;
-        this.projectService = projectService;
+    @Override
+    protected List<Chart> getAllItemsByEmpNo(Long empNo) {
+        // Retrieve charts by employee number (chartAuthor)
+        return chartRepository.findByChartAuthor(empNo);
     }
 
     @Override   // 차트 생성 등록
     public ChartDTO createChart(ChartRequestDTO chartRequestDTO) {
+        // Get employee number from session
+        Long empNo = getEmpNoFromSession();
+        chartRequestDTO.setChartAuthor(empNo);
+
         Chart chart = modelMapper.map(chartRequestDTO, Chart.class);
 
-        // 다른 라벨 값 처리 로직
+        // Process progress labels
         String labelsString = String.join(",",
                 chartRequestDTO.getProgressLabel20(),
                 chartRequestDTO.getProgressLabel40(),
@@ -41,28 +51,32 @@ public class ChartServiceImpl implements ChartService {
         return modelMapper.map(chart, ChartDTO.class);
     }
 
-
     @Override   // 전체 차트 조회
     public List<ChartDTO> getAllCharts() {
-        return chartRepository.findAll().stream()
+        Long empNo = getEmpNoFromSession();
+        List<Chart> charts = getItemsByEmpNo(empNo, chartRepository::findByChartAuthor);
+        return charts.stream()
                 .map(chart -> modelMapper.map(chart, ChartDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override   // 특정 차트 조회
     public ChartDTO getChartById(Long chartNo) {
-        Chart chart = chartRepository.findById(chartNo).orElseThrow();
+        Long empNo = getEmpNoFromSession();
+        Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
         return modelMapper.map(chart, ChartDTO.class);
     }
 
-
     @Override   // 수정 등록
     public ChartDTO updateChart(Long chartNo, ChartRequestDTO chartRequestDTO) {
-        Chart chart = chartRepository.findById(chartNo).orElseThrow();
+        Long empNo = getEmpNoFromSession();
+        Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
 
         modelMapper.map(chartRequestDTO, chart);
 
-        // 각 라벨 값을 쉼표로 구분하여 하나의 문자열로 결합
+        // Process progress labels
         String labelsString = String.join(",",
                 chartRequestDTO.getProgressLabel20(),
                 chartRequestDTO.getProgressLabel40(),
@@ -71,17 +85,23 @@ public class ChartServiceImpl implements ChartService {
                 chartRequestDTO.getProgressLabel100()
         );
 
-        // 결합된 라벨 문자열을 엔티티에 저장
         chart.setProgressLabels(labelsString);
-
         chart = chartRepository.save(chart);
         return modelMapper.map(chart, ChartDTO.class);
     }
 
     @Override   // 차트 삭제
     public void deleteChart(Long chartNo) {
-        chartRepository.deleteById(chartNo);
+        Long empNo = getEmpNoFromSession();
+        Chart chart = chartRepository.findByChartNoAndChartAuthor(chartNo, empNo)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chart ID or unauthorized access"));
+        chartRepository.delete(chart);
     }
 
-
+    // Method to get employee number from session
+    private Long getEmpNoFromSession() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        return (Long) session.getAttribute("empNo");
+    }
 }

@@ -446,37 +446,54 @@
                         <form id="emailForm" th:action="@{/mail/send}" method="post" enctype="multipart/form-data">
                             <div class="offset-sm-0 mt-3">
                                 <div class="col-sm-5">
-                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#sendModal">보내기</button>
-                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#saveModal">임시저장</button>
+                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#sendModal" onclick="setFormAction('/mail/send'); submitSendForm();">보내기</button>
+                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" data-bs-target="#saveModal" onclick="submitDraftForm();">임시저장</button>
                                 </div>
                             </div>
 
+                            <!-- 수신자 이메일 입력 -->
                             <div class="row mb-3">
                                 <label for="recipientEmail" class="col-sm-1 col-form-label">받는사람</label>
                                 <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="recipientEmail" name="recipientEmail" required>
+                                    <input type="email" class="form-control" id="recipientEmail" name="recipientEmail"
+                                           th:value="${recipientEmail}" required>
                                 </div>
                             </div>
+
+                            <!-- 이메일 제목 입력 -->
                             <div class="row mb-3">
                                 <label for="subject" class="col-sm-1 col-form-label">제목</label>
                                 <div class="col-sm-11">
-                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                    <input type="text" class="form-control" id="subject" name="subject"
+                                           th:value="${subject}" required>
                                 </div>
                             </div>
 
+                            <!-- 첨부파일 입력 -->
                             <div class="row mb-3">
-                                <label for="attachments" class="col-sm-1 col-form-label">첨부파일</label>
+                                <label for="newAttachments" class="col-sm-1 col-form-label">첨부파일</label>
                                 <div class="col-sm-11">
-                                    <input type="file" class="form-control" id="attachments" name="attachments" multiple>
+                                    <input type="file" class="form-control" id="newAttachments" name="newAttachments" multiple>
+                                    <!-- 새로운 첨부파일 리스트를 보여줄 공간 -->
+                                    <div id="newAttachmentsContainer">
+                                        <!-- 새로운 첨부파일 리스트가 여기에 추가됩니다. -->
+                                    </div>
+                                    <!-- 기존 첨부파일 리스트를 보여줄 공간 -->
+                                    <div id="savedAttachmentsContainer">
+                                        <!-- 기존 첨부파일 리스트가 여기에 추가됩니다. -->
+                                    </div>
                                 </div>
                             </div>
 
+
+                            <!-- 이메일 본문 작성 -->
                             <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <div id="editor-container" style="height: 300px;"></div>
-                                <textarea name="message" id="message" style="display:none;"></textarea>
+                                <div id="editor-container" style="height: 300px;" th:utext="${message}"></div>
+                                <textarea name="message" id="message" style="display:none;" th:text="${message}"></textarea>
                             </div>
                         </form>
+
+
                     </div>
                 </div>
             </div>
@@ -515,7 +532,7 @@
                     메일을 임시저장함에 보내겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="confirmSave()">네</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">네</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
                 </div>
             </div>
@@ -559,32 +576,129 @@
     <i class="bi bi-arrow-up-short"></i>
 </a>
 
+
 <!-- Quill.js JavaScript -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<script>
-    var quill = new Quill('#editor-container', {
-        theme: 'snow',
-        modules: {
-            toolbar: [
-                [{ 'font': [] }, { 'size': [] }],
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'script': 'sub'}, { 'script': 'super' }],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
-                ['direction', { 'align': [] }],
-                ['link', 'image', 'video', 'formula'],
-                ['clean']
-            ]
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'font': [] }, { 'size': [] }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+                    ['direction', { 'align': [] }],
+                    ['link', 'image', 'video', 'formula'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // 서버에서 불러온 메시지를 Quill 에디터에 반영
+        var message = document.querySelector('textarea[name=message]').value;
+        console.log("Initial message content loaded from server:", message);
+        if (message) {
+            quill.clipboard.dangerouslyPasteHTML(message);
+        }
+
+        // 기존 첨부파일 로드 및 표시 (서버에서 불러온 데이터 기반)
+        var savedAttachments = /*[[${attachments}]]*/ [];
+        console.log("Saved attachments:", savedAttachments);
+        if (savedAttachments && savedAttachments.length > 0) {
+            var savedAttachmentsContainer = document.getElementById('savedAttachmentsContainer');
+            savedAttachments.forEach(function(attachment) {
+                var fileItem = document.createElement('div');
+                fileItem.innerHTML = '<input type="hidden" name="existingAttachments" value="' + attachment + '">'
+                    + '<a href="' + attachment + '" target="_blank">' + attachment.split('/').pop() + '</a>';
+                savedAttachmentsContainer.appendChild(fileItem);
+            });
         }
     });
 
-    function submitForm() {
+    function setFormAction(action) {
+        document.getElementById('emailForm').setAttribute('action', action);
+    }
+
+    // 메일을 보내기 위한 폼 전송
+    function submitSendForm() {
         var message = document.querySelector('textarea[name=message]');
-        message.value = quill.root.innerHTML;
-        document.getElementById('emailForm').submit();
+        if (quill) {
+            message.value = quill.root.innerHTML;
+            document.getElementById('emailForm').submit();
+        } else {
+            console.error("Quill is not defined. Please ensure Quill is initialized before submitting the form.");
+        }
+    }
+
+    // 임시저장 기능을 위한 폼 전송
+    function submitDraftForm() {
+        var message = document.querySelector('textarea[name=message]');
+        if (quill) {
+            message.value = quill.root.innerHTML;
+
+            var formData = new FormData(document.getElementById('emailForm'));
+
+            // AJAX를 사용하여 임시저장
+            $.ajax({
+                type: 'POST',
+                url: '/mail/saveDraft',  // 임시저장 엔드포인트
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // 첨부파일 목록 갱신
+                    if (response.attachments) {
+                        var attachmentsContainer = document.getElementById('attachmentsContainer');
+                        attachmentsContainer.innerHTML = ''; // 기존 파일 목록 초기화
+                        response.attachments.forEach(function(attachment) {
+                            var fileItem = document.createElement('div');
+                            fileItem.innerHTML = '<a href="' + attachment.url + '" target="_blank">' + attachment.name + '</a>';
+                            attachmentsContainer.appendChild(fileItem);
+                        });
+                    }
+
+                    // 알림 메시지 표시
+                    alert('Draft saved successfully!');
+
+                    // 페이지 리디렉션
+                    window.location.href = '/mail/draftsList';
+                },
+                error: function() {
+                    alert('Failed to save draft.');
+                }
+            });
+        } else {
+            console.error("Quill is not defined. Please ensure Quill is initialized before submitting the form.");
+        }
+    }
+
+    // 이미지 업로드 함수
+    function uploadImageToServer(base64String) {
+        var resultPath = '';
+        $.ajax({
+            type: 'POST',
+            url: '/uploadImage', // 서버에서 이미지를 받아 저장할 경로를 설정
+            data: {
+                image: base64String
+            },
+            async: false,
+            success: function (response) {
+                resultPath = response.filePath; // 서버에서 반환하는 업로드된 이미지의 경로를 저장
+                resultPath = '/upload/' + resultPath; // 경로를 '/upload/'로 수정
+            },
+            error: function () {
+                console.error("Image upload failed.");
+            }
+        });
+        return resultPath;
     }
 </script>
+
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

@@ -1,0 +1,67 @@
+<!-- src/main/resources/templates/fragments/notifications.html -->
+<!--고정 헤더 : 알림창 -->
+<div th:fragment="notifications">
+    <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
+            <i class="bi bi-bell"></i>
+            <!-- 수정된 부분: 읽지 않은 알림의 개수 표시 -->
+            <span class="badge btn-secondary badge-number"
+                  th:text="${#lists.size(allNotifications.?[isRead == false])}">0</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+            <li class="dropdown-header">
+                <!-- 수정된 부분: 읽지 않은 알림의 개수 표시 -->
+                <span th:text="${#lists.size(allNotifications.?[isRead == false])} + '개의 새 알림이 있습니다'">0개의 새 알림이 있습니다</span>
+                <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+            </li>
+            <li>
+                <hr class="dropdown-divider"/>
+            </li>
+            <!-- 수정된 부분: 읽지 않은 알림만 표시 -->
+            <div class="overflow-y-auto" style="max-height: 350px;">
+                <li th:each="notification : ${allNotifications.?[isRead == false]}">
+                    <a th:href="@{/user/alarm/read/{notificationNo}(notificationNo=${notification.notificationNo})}">
+                        <div class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h4 th:text="${notification.notificationType}">알림 유형</h4>
+                                <p th:text="${notification.notificationMessage}">알림 내용</p>
+                                <span class="notification-time" th:data-timestamp="${notification.notificationDate}">알림 시간</span>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="dropdown-divider"/>
+                </li>
+            </div>
+        </ul>
+    </li>
+</div>
+
+<!-- 시간 표시 -->
+<script>
+    function timeAgo(timestamp) {
+        const now = new Date();
+        const notificationTime = new Date(timestamp);
+        const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+        const minutes = Math.floor(diffInSeconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return '방금 전';
+        if (minutes < 60) return `${minutes}분 전`;
+        if (hours < 24) return `${hours}시간 전`;
+        return `${days}일 전`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const notificationTimes = document.querySelectorAll('.notification-time');
+
+        notificationTimes.forEach(function (element) {
+            const timestamp = element.getAttribute('data-timestamp');
+            if (timestamp) {
+                element.textContent = timeAgo(new Date(timestamp));
+            }
+        });
+    });
+</script>

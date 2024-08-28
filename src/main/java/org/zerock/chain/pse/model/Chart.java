@@ -1,6 +1,5 @@
 package org.zerock.chain.pse.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 @ToString
 public class Chart {
 
-    // 목표차트는 데이터 생성, 프로젝트 차트는 기존 데이터 가져오기
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chart_no")
@@ -42,10 +40,10 @@ public class Chart {
     private Boolean noticePinned = false;   // 완료 여부
 
     @Column(name = "chart_upload_date")
-    private LocalDate reportUploadDate= LocalDate.now();    // 생성일
+    private LocalDate chartUploadDate= LocalDate.now();    // 생성일
 
     @Column(name = "chart_author")
-    private String chartAuthor  ;  //  작성자
+    private Long chartAuthor;  //  작성자 (사원번호)
 
     @Column(name = "progress_labels")
     private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장

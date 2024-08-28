@@ -80,78 +80,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -440,7 +369,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="mb-3">
-                    <button class="btn btn-primary" onclick="location.href='/user/qna/register'">질문 하기</button>
+                    <button class="btn btn-primary" onclick="location.href='/user/qna/register'">질문 작성</button>
                 </div>
 
                 <!------------------------------------------------------------------card 시작 ----------------------------------------------------------------------->
@@ -510,8 +439,7 @@
                                 </div>
                             </div>
 
-                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile"
-                                 role="tabpanel">
+                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile" role="tabpanel">
                                 <table class="table datatable table-hover ">
                                     <thead>
                                     <tr>
@@ -529,9 +457,9 @@
                                         <td th:text="${qna.qnaNo}"></td>
                                         <td th:text="${qna.qnaCategory}"></td>
                                         <td th:text="${qna.qnaName}"></td>
-                                        <td th:text="${qna.qnaAuthor}"></td>
+                                        <td class="qnaAuthor" th:text="${qna.qnaAuthor}"></td>
                                         <td th:text="${qna.qnaUploadDate}"></td>
-                                        <td th:text="${qna.qnaStatus}"></td>
+                                        <td th:text="${qna.qnaStatus ? '완료' : '대기'}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -772,5 +700,43 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--  사원번호로 작성자 이름 출력 -->
+<script>
+    $(document).ready(function () {
+        // 업무의 작성자 정보를 처리하는 함수
+        function processQnaAuthors() {
+            const qnaAuthorElements = $('.qnaAuthor'); // 모든 작성자 요소를 선택
+
+            // 서버에서 모든 직원 데이터를 가져옴
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
+
+                // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
+                });
+
+                qnaAuthorElements.each(function () {
+                    const empNo = $(this).text(); // 작성자 사원번호를 가져옴
+                    const authorContainer = $(this);
+
+                    // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+                    if (employeeMap[empNo]) {
+                        authorContainer.text(employeeMap[empNo]); // 사원이름으로 텍스트 변경
+                    } else {
+                        authorContainer.text("정보 없음");
+                    }
+                });
+            }).fail(function () {
+                console.error("Failed to fetch employee data.");
+            });
+        }
+
+        // 페이지 로드 시 모든 작성자 정보를 처리
+        processQnaAuthors();
+    });
+</script>
+
 </body>
 </html>
