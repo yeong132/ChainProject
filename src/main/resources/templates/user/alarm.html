@@ -347,6 +347,12 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
+                                <button aria-controls="chart" aria-selected="false" class="nav-link"
+                                        data-bs-target="#chart"
+                                        data-bs-toggle="tab" id="chart-tab" role="tab" type="button">Chart
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
                                 <button aria-controls="notice" aria-selected="false" class="nav-link"
                                         data-bs-target="#notice"
                                         data-bs-toggle="tab" id="notice-tab" role="tab" type="button">공지사항
@@ -404,7 +410,6 @@
                                     </form>
                                 </div>
                             </div>
-
                             <!-------프로젝트 알림  목록 ----------------------->
                             <div aria-labelledby="project-tab" class="tab-pane fade" id="project" role="tabpanel">
                                 <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}" th:if="${notification.enabled}">
@@ -422,7 +427,6 @@
                                     </form>
                                 </div>
                             </div>
-
                             <!------------- 업무 알림 목록 ----------------------->
                             <div aria-labelledby="payment-tab" class="tab-pane fade" id="payment" role="tabpanel">
                                 <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}" th:if="${notification.enabled}">
@@ -430,6 +434,23 @@
                                     <a th:href="@{'/report/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="'업무 '"></strong>
+                                            <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                            <hr>
+                                            <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
+                                        </div>
+                                    </a>
+                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                        <button aria-label="Close" class="btn-close" type="submit"></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!------------ 차트 알림  목록 ----------------------->
+                            <div aria-labelledby="chart-tab" class="tab-pane fade" id="chart" role="tabpanel">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${chartNotifications}" th:if="${notification.enabled}">
+                                    <!-- 클릭 시 전체 알림 내용으로 이동 -->
+                                    <a th:href="@{'/notice/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
+                                        <div>
+                                            <strong th:text="'chart ' + ${notification.referenceId}"></strong>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>

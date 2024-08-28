@@ -190,6 +190,7 @@ public class UserController {
         List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
+        List<Notification> chartNotifications = notificationService.getNotificationsByType(empNo, "차트");
         // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
 
@@ -198,6 +199,7 @@ public class UserController {
         projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        chartNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
 
         systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
 
@@ -206,6 +208,7 @@ public class UserController {
         model.addAttribute("projectNotifications", projectNotifications);
         model.addAttribute("noticeNotifications", noticeNotifications);
         model.addAttribute("reportNotifications", reportNotifications);
+        model.addAttribute("chartNotifications", chartNotifications);
         model.addAttribute("systemNotifications", systemNotifications);
         return "user/alarm";
     }
