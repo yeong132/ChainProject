@@ -1,7 +1,10 @@
 package org.zerock.chain.jy.controller;
 
 import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.model.Draft;
+import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.Message;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,21 +33,36 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeMessage;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-
+import javax.mail.util.ByteArrayDataSource;
+import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.codec.binary.Base64; // 이걸 임포트
 
 
+import javax.activation.DataSource;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.io.File;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -68,52 +86,52 @@ public class EmailController {
             @RequestParam("subject") String subject,
             @RequestParam("message") String message,
             @RequestParam(value = "attachments", required = false) List<MultipartFile> attachments,
+            @RequestParam(value = "existingAttachments", required = false) List<String> existingAttachments,
+            @RequestParam(value = "deleteAttachments", required = false) List<String> deleteAttachments,
+            @RequestParam(value = "draftId", required = false) String draftId,
             Model model) {
         log.info("sendEmail called with recipient: {}, subject: {}", recipientEmail, subject);
         try {
-            MimeMessage email = new MimeMessage(Session.getDefaultInstance(new Properties(), null));
-            email.setFrom(new InternetAddress("your-email@gmail.com"));
-            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipientEmail));
-            email.setSubject(subject);
+            // 기존 첨부파일 삭제 처리
+            if (deleteAttachments != null && !deleteAttachments.isEmpty()) {
+                for (String fileName : deleteAttachments) {
+                    Path filePath = Paths.get(UPLOAD_DIR + fileName);
+                    Files.deleteIfExists(filePath);
+                    log.info("Deleted attachment: {}", fileName);
+                }
+            }
 
-            // 최종 메일을 담을 Multipart 객체
-            Multipart multipart = new MimeMultipart();
+            // 첨부파일 저장 경로 리스트 생성
+            List<String> filePaths = new ArrayList<>();
 
-            // HTML 본문을 담을 BodyPart 생성
-            MimeBodyPart htmlBodyPart = new MimeBodyPart();
-            htmlBodyPart.setContent(message, "text/html; charset=UTF-8");
-            multipart.addBodyPart(htmlBodyPart);
+            // 기존 첨부파일 추가
+            if (existingAttachments != null && !existingAttachments.isEmpty()) {
+                filePaths.addAll(existingAttachments);
+            }
 
-            // 첨부파일 추가
+            // 새로운 첨부파일 추가
             if (attachments != null && !attachments.isEmpty()) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
-                        MimeBodyPart attachmentPart = new MimeBodyPart();
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
-                        Path path = Paths.get("C:/upload/" + fileName);
+                        Path path = Paths.get(UPLOAD_DIR + fileName);
                         Files.write(path, attachment.getBytes());
-
-                        DataSource source = new FileDataSource(new File("C:/upload/" + fileName));
-                        attachmentPart.setDataHandler(new DataHandler(source));
-                        attachmentPart.setFileName(fileName);
-                        multipart.addBodyPart(attachmentPart);
+                        filePaths.add(path.toString());
                     }
                 }
             }
 
-            // 이메일에 Multipart 설정
-            email.setContent(multipart);
-
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            email.writeTo(buffer);
-            String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
-
-            Gmail service = gmailService.getGmailService();
-            Message gmailMessage = new Message();
-            gmailMessage.setRaw(encodedEmail);
-            service.users().messages().send("me", gmailMessage).execute();
+            // 이메일 전송
+            gmailService.sendMail(recipientEmail, subject, message, filePaths);
 
             log.info("Email sent successfully to: {}", recipientEmail);
+
+            // 이메일 전송 후 초안 삭제
+            if (draftId != null && !draftId.isEmpty()) {
+                gmailService.deleteDraft("me", draftId);
+                log.info("Draft deleted successfully: {}", draftId);
+            }
+
             model.addAttribute("success", "Email sent successfully!");
         } catch (Exception e) {
             log.error("Error sending email", e);
@@ -123,26 +141,88 @@ public class EmailController {
     }
 
 
-    //이메일 목록을 표시하는 메서드 추가
-    @GetMapping("/totalEmail")
-    public String listEmails(Model model) {
+
+    @PostMapping("/uploadImage")
+    public ResponseEntity<?> uploadImage(@RequestParam("image") String imageData) {
         try {
-            List<MessageDTO> messages = gmailService.listMessages("me");
-            model.addAttribute("messages", messages);
-            model.addAttribute("success", "Emails fetched successfully!");
+            String base64Image = imageData.split(",")[1];
+            byte[] imageBytes = Base64.decodeBase64(base64Image); // Apache Commons Codec 사용
+            String fileName = UUID.randomUUID().toString() + ".png"; // 고유한 파일명 생성
+            Path path = Paths.get(UPLOAD_DIR + fileName);
+            Files.write(path, imageBytes);
+            log.info("Image uploaded successfully: {}", path.toString());
+            return ResponseEntity.ok(Map.of("filePath", "/upload/" + fileName));
         } catch (IOException e) {
-            log.error("Error fetching emails", e); // 오류를 로깅.
-            model.addAttribute("error", "Error fetching emails: " + e.getMessage());
+            log.error("Image upload failed", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패");
         }
-        return "mail/totalEmail";
     }
+
+    @GetMapping("/drafts/edit/{draftId}")
+    public String editDraft(@PathVariable("draftId") String draftId, Model model) {
+        log.info("editDraft called with draftId: {}", draftId);
+        try {
+            // 초안 메세지 불러오기
+            MessageDTO draftMessage = gmailService.getDraftById("me", draftId);
+            log.info("Draft message fetched: {}", draftMessage);
+
+            // 모델에 초안 메세지의 속성 추가
+            model.addAttribute("draftId", draftId);
+            model.addAttribute("recipientEmail", draftMessage.getTo());
+            model.addAttribute("subject", draftMessage.getSubject());
+            model.addAttribute("message", draftMessage.getBody());
+
+            // 첨부파일 리스트 가져오기
+            List<String> attachments = draftMessage.getAttachments();
+
+            if (attachments != null && !attachments.isEmpty()) {
+                log.info("Attachments found: {}", attachments); // 첨부파일이 있을 경우
+                model.addAttribute("attachments", attachments);
+            } else {
+                log.info("No attachments found or attachments list is empty."); // 첨부파일이 없을 경우
+                model.addAttribute("attachments", Collections.emptyList()); // 빈 리스트 전달
+            }
+
+            return "mail/compose";
+        } catch (IOException e) {
+            log.error("Error fetching draft for editing", e);
+            model.addAttribute("error", "Error fetching draft: " + e.getMessage());
+            return "error";
+        }
+    }
+
+
+
+
+
+
+    // 메일 전체 수신함 INBOX 메일함을 표시하는 메서드 추가 [메일의 메인 페이지]
+    @GetMapping("/inbox")
+    public String listInboxEmails(Model model) {
+        log.info("listInboxEmails called");
+        try {
+            // GmailService에서 INBOX 라벨이 적용된 이메일 목록을 가져옴
+            List<MessageDTO> inboxMessages = gmailService.listInboxMessages("me");
+            model.addAttribute("messages", inboxMessages);
+            model.addAttribute("success", "Inbox emails fetched successfully!");
+        } catch (IOException e) {
+            log.error("Error fetching inbox emails", e);
+            model.addAttribute("error", "Error fetching inbox emails: " + e.getMessage());
+        }
+        return "mail/inbox";  // 받은 메일함 뷰로 반환
+    }
+
 
     // viewEmail 메서드 수정
     @GetMapping("/view")
-    public String viewEmail(@RequestParam("messageId") String messageId, Model model) {
+    public String viewEmail(@RequestParam("messageId") String messageId, Model model, HttpServletRequest request) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
+            // 이메일을 가져옴
             Message message = gmailService.getMessage("me", messageId);
+
+            // 읽은 상태로 변경
+            gmailService.markAsRead("me", messageId);
 
             List<MessagePartHeader> headers = message.getPayload().getHeaders();
             String subject = gmailService.getHeader(headers, "Subject").orElse("No Subject");
@@ -156,25 +236,22 @@ public class EmailController {
 
             String messageContent = gmailService.getMessageContent("me", messageId);
 
-            // CID 기반 이미지를 실제 경로로 변경
-            Pattern pattern = Pattern.compile("cid:([\\w\\-\\.]+)@\\w+\\.\\w+");
-            Matcher matcher = pattern.matcher(messageContent);
-
-            StringBuffer sb = new StringBuffer();
-            while (matcher.find()) {
-                String cid = matcher.group(1).replaceAll("[^a-zA-Z0-9]", "_");
-                String imagePath = "/assets/img/mailimg/image_" + cid + ".jpeg";
-                matcher.appendReplacement(sb, imagePath);
-            }
-            matcher.appendTail(sb);
-
-            messageContent = sb.toString();
-
+            boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
+            messageDTO.setStarred(isStarred);
 
             log.info("Final message content: {}", messageContent);
 
             model.addAttribute("message", messageDTO);
             model.addAttribute("messageContent", messageContent);
+            model.addAttribute("messageId", messageId);
+
+            // Referer 헤더에서 returnUrl을 설정
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.isEmpty()) {
+                model.addAttribute("returnUrl", referer);
+            } else {
+                model.addAttribute("returnUrl", "/mail/inbox"); // 기본적으로 수신 메일함으로 설정
+            }
 
         } catch (IOException e) {
             log.error("Error fetching email", e);
@@ -184,6 +261,47 @@ public class EmailController {
         return "mail/mailRead";
     }
 
+
+    // 이메일 읽음 상태를 토글하거나 특정 상태로 설정하는 메서드
+    @PostMapping("/toggleReadStatus")
+    public ResponseEntity<String> toggleReadStatus(
+            @RequestBody Map<String, Object> payload) {
+        String messageId = (String) payload.get("messageId");
+
+        if (messageId == null || messageId.isEmpty()) {
+            log.error("Message ID is missing in the request");
+            return ResponseEntity.badRequest().body("Message ID is required");
+        }
+
+        Boolean markAsRead = (Boolean) payload.get("markAsRead");
+
+        log.info("Toggle read status for messageId: {} to {}", messageId, markAsRead);
+
+        try {
+            if (markAsRead != null) {
+                if (markAsRead) {
+                    gmailService.markAsRead("me", messageId);
+                    log.info("Marked as read for messageId: {}", messageId);
+                } else {
+                    gmailService.markAsUnread("me", messageId);
+                    log.info("Marked as unread for messageId: {}", messageId);
+                }
+            } else {
+                MessageDTO message = gmailService.getMessageDTO("me", messageId);
+                if (message.isRead()) {
+                    gmailService.markAsUnread("me", messageId);
+                    log.info("Toggled to unread for messageId: {}", messageId);
+                } else {
+                    gmailService.markAsRead("me", messageId);
+                    log.info("Toggled to read for messageId: {}", messageId);
+                }
+            }
+            return ResponseEntity.ok("Success");
+        } catch (IOException e) {
+            log.error("Failed to toggle read status for messageId: {}", messageId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to toggle read status");
+        }
+    }
 
 
 
@@ -214,8 +332,24 @@ public class EmailController {
             model.addAttribute("success", "Email moved to trash successfully!");
         } catch (IOException e) {
             model.addAttribute("error", "Failed to move email to trash: " + e.getMessage());
+        } catch (Exception e) {
+            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
         }
         return "redirect:/mail/trash"; // 휴지통 페이지로 리다이렉트
+    }
+
+    // 휴지통으로 이동하는 요청 처리 메서드
+    @PostMapping("/moveToTrash")
+    public ResponseEntity<String> moveToTrash(@RequestBody List<String> messageIds) {
+        try {
+            for (String messageId : messageIds) {
+                gmailService.addLabelToMessage("me", messageId, "TRASH");
+            }
+            return ResponseEntity.ok("Messages moved to trash successfully");
+        } catch (IOException e) {
+            log.error("Error moving messages to trash", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to move messages to trash");
+        }
     }
 
     // 휴지통에 있는 메시지 목록을 보여주는 메서드
@@ -229,6 +363,7 @@ public class EmailController {
         }
         return "mail/trash";
     }
+
 
     // 개별 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/delete/{messageId}")
@@ -260,23 +395,41 @@ public class EmailController {
         return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
     }
 
-/*    // Draft를 저장하는 요청 처리 메서드 추가
-    @PostMapping("/draft")
+    @PostMapping("/saveDraft")
     public String saveDraft(
             @RequestParam("recipientEmail") String recipientEmail,
             @RequestParam("subject") String subject,
             @RequestParam("message") String message,
+            @RequestParam(value = "attachments", required = false) List<MultipartFile> attachments,
             Model model) {
         log.info("saveDraft called with recipient: {}, subject: {}", recipientEmail, subject);
         try {
-            String draftId = gmailService.saveDraft(recipientEmail, subject, message);
+            // 첨부파일 저장 경로 리스트
+            List<String> filePaths = new ArrayList<>();
+            if (attachments != null && !attachments.isEmpty()) {
+                for (MultipartFile attachment : attachments) {
+                    if (!attachment.isEmpty()) {
+                        String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
+                        Path path = Paths.get(UPLOAD_DIR + fileName);
+                        Files.write(path, attachment.getBytes());
+                        filePaths.add(path.toString());  // 절대 경로로 저장
+                    }
+                }
+            }
+
+            // 새로운 초안을 생성하거나, 기존 초안을 업데이트
+            String draftId = gmailService.saveDraft(recipientEmail, subject, message, filePaths);
             model.addAttribute("success", "Draft saved successfully with ID: " + draftId);
         } catch (Exception e) {
             log.error("Error saving draft", e);
             model.addAttribute("error", "Error saving draft: " + e.getMessage());
         }
-        return "mail/compose";
-    }*/
+        return "mail/compose";  // 임시저장 후에도 compose 페이지로 리다이렉트
+    }
+
+
+
+
 
     // Draft 목록을 가져와 표시하는 메서드 추가
     @GetMapping("/draftsList")
@@ -313,6 +466,7 @@ public class EmailController {
         }
         return "redirect:/mail/draftsList";  // 초안 목록 페이지로 리다이렉트
     }
+
     //임시보관함에서 일괄 삭제를 위한 메서드
     @PostMapping("/drafts/deleteSelected")
     public String deleteSelectedDrafts(@RequestParam("draftIds") List<String> draftIds, RedirectAttributes redirectAttributes) {
@@ -345,6 +499,30 @@ public class EmailController {
         return "mail/starred";
     }
 
+    //별표를 위한 메서드 추가
+    @PostMapping("/toggleStar")
+    public ResponseEntity<String> toggleStar(@RequestBody Map<String, Object> payload) {
+        String messageId = (String) payload.get("messageId");
+        boolean starred = (Boolean) payload.get("starred");
+
+        log.info("Toggle star for messageId: {} to {}", messageId, starred);
+
+        try {
+            if (starred) {
+                gmailService.addStar("me", messageId);
+                log.info("Star added for messageId: {}", messageId);
+            } else {
+                gmailService.removeStar("me", messageId);
+                log.info("Star removed for messageId: {}", messageId);
+            }
+            return ResponseEntity.ok("Success");
+        } catch (IOException e) {
+            log.error("Failed to update starred status for messageId: {}", messageId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update star status");
+        }
+    }
+
+
     // 중요 메일함을 표시하는 메서드 추가
     @GetMapping("/important")
     public String listImportantEmails(Model model) {
@@ -361,24 +539,7 @@ public class EmailController {
         return "mail/important";  // 중요 메일함 뷰로 반환
     }
 
-    //별표를 위한 메서드 추가
-    @PostMapping("/toggleStar")
-    public ResponseEntity<String> toggleStar(@RequestBody Map<String, Object> payload) {
-        String messageId = (String) payload.get("messageId");
-        boolean starred = (Boolean) payload.get("starred");
 
-        try {
-            if (starred) {
-                gmailService.addStar("me", messageId);  // 별표 추가
-            } else {
-                gmailService.removeStar("me", messageId);  // 별표 제거
-            }
-            return ResponseEntity.ok("Success");
-        } catch (IOException e) {
-            log.error("Failed to update starred status for messageId: {}", messageId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update star status");
-        }
-    }
     //중요(IMPORTANT) 라벨 메서드로 이동하는 메서드
     @PostMapping("/markAsImportant")
     public ResponseEntity<Map<String, List<String>>> markAsImportant(@RequestBody List<String> messageIds) {
@@ -431,39 +592,6 @@ public class EmailController {
         }
     }
 
-    // 휴지통으로 이동하는 요청 처리 메서드
-    @PostMapping("/moveToTrash")
-    public ResponseEntity<String> moveToTrash(@RequestBody List<String> messageIds) {
-        try {
-            for (String messageId : messageIds) {
-                gmailService.addLabelToMessage("me", messageId, "TRASH");
-            }
-            return ResponseEntity.ok("Messages moved to trash successfully");
-        } catch (IOException e) {
-            log.error("Error moving messages to trash", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to move messages to trash");
-        }
-    }
-
-
-
-
-
-    // INBOX 메일함을 표시하는 메서드 추가
-    @GetMapping("/inbox")
-    public String listInboxEmails(Model model) {
-        log.info("listInboxEmails called");
-        try {
-            // GmailService에서 INBOX 라벨이 적용된 이메일 목록을 가져옴
-            List<MessageDTO> inboxMessages = gmailService.listInboxMessages("me");
-            model.addAttribute("messages", inboxMessages);
-            model.addAttribute("success", "Inbox emails fetched successfully!");
-        } catch (IOException e) {
-            log.error("Error fetching inbox emails", e);
-            model.addAttribute("error", "Error fetching inbox emails: " + e.getMessage());
-        }
-        return "mail/inbox";  // 받은 메일함 뷰로 반환
-    }
 
     // "내게 쓴 메일함"을 표시하는 메서드 추가
     @GetMapping("/myself")

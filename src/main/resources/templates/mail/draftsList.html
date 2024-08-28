@@ -507,9 +507,13 @@
                                             <input type="checkbox" class="form-check-input draft-checkbox" th:value="${message.draftId}" name="draftIds" onclick="event.stopPropagation();">
                                         </div>
                                     </td>
-                                    <td th:text="${message.to}">To</td>
-                                    <td th:text="${message.subject}">Subject</td>
-                                    <td th:text="${message.date}">Date</td>
+                                    <td>
+                                        <a th:href="@{/mail/drafts/edit/{draftId}(draftId=${message.draftId})}" th:text="${message.to}">받는사람</a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/mail/drafts/edit/{draftId}(draftId=${message.draftId})}" th:text="${message.subject}">제목</a>
+                                    </td>
+                                    <td th:text="${message.date}">날짜</td>
                                     <td>
                                         <!-- 개별 삭제 버튼 -->
                                         <form th:action="@{/mail/drafts/delete/{draftId}(draftId=${message.draftId})}" method="post" onsubmit="return confirm('이 초안을 삭제하시겠습니까?');">
@@ -520,6 +524,7 @@
                                 </tbody>
                             </table>
                         </form>
+
                         <!-- 테이블 끝 -->
                     </div>
                 </div>
