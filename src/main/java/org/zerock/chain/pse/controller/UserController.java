@@ -43,10 +43,18 @@ public class UserController {
     // 환경설정에서 알람 온오프
     @PostMapping("/update-notification-setting")
     public ResponseEntity<?> updateNotificationSetting(@RequestBody Map<String, Object> payload) {
+        // 세션에서 empNo 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");
+
+        // JSON에서 notificationType과 enabled 값을 추출
         String notificationType = (String) payload.get("notificationType");
         Boolean enabled = (Boolean) payload.get("enabled");
 
-        notificationService.updateNotificationSettingByType(notificationType, enabled);
+        // 서비스 호출
+        notificationService.updateNotificationSettingByType(empNo, notificationType, enabled);
+
         return ResponseEntity.ok().build();
     }
 

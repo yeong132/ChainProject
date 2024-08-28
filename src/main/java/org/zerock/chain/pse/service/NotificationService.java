@@ -13,5 +13,5 @@ public interface NotificationService {
     void deleteNotification(Long notificationNo);   // 알림 번호로 개별 삭제
     void markAsRead(Long notificationNo);  // 알림을 읽음으로 표시
     Notification getNotificationById(Long notificationNo);
-    void updateNotificationSettingByType(String notificationType, Boolean enabled);  // 알림 온오프
+    void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled);  // 알림 온오프
 }

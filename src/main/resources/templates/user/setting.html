@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="empNo" content="${session.getAttribute('empNo')}">
 
     <title>환경설정</title>
     <meta content="" name="description"/>
@@ -606,6 +607,14 @@
 
         const type = notificationMap[notificationType];
 
+        // 로그인된 사용자 정보(사원번호)를 세션에서 가져오기
+        const empNo = document.querySelector('meta[name="empNo"]').content; // empNo를 메타 태그에서 가져옵니다.
+
+        if (!empNo) {
+            console.error('사원번호를 가져올 수 없습니다.');
+            return;
+        }
+
         // AJAX 요청을 통해 서버로 데이터 전송
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/user/update-notification-setting", true);
@@ -613,15 +622,17 @@
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(type + ' 알림 설정이 업데이트되었습니다.');
+                alert(type + ' 알림 설정이 업데이트되었습니다.');
             } else if (xhr.readyState === 4) {
-                console.error('알림 설정 업데이트 실패');
+                alert('알림 설정 업데이트 실패');
             }
         };
 
-        xhr.send(JSON.stringify({ notificationType: type, enabled: enabled }));
+        xhr.send(JSON.stringify({ empNo: empNo, notificationType: type, enabled: enabled }));
     }
 </script>
+
+
 
 </body>
 </html>

@@ -23,6 +23,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // 알림 타입 및 사원 번호로 enabled 상태 업데이트
     @Modifying
-    @Query("UPDATE Notification n SET n.enabled = :enabled WHERE n.notificationType = :notificationType")
-    void updateEnabledByType(@Param("notificationType") String notificationType, @Param("enabled") Boolean enabled);
+    @Query("UPDATE Notification n SET n.enabled = :enabled WHERE n.empNo = :empNo AND n.notificationType = :notificationType")
+    void updateEnabledByEmpNoAndType(@Param("empNo") Long empNo, @Param("notificationType") String notificationType, @Param("enabled") Boolean enabled);
 }

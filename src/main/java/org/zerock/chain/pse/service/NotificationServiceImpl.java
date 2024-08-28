@@ -16,10 +16,11 @@ public class NotificationServiceImpl extends BaseService<Notification> implement
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Override // 알림 온오프
+    // 사원번호와 알림 타입으로 알림 상태 업데이트
+    @Override
     @Transactional
-    public void updateNotificationSettingByType(String notificationType, Boolean enabled) {
-        notificationRepository.updateEnabledByType(notificationType, enabled);
+    public void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled) {
+        notificationRepository.updateEnabledByEmpNoAndType(empNo, notificationType, enabled);
     }
 
     @Override
