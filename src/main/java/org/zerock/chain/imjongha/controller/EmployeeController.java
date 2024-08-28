@@ -115,4 +115,20 @@ public class EmployeeController {
 
         return ResponseEntity.ok(response);
     }
+    // 로그인한 사원번호를 제외한 전체 사원 목록 조회
+    @GetMapping("/all-except-logged-in")
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployeesExceptLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long loggedInEmpNo = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                loggedInEmpNo = ((CustomUserDetails) principal).getEmpNo();
+            }
+        }
+
+        List<EmployeeDTO> employees = employeeService.getAllEmployeesExcept(loggedInEmpNo);
+        return ResponseEntity.ok(employees);
+    }
 }

@@ -199,5 +199,21 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setRank(rank);
         }
     }
+
+    // 박성은 추가 코드
+    // 로그인한 사원번호를 제외한 전체 사원 목록 조회
+    public List<EmployeeDTO> getAllEmployeesExcept(Long loggedInEmpNo) {
+        List<Employee> employees;
+
+        if (loggedInEmpNo != null) {
+            employees = employeeRepository.findAllByEmpNoNot(loggedInEmpNo);
+        } else {
+            employees = employeeRepository.findAll();
+        }
+
+        return employees.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }
 

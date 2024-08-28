@@ -24,7 +24,7 @@ public class ChatUserController {
 //    @SendTo("/topic/public") // 반환한 employeeDTO값을 받음
 //    public Long addUser(@Payload Long empNo) {
 ////        chatUserService.saveEmployee(employee);
-//        log.info("디티오ㅗㅗㅗㅗㅗㅗㅗㅗㅗReceived EmployeeDTO: {}", empNo);
+//        log.info("Received EmployeeDTO: {}", empNo);
 //        return empNo; // 받은 사원 데이터 그대로 반환
 //    }
 
@@ -35,10 +35,10 @@ public class ChatUserController {
         EmployeeDTO employeeDTO = chatUserService.findEmployeeByEmpNo(empNo);
 
         if (employeeDTO != null) {
-            log.info("디티오ㅗㅗㅗㅗㅗRetrieved EmployeeDTO: {}", employeeDTO);
+            log.info("Retrieved EmployeeDTO: {}", employeeDTO);
             return employeeDTO;
         } else {
-            log.warn("사원ㄴㄴㄴEmployee not found for empNo: {}", empNo);
+            log.warn("Employee not found for empNo: {}", empNo);
             return null; // 혹은 적절한 처리
         }
     }
