@@ -454,11 +454,16 @@
                             <!-- 수신자 이메일 입력 -->
                             <div class="row mb-3">
                                 <label for="recipientEmail" class="col-sm-1 col-form-label">받는사람</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="recipientEmail" name="recipientEmail"
-                                           th:value="${recipientEmail}" required>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" id="recipientEmail" name="recipientEmail" th:value="${recipientEmail}" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#organizationChartModal">
+                                        조직도
+                                    </button>
                                 </div>
                             </div>
+
 
                             <!-- 이메일 제목 입력 -->
                             <div class="row mb-3">
@@ -498,9 +503,40 @@
         </div>
     </section>
 
-
+    <!-- 조직도 모달 추가 -->
+    <div class="modal fade" id="organizationChartModal" tabindex="-1" aria-labelledby="organizationChartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="organizationChartModalLabel">조직도</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>사원번호</th>
+                            <th>부서</th>
+                            <th>직급</th>
+                            <th>이름</th>
+                            <th>전화번호</th>
+                            <th>이메일</th>
+                        </tr>
+                        </thead>
+                        <tbody id="organizationChartTableBody">
+                        <!-- 사원 목록이 여기에 동적으로 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </main><!-- End #main -->
+
+</main><!-- End #main -->
+
+
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
@@ -537,17 +573,38 @@
 </a>
 
 
-<!-- Quill.js JavaScript -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.1.52/go.js"></script>
+
+
+<!-- Quill 2.0.2 스타일시트 -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+
+<!-- Quill 2.0.2 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
 <script th:inline="javascript">
-    // Quill 에디터와 첨부파일을 다루는 전역 변수
     var quill;
     var selectedFiles = []; // 새로 추가된 첨부파일을 저장하는 배열
     var existingFiles = []; // 기존 첨부파일을 저장하는 배열
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Quill 에디터 초기화
+        // Quill 2.0.2 에디터 초기화
         quill = new Quill('#editor-container', {
             theme: 'snow',
             modules: {
@@ -565,7 +622,7 @@
             }
         });
 
-        console.log("Quill editor initialized.");
+        console.log("Quill 2.0.2 editor initialized.");
 
         // 서버에서 불러온 메시지를 Quill 에디터에 로드
         var message = document.querySelector('textarea[name=message]').value;
@@ -703,22 +760,52 @@
     }
 </script>
 
+<script>
+    $(document).ready(function () {
+        // 조직도 모달이 열릴 때 데이터를 로드
+        $('#organizationChartModal').on('show.bs.modal', function () {
+            loadOrganizationChart();
+        });
 
-<!-- Vendor JS Files -->
-<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="/assets/vendor/echarts/echarts.min.js"></script>
-<script src="/assets/vendor/quill/quill.js"></script>
-<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+        // 조직도 데이터를 불러와서 모달에 표시
+        function loadOrganizationChart() {
+            $.getJSON('/api/employees/all')
+                .done(function (employees) {
+                    const tableBody = $('#organizationChartTableBody');
+                    tableBody.empty(); // 기존 내용을 비움
+                    employees.forEach(employee => {
+                        const row = $(`
+                            <tr>
+                                <td>${employee.empNo}</td>
+                                <td>${employee.departmentName || 'N/A'}</td>
+                                <td>${employee.rankName || 'N/A'}</td>
+                                <td>${employee.lastName}${employee.firstName}</td>
+                                <td>${employee.phoneNum}</td>
+                                <td>
+                                    <a href="#" class="select-email" data-email="${employee.email || ''}">
+                                        ${employee.email || 'N/A'}
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
+                        tableBody.append(row);
+                    });
 
-<!-- Template Main JS File -->
-<script src="/assets/js/main.js"></script>
-<script src="/assets/js/wemaked.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    // 이메일 링크 클릭 시 수신자 이메일 입력란에 이메일 주소 입력
+                    $('.select-email').on('click', function (e) {
+                        e.preventDefault();
+                        const email = $(this).data('email');
+                        $('#recipientEmail').val(email);
+                        $('#organizationChartModal').modal('hide');
+                    });
+                })
+                .fail(function () {
+                    console.error("조직도 데이터를 불러오는 데 실패했습니다.");
+                });
+        }
+    });
+</script>
+
+
 </body>
 </html>
