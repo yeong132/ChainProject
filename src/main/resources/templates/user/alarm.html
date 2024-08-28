@@ -389,7 +389,7 @@
                                 </div>
 
                                 <!-- 일반 알림 -->
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}" th:if="${notification.enabled}">
                                     <!-- 알림 클릭 시 해당 페이지로 이동 -->
                                     <a th:href="@{/user/alarm/read/{notificationNo}(notificationNo=${notification.notificationNo})}" style="text-decoration:none; color:inherit;">
                                         <div>
@@ -407,7 +407,7 @@
 
                             <!-------프로젝트 알림  목록 ----------------------->
                             <div aria-labelledby="project-tab" class="tab-pane fade" id="project" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}" th:if="${notification.enabled}">
                                     <!-- 알림 클릭 시 해당 페이지로 이동 -->
                                     <a th:href="@{/user/alarm/read/{notificationNo}(notificationNo=${notification.notificationNo})}" style="text-decoration:none; color:inherit;">
                                         <div>
@@ -425,7 +425,7 @@
 
                             <!------------- 업무 알림 목록 ----------------------->
                             <div aria-labelledby="payment-tab" class="tab-pane fade" id="payment" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}" th:if="${notification.enabled}">
                                     <!-- 클릭 시 전체 알림 내용으로 이동 -->
                                     <a th:href="@{'/report/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
                                         <div>
@@ -442,7 +442,7 @@
                             </div>
                         <!------------ 공지사항 알림  목록 ----------------------->
                             <div aria-labelledby="notice-tab" class="tab-pane fade" id="notice" role="tabpanel">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${noticeNotifications}">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${noticeNotifications}" th:if="${notification.enabled}">
                                     <!-- 클릭 시 전체 알림 내용으로 이동 -->
                                     <a th:href="@{'/notice/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
                                         <div>

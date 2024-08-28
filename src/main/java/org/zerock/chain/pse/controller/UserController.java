@@ -3,16 +3,13 @@ package org.zerock.chain.pse.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.zerock.chain.pse.dto.CommentDTO;
-import org.zerock.chain.pse.dto.FavoriteQnaDTO;
-import org.zerock.chain.pse.dto.FavoriteQnaRequestDTO;
-import org.zerock.chain.pse.dto.QnaDTO;
-import org.zerock.chain.pse.dto.QnaRequestDTO;
+import org.zerock.chain.pse.dto.*;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.service.*;
@@ -20,6 +17,7 @@ import org.zerock.chain.pse.service.*;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -40,6 +38,16 @@ public class UserController {
         this.commentService = commentService;
         this.notificationService = notificationService;
         this.systemNotificationService = systemNotificationService;
+    }
+
+    // 환경설정에서 알람 온오프
+    @PostMapping("/update-notification-setting")
+    public ResponseEntity<?> updateNotificationSetting(@RequestBody Map<String, Object> payload) {
+        String notificationType = (String) payload.get("notificationType");
+        Boolean enabled = (Boolean) payload.get("enabled");
+
+        notificationService.updateNotificationSettingByType(notificationType, enabled);
+        return ResponseEntity.ok().build();
     }
 
 

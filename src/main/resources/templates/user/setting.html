@@ -80,78 +80,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -162,62 +91,7 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
@@ -595,32 +469,29 @@
                             </div>
 
                             <!-- --------------------------------------------------------환경 설정 -------------------------------------------------------- -->
-                            <div class="tab-pane fade   profile-change-password" id="profile-change-password">
-                                <form style="display: flex; justify-content: center;">
-                                    <div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="10" type="radio">
-                                            <label class="form-check-label" for="10">
-                                                알림1
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="20" type="radio">
-                                            <label class="form-check-label" for="20">
-                                                알림2
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" disabled id="30" type="radio">
-                                            <label class="form-check-label" for="30">
-                                                알림3
-                                            </label>
-                                        </div>
+                            <!-- 알림 설정 폼 -->
+                            <div class="tab-pane fade" id="profile-change-password">
+                                <form id="notificationSettingsForm">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="projectNotification" checked>
+                                        <label class="form-check-label" for="projectNotification">
+                                            프로젝트 알림
+                                        </label>
                                     </div>
-                                </form><!-- End Change Password Form -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="taskNotification" checked>
+                                        <label class="form-check-label" for="taskNotification">
+                                            업무보고서 알림
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="noticeNotification" checked>
+                                        <label class="form-check-label" for="noticeNotification">
+                                            공지사항 알림
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
-
-                        </div>
 
                         <!-- ------------------------------------------------탭 내용 끝// 저장 버튼 --------------------------------------------------------- -->
                         <div class="text-center mt-5">
@@ -632,10 +503,28 @@
             </div>
         </div>
         <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
-
+        </div>
     </section>
 </main><!-- End #main -->
 
+<!-- 모달 창 -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">알림 설정 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 이 알림을 끄시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                <button type="button" id="confirmDisable" class="btn btn-primary">예</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
@@ -683,5 +572,56 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 모달 및 스크립트 -->
+<script>
+    document.getElementById('notificationSettingsForm').addEventListener('change', function (event) {
+        const checkbox = event.target;
+        const notificationType = checkbox.id;
+        const enabled = checkbox.checked;
+
+        if (!enabled) {
+            showConfirmationModal(notificationType);
+        } else {
+            updateNotificationSetting(notificationType, enabled);
+        }
+    });
+
+    function showConfirmationModal(notificationType) {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+
+        document.getElementById('confirmDisable').onclick = function () {
+            updateNotificationSetting(notificationType, false);
+            modal.hide();
+        };
+    }
+
+    function updateNotificationSetting(notificationType, enabled) {
+        const notificationMap = {
+            'projectNotification': '프로젝트',
+            'taskNotification': '업무보고서',
+            'noticeNotification': '공지사항'
+        };
+
+        const type = notificationMap[notificationType];
+
+        // AJAX 요청을 통해 서버로 데이터 전송
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/update-notification-setting", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(type + ' 알림 설정이 업데이트되었습니다.');
+            } else if (xhr.readyState === 4) {
+                console.error('알림 설정 업데이트 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify({ notificationType: type, enabled: enabled }));
+    }
+</script>
+
 </body>
 </html>

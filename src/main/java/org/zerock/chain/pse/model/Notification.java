@@ -22,7 +22,6 @@ public class Notification {
     @Column(name = "emp_no")
     private Long empNo;
 
-
     @Column(name = "notification_type")
     private String notificationType;
 
@@ -38,6 +37,8 @@ public class Notification {
     @Column(name = "is_read")
     private Boolean isRead = false;
 
+    @Column(name = "enabled")
+    private Boolean enabled = true; // 활성화 여부
 
     public String getRedirectUrl() {
         switch (this.notificationType) {

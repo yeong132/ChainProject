@@ -3,6 +3,7 @@ package org.zerock.chain.pse.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.chain.pse.dto.NotificationRequestDTO;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.repository.NotificationRepository;
 
@@ -14,6 +15,12 @@ public class NotificationServiceImpl extends BaseService<Notification> implement
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Override // 알림 온오프
+    @Transactional
+    public void updateNotificationSettingByType(String notificationType, Boolean enabled) {
+        notificationRepository.updateEnabledByType(notificationType, enabled);
+    }
 
     @Override
     protected List<Notification> getAllItemsByEmpNo(Long empNo) {
