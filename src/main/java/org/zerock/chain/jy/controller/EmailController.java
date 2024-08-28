@@ -74,11 +74,13 @@ public class EmailController {
 
     private static final String UPLOAD_DIR = "C:/upload/";
 
+    // 메일 작성 페이지를 반환하는 메서드
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
     }
 
+    // 메일을 전송하는 메서드
     @PostMapping("/send")
     public String sendEmail(
             @RequestParam("recipientEmail") String recipientEmail,
@@ -137,14 +139,14 @@ public class EmailController {
         return "mail/complete";
     }
 
-
+    // 메일 전송 완료 페이지를 반환하는 메서드
     @GetMapping("/complete")
     public String mailComplete() {
         return "mail/complete";
     }
 
 
-    
+
     // 경로를 처리하는 메서드
     private Path resolveFilePath(String fileName) {
         Path path = Paths.get(fileName).normalize();
@@ -154,6 +156,7 @@ public class EmailController {
         return path;
     }
 
+    // 이미지를 업로드하는 메서드
     @PostMapping("/uploadImage")
     public ResponseEntity<?> uploadImage(@RequestParam("image") String imageData) {
         try {
@@ -170,6 +173,7 @@ public class EmailController {
         }
     }
 
+    // 임시저장된 데이터를 반환하는 메서드
     @GetMapping("/drafts/edit/{draftId}")
     public String editDraft(@PathVariable("draftId") String draftId, Model model) {
         log.info("editDraft called with draftId: {}", draftId);
@@ -200,9 +204,6 @@ public class EmailController {
     }
 
 
-
-
-
     // 메일 전체 수신함 INBOX 메일함을 표시하는 메서드 추가 [메일의 메인 페이지]
     @GetMapping("/inbox")
     public String listInboxEmails(Model model) {
@@ -220,7 +221,7 @@ public class EmailController {
     }
 
 
-    // viewEmail 메서드 수정
+    // 이메일을 읽고 본문(상세 내용)을 표시하는 메서드
     @GetMapping("/view")
     public String viewEmail(@RequestParam("messageId") String messageId, Model model, HttpServletRequest request) {
         log.info("viewEmail called with messageId: {}", messageId);
@@ -311,8 +312,6 @@ public class EmailController {
     }
 
 
-
-
     // 보낸 메일함을 표시하는 메서드 추가
     @GetMapping("/sent")
     public String listSentEmails(Model model) {
@@ -328,7 +327,6 @@ public class EmailController {
         }
         return "mail/sent";  // 보낸 메일함 뷰로 반환
     }
-
 
 
     // 메시지를 휴지통으로 이동시키는 메서드 추가
@@ -371,7 +369,6 @@ public class EmailController {
         return "mail/trash";
     }
 
-
     // 개별 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/delete/{messageId}")
     public String deleteMessagePermanently(@PathVariable String messageId, RedirectAttributes redirectAttributes) {
@@ -402,6 +399,7 @@ public class EmailController {
         return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
     }
 
+    // 작성 데이터를 임시저장(Draft) 시키는 메서드
     @PostMapping("/saveDraft")
     public String saveDraft(
             @RequestParam("recipientEmail") String recipientEmail,
@@ -441,10 +439,6 @@ public class EmailController {
     }
 
 
-
-
-
-
     // Draft 목록을 가져와 표시하는 메서드 추가
     @GetMapping("/draftsList")
     public String listDrafts(Model model) {
@@ -467,7 +461,7 @@ public class EmailController {
         return "mail/draftsList";
     }
 
-    // 임시보관함에서 초안을 삭제하는 메서드 추가
+    // 임시보관함(Draft)에서 초안을 개별 삭제하는 메서드 추가
     @PostMapping("/drafts/delete/{draftId}")
     public String deleteDraft(@PathVariable String draftId, RedirectAttributes redirectAttributes) {
         log.info("deleteDraft called with draftId: {}", draftId);
@@ -481,7 +475,7 @@ public class EmailController {
         return "redirect:/mail/draftsList";  // 초안 목록 페이지로 리다이렉트
     }
 
-    //임시보관함에서 일괄 삭제를 위한 메서드
+    //임시보관함(Draft)에서 선택 삭제를 위한 메서드
     @PostMapping("/drafts/deleteSelected")
     public String deleteSelectedDrafts(@RequestParam("draftIds") List<String> draftIds, RedirectAttributes redirectAttributes) {
         log.info("deleteSelectedDrafts called with draftIds: {}", draftIds);
@@ -497,7 +491,7 @@ public class EmailController {
         return "redirect:/mail/draftsList";  // 초안 목록 페이지로 리다이렉트
     }
 
-    //별표 메일함을 표시하는 메서드 추가
+    //별표 메일함(starred)을 표시하는 메서드 추가
     @GetMapping("/starred")
     public String listStarredEmails(Model model) {
         log.info("listStarredEmails called");
@@ -513,7 +507,7 @@ public class EmailController {
         return "mail/starred";
     }
 
-    //별표를 위한 메서드 추가
+    //별표(starred) 서버와 연동 토글 위한 메서드 추가
     @PostMapping("/toggleStar")
     public ResponseEntity<String> toggleStar(@RequestBody Map<String, Object> payload) {
         String messageId = (String) payload.get("messageId");
@@ -537,7 +531,7 @@ public class EmailController {
     }
 
 
-    // 중요 메일함을 표시하는 메서드 추가
+    // 중요 메일함(IMPORTANT)을 표시하는 메서드 추가
     @GetMapping("/important")
     public String listImportantEmails(Model model) {
         log.info("listImportantEmails called");
