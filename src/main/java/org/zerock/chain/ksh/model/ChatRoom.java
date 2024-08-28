@@ -28,4 +28,7 @@ public class ChatRoom {
 
     @Column(name = "unread_count", nullable = false)
     private int unreadCount = 0; // 읽지 않은 메시지 수
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false; // 방 삭제 여부
 }

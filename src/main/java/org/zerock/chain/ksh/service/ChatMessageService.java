@@ -34,7 +34,7 @@ public class ChatMessageService {
 
         // ChatNotification 생성 및 저장
         ChatNotification notification = ChatNotification.builder()
-                .chatMessage(savedMessage)  // 참조된 chat_message 객체를 설정
+                .chatMessage(savedMessage)
                 .senderEmpNo(savedMessage.getSenderEmpNo())
                 .recipientEmpNo(savedMessage.getRecipientEmpNo())
                 .chatContent(savedMessage.getChatContent())
@@ -53,12 +53,13 @@ public class ChatMessageService {
         return chatRoomRepository.findActiveChatUsersByEmpNo(empNo);
     }
 
+    // 채팅방 재생성 시 최신 메시지 반환 및 이후 채팅만 저장
     public List<ChatMessage> findChatMessages(Long senderEmpNo, Long recipientEmpNo) {
-        var chatNo = chatRoomService.getChatRoomNo(
-                senderEmpNo,
-                recipientEmpNo,
-                false); // 방이 없을 경우 false
-        return chatNo.map(messageRepository::findByChatNo).orElse(new ArrayList<>());
+        var chatRoom = chatRoomService.getChatRoom(senderEmpNo, recipientEmpNo, true);
+        return chatRoom
+                .filter(room -> !chatRoomService.isChatRoomDeleted(senderEmpNo, recipientEmpNo))
+                .map(room -> messageRepository.findByChatNo(room.getChatNo()))
+                .orElse(new ArrayList<>());
     }
 
     // 로그인 시 읽지 않은 메시지 불러오기

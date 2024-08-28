@@ -34,17 +34,12 @@
                     data-bs-target="#v-pills-organization" type="button" role="tab"
                     aria-controls="v-pills-organization" aria-selected="false"><i class="bi bi-diagram-2-fill"></i>
             </button>
-            <!-- 즐겨찾기 버튼 -->
-            <!--            나중에 지울 때, css에도 즐겨찾기 항목 지우기     -->
-            <!--            <button class="menu_icon nav-link" id="v-pills-favorites-tab" data-bs-toggle="pill"-->
-            <!--                    data-bs-target="#v-pills-favorites" type="button" role="tab"-->
-            <!--                    aria-controls="v-pills-favorites" aria-selected="false"><i class="bi bi-star-fill"></i>-->
-            <!--            </button>-->
             <!-- 채팅방 버튼 -->
             <button class="menu_icon nav-link active" id="v-pills-chatrooms-tab" data-bs-toggle="pill"
                     data-bs-target="#v-pills-chatrooms" type="button" role="tab"
                     aria-controls="v-pills-chatrooms" aria-selected="true"><i class="bi bi-chat-dots-fill"></i>
             </button>
+            <span class="menu_alarm hidden">0</span>
         </div>
 
         <!-- 조직도/즐겨찾기/채팅방 목록 -->
@@ -66,6 +61,7 @@
                 </div>
                 <!-- 조직도 목록 -->
                 <div class="chat_list" alt="조직도 목록">
+                    <div class="scrollbar"></div>
                     <!-- 조직도 전체 네비 -->
                     <ul class="org_dep_list">
                         <th:block th:each="entry : ${departmentMap}">
@@ -76,7 +72,10 @@
                                 </span>
                                 <ul class="dep_emps_list">
                                     <th:block th:each="employee : ${entry.value}">
-                                        <span th:data-empno="${employee.empNo}">
+                                        <span th:data-empno="${employee.empNo}"
+                                              th:data-rank="${employee.rankName}"
+                                              th:data-lastname="${employee.lastName}"
+                                              th:data-firstname="${employee.firstName}">
                                             <li th:text="${employee.rankName} + ' ' + ${employee.lastName} + ${employee.firstName}">직급 성 이름</li>
                                         </span>
                                     </th:block>
@@ -90,115 +89,32 @@
             <!-- /end 조직도 -->
 
             <!-- 오른쪽 마우스 클릭 : 드롭 다운 메뉴 -->
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"><li>
-                <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-item d-flex align-items-center justify-content-center none">
+                    <!--                <a class="dropdown-item d-flex align-items-center justify-content-center">-->
                     <span>채팅방 이름 설정</span>
-                </a>
-            </li>
+                    <!--                </a>-->
+                </li>
                 <li>
                     <hr class="dropdown-divider"/>
                 </li>
-                <!--                <li>-->
-                <!--                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">-->
-                <!--                        <span class="chatroomFavorite">즐겨찾기 등록</span>-->
-                <!--                    </a>-->
-                <!--                </li>-->
-                <!--                <li>-->
-                <!--                    <hr class="dropdown-divider"/>-->
+
+                <li class="dropdown-item d-flex align-items-center justify-content-center none">
+                    <!--                     <a class="dropdown-item d-flex align-items-center justify-content-center">-->
+                    <span class="chatroomFavorite">즐겨찾기 등록</span>
+                    <!--                     </a>-->
                 </li>
-                <li id="chatRoomExit">
-                    <a class="dropdown-item d-flex align-items-center justify-content-center" href="#">
-                        <span>채팅방 나가기</span>
-                    </a>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+
+                <li class="dropdown-item d-flex align-items-center justify-content-center" id="chatRoomExit">
+                    <!--                    <a class="dropdown-item d-flex align-items-center justify-content-center">-->
+                    <span>채팅방 나가기</span>
+                    <!--                    </a>-->
                 </li>
             </ul>
             <!-- /end 드롭 다운 메뉴 -->
-
-            <!-- 즐겨찾기 목록 -->
-            <!--<div class="chat_menu tab-pane" id="v-pills-favorites" role="tabpanel"
-                 aria-labelledby="v-pills-favorites-tab">
-                &lt;!&ndash; 검색 &ndash;&gt;
-                <div class="search">
-                    <input type="text" id="searchInputFavorRoom" placeholder=" 검색">
-                </div>
-                &lt;!&ndash; 방 목록 &ndash;&gt;
-                <div class="chat_list" alt="채팅방 즐겨찾기 목록">
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방1</li>
-                            <li class="room_content">내용1</li>
-                        </ul>
-                        <span class="room_alarm">41</span>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방2</li>
-                            <li class="room_content">내용2</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">즐찾방3</li>
-                            <li class="room_content">내용3</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방4</li>
-                            <li class="room_content">내용4</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방5</li>
-                            <li class="room_content">내용5</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방6</li>
-                            <li class="room_content">내용6</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방7</li>
-                            <li class="room_content">내용7</li>
-                        </ul>
-                    </div>
-                    <div class="chat_room_item">
-                        <div class="room_img">
-                            <img src="/assets/img/보노보노.png" alt="프로필사진">
-                        </div>
-                        <ul>
-                            <li class="room_name">방8</li>
-                            <li class="room_content">내용8</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>-->
-            <!-- /end 즐겨찾기 목록 -->
 
             <!-- 채팅방 목록 -->
             <div class="chat_menu tab-pane show active" id="v-pills-chatrooms" role="tabpanel"
@@ -209,6 +125,7 @@
                 </div>
                 <!-- 방 목록 -->
                 <div class="chat_list" alt="채팅방 목록">
+                    <div class="scrollbar"></div>
                 </div>
             </div> <!-- /end 채팅방 목록 -->
         </div>
@@ -225,23 +142,32 @@
             <div id="chatHeader" class="chat_header">
                 <button id="backButton"><i class="bi bi-arrow-left-short"></i></button> <!-- 닫기 버튼 -->
                 <span id="chatRoomName">Chat Room</span> <!-- 채팅방 이름 -->
-                <!--                <button id="favoriteButton"><i class="bi bi-star"></i></button> &lt;!&ndash; 즐겨찾기 버튼 &ndash;&gt;-->
+                <button id="exitButton"><i class="ri ri-logout-box-r-line"></i></button> <!-- 나가기 버튼 -->
             </div>
             <!-- 채팅 대화 영역 -->
             <div class="chat_area" id="chatArea">
             </div>
             <!-- 채팅 입력 영역 -->
             <div class="chat_input_container">
-                <textarea id="messageInput"></textarea> <!--chatInput-->
-                <button class="send_button">전송</button> <!--sendButton-->
+                <textarea id="messageInput"></textarea>
+                <button class="send_button">전송</button>
             </div>
         </div><!-- /end chat_room -->
     </div> <!-- /end chat_room_container -->
 </div>
 
+<!-- 채팅방 나가기 모달 창 -->
+<div class="chat_modal hidden" id="exitChatRoomModal">
+    <div class="modal_content">
+        <span id="closeExitModalButton">&times;</span>
+        <p>채팅방에서 나가시겠습니까?</p>
+        <button id="confirmExitRoomButton">확인</button>
+    </div>
+</div>
+
 <!-- 메신저 js -->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/assets/js/chatting.js"></script>
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
