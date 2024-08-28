@@ -38,9 +38,9 @@ public class ProjectRequestDTO {
     }
 
     // 각 라벨을 받을 필드 추가
-    private String progressLabel20 = "20";
-    private String progressLabel40 = "40";
-    private String progressLabel60 = "60";
-    private String progressLabel80 = "80";
-    private String progressLabel100 = "100";
+    private String progressLabel20;
+    private String progressLabel40;
+    private String progressLabel60;
+    private String progressLabel80;
+    private String progressLabel100;
 }

@@ -20,5 +20,4 @@ public interface ProjectService {
     void deleteProject(Long projectNo); // 삭제 기능
     String saveFile(MultipartFile file) throws Exception; // 첨부파일 저장
     List<ProjectDTO> getTemporaryProjects(); // 임시 보관 프로젝트 조회
-
 }

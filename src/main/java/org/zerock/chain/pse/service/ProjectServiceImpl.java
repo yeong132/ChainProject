@@ -60,7 +60,7 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
 
 
 
-    @Override // 프로젝트 수정
+    @Override// 프로젝트 수정
     public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
         Optional<Project> result = projectRepository.findById(projectNo);
         Project existingProject = result.orElseThrow(() -> new NoSuchElementException("Project not found"));
@@ -69,15 +69,30 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         Long existingEmpNo = existingProject.getEmpNo();
         projectRequestDTO.setEmpNo(existingEmpNo);
 
-        // 기존 uploadDate를 유지하는 로직 추가
+        // 기존 uploadDate를 유지
         if (!existingProject.isTemporary()) {
             projectRequestDTO.setUploadDate(existingProject.getUploadDate());
         }
 
+        // Process progress labels 리스트로 라벨 저장
+        String labelsString = String.join(",",
+                projectRequestDTO.getProgressLabel20(),
+                projectRequestDTO.getProgressLabel40(),
+                projectRequestDTO.getProgressLabel60(),
+                projectRequestDTO.getProgressLabel80(),
+                projectRequestDTO.getProgressLabel100()
+        );
+        projectRequestDTO.setProgressLabels(labelsString);
+
         // DTO를 엔티티로 매핑하여 업데이트
         modelMapper.map(projectRequestDTO, existingProject);
+
+        // 업데이트된 프로젝트 저장
         projectRepository.save(existingProject);
     }
+
+
+
 
     @Override
     public List<ProjectDTO> getTemporaryProjects() {

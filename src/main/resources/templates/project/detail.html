@@ -377,11 +377,23 @@
                     <div class="card-body">
                         <h5 class="card-title">Project</h5>
                         <form>
+                            <input id="projectNo" name="projectNo" th:value="${project.projectNo}" type="hidden">
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="projectName">제목</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" id="projectName" readonly th:value="${project.projectName}"
                                            type="text">
+                                </div>
+                            </div>
+
+                            <!-- 프로젝트 참여자 데이터를 숨겨진 HTML 요소의 데이터 속성으로 전달 -->
+                            <div hidden id="projectData" th:data-participants="${project.participants}">
+                            </div>
+                            <!-- 참여자 목록 -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">참여자</label>
+                                <div class="col-sm-10" id="participantList">
+                                    <!-- 선택된 사람 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
 
@@ -427,7 +439,6 @@
                         <h5 class="card-title">프로젝트 차트</h5>
                         <h6 class="mt-3">진행도 현황</h6>
                         <fieldset>
-                            <input id="projectNo" name="projectNo" th:value="${project.projectNo}" type="hidden">
                             <input class="form-control" id="projectProgress" name="projectProgress" th:value="${project.projectProgress}"
                                    type="hidden">
 
@@ -498,6 +509,7 @@
 
             <div class="offset-sm-0">
                 <div class="col-sm-5">
+                    <button class="btn btn-primary" th:onclick="|location.href='/project/modify/${project.projectNo}'|" type="button">수정</button>
                     <button class="btn btn-primary" onclick="location.href='/project/list'" type="button">목록</button>
                 </div>
             </div>
@@ -517,16 +529,7 @@
 </footer>
 <!-- Footer 끝 -->
 
-<!--즐겨찾기 데이터 값 저장 -->
-<script>
-    function toggleStar(element, event) {
-        event.preventDefault();
-        element.classList.toggle('bi-star-fill');
-        element.classList.toggle('text-warning');
-        var favoriteInput = document.getElementById('projectFavorite');
-        favoriteInput.value = favoriteInput.value === 'true' ? 'false' : 'true';
-    }
-</script>
+
 
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
@@ -614,7 +617,16 @@
         }
     });
 </script>
-
+<!--즐겨찾기 데이터 값 저장 -->
+<script>
+    function toggleStar(element, event) {
+        event.preventDefault();
+        element.classList.toggle('bi-star-fill');
+        element.classList.toggle('text-warning');
+        var favoriteInput = document.getElementById('projectFavorite');
+        favoriteInput.value = favoriteInput.value === 'true' ? 'false' : 'true';
+    }
+</script>
 <!-- JavaScript로 진행도 라벨 분리 및 출력 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
