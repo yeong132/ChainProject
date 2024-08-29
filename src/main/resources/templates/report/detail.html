@@ -403,7 +403,11 @@
 
                         <div class="offset-sm-0">
                             <div class="col-sm-12 text-end">
-                                <button class="btn btn-primary" th:onclick="'location.href=\'/report/modify/' + ${report.reportNo} + '\''" type="button">수정</button>
+<!--                                <button class="btn btn-primary" th:onclick="'location.href=\'/report/modify/' + ${report.reportNo} + '\''" type="button">수정</button>-->
+                                <button class="btn btn-primary"
+                                        th:if="${session.empNo == report.empNo}"
+                                        th:onclick="'location.href=\'/report/modify/' + ${report.reportNo} + '\''"
+                                        type="button">수정</button>
                                 <button class="btn btn-primary" onclick="location.href='/report/list'" type="button">목록</button>
                             </div>
                         </div>

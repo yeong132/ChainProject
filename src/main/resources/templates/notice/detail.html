@@ -380,8 +380,7 @@
 
                             <div class="offset-sm-0">
                                 <div class="col-sm-5">
-                                    <button class="btn btn-primary"  th:onclick="'location.href=\'/notice/modify/' + ${notice.noticeNo} + '\''"  type="button">수정(히든)
-                                    </button>
+                                    <button class="btn btn-primary"  th:if="${session.empNo == notice.empNo}"  th:onclick="'location.href=\'/notice/modify/' + ${notice.noticeNo} + '\''"  type="button">수정</button>
                                     <button class="btn btn-primary" onclick="location.href='/notice/list'"
                                             type="button">목록
                                     </button>
