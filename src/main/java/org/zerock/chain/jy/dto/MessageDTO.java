@@ -194,4 +194,41 @@ public class MessageDTO {
                 .map(MessagePartHeader::getValue)
                 .findFirst();
     }
+
+    // 답장 본문을 생성하는 메서드
+    public static String buildReplyBody(MessageDTO messageDTO) {
+        return String.format(
+                "<br><br>-----Original Message-----<br>" +
+                        "From: %s<br>" +
+                        "To: %s<br>" +
+                        "Cc: %s<br>" +
+                        "Sent: %s<br>" +
+                        "Subject: %s<br><br>%s",
+                messageDTO.getFrom(),
+                messageDTO.getTo(),
+                "", // Cc는 공백으로 남김 (필요 시 수정 가능)
+                messageDTO.getDate(),
+                messageDTO.getSubject(),
+                messageDTO.getBody()
+        );
+    }
+
+    // 전달 본문을 생성하는 메서드
+    public static String buildForwardBody(MessageDTO messageDTO) {
+        return String.format(
+                "<br><br>-----Original Message-----<br>" +
+                        "From: %s<br>" +
+                        "To: %s<br>" +
+                        "Cc: %s<br>" +
+                        "Sent: %s<br>" +
+                        "Subject: %s<br><br>%s",
+                messageDTO.getFrom(),
+                messageDTO.getTo(),
+                "", // Cc는 공백으로 남김 (필요 시 수정 가능)
+                messageDTO.getDate(),
+                messageDTO.getSubject(),
+                messageDTO.getBody()
+        );
+    }
+
 }

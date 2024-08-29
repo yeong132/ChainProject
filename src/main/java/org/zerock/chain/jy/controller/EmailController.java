@@ -80,6 +80,20 @@ public class EmailController {
         return "mail/compose";
     }
 
+    @PostMapping("/compose")
+    public String composeEmail(@RequestParam("subject") String subject,
+                               @RequestParam("messageContent") String messageContent,
+                               @RequestParam("recipientEmail") String recipientEmail,
+                               Model model) {
+        model.addAttribute("subject", subject);
+        model.addAttribute("message", messageContent);
+        model.addAttribute("recipientEmail", recipientEmail);
+
+        // 필요한 다른 로직을 여기에 추가하세요 (예: 첨부 파일 처리 등)
+
+        return "mail/compose";  // compose.html 페이지로 이동
+    }
+
     // 메일을 전송하는 메서드
     @PostMapping("/send")
     public String sendEmail(
@@ -202,6 +216,50 @@ public class EmailController {
             return "error";
         }
     }
+
+    @PostMapping("/forward")
+    public String forwardEmail(@RequestParam("subject") String subject,
+                               @RequestParam("messageContent") String messageContent,
+                               @RequestParam("recipientEmail") String recipientEmail,
+                               @RequestParam(value = "attachments", required = false) List<String> attachments,
+                               Model model) {
+        model.addAttribute("subject", subject);
+
+        // 본문이 HTML 형식임을 보장
+        model.addAttribute("message", "<html>" + messageContent + "</html>");
+        model.addAttribute("recipientEmail", recipientEmail);
+
+        // 첨부파일 정보 추가
+        if (attachments != null && !attachments.isEmpty()) {
+            model.addAttribute("attachments", attachments);
+        }
+
+        return "mail/compose"; // compose.html 페이지로 이동
+    }
+
+
+    @PostMapping("/reply")
+    public String replyEmail(@RequestParam("subject") String subject,
+                             @RequestParam("messageContent") String messageContent,
+                             @RequestParam("recipientEmail") String recipientEmail,
+                             @RequestParam(value = "attachments", required = false) List<String> attachments,
+                             Model model) {
+        model.addAttribute("subject", subject);
+
+        // 본문이 HTML 형식임을 보장
+        model.addAttribute("message", "<html>" + messageContent + "</html>");
+        model.addAttribute("recipientEmail", recipientEmail);
+
+        // 첨부파일 정보 추가
+        if (attachments != null && !attachments.isEmpty()) {
+            model.addAttribute("attachments", attachments);
+        }
+
+        return "mail/compose"; // compose.html 페이지로 이동
+    }
+
+
+
 
 
     // 메일 전체 수신함 INBOX 메일함을 표시하는 메서드 추가 [메일의 메인 페이지]

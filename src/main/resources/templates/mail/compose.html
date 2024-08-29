@@ -758,6 +758,30 @@
             attachmentList.appendChild(listItem);
         });
     }
+
+    //전달 , 답장 버튼 클릭 후 작성폼 함수
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const subject = urlParams.get('subject');
+        const messageContent = urlParams.get('messageContent');
+        const action = urlParams.get('action');
+        const recipientEmail = urlParams.get('recipientEmail') || urlParams.get('sender');
+
+        // 제목을 설정
+        if (subject) {
+            document.getElementById('subject').value = subject;
+        }
+
+        // 본문 내용을 설정
+        if (messageContent) {
+            quill.clipboard.dangerouslyPasteHTML(messageContent);
+        }
+
+        // 수신자 이메일 설정 (답장일 경우 발신자를 수신자로 설정)
+        if (recipientEmail) {
+            document.getElementById('recipientEmail').value = recipientEmail;
+        }
+    });
 </script>
 
 <script>

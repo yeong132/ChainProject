@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import javax.mail.internet.MimeUtility;
 
 @Service
 @Log4j2
@@ -117,20 +118,18 @@ public class GmailService {
             Session session = Session.getDefaultInstance(props, null);
             MimeMessage email = new MimeMessage(session);
 
-            // 이메일의 발신자, 수신자, 제목, 내용을 설정
             email.setFrom(new InternetAddress("your-email@gmail.com"));
             email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipientEmail));
             email.setSubject(subject);
 
-            // 본문과 파일을 담을 Multipart 객체 생성
             Multipart multipart = new MimeMultipart();
 
-            // 본문 설정
+            // 본문 설정 (HTML 포맷)
             MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(messageText, "UTF-8", "html"); // 본문을 HTML로 처리
+            textPart.setContent(messageText, "text/html; charset=UTF-8");
             multipart.addBodyPart(textPart);
 
-            // 첨부파일 추가
+            // CID 매핑을 위한 파일 처리
             if (filePaths != null && !filePaths.isEmpty()) {
                 for (String filePath : filePaths) {
                     Path fileAbsolutePath = Paths.get(filePath).isAbsolute()
@@ -141,15 +140,21 @@ public class GmailService {
                     MimeBodyPart attachmentPart = new MimeBodyPart();
                     DataSource source = new FileDataSource(fileAbsolutePath.toString());
                     attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName(fileAbsolutePath.getFileName().toString());
+                    String cid = UUID.randomUUID().toString();
+                    attachmentPart.setHeader("Content-ID", "<" + cid + ">");
+                    attachmentPart.setDisposition(MimeBodyPart.INLINE); // CID로 참조된 이미지를 INLINE으로 설정
+                    attachmentPart.setFileName(MimeUtility.encodeText(fileAbsolutePath.getFileName().toString(), "UTF-8", "B"));
                     multipart.addBodyPart(attachmentPart);
+
+                    // CID를 이메일 본문에서 참조되도록 수정
+                    messageText = messageText.replace("cid:" + fileAbsolutePath.getFileName().toString(), "cid:" + cid);
                 }
             } else {
                 log.info("No attachments to add to the email.");
             }
 
             // 이메일의 본문을 multipart로 설정
-            email.setContent(multipart);
+            email.setContent(multipart, "text/html; charset=UTF-8");
 
             // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -170,6 +175,7 @@ public class GmailService {
             throw new Exception("Failed to send email", e);
         }
     }
+
 
 
 
@@ -363,11 +369,16 @@ public class GmailService {
         return cid.replace("<", "").replace(">", "").replaceAll("[^a-zA-Z0-9]", "_");
     }
 
+    private String cleanFileName(String cid) {
+        return cid.replaceAll("[^a-zA-Z0-9]", "_");
+    }
+
     private String saveImageToFileSystem(String imageData, String mimeType, String cid) throws IOException {
         byte[] imageBytes = Base64.decodeBase64(imageData);
         String extension = mimeType.split("/")[1];
 
-        String cleanCid = cid.replaceAll("_cweb[0-9]+_nm", "");
+        // 기존 CID를 클린업하여 안전한 파일명을 생성
+        String cleanCid = cleanFileName(cid);
         String imageName = "image_" + cleanCid + "." + extension;
 
         Path imagePath = Paths.get("C:/upload/", imageName);
@@ -392,20 +403,34 @@ public class GmailService {
         return "/upload/" + imageName;
     }
 
+
+
     private String parseEmailContent(String emailHtml, Map<String, String> cidMap) {
         log.info("CID 대체 작업 시작...");
-
         for (Map.Entry<String, String> entry : cidMap.entrySet()) {
             String cid = entry.getKey();
             String imagePath = entry.getValue();
             log.info("CID: {}를 이미지 경로: {}로 대체 시도 중...", cid, imagePath);
 
+            // 올바른 CID 대체를 위해 cid:CID 부분을 정확하게 대체
             emailHtml = emailHtml.replace("cid:" + cid, imagePath);
         }
-
         log.info("최종 이메일 본문: {}", emailHtml);
         return emailHtml;
     }
+
+    public String replaceCidWithImagePath(String emailContent, Map<String, String> cidMap) {
+        // CID와 이미지 경로 매핑을 이용하여 이메일 콘텐츠 내의 CID를 실제 경로로 대체
+        for (Map.Entry<String, String> entry : cidMap.entrySet()) {
+            String cid = entry.getKey();
+            String imagePath = entry.getValue();
+            // 올바르게 CID를 대체하기 위해 정확한 포맷으로 대체
+            emailContent = emailContent.replace("cid:" + cid, imagePath);
+        }
+        return emailContent;
+    }
+
+
 
     public List<MessageDTO> listSentMessages(String userId) throws IOException {
         Gmail service = getInstance();

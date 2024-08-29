@@ -451,8 +451,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
-                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="handleReplyForward('forward')">전달</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="handleReplyForward('reply')">답장</button>
                                 <button class="btn btn-primary btn-custom me-2 mt-2"
                                         th:data-message-id="${message.id}"
                                         th:data-return-url="${returnUrl}"
@@ -664,6 +664,66 @@
             }
         });
     }
+
+    //답장,전달 처리하는 함수
+    function handleReplyForward(action) {
+        const emailData = {
+            sender: /*[[${message.from}]]*/,
+            recipient: /*[[${message.to}]]*/,
+            cc: '',
+            subject: /*[[${message.subject}]]*/,
+            messageContent: /*[[${messageContent}]]*/,
+            sentDate: /*[[${message.date}]]*/,
+        };
+
+        let newSubject = action === 'reply' ? `RE: ${emailData.subject}` : `FW: ${emailData.subject}`;
+        let newMessageContent = `
+    <br><br>
+    -----Original Message-----<br>
+    From: ${emailData.sender}<br>
+    To: ${emailData.recipient}<br>
+    Cc: ${emailData.cc}<br>
+    Sent: ${emailData.sentDate}<br>
+    Subject: ${emailData.subject}<br>
+    <br>
+    ${emailData.messageContent}
+    `;
+
+        let recipientEmail = action === 'reply' ? emailData.sender : '';
+
+        // POST 방식으로 데이터 전송
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/mail/compose';
+
+        const subjectInput = document.createElement('input');
+        subjectInput.type = 'hidden';
+        subjectInput.name = 'subject';
+        subjectInput.value = newSubject;
+        form.appendChild(subjectInput);
+
+        const messageContentInput = document.createElement('input');
+        messageContentInput.type = 'hidden';
+        messageContentInput.name = 'messageContent';
+        messageContentInput.value = newMessageContent;
+        form.appendChild(messageContentInput);
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+
+        const recipientEmailInput = document.createElement('input');
+        recipientEmailInput.type = 'hidden';
+        recipientEmailInput.name = 'recipientEmail';
+        recipientEmailInput.value = recipientEmail;
+        form.appendChild(recipientEmailInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
 
 </script>
 
