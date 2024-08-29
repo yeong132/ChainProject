@@ -633,17 +633,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
                     const fileInput = document.getElementById('file');
+                    console.log("filePath: " + documentData.filePath);
 
-                    // 파일 경로 저장
+                    // 파일 경로에서 \를 /로 변경
                     let originalPath = documentData.filePath;
+
                     // URL 인코딩
                     let encodedPath = encodeURIComponent(originalPath);
                     // 다운로드 URL 생성
                     const downloadUrl = `/download?filePath=${encodedPath}`;
 
-                    // 파일 이름 추출
-                    const fileName = originalPath.substring(originalPath.lastIndexOf('\\') + 1);
-                    console.log("fileName: "+fileName);
+                    // 파일 이름 추출 - 파일 경로에서 원본 파일 이름을 가져옴
+                    const fileName = originalPath.split("|")[0];
+                    console.log("fileName: " + fileName);
 
                     // 다운로드 링크 생성
                     const fileLink = document.createElement('a');

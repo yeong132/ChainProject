@@ -1,5 +1,7 @@
 package org.zerock.chain.parkyeongmin.service;
 
+import freemarker.core.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service("yeongminFileService")
 public class FileService {
@@ -15,8 +18,8 @@ public class FileService {
     // 파일 크기 제한: 예를 들어 5MB로 설정
     private static final long MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-    @Value("${spring.servlet.multipart.location}")
-    private String uploadDir;  // 설정 파일의 uploadDir을 사용
+    // 하드코딩된 파일 저장 경로
+    private static final String uploadDir = "src/main/resources/static/uploads";
 
     public String saveFile(MultipartFile file) throws IOException {
         // 파일 크기 확인
@@ -37,18 +40,15 @@ public class FileService {
             Files.createDirectories(directory);
         }
 
-        // 파일명과 저장 경로 설정
-        String fileName = file.getOriginalFilename();
-        Path filePath = directory.resolve(fileName);
+        // UUID를 사용하여 파일 이름 생성
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String uuidFileName = UUID.randomUUID() + fileExtension;
+        Path filePath = directory.resolve(uuidFileName);
 
-        // 기존 파일 삭제 후 저장
-        if (Files.exists(filePath)) {
-            Files.delete(filePath);
-        }
         Files.copy(file.getInputStream(), filePath);
 
-
-        // 저장된 파일의 경로를 반환
-        return filePath.toString();
+        // 원래 파일 이름과 UUID 이름을 함께 반환
+        return originalFileName + "|" + filePath;
     }
 }

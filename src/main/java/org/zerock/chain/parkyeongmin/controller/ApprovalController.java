@@ -140,8 +140,6 @@ public class ApprovalController {
     @GetMapping("/read/{docNo}")
     public String readDocument(@PathVariable("docNo") int docNo,
                                Model model) {
-        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
-        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
@@ -176,8 +174,6 @@ public class ApprovalController {
                                             @RequestParam("source") String source,
                                             Model model) {
         log.info("Source: {}", source);
-        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
-        Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
@@ -222,12 +218,15 @@ public class ApprovalController {
         // 사용자가 해당 문서의 결재자인지 확인
         boolean isDocumentApprover = approvalService.isDocumentApprover(docNo, loggedInEmpNo);
 
+        // 반려 사유 조회
+        String rejectionReason = documentsService.getRejectionReason(docNo);
+
         // 반환할 데이터를 맵에 추가
         Map<String, Object> response = new HashMap<>();
         response.put("document", document);
         response.put("isFirstApprovalApproved", isFirstApprovalApproved);
         response.put("isCurrentApprover", isCurrentApprover);
-        response.put("rejectionReason", document.getRejectionReason());  // 반려 사유 추가
+        response.put("rejectionReason", rejectionReason);  // 반려 사유 추가
         response.put("isDocumentApprover", isDocumentApprover);          // 결재자인지 확인
 
         return ResponseEntity.ok(response);
@@ -328,10 +327,6 @@ public class ApprovalController {
 
         // 문서 반려 처리
         approvalService.rejectDocument(docNo, empNo, rejectMessage);
-
-        // 알림 생성은 일단 나중에 시간 되면 하자..
-        /*String notificationMessage = String.format("%s번인 %s 결재자가 %d번 문서를 반려했습니다.", empNo, employeeName, docNo);
-        notificationService.sendNotification(notificationMessage);*/
 
         return ResponseEntity.ok("Document rejected successfully");
     }

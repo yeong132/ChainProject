@@ -61,4 +61,8 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
     // 특정 문서 번호에 관련된 모든 참조자 사원의 번호를 가져옵니다.
     @Query("SELECT DISTINCT a.refEmployee.empNo FROM Approval a WHERE a.documents.docNo = :docNo")
     List<Long> findRefEmpNosByDocNo(@Param("docNo") int docNo);
+
+    // 반려 사유를 가져오는 쿼리 메서드
+    @Query("SELECT a.rejectionReason FROM Approval a WHERE a.documents.docNo = :docNo AND a.approvalStatus = '반려'")
+    String findRejectionReasonByDocNo(@Param("docNo") int docNo);
 }

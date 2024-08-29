@@ -20,16 +20,18 @@ public class FileDownloadController {
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestParam String filePath) throws IOException {
-        // 파일 경로를 URL 디코딩
-        String decodedFilePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8);
+        // 파일 경로와 원본 파일 이름을 분리
+        String[] parts = filePath.split("\\|");
+        String originalFileName = parts[0];
+        String savedFilePath = parts[1];
 
         // 파일 리소스를 가져옴
-        Path path = Paths.get(decodedFilePath);
+        Path path = Paths.get(savedFilePath);
         Resource resource = new UrlResource(path.toUri());
 
         if (resource.exists() || resource.isReadable()) {
             // 파일명을 UTF-8로 인코딩
-            String encodedFileName = UriUtils.encode(resource.getFilename(), StandardCharsets.UTF_8);
+            String encodedFileName = UriUtils.encode(originalFileName, StandardCharsets.UTF_8);
 
             // 파일이 존재하고 읽을 수 있는 경우 다운로드를 위한 응답 생성
             return ResponseEntity.ok()

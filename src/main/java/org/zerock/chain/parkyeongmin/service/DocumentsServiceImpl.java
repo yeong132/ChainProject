@@ -292,4 +292,9 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                 .map(doc -> modelMapper.map(doc, DocumentsDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override  // 해당 문서의 반려사유를 들고오는 메서드
+    public String getRejectionReason(int docNo) {
+        return approvalRepository.findRejectionReasonByDocNo(docNo);
+    }
 }
