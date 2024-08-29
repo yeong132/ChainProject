@@ -32,7 +32,7 @@ public class Notification {
     private String  notificationMessage;
 
     @Column(name = "notification_date", insertable = false, updatable = false)
-    private LocalDateTime notificationDate;
+    private LocalDateTime notificationDate = LocalDateTime.now();
 
     @Column(name = "is_read")
     private Boolean isRead;

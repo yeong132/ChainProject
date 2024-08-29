@@ -51,10 +51,14 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
             "WHERE a.refEmployee.empNo = :empNo AND a.approvalStatus = '참조'")
     int countReferencedDocumentsForUser(@Param("empNo") Long empNo);
 
-    // 특정 문서 번호에 관련된 모든 사원의 ID를 가져옵니다.
-    @Query("SELECT DISTINCT a.employee.empNo FROM Approval a WHERE a.documents.docNo = :docNo")
-    List<Long> findAllRelatedEmpNosByDocNo(@Param("docNo") int docNo);
-
     // 특정 문서 번호에 해당하는 결재자 정보 삭제
     void deleteByDocumentsDocNo(int docNo);
+
+    // 특정 문서 번호에 관련된 모든 결재자 사원의 번호를 가져옵니다.
+    @Query("SELECT DISTINCT a.employee.empNo FROM Approval a WHERE a.documents.docNo = :docNo")
+    List<Long> findEmpNosByDocNo(@Param("docNo") int docNo);
+
+    // 특정 문서 번호에 관련된 모든 참조자 사원의 번호를 가져옵니다.
+    @Query("SELECT DISTINCT a.refEmployee.empNo FROM Approval a WHERE a.documents.docNo = :docNo")
+    List<Long> findRefEmpNosByDocNo(@Param("docNo") int docNo);
 }

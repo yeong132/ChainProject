@@ -127,7 +127,6 @@ public class ApprovalController {
     public String draftReadDocument(@PathVariable("docNo") int docNo,
                                Model model) {
 
-
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
 

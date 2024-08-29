@@ -41,8 +41,12 @@ public class FileService {
         String fileName = file.getOriginalFilename();
         Path filePath = directory.resolve(fileName);
 
-        // 파일 저장
+        // 기존 파일 삭제 후 저장
+        if (Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
         Files.copy(file.getInputStream(), filePath);
+
 
         // 저장된 파일의 경로를 반환
         return filePath.toString();

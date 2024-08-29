@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.chain.parkyeongmin.service.UserService;  // (영민)이 추가
 import org.zerock.chain.pse.dto.CommentDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaDTO;
 import org.zerock.chain.pse.dto.FavoriteQnaRequestDTO;
@@ -28,15 +29,17 @@ public class UserController {
     private final CommentService commentService;
     private final NotificationService notificationService;
     private final SystemNotificationService systemNotificationService;
+    private final UserService userService; // (영민)이 추가
 
 
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService, UserService userService) {
         this.favoriteQnaService = favoriteQnaService;
         this.qnaService = qnaService;
         this.commentService = commentService;
         this.notificationService = notificationService;
         this.systemNotificationService = systemNotificationService;
+        this.userService = userService; // (영민)이 추가
     }
 
 
@@ -161,13 +164,18 @@ public class UserController {
     // 알림 페이지로 이동
     @GetMapping("/alarm")
     public String userAlarm(Model model) {
-        int empNo = 1; // 예시 사원번호
+//        int empNo = 1; // 예시 사원번호   << 잠시 주석처리 로그인한 사원번호로 실험 필요 (영민)이 주석처리
+        // 로그인한 사용자의 empNo를 userService의 getLoggedInUserEmpNo 메서드로 가져오기 (영민)이 추가
+        Long longEmpNo = userService.getLoggedInUserEmpNo();
+        int empNo = longEmpNo.intValue();
 
         // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
         List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
+        // 전자결재 알림 추가(영민)
+        List<Notification> approvalNotifications = notificationService.getNotificationsByType(empNo, "전자결재");
         // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
 
@@ -176,6 +184,8 @@ public class UserController {
         projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
+        // 전자결재 추가(영민)
+        approvalNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
 
         systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
 
@@ -184,6 +194,7 @@ public class UserController {
         model.addAttribute("projectNotifications", projectNotifications);
         model.addAttribute("noticeNotifications", noticeNotifications);
         model.addAttribute("reportNotifications", reportNotifications);
+        model.addAttribute("approvalNotifications", approvalNotifications); // 전자결재 알림 추가 (영민)
         model.addAttribute("systemNotifications", systemNotifications);
         return "user/alarm";
     }

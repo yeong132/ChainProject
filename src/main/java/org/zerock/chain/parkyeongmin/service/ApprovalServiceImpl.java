@@ -13,6 +13,7 @@ import org.zerock.chain.parkyeongmin.model.Employee;
 import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
 import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
+import org.zerock.chain.pse.service.NotificationService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final ApprovalRepository approvalRepository;
     private final DocumentsRepository documentsRepository;
     private final EmployeesRepository employeesRepository;
+    private final NotificationService notificationService;  // 추가된 부분
 
     // approvals테이블에 사용자가 정한 정보가 저장되는 메서드
     @Override
@@ -43,12 +45,14 @@ public class ApprovalServiceImpl implements ApprovalService {
             throw new RuntimeException("Error parsing approverJson", e);
         }
 
+        log.info("What the hell SenderName1:{}", documentsDTO.getSenderName());
+
+        // 문서와 사원 객체를 조회하여 설정
+        Documents document = documentsRepository.findById(documentsDTO.getDocNo())
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
         // 결재선의 결재자들을 저장 (DocStatus는 변경하지 않음)
         for (Map<String, Object> approver : approvers) {
-            // 문서와 사원 객체를 조회하여 설정
-            Documents document = documentsRepository.findById(documentsDTO.getDocNo())
-                    .orElseThrow(() -> new RuntimeException("Document not found"));
-            log.info("Found document: {}", document);
 
             // 문자열로 들어온 값을 Long과 Integer로 변환
             Long empNo = Long.valueOf(approver.get("empNo").toString());
@@ -74,10 +78,6 @@ public class ApprovalServiceImpl implements ApprovalService {
         // 참조자가 여러 명일 경우, 각각에 대해 별도의 Approval 객체 생성 및 저장
         if (!references.isEmpty()) {
             for (Map<String, Object> reference : references) {
-                // 문서와 사원 객체를 조회하여 설정
-                Documents document = documentsRepository.findById(documentsDTO.getDocNo())
-                        .orElseThrow(() -> new RuntimeException("Document not found"));
-                log.info("Found document: {}", document);
 
                 Long refEmpNo = Long.valueOf(reference.get("refEmpNo").toString());
                 Employee refEmployee = employeesRepository.findById(refEmpNo)
@@ -91,6 +91,9 @@ public class ApprovalServiceImpl implements ApprovalService {
                 log.info("Saved reference approval: {}", refApproval);
             }
         }
+
+        // 결재 차례인 사람에게 알림 생성
+        notificationService.createApprovalNotification(documentsDTO.getDocNo(), documentsDTO.getDocTitle(), documentsDTO.getSenderName(), "대기 중");
 
         // 첫 번째 결재자에게 문서 할당
         Map<String, Object> firstApprover = approvers.get(0);
@@ -126,6 +129,12 @@ public class ApprovalServiceImpl implements ApprovalService {
         } else {
             // 최종 결재가 아니므로 다음 결재자로 이동
             moveToNextApprover(docNo, approval.getApprovalOrder() + 1);
+
+            // 다음 결재자에게 알림 전송
+            Approval nextApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, approval.getApprovalOrder() + 1);
+            if (nextApproval != null) {
+                notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "진행 중");
+            }
         }
     }
 
@@ -144,8 +153,8 @@ public class ApprovalServiceImpl implements ApprovalService {
             document.setDocStatus("반려");
             documentsRepository.save(document);
 
-            // 반려 처리 (작성자에게 알림 등)
-            handleRejection(docNo);
+            // 결재 모든 관련자들에게 반려 알림 생성
+            notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "반려");
         }
     }
 
@@ -175,6 +184,9 @@ public class ApprovalServiceImpl implements ApprovalService {
         document.setDocStatus("완료");
         documentsRepository.save(document);
 
+        // 결재 모든 관련자들에게 완료 알림 생성
+        notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "완료");
+
         System.out.println("Document No: " + docNo + " has been finalized.");
     }
 
@@ -193,13 +205,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
         // 문서를 첫 번째 결재자에게 할당했다고 로그 출력
         System.out.println("Document No: " + docNo + " has been assigned to the first approver with empNo: " + empNo);
-    }
-
-    // 반려 처리 로직 (임의로 추가)
-    private void handleRejection(int docNo) {
-        // 문서 반려 시 처리할 로직을 구현합니다.
-        // 예를 들어, 작성자에게 알림을 보내거나, 문서 상태를 변경하는 등의 작업을 할 수 있습니다.
-        System.out.println("Document No: " + docNo + " has been rejected.");
     }
 
     @Override

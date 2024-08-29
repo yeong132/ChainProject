@@ -14,6 +14,7 @@ import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
 import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -81,13 +82,16 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
             // 파일이 있는 경우 파일 저장 처리
             String filePath = null;
             if (documentsDTO.getFile() != null && !documentsDTO.getFile().isEmpty()) {
-                filePath = fileService.saveFile(documentsDTO.getFile());  // 파일을 저장하고 경로를 반환
-                documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
+                try {
+                    filePath = fileService.saveFile(documentsDTO.getFile());  // 파일을 저장하고 경로를 반환
+                    documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
+                } catch (IOException e) {
+                    throw new RuntimeException("파일 저장에 실패했습니다.", e);
+                }
             }
 
             // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
             Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
-            documentsDTO.setLoggedInEmpNo(loggedInEmpNo);  // DTO에 설정
 
             // 로그인한 사용자의 정보를 Employees 테이블에서 조회
             Employee employee = employeesRepository.findById(loggedInEmpNo)
@@ -97,6 +101,10 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
             String senderName = employee.getLastName() + employee.getFirstName();
             String senderDmpName = employee.getDepartment().getDmpName();
             String senderRankName = employee.getRank().getRankName();
+
+            // DocumentsDTO에 필요한 필드 설정
+            documentsDTO.setLoggedInEmpNo(loggedInEmpNo);
+            documentsDTO.setSenderName(senderName);
 
             log.info("senderName: {}, senderDmpName: {}, senderRankName: {}", senderName, senderDmpName, senderRankName);
 
