@@ -22,7 +22,6 @@ public class ProjectDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectEndDate;
 
-    private String dmpNo;
     private String participants;
     private String projectContent;
     private String projectFiles;

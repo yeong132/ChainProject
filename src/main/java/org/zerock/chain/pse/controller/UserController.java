@@ -248,6 +248,21 @@ public class UserController {
         return "redirect:/user/alarm";
     }
 
+    // 읽은 알림만 삭제
+    @PostMapping("/alarm/deleteRead")
+    public String deleteReadNotifications() {
+        // 세션에서 사원번호(empNo) 가져오기
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+
+        // 읽은 알림 삭제
+        notificationService.deleteReadNotifications(empNo);
+
+        return "redirect:/user/alarm";
+    }
+
+
     // 개별 시스템 알림 삭제
     @PostMapping("/systemNotification/delete/{systemNo}")
     public String deleteSystemNotification(@PathVariable Long systemNo) {

@@ -1,6 +1,5 @@
 package org.zerock.chain.pse.service;
 
-import org.zerock.chain.pse.dto.NotificationRequestDTO;
 import org.zerock.chain.pse.model.Notification;
 
 import java.util.List;
@@ -14,4 +13,5 @@ public interface NotificationService {
     void markAsRead(Long notificationNo);  // 알림을 읽음으로 표시
     Notification getNotificationById(Long notificationNo);
     void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled);  // 알림 온오프
+    void deleteReadNotifications(Long empNo); // 특정 사원의 읽은 알림을 모두 삭제함
 }

@@ -319,6 +319,7 @@
                 <div class="mb-3">
                     <!--  showConfirmationModal :  전체삭제 모달 창 연결  -->
                     <button class="btn btn-danger" onclick="showConfirmationModal()">전체 삭제</button>
+                    <button class="btn btn-warning" onclick="document.getElementById('deleteReadForm').submit();">읽은 알림 삭제</button>
                     <button class="btn btn-danger" onclick="showMakeNotificationModal()">시스템 알림 작성(관리자)</button>
                 </div>
 
@@ -395,13 +396,15 @@
                                 </div>
 
                                 <!-- 일반 알림 -->
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}" th:if="${notification.enabled}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${allNotifications}" th:classappend="${notification.isRead ? 'read' : 'unread'}" th:if="${notification.enabled}">
                                     <!-- 알림 클릭 시 해당 페이지로 이동 -->
                                     <a th:if="${notification.notificationType == '차트'}"
                                        th:href="@{/chart/OKR}"
                                        style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="${notification.notificationType}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
+
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="${notification.notificationMessage}"></p>
@@ -413,6 +416,7 @@
                                        style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="${notification.notificationType}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="${notification.notificationMessage}"></p>
@@ -427,11 +431,12 @@
                             </div>
                             <!-------프로젝트 알림  목록 ----------------------->
                             <div aria-labelledby="project-tab" class="tab-pane fade" id="project" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}" th:if="${notification.enabled}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${projectNotifications}" th:classappend="${notification.isRead ? 'read' : 'unread'}" th:if="${notification.enabled}">
                                     <!-- 알림 클릭 시 해당 페이지로 이동 -->
                                     <a th:href="@{/user/alarm/read/{notificationNo}(notificationNo=${notification.notificationNo})}" style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="'프로젝트 ' + ${notification.referenceId}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="${notification.notificationMessage}"></p>
@@ -444,11 +449,12 @@
                             </div>
                             <!------------- 업무 알림 목록 ----------------------->
                             <div aria-labelledby="payment-tab" class="tab-pane fade" id="payment" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}" th:if="${notification.enabled}">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${reportNotifications}" th:classappend="${notification.isRead ? 'read' : 'unread'}"  th:if="${notification.enabled}">
                                     <!-- 클릭 시 전체 알림 내용으로 이동 -->
                                     <a th:href="@{'/report/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="'업무 '"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
@@ -461,11 +467,12 @@
                             </div>
                             <!------------ 차트 알림  목록 ----------------------->
                             <div aria-labelledby="chart-tab" class="tab-pane fade" id="chart" role="tabpanel">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${chartNotifications}" th:if="${notification.enabled}">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${chartNotifications}" th:classappend="${notification.isRead ? 'read' : 'unread'}"  th:if="${notification.enabled}">
                                     <!-- 클릭 시 전체 알림 내용으로 이동 -->
                                     <a th:href="@{'/chart/OKR' }" style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="${notification.notificationType}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
@@ -478,11 +485,12 @@
                             </div>
                         <!------------ 공지사항 알림  목록 ----------------------->
                             <div aria-labelledby="notice-tab" class="tab-pane fade" id="notice" role="tabpanel">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${noticeNotifications}" th:if="${notification.enabled}">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:each="notification : ${noticeNotifications}" th:classappend="${notification.isRead ? 'read' : 'unread'}"  th:if="${notification.enabled}">
                                     <!-- 클릭 시 전체 알림 내용으로 이동 -->
                                     <a th:href="@{'/notice/detail/' + ${notification.referenceId}}" style="text-decoration:none; color:inherit;">
                                         <div>
                                             <strong th:text="'공지사항 ' + ${notification.referenceId}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
                                             <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
                                             <hr>
                                             <p th:text="' 알림: ' + ${notification.notificationMessage}"></p>
@@ -535,6 +543,8 @@
         </div>
 
         <form action="/user/alarm/deleteAll" id="deleteAllForm" method="post">
+        </form>
+        <form id="deleteReadForm" method="post" action="/user/alarm/deleteRead">
         </form>
     </section>
 </main><!-- End #main -->

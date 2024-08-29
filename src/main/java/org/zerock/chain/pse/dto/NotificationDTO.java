@@ -11,8 +11,8 @@ public class NotificationDTO {
     private long referenceId;
     private String  notificationMessage;
     private LocalDateTime notificationDate;
-    private Boolean isRead;
-    private Boolean enabled;
+    private boolean isRead;
+    private boolean enabled;
 
     // getRedirectUrl 메서드 추가 (선택 사항)
     public String getRedirectUrl() {

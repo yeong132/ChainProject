@@ -35,10 +35,10 @@ public class Notification {
     private LocalDateTime notificationDate = LocalDateTime.now();
 
     @Column(name = "is_read")
-    private Boolean isRead = false;
+    private boolean isRead = false;
 
     @Column(name = "enabled")
-    private Boolean enabled = true; // 활성화 여부
+    private boolean enabled = true; // 활성화 여부
 
     public String getRedirectUrl() {
         switch (this.notificationType) {
