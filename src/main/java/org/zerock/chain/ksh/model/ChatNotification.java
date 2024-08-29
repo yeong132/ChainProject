@@ -17,7 +17,7 @@ public class ChatNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "chat_message_id", referencedColumnName = "id")
     private ChatMessage chatMessage;  // chat_message 테이블의 id를 참조
 

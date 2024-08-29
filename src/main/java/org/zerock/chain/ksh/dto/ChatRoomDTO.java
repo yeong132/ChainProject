@@ -15,4 +15,5 @@ public class ChatRoomDTO {
     private Long senderEmpNo;
     private Long recipientEmpNo;
     private int unreadCount;
+    private boolean isDeleted;
 }

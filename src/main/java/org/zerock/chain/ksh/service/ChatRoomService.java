@@ -1,27 +1,36 @@
 package org.zerock.chain.ksh.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.ksh.model.ChatRoom;
+import org.zerock.chain.ksh.repository.ChatMessageRepository;
+import org.zerock.chain.ksh.repository.ChatNotificationRepository;
 import org.zerock.chain.ksh.repository.ChatRoomRepository;
 
+import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
+    @Autowired
     private final ChatRoomRepository chatRoomRepository;
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private ChatNotificationRepository chatNotificationRepository;
 
     // 단일 ChatRoom 객체를 반환하도록 수정
-    public Optional<ChatRoom> getChatRoom(Long senderEmpNo, // 채팅방 번호 가져오기
-                                          Long recipientEmpNo,
-                                          boolean createNewRoomIfNotExists // 존재하지 않는 경우 새 방 만들기 호출
-    ) {
+    public Optional<ChatRoom> getChatRoom(Long senderEmpNo, Long recipientEmpNo, boolean createNewRoomIfNotExists) {
         return chatRoomRepository
-                .findBySenderEmpNoAndRecipientEmpNo(senderEmpNo, recipientEmpNo) // 수신자 발신자로 검색
+                .findBySenderEmpNoAndRecipientEmpNo(senderEmpNo, recipientEmpNo)
                 .or(() -> {
                     if (createNewRoomIfNotExists) {
-                        return Optional.of(createChatRoom(senderEmpNo, recipientEmpNo)); // 채팅방을 생성
+                        return Optional.of(createChatRoom(senderEmpNo, recipientEmpNo)); // 새로운 방 생성
                     }
                     return Optional.empty();
                 });
@@ -37,35 +46,95 @@ public class ChatRoomService {
     }
 
     // 채팅방을 생성하고, ChatRoom 객체를 생성하여 반환
-    // ChatRoom 객체에서 chatNo 값을 반환하도록 수정
     public Optional<String> getChatRoomNo(Long senderEmpNo, Long recipientEmpNo, boolean createNewRoomIfNotExists) {
-        return getChatRoom(senderEmpNo, recipientEmpNo, createNewRoomIfNotExists).map(ChatRoom::getChatNo);  // ChatRoom 객체에서 chatNo 값을 추출하여 반환
+        return getChatRoom(senderEmpNo, recipientEmpNo, createNewRoomIfNotExists).map(ChatRoom::getChatNo);
     }
 
-    // 채팅방을 생성하고 ChatRoom 객체를 반환하도록 수정
+    // 채팅방 생성: 기존 방이 존재하지 않는 경우에만 방을 추가
     private ChatRoom createChatRoom(Long senderEmpNo, Long recipientEmpNo) {
-        var chatNo = String.format("%s_%s", senderEmpNo, recipientEmpNo);
+        // 작은 값이 앞에 오고 큰 값이 뒤에 오도록 정렬
+        Long smallerEmpNo = Math.min(senderEmpNo, recipientEmpNo);
+        Long largerEmpNo = Math.max(senderEmpNo, recipientEmpNo);
 
-        // 보낸 사람과 수신자에 대한 두 개의 ChatRoom 객체 생성
-        ChatRoom senderRecipient = ChatRoom // 보낸 사람 = 수신자가 채팅방 개체와 같음
-                .builder()
-                .chatNo(chatNo)
-                .senderEmpNo(senderEmpNo)
-                .recipientEmpNo(recipientEmpNo)
-                .build();
+        // chatNo를 "작은값_큰값" 형식으로 생성
+        var chatNo = String.format("%s_%s", smallerEmpNo, largerEmpNo);
 
-        ChatRoom recipientSender = ChatRoom // 발신자가 수신자가 되고, 수신자가 발신자가 됨
-                .builder()
-                .chatNo(chatNo)
-                .senderEmpNo(recipientEmpNo)
-                .recipientEmpNo(senderEmpNo)
-                .build();
+        boolean senderRoomExists = chatRoomRepository.existsBySenderEmpNoAndRecipientEmpNo(smallerEmpNo, largerEmpNo);
+        boolean recipientRoomExists = chatRoomRepository.existsBySenderEmpNoAndRecipientEmpNo(largerEmpNo, smallerEmpNo);
 
-        // 생성된 채팅방id를 데이터베이스에 저장
-        chatRoomRepository.save(senderRecipient);
-        chatRoomRepository.save(recipientSender);
+        if (senderRoomExists && recipientRoomExists) {
+            throw new IllegalStateException("이미 존재하는 방입니다.");
+        }
 
-        // 둘 중 하나의 ChatRoom 객체 반환 (예: senderRecipient)
-        return senderRecipient;
+        ChatRoom newChatRoom = null;
+        if (!senderRoomExists) {
+            ChatRoom senderRecipient = ChatRoom.builder()
+                    .chatNo(chatNo)
+                    .senderEmpNo(smallerEmpNo)
+                    .recipientEmpNo(largerEmpNo)
+                    .isDeleted(false)
+                    .build();
+            chatRoomRepository.save(senderRecipient);
+            newChatRoom = senderRecipient;
+        }
+        if (!recipientRoomExists) {
+            ChatRoom recipientSender = ChatRoom.builder()
+                    .chatNo(chatNo)
+                    .senderEmpNo(largerEmpNo)
+                    .recipientEmpNo(smallerEmpNo)
+                    .isDeleted(false)
+                    .build();
+            chatRoomRepository.save(recipientSender);
+            if (newChatRoom == null) {
+                newChatRoom = recipientSender;
+            }
+        }
+        return newChatRoom;
     }
+
+    // 방 삭제
+    @Transactional
+    public void exitChatRoom(Long senderEmpNo, Long recipientEmpNo) {
+        try {
+            // 기존 채팅방을 조회합니다.
+            Optional<ChatRoom> chatRoomOpt = chatRoomRepository.findBySenderEmpNoAndRecipientEmpNo(senderEmpNo, recipientEmpNo);
+
+            // 채팅방이 존재하면 is_deleted 값을 true로 변경합니다.
+            chatRoomOpt.ifPresent(chatRoom -> {
+                chatRoom.setDeleted(true);
+                chatRoomRepository.save(chatRoom); // 변경된 엔티티를 저장합니다.
+            });
+
+            String chatNo = chatRoomOpt.map(ChatRoom::getChatNo).orElse(null);
+            if (chatNo != null && isChatRoomCompletelyDeleted(chatNo)) {
+                // chatNo에 해당하는 모든 데이터를 삭제합니다.
+                chatNotificationRepository.deleteByChatNo(chatNo);
+                chatMessageRepository.deleteByChatNo(chatNo);
+                chatRoomRepository.deleteByChatNo(chatNo);
+            }
+        } catch (Exception e) {
+            log.error("채팅방 삭제 중 오류 발생: ", e);
+            throw new RuntimeException("채팅방을 삭제하는 동안 오류가 발생했습니다.");
+        }
+    }
+
+    // 방이 완전히 삭제되었는지 확인하는 메서드
+    public boolean isChatRoomCompletelyDeleted(String chatNo) {
+        List<Boolean> isDeletedList = chatRoomRepository.findIsDeletedByChatNo(chatNo);
+        // 모든 채팅방의 isDeleted가 true라면 true를 반환
+        return isDeletedList.stream().allMatch(Boolean::booleanValue);
+    }
+
+    // 중복 방 존재 여부 확인 메서드
+    public boolean checkRoomExistence(Long senderEmpNo, Long recipientEmpNo) {
+        return chatRoomRepository.existsBySenderEmpNoAndRecipientEmpNo(senderEmpNo, recipientEmpNo);
+    }
+
+    // 방 삭제 확인
+    public boolean isChatRoomDeleted(Long senderEmpNo, Long recipientEmpNo) {
+        return chatRoomRepository.findBySenderEmpNoAndRecipientEmpNo(senderEmpNo, recipientEmpNo)
+                .map(ChatRoom::isDeleted)
+                .orElse(true);
+    }
+
 }
