@@ -222,122 +222,137 @@ public class GmailService {
     }
 
 
+    // 주어진 사용자 ID와 메시지 ID를 사용해 Gmail API에서 이메일 메시지를 가져옵니다.
     public Message getMessage(String userId, String messageId) throws IOException {
-        Gmail service = getInstance();
         return service.users().messages().get(userId, messageId).execute();
     }
 
+    // 이메일 메시지의 본문 내용을 가져오는 메서드
+// 이메일 메시지를 가져와서 그 안의 HTML 본문을 추출한 후, 이미지 CID를 실제 이미지 경로로 변환합니다.
     public String getMessageContent(String userId, String messageId) throws IOException {
-        Gmail service = getInstance();
-        Message message = getMessage(userId, messageId);
-        MessagePart payload = message.getPayload();
-        StringBuilder body = new StringBuilder();
+        Message message = getMessage(userId, messageId); // 메시지를 가져옴
+        MessagePart payload = message.getPayload(); // 메시지의 페이로드를 가져옴
+        StringBuilder body = new StringBuilder(); // 본문을 저장할 StringBuilder 초기화
 
         if (payload != null) {
-            String htmlContent = getHtmlContent(payload);
+            String htmlContent = getHtmlContent(payload); // HTML 콘텐츠를 추출
             if (htmlContent != null) {
-                body.append(htmlContent);
+                body.append(htmlContent); // HTML 내용을 본문에 추가
             } else {
-                log.warn("이메일 메시지에서 HTML 내용을 찾을 수 없습니다.");
+                log.warn("이메일 메시지에서 HTML 내용을 찾을 수 없습니다."); // HTML 본문이 없을 경우 경고 로그
             }
         }
 
-        String finalContent = body.toString();
-        Map<String, String> cidMap = extractCidMap(payload);
-        finalContent = parseEmailContent(finalContent, cidMap);
+        // 이미지 CID 변환 작업 수행
+        String finalContent = body.toString(); // 본문을 문자열로 변환
+        Map<String, String> cidMap = extractCidMap(payload); // CID와 이미지 경로의 매핑 추출
+        finalContent = parseEmailContent(finalContent, cidMap); // CID를 실제 경로로 변환
 
-        return finalContent;
+        return finalContent; // 변환된 최종 본문 반환
     }
 
+    // MIME 파트를 재귀적으로 처리하여 HTML 콘텐츠를 추출하는 메서드
+// 주어진 메시지 파트를 검사하여, HTML 콘텐츠를 추출합니다.
     private String getHtmlContent(MessagePart part) throws IOException {
-        String mimeType = part.getMimeType();
-        MessagePartBody partBody = part.getBody();
+        String mimeType = part.getMimeType(); // MIME 타입을 가져옴
+        MessagePartBody partBody = part.getBody(); // MIME 파트의 본문을 가져옴
 
+        // MIME 타입이 text/html인 경우, 그 데이터를 디코딩하여 반환
         if (mimeType.equals("text/html")) {
             if (partBody != null && partBody.getData() != null) {
                 return new String(Base64.decodeBase64(partBody.getData()), StandardCharsets.UTF_8);
             } else {
-                log.warn("HTML 파트에 데이터가 없습니다.");
+                log.warn("HTML 파트에 데이터가 없습니다."); // 데이터가 없을 경우 경고 로그
             }
         } else if (mimeType.startsWith("multipart/")) {
-            return extractHtmlFromMultipart(part);
+            return extractHtmlFromMultipart(part); // multipart/ 관련 MIME 타입의 경우, 재귀적으로 HTML 콘텐츠를 추출
         }
-        return null;
+        return null; // HTML 콘텐츠를 찾지 못한 경우 null 반환
     }
 
+    // Multipart 내에서 HTML 콘텐츠를 추출하는 메서드
+// 주어진 multipart 파트를 재귀적으로 처리하여 HTML 콘텐츠를 추출합니다.
     private String extractHtmlFromMultipart(MessagePart part) throws IOException {
         if (part.getParts() != null) {
             for (MessagePart subPart : part.getParts()) {
-                String result = getHtmlContent(subPart);
+                String result = getHtmlContent(subPart); // 각 서브 파트를 검사하여 HTML 콘텐츠를 추출
                 if (result != null) {
-                    return result;
+                    return result; // HTML 콘텐츠를 찾으면 반환
                 }
             }
         } else {
-            log.warn("Multipart 파트에 서브 파트가 없습니다.");
+            log.warn("Multipart 파트에 서브 파트가 없습니다."); // 서브 파트가 없을 경우 경고 로그
         }
-        return null;
+        return null; // HTML 콘텐츠를 찾지 못한 경우 null 반환
     }
 
+    // CID와 이미지 경로의 매핑을 추출하는 메서드
+// 메시지 페이로드를 검사하여, 이미지 CID와 그에 대응하는 경로를 매핑한 맵을 생성합니다.
     private Map<String, String> extractCidMap(MessagePart payload) throws IOException {
         Map<String, String> cidMap = new HashMap<>();
 
         if (payload != null) {
             log.info("CID 추출을 위한 Payload 처리 중...");
-            processCidMap(payload, cidMap);
-            log.info("CID 추출 완료: {}", cidMap);
+            processCidMap(payload, cidMap); // 페이로드를 처리하여 CID와 이미지 경로를 매핑
+            log.info("CID 추출 완료: {}", cidMap); // 완료된 CID 맵을 로그로 출력
         } else {
-            log.warn("Payload가 null이므로 CID 추출을 건너뜀.");
+            log.warn("Payload가 null이므로 CID 추출을 건너뜀."); // 페이로드가 null일 경우 경고 로그
         }
 
-        return cidMap;
+        return cidMap; // CID 맵 반환
     }
 
+    // CID와 이미지 경로의 매핑을 처리하는 메서드
+// 주어진 메시지 파트를 검사하여, CID와 이미지 경로를 매핑합니다.
     private void processCidMap(MessagePart part, Map<String, String> cidMap) throws IOException {
-        String mimeType = part.getMimeType();
-        MessagePartBody partBody = part.getBody();
+        String mimeType = part.getMimeType(); // MIME 타입을 가져옴
+        MessagePartBody partBody = part.getBody(); // MIME 파트의 본문을 가져옴
 
         log.info("MIME 타입 처리 중: {}", mimeType);
 
         if (mimeType.startsWith("image/")) {
-            processImagePartForCidMap(part, cidMap, mimeType, partBody);
+            processImagePartForCidMap(part, cidMap, mimeType, partBody); // 이미지 파트의 경우 CID와 경로를 처리
         } else if (mimeType.startsWith("multipart/")) {
-            processMultipartForCidMap(part, cidMap);
+            processMultipartForCidMap(part, cidMap); // multipart 파트의 경우 서브 파트를 재귀적으로 처리
         } else {
-            log.warn("처리되지 않은 MIME 타입: {}. 파트 스킵.", mimeType);
+            log.warn("처리되지 않은 MIME 타입: {}. 파트 스킵.", mimeType); // 처리되지 않는 MIME 타입의 경우 경고 로그
         }
     }
 
+    // CID와 이미지 경로의 매핑을 처리하는 메서드
+// 이미지 MIME 타입의 메시지 파트를 처리하여 CID와 이미지 경로를 매핑합니다.
     private void processImagePartForCidMap(MessagePart part, Map<String, String> cidMap, String mimeType, MessagePartBody partBody) throws IOException {
         if (partBody != null) {
             log.info("이미지 파트 Body가 null이 아님. 데이터 확인 중...");
             if (partBody.getData() != null) {
                 log.info("이미지 데이터 존재. CID 처리 중...");
-                String cid = extractCid(part);
-                String imageUrl = saveImageToFileSystem(partBody.getData(), mimeType, cid);
-                cidMap.put(cid, imageUrl);
+                String cid = extractCid(part); // CID를 추출
+                String imageUrl = saveImageToFileSystem(partBody.getData(), mimeType, cid); // 이미지를 파일 시스템에 저장하고 URL을 반환
+                cidMap.put(cid, imageUrl); // CID와 이미지 경로를 매핑
                 log.info("CID: {}가 이미지 경로로 매핑됨: {}", cid, imageUrl);
             } else {
                 log.warn("이미지 파트에 데이터가 없음. Attachment ID: {}", partBody.getAttachmentId());
-                handleImageAttachmentForCidMap(part, cidMap, mimeType, partBody);
+                handleImageAttachmentForCidMap(part, cidMap, mimeType, partBody); // 이미지 첨부파일 처리
             }
         } else {
-            log.warn("이미지 파트 Body가 null입니다.");
+            log.warn("이미지 파트 Body가 null입니다."); // Body가 null일 경우 경고 로그
         }
     }
 
+    // 이미지 첨부파일을 처리하여 CID와 경로를 매핑하는 메서드
+// 이미지 첨부파일을 가져와서 CID와 경로를 매핑합니다.
     private void handleImageAttachmentForCidMap(MessagePart part, Map<String, String> cidMap, String mimeType, MessagePartBody partBody) throws IOException {
-        Gmail service = getInstance();
         if (partBody.getAttachmentId() != null) {
             log.info("Attachment ID: {}에 대한 첨부파일 데이터 가져오는 중...", partBody.getAttachmentId());
+            // 첨부파일 데이터 가져오기 시도
             MessagePartBody attachPart = service.users().messages().attachments()
                     .get("me", part.getPartId(), partBody.getAttachmentId()).execute();
 
             if (attachPart.getData() != null) {
                 log.info("첨부파일 데이터 가져오기 성공. CID 처리 중...");
-                String cid = extractCid(part);
-                String imageUrl = saveImageToFileSystem(attachPart.getData(), mimeType, cid);
-                cidMap.put(cid, imageUrl);
+                String cid = extractCid(part); // CID를 추출
+                String imageUrl = saveImageToFileSystem(attachPart.getData(), mimeType, cid); // 이미지를 파일 시스템에 저장하고 URL을 반환
+                cidMap.put(cid, imageUrl); // CID와 이미지 경로를 매핑
                 log.info("CID: {}가 이미지 경로로 매핑됨: {}", cid, imageUrl);
             } else {
                 log.warn("Attachment ID: {}에 대한 첨부파일 데이터를 가져오지 못했습니다.", partBody.getAttachmentId());
@@ -345,42 +360,45 @@ public class GmailService {
         }
     }
 
+    // Multipart 파트를 처리하여 CID와 이미지 경로를 추출하는 메서드
+// multipart 파트를 재귀적으로 처리하여 CID와 이미지 경로를 추출합니다.
     private void processMultipartForCidMap(MessagePart part, Map<String, String> cidMap) throws IOException {
         if (part.getParts() != null) {
             log.info("Multipart 콘텐츠 {}개 처리 중", part.getParts().size());
             for (MessagePart subPart : part.getParts()) {
-                processCidMap(subPart, cidMap);
+                processCidMap(subPart, cidMap); // 각 서브 파트를 처리하여 CID와 경로를 매핑
             }
         } else {
-            log.warn("Multipart 파트에 서브 파트가 없습니다.");
+            log.warn("Multipart 파트에 서브 파트가 없습니다."); // 서브 파트가 없을 경우 경고 로그
         }
     }
 
+    // CID(Content-ID)를 추출하는 메서드
+// 메시지 파트의 헤더에서 CID(Content-ID)를 추출합니다.
     private String extractCid(MessagePart part) {
         String cid = "";
         if (part.getHeaders() != null) {
             for (MessagePartHeader header : part.getHeaders()) {
                 if ("Content-ID".equalsIgnoreCase(header.getName())) {
-                    cid = header.getValue();
+                    cid = header.getValue(); // Content-ID 헤더의 값을 CID로 설정
                     break;
                 }
             }
         }
+        // CID에서 불필요한 문자 제거
         return cid.replace("<", "").replace(">", "").replaceAll("[^a-zA-Z0-9]", "_");
     }
 
-    private String cleanFileName(String cid) {
-        return cid.replaceAll("[^a-zA-Z0-9]", "_");
-    }
-
+    // 이미지 데이터를 파일 시스템에 저장하고 경로를 반환하는 메서드
+// CID를 기반으로 파일 이름을 생성하여 이미지 데이터를 파일 시스템에 저장합니다.
     private String saveImageToFileSystem(String imageData, String mimeType, String cid) throws IOException {
         byte[] imageBytes = Base64.decodeBase64(imageData);
         String extension = mimeType.split("/")[1];
 
-        // 기존 CID를 클린업하여 안전한 파일명을 생성
-        String cleanCid = cleanFileName(cid);
+        String cleanCid = cid.replaceAll("_cweb[0-9]+_nm", "");
         String imageName = "image_" + cleanCid + "." + extension;
 
+        // 실제 파일 시스템 경로 설정 - C:/upload/로 변경
         Path imagePath = Paths.get("C:/upload/", imageName);
 
         log.info("CID: {}에 대한 이미지를 경로: {}에 저장합니다.", cid, imagePath.toAbsolutePath());
@@ -400,35 +418,29 @@ public class GmailService {
             throw e;
         }
 
+        // 이메일 본문에서 참조할 웹 경로 반환
         return "/upload/" + imageName;
     }
 
 
-
+    // 이메일 본문 내의 CID를 실제 이미지 경로로 대체하는 메서드
+// 이메일 본문에서 CID를 찾아서, 실제 이미지 경로로 변환합니다.
     private String parseEmailContent(String emailHtml, Map<String, String> cidMap) {
         log.info("CID 대체 작업 시작...");
+
         for (Map.Entry<String, String> entry : cidMap.entrySet()) {
             String cid = entry.getKey();
             String imagePath = entry.getValue();
             log.info("CID: {}를 이미지 경로: {}로 대체 시도 중...", cid, imagePath);
 
-            // 올바른 CID 대체를 위해 cid:CID 부분을 정확하게 대체
+            // CID를 실제 경로로 변환
             emailHtml = emailHtml.replace("cid:" + cid, imagePath);
         }
+
         log.info("최종 이메일 본문: {}", emailHtml);
         return emailHtml;
     }
 
-    public String replaceCidWithImagePath(String emailContent, Map<String, String> cidMap) {
-        // CID와 이미지 경로 매핑을 이용하여 이메일 콘텐츠 내의 CID를 실제 경로로 대체
-        for (Map.Entry<String, String> entry : cidMap.entrySet()) {
-            String cid = entry.getKey();
-            String imagePath = entry.getValue();
-            // 올바르게 CID를 대체하기 위해 정확한 포맷으로 대체
-            emailContent = emailContent.replace("cid:" + cid, imagePath);
-        }
-        return emailContent;
-    }
 
 
 

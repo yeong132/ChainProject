@@ -302,6 +302,21 @@ public class EmailController {
 
             String messageContent = gmailService.getMessageContent("me", messageId);
 
+            // CID 기반 이미지를 실제 경로로 변경
+            Pattern pattern = Pattern.compile("cid:([\\w\\-\\.]+)@\\w+\\.\\w+");
+            Matcher matcher = pattern.matcher(messageContent);
+
+            StringBuffer sb = new StringBuffer();
+            while (matcher.find()) {
+                String cid = matcher.group(1).replaceAll("[^a-zA-Z0-9]", "_");
+                String imagePath = "/assets/img/mailimg/image_" + cid + ".jpeg";
+                matcher.appendReplacement(sb, imagePath);
+            }
+            matcher.appendTail(sb);
+
+            messageContent = sb.toString();
+
+            // 이메일이 별표 표시되었는지 확인
             boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
             messageDTO.setStarred(isStarred);
 
@@ -326,6 +341,7 @@ public class EmailController {
         }
         return "mail/mailRead";
     }
+
 
 
     // 이메일 읽음 상태를 토글하거나 특정 상태로 설정하는 메서드
