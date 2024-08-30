@@ -6,8 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.repository.NotificationRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class NotificationServiceImpl extends BaseService<Notification> implements NotificationService {
 
@@ -33,10 +36,12 @@ public class NotificationServiceImpl extends BaseService<Notification> implement
         return getItemsByEmpNo(empNo, empNoParam -> notificationRepository.findByEmpNoAndNotificationType(empNoParam, type));
     }
 
-    // 특정 사원의 모든 알림을 가져옴
+    // 특정 사원의 모든 알림을 최신순으로 가져옴
     @Override
     public List<Notification> getAllNotifications(Long empNo) {
-        return getItemsByEmpNo(empNo, this::getAllItemsByEmpNo);
+        return getItemsByEmpNo(empNo, this::getAllItemsByEmpNo).stream()
+                .sorted(Comparator.comparing(Notification::getNotificationDate).reversed()) // 최신순으로 정렬
+                .collect(Collectors.toList());
     }
 
     // 특정 사원의 모든 알림을 삭제함
