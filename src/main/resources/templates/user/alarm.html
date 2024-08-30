@@ -384,7 +384,7 @@
                             <!-- ALL 탭 내용 -->
                             <div aria-labelledby="all-tab" class="tab-pane fade show active" id="all" role="tabpanel">
                                 <!-- 시스템 알림 -->
-                                <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:each="systemNotification : ${systemNotifications}">
+                                <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:classappend="${systemNotification.isRead ? 'read' : 'unread'}" th:each="systemNotification : ${systemNotifications}">
                                     <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
                                     <p th:text="${systemNotification.systemTitle}"></p>
                                     <hr>
@@ -519,9 +519,7 @@
                         </div>
                         <!--------------- 시스템알림  목록 ------------------------>
                         <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
-                            <div class="alert alert-dismissible fade show" role="alert"
-                                 th:data-category="${systemNotification.systemCategory}"
-                                 th:each="systemNotification : ${systemNotifications}">
+                            <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:classappend="${systemNotification.isRead ? 'read' : 'unread'}" th:each="systemNotification : ${systemNotifications}">
                                 <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
                                 <p th:text="${systemNotification.systemTitle}"></p>
                                 <hr>

@@ -33,5 +33,7 @@ public class SystemNotification {
     @Column(name = "system_upload_date")
     private LocalDateTime systemUploadDate;
 
+    @Column(name = "is_read")
+    private boolean isRead = false;
 
 }

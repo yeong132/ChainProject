@@ -34,7 +34,7 @@ public class UserController {
     private final EmployeeService employeeService;
 
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService,  EmployeeService employeeService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService, EmployeeService employeeService) {
         this.favoriteQnaService = favoriteQnaService;
         this.qnaService = qnaService;
         this.commentService = commentService;
@@ -46,16 +46,13 @@ public class UserController {
     // 환경설정에서 알람 온오프
     @PostMapping("/update-notification-setting")
     public ResponseEntity<?> updateNotificationSetting(@RequestBody Map<String, Object> payload) {
-        // 세션에서 empNo 가져오기
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
         Long empNo = (Long) session.getAttribute("empNo");
 
-        // JSON에서 notificationType과 enabled 값을 추출
         String notificationType = (String) payload.get("notificationType");
         Boolean enabled = (Boolean) payload.get("enabled");
 
-        // 서비스 호출
         notificationService.updateNotificationSettingByType(empNo, notificationType, enabled);
 
         return ResponseEntity.ok().build();
@@ -65,10 +62,10 @@ public class UserController {
     @GetMapping("/qna/detail/{qnaNo}")
     public String detailQna(@PathVariable Long qnaNo, Model model) {
         QnaDTO qna = qnaService.getQnaById(qnaNo);
-        List<CommentDTO> comments = commentService.getCommentsByQnaNo(qnaNo); // 댓글 조회
+        List<CommentDTO> comments = commentService.getCommentsByQnaNo(qnaNo);
         model.addAttribute("qna", qna);
-        model.addAttribute("comments", comments); // 댓글 리스트 추가
-        return "user/qaDetail"; // Q&A 상세 페이지로 이동
+        model.addAttribute("comments", comments);
+        return "user/qaDetail";
     }
 
     // 마이페이지로 이동
@@ -81,11 +78,10 @@ public class UserController {
     @GetMapping("/setting")
     public String userSetting(HttpSession session, Model model) {
         Long empNo = (Long) session.getAttribute("empNo");
-        // 세션에서 empNo가 없으면 로그인 페이지로 리다이렉트
         if (empNo == null) {
             return "redirect:/login";
         }
-        // empNo로 EmployeeDTO 객체를 가져와서 모델에 추가
+
         EmployeeDTO employee = employeeService.getEmployeeById(empNo);
         model.addAttribute("employee", employee);
 
@@ -105,25 +101,20 @@ public class UserController {
 
         Long empNo = (Long) session.getAttribute("empNo");
 
-        // 기존 사원 정보 가져오기
         EmployeeDTO existingEmployee = employeeService.getEmployeeById(empNo);
 
-        // 사용자 입력값으로 기존 사원 정보 업데이트
         existingEmployee.setLastName(lastName);
         existingEmployee.setFirstName(firstName);
         existingEmployee.setAddr(address);
         existingEmployee.setPhoneNum(phone);
         existingEmployee.setEmail(email);
 
-        // 사원 정보 업데이트
         employeeService.updateEmployee(empNo, existingEmployee);
 
-        // 업데이트된 정보를 모델에 다시 저장하여 페이지에 반영
         model.addAttribute("employee", existingEmployee);
 
         return "redirect:/user/setting";
     }
-
 
     // Q&A 및 FAQ 목록을 가져와서 Q&A 페이지로 이동
     @GetMapping("/Q&A")
@@ -131,66 +122,64 @@ public class UserController {
         List<QnaDTO> qnaList = qnaService.getAllQnas();
         List<FavoriteQnaDTO> faqList = favoriteQnaService.getAllFAQs();
 
-        // qnaUploadDate를 기준으로 최신순으로 정렬
         qnaList.sort(Comparator.comparing(QnaDTO::getQnaUploadDate).reversed());
-//        faqList.sort(Comparator.comparing(FavoriteQnaDTO::getFaqCreatedDate).reversed());
 
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("faqList", faqList);
         return "user/Q&A";
     }
 
-    // 새로운 FAQ(자주 묻는 질문) 등록
+    // 새로운 FAQ 등록
     @PostMapping("/faq/add")
     public String registerFAQ(@RequestParam String faqName, @RequestParam String faqContent) {
         FavoriteQnaRequestDTO requestDTO = new FavoriteQnaRequestDTO();
         requestDTO.setFaqName(faqName);
         requestDTO.setFaqContent(faqContent);
         favoriteQnaService.createFAQ(requestDTO);
-        return "redirect:/user/Q&A"; // 등록 후 Q&A 페이지로 리다이렉트
+        return "redirect:/user/Q&A";
     }
 
-    // 기존 FAQ(자주 묻는 질문) 수정
+    // 기존 FAQ 수정
     @PostMapping("/faq/edit")
     public String editFaq(@RequestParam("faqNo") Long faqNo, @RequestParam("faqName") String faqName, @RequestParam("faqContent") String faqContent) {
         favoriteQnaService.updateFaq(faqNo, faqName, faqContent);
-        return "redirect:/user/Q&A"; // 수정 후 Q&A 페이지로 리다이렉트
+        return "redirect:/user/Q&A";
     }
 
-    // FAQ(자주 묻는 질문) 삭제
+    // FAQ 삭제
     @PostMapping("/faq/delete")
     public String deleteFaq(@RequestParam("faqNo") Long faqNo) {
         favoriteQnaService.deleteFaq(faqNo);
-        return "redirect:/user/Q&A"; // 삭제 후 Q&A 페이지로 리다이렉트
+        return "redirect:/user/Q&A";
     }
 
     // Q&A 질문 등록 페이지로 이동
     @GetMapping("/qna/register")
     public String showQnaRegisterPage(Model model) {
         model.addAttribute("qnaRequestDTO", new QnaRequestDTO());
-        return "user/qaRegister"; // Q&A 등록 페이지로 이동
+        return "user/qaRegister";
     }
 
     // Q&A 질문 등록 처리
     @PostMapping("/qna/register")
     public String registerQna(@ModelAttribute QnaRequestDTO qnaRequestDTO) {
         QnaDTO createdQna = qnaService.createQna(qnaRequestDTO);
-        return "redirect:/user/qna/detail/" + createdQna.getQnaNo(); // 등록 후 해당 Q&A 상세 페이지로 리다이렉트
+        return "redirect:/user/qna/detail/" + createdQna.getQnaNo();
     }
 
-    // Q&A 수정 페이지로 이동 (수정 조회)
+    // Q&A 수정 페이지로 이동
     @GetMapping("/qna/edit/{qnaNo}")
     public String editQnaPage(@PathVariable Long qnaNo, Model model) {
         QnaDTO qna = qnaService.getQnaById(qnaNo);
         model.addAttribute("qna", qna);
-        return "user/qaModify"; // 수정 페이지로 이동
+        return "user/qaModify";
     }
 
     // Q&A 수정 처리
     @PostMapping("/qna/edit/{qnaNo}")
     public String updateQna(@PathVariable Long qnaNo, @ModelAttribute QnaRequestDTO qnaRequestDTO) {
         qnaService.updateQna(qnaNo, qnaRequestDTO);
-        return "redirect:/user/qna/detail/" + qnaNo; // 수정 후 해당 Q&A 상세 페이지로 리다이렉트
+        return "redirect:/user/qna/detail/" + qnaNo;
     }
 
     // Q&A 삭제 처리
@@ -198,11 +187,8 @@ public class UserController {
     @ResponseBody
     public String deleteQna(@PathVariable Long qnaNo) {
         qnaService.deleteQna(qnaNo);
-        return "redirect:/user/Q&A"; // 삭제 후 Q&A 페이지로 리다이렉트
+        return "redirect:/user/Q&A";
     }
-
-
-
 
     // 시스템 알림 작성 처리
     @PostMapping("/systemNotification")
@@ -216,70 +202,66 @@ public class UserController {
         systemNotification.setSystemTitle(systemTitle);
         systemNotification.setSystemContent(systemContent);
         systemNotification.setSystemUploadDate(LocalDateTime.now());
+        systemNotification.setRead(false);
 
         systemNotificationService.saveSystemNotification(systemNotification);
-        return "redirect:/user/alarm"; // 작성 후 알림 페이지로 리다이렉트
+        return "redirect:/user/alarm";
     }
 
     // 알림 페이지로 이동
     @GetMapping("/alarm")
     public String userAlarm(Model model) {
-        // 세션에서 사원번호(empNo) 가져오기
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
-        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+        Long empNo = (Long) session.getAttribute("empNo");
 
-        // 모든 알림과 프로젝트 알림을 각각 가져옵니다.
         List<Notification> allNotifications = notificationService.getAllNotifications(empNo);
         List<Notification> projectNotifications = notificationService.getNotificationsByType(empNo, "프로젝트");
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
         List<Notification> chartNotifications = notificationService.getNotificationsByType(empNo, "차트");
-        // 시스템 알림도 가져옵니다.
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
 
-        // 모든 알림 리스트를 최신순으로 정렬합니다.
         allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
-        projectNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
-        noticeNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
-        reportNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
-        chartNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
-
         systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
 
-        // 모든 알림에 시스템 알림을 추가합니다.
-        model.addAttribute("allNotifications", allNotifications);
-        model.addAttribute("projectNotifications", projectNotifications);
-        model.addAttribute("noticeNotifications", noticeNotifications);
-        model.addAttribute("reportNotifications", reportNotifications);
-        model.addAttribute("chartNotifications", chartNotifications);
-        model.addAttribute("systemNotifications", systemNotifications);
+        model.addAttribute("allNotifications", allNotifications != null ? allNotifications : List.of());
+        model.addAttribute("projectNotifications", projectNotifications != null ? projectNotifications : List.of());
+        model.addAttribute("noticeNotifications", noticeNotifications != null ? noticeNotifications : List.of());
+        model.addAttribute("reportNotifications", reportNotifications != null ? reportNotifications : List.of());
+        model.addAttribute("chartNotifications", chartNotifications != null ? chartNotifications : List.of());
+        model.addAttribute("systemNotifications", systemNotifications != null ? systemNotifications : List.of());
+
         return "user/alarm";
     }
 
     // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트
-    @GetMapping("/alarm/read/{notificationNo}")
+    @GetMapping("/alarm/read/notification/{notificationNo}")
     public String readNotificationAndRedirect(@PathVariable Long notificationNo) {
         Notification notification = notificationService.getNotificationById(notificationNo);
         notificationService.markAsRead(notificationNo);
 
-        // 리다이렉트 URL을 동적으로 가져옴
         String redirectUrl = notification.getRedirectUrl();
         return "redirect:" + redirectUrl;
     }
 
+    // 시스템 알림 클릭 시 읽음 상태로 변경
+    @GetMapping("/alarm/read/system/{systemNo}")
+    public String readSystemAndRedirect(@PathVariable Long systemNo) {
+        SystemNotification systemNotification = systemNotificationService.getSystemNotificationById(systemNo);
+        systemNotificationService.markAsReadSystem(systemNo);
+
+        return "redirect:/user/alarm";
+    }
 
     // 알림 전체 삭제
     @PostMapping("/alarm/deleteAll")
     public String deleteAllNotifications() {
-        // 세션에서 사원번호(empNo) 가져오기
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
-        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+        Long empNo = (Long) session.getAttribute("empNo");
 
-        // 일반 알림 삭제
         notificationService.deleteAllNotifications(empNo);
-        // 시스템 알림 삭제
         systemNotificationService.deleteAllSystemNotifications();
 
         return "redirect:/user/alarm";
@@ -295,17 +277,14 @@ public class UserController {
     // 읽은 알림만 삭제
     @PostMapping("/alarm/deleteRead")
     public String deleteReadNotifications() {
-        // 세션에서 사원번호(empNo) 가져오기
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession();
-        Long empNo = (Long) session.getAttribute("empNo");  // 세션에 저장된 사원번호 가져오기
+        Long empNo = (Long) session.getAttribute("empNo");
 
-        // 읽은 알림 삭제
         notificationService.deleteReadNotifications(empNo);
 
         return "redirect:/user/alarm";
     }
-
 
     // 개별 시스템 알림 삭제
     @PostMapping("/systemNotification/delete/{systemNo}")
@@ -313,5 +292,4 @@ public class UserController {
         systemNotificationService.deleteSystemNotification(systemNo);
         return "redirect:/user/alarm";
     }
-
 }

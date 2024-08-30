@@ -12,5 +12,6 @@ public class SystemNotificationRequestDTO {
     private String systemTitle;
     private String systemContent;
     private LocalDate systemUploadDate;
+    private boolean isRead;
 
 }

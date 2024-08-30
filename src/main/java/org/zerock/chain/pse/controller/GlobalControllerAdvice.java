@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.zerock.chain.pse.model.Notification;
+import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.service.NotificationService;
+import org.zerock.chain.pse.service.SystemNotificationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,9 @@ public class GlobalControllerAdvice {
 
     @Autowired  // NotificationService를 주입받아 사용
     private NotificationService notificationService;
+
+    @Autowired  // SystemNotificationService를 주입받아 사용
+    private SystemNotificationService systemNotificationService;
 
     @ModelAttribute("allNotifications")  // "allNotifications"라는 이름으로 모델 데이터를 설정
     public List<Notification> populateNotifications(Authentication authentication) {
@@ -35,6 +40,13 @@ public class GlobalControllerAdvice {
         // 인증되지 않았거나 사원번호가 없는 경우 빈 리스트 반환
         return new ArrayList<>();  // 인증 실패 시 또는 사원번호가 없을 때 빈 리스트 반환
     }
+
+    @ModelAttribute("systemNotifications")  // "systemNotifications"라는 이름으로 모델 데이터를 설정
+    public List<SystemNotification> populateSystemNotifications() {
+        // 모든 시스템 알림을 가져와서 반환
+        return systemNotificationService.getAllSystemNotifications();
+    }
+
     @ModelAttribute("firstName")
     public String populateFirstName(HttpSession session) {
         return (String) session.getAttribute("firstName");
@@ -49,5 +61,4 @@ public class GlobalControllerAdvice {
     public String populateRankName(HttpSession session) {
         return (String) session.getAttribute("rankName");
     }
-
 }
