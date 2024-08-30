@@ -469,15 +469,26 @@ public class EmailController {
     public String deleteMessagePermanently(@PathVariable String messageId, RedirectAttributes redirectAttributes) {
         log.debug("deleteMessagePermanently invoked with messageId: {}", messageId);
 
-        log.info("deleteMessagePermanently called with messageId: {}", messageId);
+        if (messageId == null || messageId.isEmpty()) {
+            log.error("Invalid messageId: {}", messageId);
+            redirectAttributes.addFlashAttribute("error", "Invalid message ID.");
+            return "redirect:/mail/trash";
+        }
+
         try {
+            log.info("Attempting to delete message with ID: {}", messageId);
             gmailService.deleteMessagePermanently("me", messageId);
             redirectAttributes.addFlashAttribute("success", "Message permanently deleted successfully!");
+            log.info("Message with ID: {} deleted successfully", messageId);
         } catch (IOException e) {
-            log.error("Error permanently deleting message", e);
+            log.error("IOException while deleting message with ID: {}. Error: {}", messageId, e.getMessage());
             redirectAttributes.addFlashAttribute("error", "Error permanently deleting message: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while deleting message with ID: {}. Error: {}", messageId, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Unexpected error occurred: " + e.getMessage());
         }
-        return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
+
+        return "redirect:/mail/trash";  // Redirect to the trash page
     }
 
 

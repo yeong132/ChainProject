@@ -788,7 +788,8 @@
         form.submit();
     }
 </script>
-<script>
+<script th:inline="javascript">
+    // 영구 삭제 처리
     function deletePermanently(messageId, returnUrl) {
         if (!messageId) {
             console.error('Message ID is missing.');
@@ -814,6 +815,31 @@
                 }
             });
         }
+    }
+
+    // 복구 처리
+    function restoreMessage(messageId, returnUrl) {
+        if (!messageId) {
+            console.error('Message ID is missing.');
+            return;
+        }
+
+        $.ajax({
+            url: '/mail/restore/' + encodeURIComponent(messageId),
+            type: 'POST',
+            success: function (response) {
+                alert('이메일이 복구되었습니다.');
+                if (returnUrl) {
+                    window.location.href = returnUrl;
+                } else {
+                    window.location.href = "/mail/inbox"; // 기본적으로 받은메일함으로 리다이렉트
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to restore email:', error);
+                alert('이메일 복구에 실패했습니다: ' + error);
+            }
+        });
     }
 
 
