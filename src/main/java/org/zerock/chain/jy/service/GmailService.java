@@ -540,7 +540,13 @@ public class GmailService {
     public void deleteMessagePermanently(String userId, String messageId) throws IOException {
         Gmail service = getInstance();
         log.info("Permanently deleting message with ID: {}", messageId);
+
+        // 여기에서 URL을 생성하여 사용할 수 있습니다.
+        String url = "https://gmail.googleapis.com/gmail/v1/users/" + userId + "/messages/" + messageId;
+        log.debug("Constructed URL for delete request: {}", url);
+
         try {
+            // Gmail API 호출
             service.users().messages().delete(userId, messageId).execute();
             log.info("Message permanently deleted successfully with ID: {}", messageId);
         } catch (IOException e) {

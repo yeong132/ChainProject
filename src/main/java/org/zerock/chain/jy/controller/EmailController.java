@@ -351,6 +351,7 @@ public class EmailController {
 
 
 
+
     // 이메일 읽음 상태를 토글하거나 특정 상태로 설정하는 메서드
     @PostMapping("/toggleReadStatus")
     public ResponseEntity<String> toggleReadStatus(
@@ -466,6 +467,8 @@ public class EmailController {
     // 개별 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/delete/{messageId}")
     public String deleteMessagePermanently(@PathVariable String messageId, RedirectAttributes redirectAttributes) {
+        log.debug("deleteMessagePermanently invoked with messageId: {}", messageId);
+
         log.info("deleteMessagePermanently called with messageId: {}", messageId);
         try {
             gmailService.deleteMessagePermanently("me", messageId);
@@ -476,6 +479,7 @@ public class EmailController {
         }
         return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
     }
+
 
     // 선택된 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/deleteSelected")

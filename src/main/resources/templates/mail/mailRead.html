@@ -475,7 +475,7 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
-<!-- main  시작 -->
+<!-- 메인 몸통 -->
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>메일 읽기</h1>
@@ -511,12 +511,14 @@
                                             th:data-message-id="${message.id}"
                                             th:data-return-url="${returnUrl}">읽지않음으로 표시
                                     </button>
-                                    <button id="backToList" class="btn btn-primary mt-2" th:data-return-url="${returnUrl}" onclick="location.href='${returnUrl}'">목록</button>
+                                    <button id="backToList" class="btn btn-primary mt-2"
+                                            th:data-return-url="${returnUrl}" onclick="location.href='${returnUrl}'">목록
+                                    </button>
 
                                 </div>
                                 <div th:if="${isInTrash}">
-                                    <button id="deleteMailBtn" class="btn btn-danger">영구 삭제하기</button>
-                                    <button id="restoreMailBtn" class="btn btn-success">메일 복구하기</button>
+                                    <button type="button" class="btn btn-custom-danger mt-2" onclick="deletePermanently('${message.id}', '${returnUrl}')">영구삭제</button>
+                                    <button type="button" class="btn btn-primary mt-2" onclick="restoreMessage('${message.id}', '${returnUrl}')">복구하기</button>
                                     <button class="btn btn-primary mt-2"
                                             onclick="location.href='/mail/trash'">휴지통으로 돌아가기
                                     </button>
@@ -663,8 +665,6 @@
     });
 
 
-
-
     function showMoveToTrashModal(buttonElement) {
         const messageId = buttonElement.getAttribute('data-message-id');
         const returnUrl = buttonElement.getAttribute('data-return-url');
@@ -787,52 +787,36 @@
         document.body.appendChild(form);
         form.submit();
     }
-
-    document.getElementById('restoreMailBtn').addEventListener('click', function () {
-        console.log('Restore Mail Button Clicked');
-        if (!messageId || messageId === 'default_value') {
-            console.error('Message ID is missing or not properly bound');
+</script>
+<script>
+    function deletePermanently(messageId, returnUrl) {
+        if (!messageId) {
+            console.error('Message ID is missing.');
             return;
         }
 
-        if (confirm('이 메일을 복구하시겠습니까?')) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/mail/trash/restore');
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    alert('메일이 복구되었습니다.');
-                    window.location.href = '/mail/inbox'; // 복구 후 받은메일함으로 이동
-                } else {
-                    alert('복구 실패: ' + xhr.responseText);
-                }
-            };
-            xhr.send(JSON.stringify({messageId: messageId}));
-        }
-    });
-
-    document.getElementById('deleteMailBtn').addEventListener('click', function () {
-        console.log('Delete Mail Button Clicked');
-        if (!messageId || messageId === 'default_value') {
-            console.error('Message ID is missing or not properly bound');
-            return;
-        }
-
+        // 확인 창
         if (confirm('이 메일을 영구 삭제하시겠습니까?')) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/mail/trash/delete');
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    alert('메일이 영구 삭제되었습니다.');
-                    window.location.href = '/mail/trash'; // 삭제 후 휴지통으로 이동
-                } else {
-                    alert('삭제 실패: ' + xhr.responseText);
+            $.ajax({
+                url: '/mail/trash/delete/' + encodeURIComponent(messageId),
+                type: 'POST',
+                success: function (response) {
+                    alert('이메일이 영구적으로 삭제되었습니다.');
+                    if (returnUrl) {
+                        window.location.href = returnUrl;
+                    } else {
+                        window.location.href = "/mail/trash"; // 기본적으로 휴지통 페이지로 리다이렉트
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to delete email permanently:', error);
+                    alert('이메일 삭제에 실패했습니다: ' + error);
                 }
-            };
-            xhr.send(JSON.stringify({messageId: messageId}));
+            });
         }
-    });
+    }
+
+
 </script>
 
 
