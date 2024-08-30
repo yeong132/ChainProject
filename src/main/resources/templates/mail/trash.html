@@ -364,8 +364,10 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#" id="selectAllBtn">전체선택</a>
                                                 <a class="dropdown-item" href="#" id="deselectAllBtn">선택안함</a>
-                                                <a class="dropdown-item text-danger" href="#" id="deleteSelected">선택삭제</a>
-                                                <a class="dropdown-item text-success" href="#" id="restoreSelected">선택 복구하기</a>
+                                                <a class="dropdown-item text-danger" href="#"
+                                                   id="deleteSelected">선택삭제</a>
+                                                <a class="dropdown-item text-success" href="#" id="restoreSelected">선택
+                                                    복구하기</a>
                                             </div>
                                         </div>
                                     </div>
@@ -377,12 +379,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}" onclick="rowClick(this)"> <!-- rowClick 함수 호출 -->
+                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}"
+                                onclick="rowClick(this)"> <!-- rowClick 함수 호출 -->
                                 <td>
                                     <div class="checkbox-star-container">
-                                        <input type="checkbox" class="form-check-input trash-checkbox" th:value="${message.id}" onclick="event.stopPropagation();">
+                                        <input type="checkbox" class="form-check-input trash-checkbox"
+                                               th:value="${message.id}" onclick="event.stopPropagation();">
                                         <i class="bi bi-trash-fill" style="margin-right: 5px;"></i>
-                                        <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'" style="margin-right: 10px;"></i>
+                                        <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'"
+                                           style="margin-right: 10px;"></i>
                                     </div>
                                 </td>
                                 <td th:text="${message.from}">From</td>
@@ -390,7 +395,8 @@
                                 <td th:text="${message.date}">Date</td>
                                 <td>
                                     <!-- 개별 삭제 버튼 -->
-                                    <form th:action="@{/mail/trash/delete/{messageId}(messageId=${message.id})}" method="post" onsubmit="return confirm('이 메시지를 영구 삭제하시겠습니까?');">
+                                    <form th:action="@{/mail/trash/delete/{messageId}(messageId=${message.id})}"
+                                          method="post" onsubmit="return confirm('이 메시지를 영구 삭제하시겠습니까?');">
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                 </td>
@@ -453,10 +459,19 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    function rowClick(element) {
-        const messageId = element.getAttribute('data-message-id');
-        window.location.href = '/mail/view?messageId=' + encodeURIComponent(messageId);
+    function rowClick(row) {
+        const returnUrl = window.location.pathname + window.location.search;
+        const messageId = row.getAttribute('data-message-id');
+
+        // URL에 불필요한 문자가 포함되지 않도록 체크
+        const targetUrl = `/mail/view?messageId=${messageId}&returnUrl=${encodeURIComponent(returnUrl)}`;
+
+        console.log("Navigating to URL:", targetUrl); // URL 확인
+        window.location.href = targetUrl;
     }
+
+
+
 
     // 전체 선택 체크박스 기능 구현
     document.getElementById('selectAll').addEventListener('change', function () {

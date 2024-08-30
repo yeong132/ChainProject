@@ -495,32 +495,30 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
-                                <div>
-                                    <button type="button" class="btn btn-primary  me-2 mt-2"
+                                <div th:if="${!isInTrash}">
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
                                             onclick="handleReplyForward('forward')">전달
                                     </button>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-primary  me-2 mt-2"
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
                                             onclick="handleReplyForward('reply')">답장
                                     </button>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary  me-2 mt-2"
+                                    <button class="btn btn-primary me-2 mt-2"
                                             th:data-message-id="${message.id}"
                                             th:data-return-url="${returnUrl}"
                                             onclick="showMoveToTrashModal(this)">삭제
                                     </button>
-                                </div>
-                                <div>
-                                    <button id="markUnread" class="btn btn-primary  me-2 mt-2"
+                                    <button id="markUnread" class="btn btn-primary me-2 mt-2"
                                             th:data-message-id="${message.id}"
                                             th:data-return-url="${returnUrl}">읽지않음으로 표시
                                     </button>
+                                    <button id="backToList" class="btn btn-primary mt-2" th:data-return-url="${returnUrl}" onclick="location.href='${returnUrl}'">목록</button>
+
                                 </div>
-                                <div>
-                                    <button id="backToList" class="btn btn-primary  mt-2"
-                                            onclick="location.href='${returnUrl}'">목록
+                                <div th:if="${isInTrash}">
+                                    <button id="deleteMailBtn" class="btn btn-danger">영구 삭제하기</button>
+                                    <button id="restoreMailBtn" class="btn btn-success">메일 복구하기</button>
+                                    <button class="btn btn-primary mt-2"
+                                            onclick="location.href='/mail/trash'">휴지통으로 돌아가기
                                     </button>
                                 </div>
                             </div>
@@ -615,7 +613,14 @@
 <!-- 채팅창 끝-->
 
 <script th:inline="javascript">
-    const messageId = /*[[${message.id}]]*/ 'default_value'; // message.id 값을 가져옵니다.
+    // URL에서 messageId 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    let messageId = urlParams.get('messageId');
+
+    // messageId가 URL에서 가져오지 못한 경우, 템플릿 엔진에서 가져오기
+    if (!messageId || messageId === 'default_value') {
+        messageId = /*[[${message.id}]]*/ 'default_value';
+    }
 
     document.getElementById('markUnread').addEventListener('click', function () {
         const messageId = this.getAttribute('data-message-id');
@@ -649,14 +654,15 @@
 
     document.getElementById('backToList').addEventListener('click', function (event) {
         event.preventDefault();
-        const returnUrl = this.getAttribute('href');
-
+        const returnUrl = this.getAttribute('data-return-url');
         if (returnUrl && returnUrl !== 'null') {
             window.location.href = returnUrl;
         } else {
-            window.location.href = "/mail/inbox";  // 기본적으로 수신메일함으로 리다이렉트
+            window.location.href = "/mail/inbox";
         }
     });
+
+
 
 
     function showMoveToTrashModal(buttonElement) {
@@ -695,7 +701,6 @@
         });
     }
 
-
     function toggleStar(element) {
         const messageId = element.getAttribute('data-message-id');
         const isStarred = element.classList.contains('bi-star-fill');
@@ -724,7 +729,7 @@
         });
     }
 
-    //답장,전달 처리하는 함수
+    // 답장, 전달 처리하는 함수
     function handleReplyForward(action) {
         const emailData = {
             sender: /*[[${message.from}]]*/,
@@ -737,16 +742,16 @@
 
         let newSubject = action === 'reply' ? `RE: ${emailData.subject}` : `FW: ${emailData.subject}`;
         let newMessageContent = `
-    <br><br>
-    -----Original Message-----<br>
-    From: ${emailData.sender}<br>
-    To: ${emailData.recipient}<br>
-    Cc: ${emailData.cc}<br>
-    Sent: ${emailData.sentDate}<br>
-    Subject: ${emailData.subject}<br>
-    <br>
-    ${emailData.messageContent}
-    `;
+            <br><br>
+            -----Original Message-----<br>
+            From: ${emailData.sender}<br>
+            To: ${emailData.recipient}<br>
+            Cc: ${emailData.cc}<br>
+            Sent: ${emailData.sentDate}<br>
+            Subject: ${emailData.subject}<br>
+            <br>
+            ${emailData.messageContent}
+        `;
 
         let recipientEmail = action === 'reply' ? emailData.sender : '';
 
@@ -783,7 +788,51 @@
         form.submit();
     }
 
+    document.getElementById('restoreMailBtn').addEventListener('click', function () {
+        console.log('Restore Mail Button Clicked');
+        if (!messageId || messageId === 'default_value') {
+            console.error('Message ID is missing or not properly bound');
+            return;
+        }
 
+        if (confirm('이 메일을 복구하시겠습니까?')) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/mail/trash/restore');
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('메일이 복구되었습니다.');
+                    window.location.href = '/mail/inbox'; // 복구 후 받은메일함으로 이동
+                } else {
+                    alert('복구 실패: ' + xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify({messageId: messageId}));
+        }
+    });
+
+    document.getElementById('deleteMailBtn').addEventListener('click', function () {
+        console.log('Delete Mail Button Clicked');
+        if (!messageId || messageId === 'default_value') {
+            console.error('Message ID is missing or not properly bound');
+            return;
+        }
+
+        if (confirm('이 메일을 영구 삭제하시겠습니까?')) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/mail/trash/delete');
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('메일이 영구 삭제되었습니다.');
+                    window.location.href = '/mail/trash'; // 삭제 후 휴지통으로 이동
+                } else {
+                    alert('삭제 실패: ' + xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify({messageId: messageId}));
+        }
+    });
 </script>
 
 

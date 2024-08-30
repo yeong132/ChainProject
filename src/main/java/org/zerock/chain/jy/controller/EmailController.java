@@ -273,7 +273,9 @@ public class EmailController {
 
     // 이메일을 읽고 본문(상세 내용)을 표시하는 메서드
     @GetMapping("/view")
-    public String viewEmail(@RequestParam("messageId") String messageId, Model model, HttpServletRequest request) {
+    public String viewEmail(@RequestParam("messageId") String messageId,
+                            @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                            Model model, HttpServletRequest request) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
             // 이메일을 가져옴
@@ -312,18 +314,30 @@ public class EmailController {
             boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
             messageDTO.setStarred(isStarred);
 
+            // 이메일이 휴지통(TRASH) 라벨이 있는지 확인
+            boolean isInTrash = message.getLabelIds() != null && message.getLabelIds().contains("TRASH");
+
             log.info("Final message content: {}", messageContent);
 
             model.addAttribute("message", messageDTO);
             model.addAttribute("messageContent", messageContent);
             model.addAttribute("messageId", messageId);
+            model.addAttribute("isInTrash", isInTrash); // 휴지통 여부를 모델에 추가
 
-            // Referer 헤더에서 returnUrl을 설정
-            String referer = request.getHeader("Referer");
-            if (referer != null && !referer.isEmpty()) {
-                model.addAttribute("returnUrl", referer);
+            // returnUrl 처리
+            if (returnUrl != null && !returnUrl.isEmpty()) {
+                log.info("returnUrl provided: {}", returnUrl);
+                model.addAttribute("returnUrl", returnUrl);
             } else {
-                model.addAttribute("returnUrl", "/mail/inbox"); // 기본적으로 수신 메일함으로 설정
+                // Referer 헤더를 사용하거나 기본적으로 수신 메일함으로 설정
+                String referer = request.getHeader("Referer");
+                if (referer != null && !referer.isEmpty()) {
+                    log.info("Referer found: {}", referer);
+                    model.addAttribute("returnUrl", referer);
+                } else {
+                    log.info("Referer not found, setting default returnUrl to /mail/inbox");
+                    model.addAttribute("returnUrl", "/mail/inbox");
+                }
             }
 
         } catch (IOException e) {
@@ -333,6 +347,7 @@ public class EmailController {
         }
         return "mail/mailRead";
     }
+
 
 
 
@@ -423,7 +438,7 @@ public class EmailController {
         }
     }
 
-    // 휴지통에서 메일 복구하기 요청 처리 메서드
+    // 휴지통에서 메일 복구 요청 처리 메서드
     @PostMapping("/trash/restoreSelected")
     public ResponseEntity<String> restoreSelectedMessages(@RequestBody List<String> messageIds) {
         try {
