@@ -1,10 +1,9 @@
 // 1. main.js : 새로고침시, 초기 차트 설정 및 라디오 갱신
 document.addEventListener('DOMContentLoaded', function () {
-    // ChartModuleHome 1번 값으로 초기 차트 설정
+    // 초기 차트 설정 및 연도 선택기 이벤트 리스너 설정 추가
     const initialChart = ChartModuleHome.initChart(); // 초기 차트 데이터 제공
     initialChart.render();
 
-    // 서버에서 차트 및 프로젝트 데이터를 가져와서 적용
     $.ajax({
         url: '/chart/data',
         method: 'GET',
@@ -12,15 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
         success: function (response) {
             console.log('서버로부터 받은 데이터:', response);
 
-            // 서버로부터 받은 데이터에서 차트와 프로젝트 데이터를 분리
             const chartData = response.charts;
             const projectData = response.projects;
 
+            // 연도 선택기 초기화
+            populateYearSelector('year-selector', chartData);
+
             // 페이지 로드 시 home 1번 라디오 버튼의 값으로 차트를 업데이트
-            ChartModuleHome.updateChart(initialChart, '1', chartData, projectData);
+            ChartModuleHome.updateChart(initialChart, '1', new Date().getFullYear(), chartData, projectData);
 
             // 차트 라디오 버튼 이벤트 리스너 설정
             EventListenerModule.attachChartRadioListeners(initialChart, chartData, projectData);
+
+            // 연도 선택기 이벤트 리스너 설정
+            EventListenerModule.attachYearSelectorListener(initialChart, chartData, projectData);
         },
         error: function (xhr, status, error) {
             console.error('차트 데이터를 가져오는데 실패했습니다:', error);
@@ -29,8 +33,30 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+// 연도 선택기를 초기화하는 함수
+function populateYearSelector(selectorId, chartData) {
+    const years = new Set();
+    chartData.forEach(entity => {
+        const year = new Date(entity.chartStartDate).getFullYear();
+        years.add(year);
+    });
+
+    const selector = document.getElementById(selectorId);
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        selector.appendChild(option);
+    });
+
+    // 기본값을 현재 연도로 설정
+    const currentYear = new Date().getFullYear();
+    if (years.has(currentYear)) {
+        selector.value = currentYear;
+    }
+}
+
 // 2. chartModule.js : 라디오 차트 생성 및 업데이트
-// 라디오 1번 2번
 const ChartModuleHome = (function () {
     function initChart() {
         return new ApexCharts(document.querySelector("#barChart"), {
@@ -73,21 +99,22 @@ const ChartModuleHome = (function () {
         });
     }
 
-    function updateChart(chart, category, chartEntities) {
-        if (chartEntities && chartEntities.length > 0) {
+    function updateChart(chart, category, year, chartEntities) {
+        const yearlyData = calculateProgressData(chartEntities, false).yearlyData;
+        const dataForYear = yearlyData[year];
+        if (dataForYear) {
             let newData = [];
             let colors = [];
             let achievedCounts = [];
 
             if (category === '1') {
                 // '부서' 월간 달성률 (누적 달성률)
-                const progressData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '부서'), false);
-                newData = progressData.monthlyData;
-                achievedCounts = progressData.achievedCounts;
+                newData = dataForYear.monthlyData;
+                achievedCounts = dataForYear.achievedCounts;
                 colors = ['#93e6b7']; // 연두색 통일
             } else if (category === '2') {
                 // '부서' 월별 진행률 (각 진행도에 따른 비율 계산)
-                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '부서'));
+                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '부서')).yearlyData[year];
                 newData = distributionData.monthlyData;
                 achievedCounts = distributionData.totalCounts; // 여기서 achievedCounts는 totalCounts로 대체됩니다.
 
@@ -133,7 +160,7 @@ const ChartModuleHome = (function () {
                 }
             });
         } else {
-            console.error('유효하지 않은 데이터: chartEntities가 정의되지 않았거나 비어 있습니다.');
+            console.error('유효하지 않은 데이터: 해당 년도의 데이터가 없습니다.');
         }
     }
 
@@ -142,7 +169,6 @@ const ChartModuleHome = (function () {
         updateChart
     };
 })();
-// 라디오 3번 4번
 const ChartModuleProfile = (function () {
     function initChart() {
         return new ApexCharts(document.querySelector("#barChart"), {
@@ -185,21 +211,22 @@ const ChartModuleProfile = (function () {
         });
     }
 
-    function updateChart(chart, category, chartEntities) {
-        if (chartEntities && chartEntities.length > 0) {
+    function updateChart(chart, category, year, chartEntities) {
+        const yearlyData = calculateProgressData(chartEntities, false).yearlyData;
+        const dataForYear = yearlyData[year];
+        if (dataForYear) {
             let newData = [];
             let colors = [];
             let achievedCounts = [];
 
             if (category === '3') {
                 // '개인' 월간 달성률 (누적 달성률)
-                const progressData = calculateProgressData(chartEntities.filter(entity => entity.chartCategory === '개인'), false);
-                newData = progressData.monthlyData;
-                achievedCounts = progressData.achievedCounts;
+                newData = dataForYear.monthlyData;
+                achievedCounts = dataForYear.achievedCounts;
                 colors = ['#eed348']; // 노란색 통일
             } else if (category === '4') {
                 // '개인' 월별 진행률 (각 진행도에 따른 비율 계산)
-                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '개인'));
+                const distributionData = calculateProgressDistribution(chartEntities.filter(entity => entity.chartCategory === '개인')).yearlyData[year];
                 newData = distributionData.monthlyData;
                 achievedCounts = distributionData.totalCounts; // 여기서 achievedCounts는 totalCounts로 대체됩니다.
 
@@ -245,7 +272,7 @@ const ChartModuleProfile = (function () {
                 }
             });
         } else {
-            console.error('유효하지 않은 데이터: chartEntities가 정의되지 않았거나 비어 있습니다.');
+            console.error('유효하지 않은 데이터: 해당 년도의 데이터가 없습니다.');
         }
     }
 
@@ -257,87 +284,116 @@ const ChartModuleProfile = (function () {
 
 // 3. eventListenerModule.js : 라디오 버튼에 맞는 탭 차트 업데이트
 const EventListenerModule = (function (ChartModuleHome, ChartModuleProfile) {
-    function attachChartRadioListeners(chart, chartEntities) {
+    function attachChartRadioListeners(chart, chartEntities, projectData) {
         document.querySelectorAll('.form-check-input').forEach(input => {
             input.addEventListener('change', event => {
                 const tab = event.target.dataset.tab;
                 const category = event.target.value;
+                const selectedYear = document.querySelector('#year-selector').value; // 연도 선택
 
                 if (tab === 'home') {
-                    ChartModuleHome.updateChart(chart, category, chartEntities);
+                    ChartModuleHome.updateChart(chart, category, selectedYear, chartEntities, projectData);
                 } else if (tab === 'profile') {
-                    ChartModuleProfile.updateChart(chart, category, chartEntities);
+                    ChartModuleProfile.updateChart(chart, category, selectedYear, chartEntities, projectData);
                 }
             });
         });
     }
 
+    function attachYearSelectorListener(chart, chartEntities, projectData) {
+        document.getElementById('year-selector').addEventListener('change', event => {
+            const selectedYear = event.target.value;
+            const activeRadio = document.querySelector('.form-check-input[data-tab].form-check-input:checked');
+            const category = activeRadio ? activeRadio.value : '1'; // 기본값 '1' (home tab의 첫 번째 옵션)
+
+            const tab = activeRadio.dataset.tab;
+
+            if (tab === 'home') {
+                ChartModuleHome.updateChart(chart, category, selectedYear, chartEntities, projectData);
+            } else if (tab === 'profile') {
+                ChartModuleProfile.updateChart(chart, category, selectedYear, chartEntities, projectData);
+            }
+        });
+    }
+
     return {
-        attachChartRadioListeners
+        attachChartRadioListeners,
+        attachYearSelectorListener
     };
 })(ChartModuleHome, ChartModuleProfile);
 
+
 // 4. chartDataCalculation.js : 라디오 차트 계산
 function calculateProgressData(chartEntities, isCumulative) {
-    const monthlyData = Array(12).fill(0);
-    const totalCounts = Array(12).fill(0);
-    const achievedCounts = Array(12).fill(0);
+    const yearlyData = {};
 
     chartEntities.forEach(entity => {
         const startDate = new Date(entity.chartStartDate);
+        const year = startDate.getFullYear();
         const month = startDate.getMonth();
 
-        totalCounts[month] += 1;
+        if (!yearlyData[year]) {
+            yearlyData[year] = {monthlyData: Array(12).fill(0), totalCounts: Array(12).fill(0), achievedCounts: Array(12).fill(0)};
+        }
 
+        yearlyData[year].totalCounts[month] += 1;
         if (entity.noticePinned) {
-            achievedCounts[month] += 1;
+            yearlyData[year].achievedCounts[month] += 1;
+        }
+
+        if (isCumulative) {
+            let cumulativeTotal = 0;
+            let cumulativeAchieved = 0;
+
+            for (let i = 0; i < 12; i++) {
+                cumulativeTotal += yearlyData[year].totalCounts[i];
+                cumulativeAchieved += yearlyData[year].achievedCounts[i];
+                yearlyData[year].monthlyData[i] = cumulativeTotal > 0 ? (cumulativeAchieved / cumulativeTotal) * 100 : 0;
+            }
+        } else {
+            for (let i = 0; i < 12; i++) {
+                yearlyData[year].monthlyData[i] = yearlyData[year].totalCounts[i] > 0 ? (yearlyData[year].achievedCounts[i] / yearlyData[year].totalCounts[i]) * 100 : 0;
+            }
         }
     });
 
-    if (isCumulative) {
-        let cumulativeTotal = 0;
-        let cumulativeAchieved = 0;
-
-        for (let i = 0; i < 12; i++) {
-            cumulativeTotal += totalCounts[i];
-            cumulativeAchieved += achievedCounts[i];
-            monthlyData[i] = cumulativeTotal > 0 ? (cumulativeAchieved / cumulativeTotal) * 100 : 0;
-        }
-    } else {
-        for (let i = 0; i < 12; i++) {
-            monthlyData[i] = totalCounts[i] > 0 ? (achievedCounts[i] / totalCounts[i]) * 100 : 0;
-        }
-    }
-
-    return {monthlyData, achievedCounts};
+    return {yearlyData};
 }
-
 function calculateProgressDistribution(chartEntities) {
-    const monthlyData = Array.from({length: 12}, () => Array(6).fill(0));
-    const totalCounts = Array(12).fill(0);
+    const yearlyData = {};
 
     chartEntities.forEach(entity => {
         const startDate = new Date(entity.chartStartDate);
+        const year = startDate.getFullYear();
         const month = startDate.getMonth(); // 월 인덱스 (0 = January)
 
-        totalCounts[month] += 1; // 각 월의 목표 개수 증가
+        if (!yearlyData[year]) {
+            yearlyData[year] = {monthlyData: Array.from({length: 12}, () => Array(6).fill(0)), totalCounts: Array(12).fill(0)};
+        }
+
+        yearlyData[year].totalCounts[month] += 1; // 각 월의 목표 개수 증가
 
         const progressIndex = Math.floor(entity.chartProgress / 20); // 진행도를 20% 단위로 나누기
         if (progressIndex >= 0 && progressIndex < 6) {
-            monthlyData[month][progressIndex] += 1; // 각 진행도 구간에 목표 추가
+            yearlyData[year].monthlyData[month][progressIndex] += 1; // 각 진행도 구간에 목표 추가
         }
     });
 
-    for (let i = 0; i < 12; i++) {
-        if (totalCounts[i] > 0) {
-            for (let j = 0; j < 6; j++) {
-                monthlyData[i][j] = (monthlyData[i][j] / totalCounts[i]) * 100; // 비율 계산
+    for (const year in yearlyData) {
+        for (let i = 0; i < 12; i++) {
+            if (yearlyData[year].totalCounts[i] > 0) {
+                for (let j = 0; j < 6; j++) {
+                    yearlyData[year].monthlyData[i][j] = (yearlyData[year].monthlyData[i][j] / yearlyData[year].totalCounts[i]) * 100; // 비율 계산
+                }
             }
         }
     }
 
-    return {monthlyData, totalCounts};
+    return {yearlyData};
 }
+
+
+
 
 
 // 5. modalModule.js : 모달 차트 관리 (모달 초기화)
@@ -358,11 +414,6 @@ const ModalModule = (function () {
         showCompareChartModal
     };
 })();
-
-
-
-
-
 
 // 6. 비교 차트 모달
 const GoalComparisonModule = (function () {
@@ -596,12 +647,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-
 // 7. 페이지네이션 관련 변수 및 함수
 let currentPage = 1;
 const itemsPerPage = 5;
-
 // 페이지네이션 초기화
 function initPagination(totalItems) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -620,7 +668,6 @@ function initPagination(totalItems) {
         paginationElement.appendChild(li);
     }
 }
-
 // 목표 목록 로드
 function loadGoals(page) {
     $.ajax({
