@@ -315,14 +315,15 @@
     <section class="section ">
         <div class="row">
 <!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
-            <div class="col-xl-5">
+            <div class="col-xl-8">
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <h5>My 프로필</h5>
 
                         <div class="row mb-3">
                             <div class="col-md-8 col-lg-9">
-                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">
+<!--                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">-->
+                                <i class="bi bi-person-circle" style="font-size: 100px"></i>
                                 <div class="pt-2">
                                     <a class="btn btn-primary btn-sm" href="#" title="Upload new profile image"><i
                                             class="bi bi-upload"></i></a>
@@ -393,55 +394,34 @@
             </div>
 
             <!------------------------------------------------------------------오른쪽 위젯 -------------------------------------------------------------------->
-            <div class="col-xl-7">
+            <div class="col-xl-4">
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">My Setting</h5>
-                        <!------------------------------------------------------- Bordered Tabs--------------------------------------------------------------- -->
-                        <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link w-100  active" data-bs-target="#profile-overview"
-                                        data-bs-toggle="tab">테마 설정
-                                </button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link w-100 " data-bs-target="#profile-settings" data-bs-toggle="tab">
-                                    위젯 설정
-                                </button>
-                            </li>
-                            <li class="nav-item flex-fill" role="presentation">
-                                <button class="nav-link w-100 " data-bs-target="#profile-change-password"
-                                        data-bs-toggle="tab">알림설정
-                                </button>
-                            </li>
-                        </ul>
-                        <div class="tab-content pt-2">
-                            <!-- --------------------------------------------------------테마 설정 ----------------------------------------------------------- -->
-                            <div class="tab-pane fade show active profile-overview " id="profile-overview">
-                                <form style="display: flex; justify-content: center;">
-                                    <div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="1" type="radio">
-                                        <label class="form-check-label" for="1">
-                                            테마1
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="2" type="radio">
-                                        <label class="form-check-label" for="2">
-                                            테마2
-                                        </label>
-                                    </div>
-                                    <div class="form-check" >
-                                        <input checked class="form-check-input" disabled id="3" type="radio">
-                                        <label class="form-check-label" for="3">
-                                            테마3
-                                        </label>
-                                    </div>
-                                    </div>
-                                </form><!-- End settings Form -->
+                        <h5 class="card-title">테마 설정</h5>
+                        <form style="display: flex; justify-content: center;">
+                            <div>
+                                <div class="form-check">
+                                    <input checked class="form-check-input" id="1" type="radio">
+                                    <label class="form-check-label" for="1">
+                                        테마1
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input checked class="form-check-input" id="2" type="radio">
+                                    <label class="form-check-label" for="2">
+                                        테마2
+                                    </label>
+                                </div>
+                                <div class="form-check" >
+                                    <input checked class="form-check-input" disabled id="3" type="radio">
+                                    <label class="form-check-label" for="3">
+                                        테마3
+                                    </label>
+                                </div>
                             </div>
+                        </form>
+                        <!-- End settings Form -->
 
                             <!-- --------------------------------------------------------위젯 설정 --------------------------------------------------------------- -->
                             <div class="tab-pane fade   profile-settings" id="profile-settings">
