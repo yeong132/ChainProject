@@ -31,8 +31,6 @@ public class Project {
     @Column(name = "project_end_date")
     private LocalDate projectEndDate;
 
-    @Column(length = 100, name = "dmp_no")
-    private String dmpNo;
 
     @Column(columnDefinition = "TEXT")
     private String participants;

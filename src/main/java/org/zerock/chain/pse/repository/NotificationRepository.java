@@ -25,4 +25,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying
     @Query("UPDATE Notification n SET n.enabled = :enabled WHERE n.empNo = :empNo AND n.notificationType = :notificationType")
     void updateEnabledByEmpNoAndType(@Param("empNo") Long empNo, @Param("notificationType") String notificationType, @Param("enabled") Boolean enabled);
+
+    // 새로운 메서드: 사원 번호로 읽은(isRead = true) 알림 삭제
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.empNo = :empNo AND n.isRead = true")
+    void deleteByEmpNoAndIsRead(@Param("empNo") Long empNo); // 사원 번호로 읽은 알림 삭제
 }

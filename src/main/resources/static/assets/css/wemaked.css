@@ -1,3 +1,10 @@
+/*알림 읽음 표시 */
+.read {
+    opacity: 0.6; /* 읽은 알림은 흐리게 표시 */
+}
+.unread {
+    font-weight: bold; /* 안 읽은 알림은 굵게 표시 */
+}
 
 /*테이블 내에 임시보관 괄호 표시 */
 .temporary-text {

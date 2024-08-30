@@ -15,7 +15,6 @@ public class ProjectRequestDTO {
     private String projectName;
     private LocalDate projectStartDate;
     private LocalDate projectEndDate;
-    private String dmpNo;
     private String participants;
     private String projectContent;
     private String projectFiles;
