@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.zerock.chain.imjongha.dto.EmployeeDTO;
+import org.zerock.chain.imjongha.service.EmployeeService;
 import org.zerock.chain.pse.dto.*;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
@@ -29,15 +31,16 @@ public class UserController {
     private final CommentService commentService;
     private final NotificationService notificationService;
     private final SystemNotificationService systemNotificationService;
-
+    private final EmployeeService employeeService;
 
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService,  EmployeeService employeeService) {
         this.favoriteQnaService = favoriteQnaService;
         this.qnaService = qnaService;
         this.commentService = commentService;
         this.notificationService = notificationService;
         this.systemNotificationService = systemNotificationService;
+        this.employeeService = employeeService;
     }
 
     // 환경설정에서 알람 온오프
@@ -58,7 +61,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
     // Q&A 상세 페이지 조회
     @GetMapping("/qna/detail/{qnaNo}")
     public String detailQna(@PathVariable Long qnaNo, Model model) {
@@ -77,9 +79,51 @@ public class UserController {
 
     // 설정 페이지로 이동
     @GetMapping("/setting")
-    public String userSetting(Model model) {
+    public String userSetting(HttpSession session, Model model) {
+        Long empNo = (Long) session.getAttribute("empNo");
+        // 세션에서 empNo가 없으면 로그인 페이지로 리다이렉트
+        if (empNo == null) {
+            return "redirect:/login";
+        }
+        // empNo로 EmployeeDTO 객체를 가져와서 모델에 추가
+        EmployeeDTO employee = employeeService.getEmployeeById(empNo);
+        model.addAttribute("employee", employee);
+
         return "user/setting";
     }
+
+    // 계정 정보 수정
+    @PostMapping("/update")
+    public String updateEmployee(
+            @RequestParam("lastName") String lastName,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("address") String address,
+            @RequestParam("phone") String phone,
+            @RequestParam("email") String email,
+            HttpSession session,
+            Model model) {
+
+        Long empNo = (Long) session.getAttribute("empNo");
+
+        // 기존 사원 정보 가져오기
+        EmployeeDTO existingEmployee = employeeService.getEmployeeById(empNo);
+
+        // 사용자 입력값으로 기존 사원 정보 업데이트
+        existingEmployee.setLastName(lastName);
+        existingEmployee.setFirstName(firstName);
+        existingEmployee.setAddr(address);
+        existingEmployee.setPhoneNum(phone);
+        existingEmployee.setEmail(email);
+
+        // 사원 정보 업데이트
+        employeeService.updateEmployee(empNo, existingEmployee);
+
+        // 업데이트된 정보를 모델에 다시 저장하여 페이지에 반영
+        model.addAttribute("employee", existingEmployee);
+
+        return "redirect:/user/setting";
+    }
+
 
     // Q&A 및 FAQ 목록을 가져와서 Q&A 페이지로 이동
     @GetMapping("/Q&A")
