@@ -109,6 +109,8 @@ public class GmailService {
 
 
     // Gmail 서비스 객체를 사용하는 메서드들
+
+
     public void sendMail(String recipientEmail, String subject, String messageText, List<String> filePaths) throws Exception {
         Gmail service = getInstance();
 
@@ -116,57 +118,51 @@ public class GmailService {
         try {
             Properties props = new Properties();
             Session session = Session.getDefaultInstance(props, null);
-            MimeMessage email = new MimeMessage(session);
 
-            email.setFrom(new InternetAddress("your-email@gmail.com"));
-            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipientEmail));
-            email.setSubject(subject);
+            // 수신자 이메일을 콤마로 구분된 리스트로 분리
+            String[] recipients = recipientEmail.split(",");
 
-            Multipart multipart = new MimeMultipart();
+            for (String recipient : recipients) {
+                MimeMessage email = new MimeMessage(session);
 
-            // 본문 설정 (HTML 포맷)
-            MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setContent(messageText, "text/html; charset=UTF-8");
-            multipart.addBodyPart(textPart);
+                email.setFrom(new InternetAddress("your-email@gmail.com"));
+                email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipient.trim())); // 각 수신자에게 메일 전송
+                email.setSubject(subject);
 
-            // CID 매핑을 위한 파일 처리
-            if (filePaths != null && !filePaths.isEmpty()) {
-                for (String filePath : filePaths) {
-                    Path fileAbsolutePath = Paths.get(filePath).isAbsolute()
-                            ? Paths.get(filePath)
-                            : Paths.get(UPLOAD_DIR, filePath).normalize();
+                // 본문 설정 및 첨부파일 처리
+                Multipart multipart = new MimeMultipart();
 
-                    log.info("Adding attachment to email: {}", fileAbsolutePath.toString());
-                    MimeBodyPart attachmentPart = new MimeBodyPart();
-                    DataSource source = new FileDataSource(fileAbsolutePath.toString());
-                    attachmentPart.setDataHandler(new DataHandler(source));
-                    String cid = UUID.randomUUID().toString();
-                    attachmentPart.setHeader("Content-ID", "<" + cid + ">");
-                    attachmentPart.setDisposition(MimeBodyPart.INLINE); // CID로 참조된 이미지를 INLINE으로 설정
-                    attachmentPart.setFileName(MimeUtility.encodeText(fileAbsolutePath.getFileName().toString(), "UTF-8", "B"));
-                    multipart.addBodyPart(attachmentPart);
+                // 본문 설정 (HTML 포맷)
+                MimeBodyPart textPart = new MimeBodyPart();
+                textPart.setContent(messageText, "text/html; charset=UTF-8");
+                multipart.addBodyPart(textPart);
 
-                    // CID를 이메일 본문에서 참조되도록 수정
-                    messageText = messageText.replace("cid:" + fileAbsolutePath.getFileName().toString(), "cid:" + cid);
+                // 첨부파일 처리 로직 (이중으로 추가되지 않도록 수정)
+                if (filePaths != null && !filePaths.isEmpty()) {
+                    Set<String> uniqueFilePaths = new HashSet<>(filePaths); // 중복 제거
+                    for (String filePath : uniqueFilePaths) {
+                        MimeBodyPart attachmentPart = new MimeBodyPart();
+                        DataSource source = new FileDataSource(filePath);
+                        attachmentPart.setDataHandler(new DataHandler(source));
+                        attachmentPart.setFileName(Paths.get(filePath).getFileName().toString());
+                        multipart.addBodyPart(attachmentPart);
+                    }
                 }
-            } else {
-                log.info("No attachments to add to the email.");
+
+                email.setContent(multipart);
+
+                // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                email.writeTo(buffer);
+                String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
+
+                // Gmail API를 사용하여 이메일 전송
+                Message message = new Message();
+                message.setRaw(encodedEmail);
+                service.users().messages().send("me", message).execute();
+
+                log.info("Email sent successfully to: {}", recipient.trim());
             }
-
-            // 이메일의 본문을 multipart로 설정
-            email.setContent(multipart, "text/html; charset=UTF-8");
-
-            // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            email.writeTo(buffer);
-            String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
-
-            // Gmail API를 사용하여 이메일을 전송
-            Message message = new Message();
-            message.setRaw(encodedEmail);
-
-            service.users().messages().send("me", message).execute();  // "me"는 인증된 사용자를 나타냄
-            log.info("Email sent successfully to: {}", recipientEmail);
         } catch (MessagingException e) {
             log.error("Failed to create email message: {}", e.getMessage());
             throw new Exception("Failed to create email message", e);
@@ -175,8 +171,6 @@ public class GmailService {
             throw new Exception("Failed to send email", e);
         }
     }
-
-
 
 
 

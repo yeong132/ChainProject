@@ -110,41 +110,31 @@ public class EmailController {
             // 첨부파일 저장 경로 리스트 생성
             List<String> filePaths = new ArrayList<>();
 
-            // 기존 첨부파일 처리
-            if (existingAttachments != null) {
-                for (String existingAttachment : existingAttachments) {
-                    Path path = resolveFilePath(existingAttachment);
-                    filePaths.add(path.toString());
-                    log.info("Added existing attachment: {}", path.toString());
-                }
-            }
-
-            // 새로운 첨부파일 추가
-            if (attachments != null) {
+            // 새로운 첨부파일 처리
+            if (attachments != null && !attachments.isEmpty()) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
                         Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
-                        // 이미 파일이 존재하는지 확인
-                        if (!filePaths.contains(path.toString())) {
-                            Files.write(path, attachment.getBytes());
-                            filePaths.add(path.toString());
-                            log.info("Attachment saved: {}", path.toString());
-                        }
+
+                        // 파일을 저장하고 경로를 filePaths 리스트에 추가
+                        Files.write(path, attachment.getBytes());
+                        filePaths.add(path.toString());  // 절대 경로로 저장
+                        log.info("Attachment saved: name = {}, path = {}, size = {} bytes",
+                                fileName, path.toString(), attachment.getSize());
                     }
                 }
             }
 
-            // 이메일 전송
-            gmailService.sendMail(recipientEmail, subject, message, filePaths);
+            // 이메일 주소를 콤마로 분리하여 리스트로 변환
+            String[] recipients = recipientEmail.split(",");
 
-            // 이메일 전송 후 초안 삭제
-            if (draftId != null && !draftId.isEmpty()) {
-                gmailService.deleteDraft("me", draftId);
-                log.info("Draft deleted: {}", draftId);
+            // 이메일 전송
+            for (String recipient : recipients) {
+                gmailService.sendMail(recipient.trim(), subject, message, filePaths);
             }
 
-            model.addAttribute("success", "Email sent successfully!");
+            model.addAttribute("success", "Email sent successfully to all recipients!");
         } catch (Exception e) {
             log.error("Error sending email", e);
             model.addAttribute("error", "Error sending email: " + e.getMessage());
@@ -152,6 +142,8 @@ public class EmailController {
         }
         return "mail/complete";
     }
+
+
 
     // 메일 전송 완료 페이지를 반환하는 메서드
     @GetMapping("/complete")
