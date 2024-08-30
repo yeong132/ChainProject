@@ -465,6 +465,31 @@ public class EmailController {
         return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
     }
 
+    // 휴지통에 있는 모든 이메일을 영구 삭제하는 메서드 추가
+    @PostMapping("/trash/deleteAll")
+    public String deleteAllMessagesInTrash(RedirectAttributes redirectAttributes) {
+        log.info("deleteAllMessagesInTrash called");
+
+        try {
+            List<MessageDTO> trashMessages = gmailService.listTrashMessages("me");
+            if (trashMessages.isEmpty()) {
+                redirectAttributes.addFlashAttribute("warning", "휴지통이 이미 비어 있습니다.");
+                return "redirect:/mail/trash";
+            }
+
+            for (MessageDTO message : trashMessages) {
+                gmailService.deleteMessagePermanently("me", message.getId());
+            }
+            redirectAttributes.addFlashAttribute("success", "모든 메시지가 영구 삭제되었습니다.");
+        } catch (IOException e) {
+            log.error("모든 메시지 영구 삭제 실패", e);
+            redirectAttributes.addFlashAttribute("error", "모든 메시지 영구 삭제 실패: " + e.getMessage());
+        }
+        return "redirect:/mail/trash"; // 휴지통 페이지로 리다이렉트
+    }
+
+
+
     // 작성 데이터를 임시저장(Draft) 시키는 메서드
     @PostMapping("/saveDraft")
     public String saveDraft(

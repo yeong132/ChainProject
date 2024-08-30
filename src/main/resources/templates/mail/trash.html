@@ -346,6 +346,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title"></div>
+                        <!-- 모두 지우기 버튼 추가 -->
+                        <button class="btn btn-danger " id="deleteAll" type="button">모두 지우기</button>
                         <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
                             <thead>
@@ -494,6 +496,33 @@
             const form = document.createElement('form');
             form.method = 'post';
             form.action = '/mail/trash/deleteSelected';
+
+            messageIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'messageIds';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+
+    // 모두 지우기 버튼 기능 추가
+    document.getElementById('deleteAll').addEventListener('click', function () {
+        const selected = document.querySelectorAll('.trash-checkbox');
+        if (selected.length === 0) {
+            alert('휴지통이 비어 있습니다.');
+            return;
+        }
+
+        if (confirm('휴지통에 있는 모든 메일을 영구 삭제하시겠습니까?')) {
+            const messageIds = Array.from(selected).map(checkbox => checkbox.value);
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/mail/trash/deleteAll';
 
             messageIds.forEach(id => {
                 const input = document.createElement('input');

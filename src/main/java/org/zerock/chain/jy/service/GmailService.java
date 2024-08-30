@@ -485,13 +485,26 @@ public class GmailService {
 
     public List<MessageDTO> listTrashMessages(String userId) throws IOException {
         Gmail service = getInstance();
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("TRASH"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute().getMessages();
+
+        List<Message> messages = null;
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("TRASH"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch trash messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
+
+        if (messages == null) {
+            log.warn("No messages found in trash.");
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
-
         for (Message message : messages) {
             Message fullMessage = service.users().messages().get(userId, message.getId())
                     .setFields("id,labelIds,payload(headers)")
@@ -499,7 +512,6 @@ public class GmailService {
 
             MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-            // 읽음/안읽음 상태 설정
             boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
             messageDTO.setRead(!isUnread);
 
@@ -507,6 +519,8 @@ public class GmailService {
         }
         return messageDTOList;
     }
+
+
 
 
     public void deleteMessagePermanently(String userId, String messageId) throws IOException {

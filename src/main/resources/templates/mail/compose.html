@@ -650,7 +650,6 @@
                 ]
             }
         });
-
         console.log("Quill 2.0.2 editor initialized.");
 
         // 서버에서 불러온 메시지를 Quill 에디터에 로드
@@ -681,7 +680,7 @@
         const recipientEmailField = document.getElementById("recipientEmail");
 
         emailInput.addEventListener("keypress", function (e) {
-            if (e.key === "Enter" || e.key === ",") {
+            if (e.key === "Enter" || e.key === "," || e.key === " ") {
                 e.preventDefault();
                 const email = emailInput.value.trim();
                 if (email) {
