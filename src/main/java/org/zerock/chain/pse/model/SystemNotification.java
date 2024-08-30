@@ -21,6 +21,9 @@ public class SystemNotification {
     @Column(name = "system_no")
     private Long systemNo;
 
+    @Column(name = "emp_no")
+    private Long empNo;
+
     @Column(name = "system_category")
     private String systemCategory;
 

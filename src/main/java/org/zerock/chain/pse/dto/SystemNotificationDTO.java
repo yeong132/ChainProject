@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Data
 public class SystemNotificationDTO {
 
+    private Long empNo;
     private Long systemNo;
     private String systemCategory;
     private String systemTitle;

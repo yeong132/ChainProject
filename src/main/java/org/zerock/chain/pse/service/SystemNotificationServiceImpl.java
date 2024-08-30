@@ -8,11 +8,13 @@ import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.repository.SystemNotificationRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class SystemNotificationServiceImpl implements SystemNotificationService {
+public class SystemNotificationServiceImpl  extends BaseService<SystemNotification> implements SystemNotificationService {
 
     private final SystemNotificationRepository systemNotificationRepository;
 
@@ -27,8 +29,10 @@ public class SystemNotificationServiceImpl implements SystemNotificationService 
     }
 
     @Override   // 모든 시스템 알림 조회
-    public List<SystemNotification> getAllSystemNotifications() {
-        return systemNotificationRepository.findAll();
+    public List<SystemNotification> getAllSystemNotifications(Long empNo) {
+        return getItemsByEmpNo(empNo, this::getAllItemsByEmpNo).stream()
+                .sorted(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed()) // 최신순으로 정렬
+                .collect(Collectors.toList());
     }
 
     @Override // 모든 시스템 알림 삭제
@@ -58,5 +62,19 @@ public class SystemNotificationServiceImpl implements SystemNotificationService 
     public SystemNotification getSystemNotificationById(Long systemNo) {
         return systemNotificationRepository.findById(systemNo)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
+    }
+
+    // 새로운 메서드: 특정 사원의 읽은 알림을 모두 삭제함
+    @Override
+    @Transactional
+    public void deleteReadSystemNotification(Long empNo) {
+        // systemNotificationRepository 새로운 메서드를 호출하여 읽은 알림을 삭제
+        systemNotificationRepository.deleteByEmpNoAndIsRead(empNo);
+    }
+
+    // 특정 사원번호(empNo)로 모든 알림을 가져옴
+    @Override
+    protected List<SystemNotification> getAllItemsByEmpNo(Long empNo) {
+        return systemNotificationRepository.findByEmpNo(empNo);
     }
 }

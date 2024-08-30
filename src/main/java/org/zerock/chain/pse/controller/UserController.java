@@ -91,11 +91,7 @@ public class UserController {
     // 계정 정보 수정
     @PostMapping("/update")
     public String updateEmployee(
-            @RequestParam("lastName") String lastName,
-            @RequestParam("firstName") String firstName,
-            @RequestParam("address") String address,
-            @RequestParam("phone") String phone,
-            @RequestParam("email") String email,
+            @RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName, @RequestParam("address") String address, @RequestParam("phone") String phone, @RequestParam("email") String email,
             HttpSession session,
             Model model) {
 
@@ -197,6 +193,7 @@ public class UserController {
             @RequestParam("systemTitle") String systemTitle,
             @RequestParam("systemContent") String systemContent) {
 
+        // 시스템 알림 기본 정보 설정
         SystemNotification systemNotification = new SystemNotification();
         systemNotification.setSystemCategory(systemCategory);
         systemNotification.setSystemTitle(systemTitle);
@@ -204,8 +201,23 @@ public class UserController {
         systemNotification.setSystemUploadDate(LocalDateTime.now());
         systemNotification.setRead(false);
 
-        systemNotificationService.saveSystemNotification(systemNotification);
-        return "redirect:/user/alarm";
+        // 모든 사원의 empNo를 가져와서 개별 시스템 알림 생성
+        List<EmployeeDTO> allEmployees = employeeService.getAllEmployees();
+        for (EmployeeDTO employee : allEmployees) {
+            // 사원별 시스템 알림 객체 생성
+            SystemNotification individualNotification = new SystemNotification();
+            individualNotification.setSystemCategory(systemCategory);
+            individualNotification.setSystemTitle(systemTitle);
+            individualNotification.setSystemContent(systemContent);
+            individualNotification.setSystemUploadDate(LocalDateTime.now());
+            individualNotification.setRead(false);
+            individualNotification.setEmpNo(employee.getEmpNo()); // 개별 사원의 empNo 설정
+
+            // 시스템 알림 저장
+            systemNotificationService.saveSystemNotification(individualNotification);
+        }
+
+        return "redirect:/user/alarm"; // 작성 후 알림 페이지로 리다이렉트
     }
 
     // 알림 페이지로 이동
@@ -220,7 +232,7 @@ public class UserController {
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");
         List<Notification> chartNotifications = notificationService.getNotificationsByType(empNo, "차트");
-        List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications();
+        List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications(empNo);
 
         allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());
         systemNotifications.sort(Comparator.comparing(SystemNotification::getSystemUploadDate).reversed());
@@ -282,6 +294,7 @@ public class UserController {
         Long empNo = (Long) session.getAttribute("empNo");
 
         notificationService.deleteReadNotifications(empNo);
+        systemNotificationService.deleteReadSystemNotification(empNo);
 
         return "redirect:/user/alarm";
     }
