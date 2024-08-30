@@ -365,6 +365,7 @@
                                                 <a class="dropdown-item" href="#" id="selectAllBtn">전체선택</a>
                                                 <a class="dropdown-item" href="#" id="deselectAllBtn">선택안함</a>
                                                 <a class="dropdown-item text-danger" href="#" id="deleteSelected">선택삭제</a>
+                                                <a class="dropdown-item text-success" href="#" id="restoreSelected">선택 복구하기</a>
                                             </div>
                                         </div>
                                     </div>
@@ -376,13 +377,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}">
+                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}" onclick="rowClick(this)"> <!-- rowClick 함수 호출 -->
                                 <td>
                                     <div class="checkbox-star-container">
                                         <input type="checkbox" class="form-check-input trash-checkbox" th:value="${message.id}" onclick="event.stopPropagation();">
-                                        <!--휴지통 아이콘을 표시 -->
                                         <i class="bi bi-trash-fill" style="margin-right: 5px;"></i>
-                                        <!-- 읽음 상태에 따라 아이콘을 표시 -->
                                         <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'" style="margin-right: 10px;"></i>
                                     </div>
                                 </td>
@@ -397,6 +396,7 @@
                                 </td>
                             </tr>
                             </tbody>
+
                         </table>
                         <!-- 테이블 끝 -->
                     </div>
@@ -534,6 +534,31 @@
 
             document.body.appendChild(form);
             form.submit();
+        }
+    });
+
+    // 선택된 항목 복구 기능
+    document.getElementById('restoreSelected').addEventListener('click', function () {
+        const selected = document.querySelectorAll('.trash-checkbox:checked');
+        if (selected.length === 0) {
+            alert('복구할 메일을 선택해주세요.');
+            return;
+        }
+
+        if (confirm('선택한 메일을 복구하시겠습니까?')) {
+            const messageIds = Array.from(selected).map(checkbox => checkbox.value);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/mail/trash/restoreSelected');
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('메일이 복구되었습니다.');
+                    window.location.reload(); // 복구 후 페이지를 새로고침
+                } else {
+                    alert('복구 실패: ' + xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify(messageIds));
         }
     });
 </script>

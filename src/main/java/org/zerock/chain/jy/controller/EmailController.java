@@ -423,6 +423,19 @@ public class EmailController {
         }
     }
 
+    // 휴지통에서 메일 복구하기 요청 처리 메서드
+    @PostMapping("/trash/restoreSelected")
+    public ResponseEntity<String> restoreSelectedMessages(@RequestBody List<String> messageIds) {
+        try {
+            gmailService.restoreMessages("me", messageIds);
+            return ResponseEntity.ok("Messages restored successfully");
+        } catch (IOException e) {
+            log.error("Error restoring messages", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to restore messages");
+        }
+    }
+
+
     // 휴지통에 있는 메시지 목록을 보여주는 메서드
     @GetMapping("/trash")
     public String listTrashEmails(Model model) {

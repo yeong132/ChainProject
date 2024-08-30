@@ -477,12 +477,26 @@ public class GmailService {
         return messageDTOList;
     }
 
+    //휴지통 라벨로 이동시키는 메서드
     public void moveToTrash(String userId, String messageId) throws IOException {
         Gmail service = getInstance();
         ModifyMessageRequest mods = new ModifyMessageRequest().setRemoveLabelIds(List.of("INBOX")).setAddLabelIds(List.of("TRASH"));
         service.users().messages().modify(userId, messageId, mods).execute();
     }
 
+    //휴지통 라벨에서 기본(inbox)라벨로 복구 시키는 메서드
+    public void restoreMessages(String userId, List<String> messageIds) throws IOException {
+        Gmail service = getInstance();
+        ModifyMessageRequest mods = new ModifyMessageRequest()
+                .setRemoveLabelIds(List.of("TRASH"))
+                .setAddLabelIds(List.of("INBOX")); // 필요한 기본 라벨을 추가
+
+        for (String messageId : messageIds) {
+            service.users().messages().modify(userId, messageId, mods).execute();
+        }
+    }
+
+    //휴지통 라벨의 리스트를 보여주는 메서드
     public List<MessageDTO> listTrashMessages(String userId) throws IOException {
         Gmail service = getInstance();
 
