@@ -391,7 +391,7 @@
               </thead>
               <tbody>
               <tr th:each="document : ${draftDocuments}">
-                <td th:text="${document.docNo}"></td>
+                <td th:text="${document.virtualNo}"></td>
                 <td>
                   <a th:href="@{/approval/draftRead/{docNo}(docNo=${document.docNo}, category=${document.category})}"
                      th:text="${document.docTitle}"></a>

@@ -12,5 +12,5 @@ public interface NotificationService {
     void deleteNotification(Long notificationNo);   // 알림 번호로 개별 삭제
 
     // 전자결재 알림을 생성하는 메서드 추가 (영민)
-    void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus);
+    void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus, String withdraw);
 }

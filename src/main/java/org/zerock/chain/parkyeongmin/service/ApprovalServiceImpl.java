@@ -16,6 +16,7 @@ import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 import org.zerock.chain.pse.service.NotificationService;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +40,20 @@ public class ApprovalServiceImpl implements ApprovalService {
         try {
             approvers = objectMapper.readValue(documentsDTO.getApproversJson(), new TypeReference<>() {});
             log.info("Parsed approvers: {}", approvers);
-            references = objectMapper.readValue(documentsDTO.getReferencesJson(), new TypeReference<>() {});
-            log.info("Parsed references: {}", references);
+
+            // referencesJson이 null이거나 빈 문자열인 경우에도 안전하게 처리
+            if (documentsDTO.getReferencesJson() != null && !documentsDTO.getReferencesJson().isEmpty()) {
+                references = objectMapper.readValue(documentsDTO.getReferencesJson(), new TypeReference<>() {});
+                log.info("Parsed references: {}", references);
+            } else {
+                references = Collections.emptyList();
+                log.info("No references provided.");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error parsing approverJson", e);
         }
 
-        log.info("What the hell SenderName1:{}", documentsDTO.getSenderName());
+        log.info("SenderName1:{}", documentsDTO.getSenderName());
 
         // 문서와 사원 객체를 조회하여 설정
         Documents document = documentsRepository.findById(documentsDTO.getDocNo())
@@ -93,7 +101,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
 
         // 결재 차례인 사람에게 알림 생성
-        notificationService.createApprovalNotification(documentsDTO.getDocNo(), documentsDTO.getDocTitle(), documentsDTO.getSenderName(), "대기 중");
+        notificationService.createApprovalNotification(documentsDTO.getDocNo(), documentsDTO.getDocTitle(), documentsDTO.getSenderName(), "대기 중", documentsDTO.getWithdraw());
 
         // 첫 번째 결재자에게 문서 할당
         Map<String, Object> firstApprover = approvers.get(0);
@@ -133,7 +141,7 @@ public class ApprovalServiceImpl implements ApprovalService {
             // 다음 결재자에게 알림 전송
             Approval nextApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, approval.getApprovalOrder() + 1);
             if (nextApproval != null) {
-                notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "진행 중");
+                notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "진행 중", document.getWithdraw());
             }
         }
     }
@@ -154,7 +162,7 @@ public class ApprovalServiceImpl implements ApprovalService {
             documentsRepository.save(document);
 
             // 결재 모든 관련자들에게 반려 알림 생성
-            notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "반려");
+            notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "반려", document.getWithdraw());
         }
     }
 
@@ -185,7 +193,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         documentsRepository.save(document);
 
         // 결재 모든 관련자들에게 완료 알림 생성
-        notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "완료");
+        notificationService.createApprovalNotification(docNo, document.getDocTitle(), document.getSenderName(), "완료", document.getWithdraw());
 
         System.out.println("Document No: " + docNo + " has been finalized.");
     }

@@ -581,6 +581,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const category = getQueryParam('category');
     // URL 경로에서 docNo 경로변수를 가져옴
     const docNo = window.location.pathname.split('/').pop();
+    // approversJson 선언
+    let approversJson = '';
 
     fetch(`/approval/getForm/${category}`)
         .then(response => {
@@ -679,16 +681,25 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch(error => console.error('Error fetching form or document data:', error));
 
+    // 서버에서 approversJson을 가져와서 처리
+    fetch(`/approval/get-approver-json/${docNo}`, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            approversJson = data.approversJson;
+        })
+        .catch(error => console.error('Error fetching approversJson:', error));
 
     // 철회 버튼 누를시 기존 요청 문서가 임시문서함으로 이동
     // 철회 버튼 이벤트리스너
     document.getElementById('cancelBtn').addEventListener('click', (e) => {
         e.stopPropagation();
-        saveDocumentAsDraft();
+        saveDocumentAsDraft(true, approversJson);
     })
 
     // 임시저장을 위한 함수
-    function saveDocumentAsDraft() {
+    function saveDocumentAsDraft(isWithdraw = false, approversJson = '') {
         const docNo = window.location.pathname.split('/').pop();  // URL에서 문서 번호를 가져옴
         const docTitle = document.querySelector('input[name="docTitle"]').value;
         const docBody = document.querySelector('textarea[name="docBody"]').value;
@@ -708,8 +719,14 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append('approverNoHtml', approverContainerNumbersHtml);
         formData.append('category', category);
         formData.append('docStatus', '임시저장');  // 임시저장 상태로 설정
+        formData.append('approversJson', approversJson);  // 서버에서 불러온 approversJson 추가
         if (file) {
             formData.append('file', file);
+        }
+
+        // 철회 작업이면 withdraw 플래그를 true로 추가
+        if (isWithdraw) {
+            formData.append('withdraw', 'true');
         }
 
         // 서버에 임시저장한 문서 업데이트

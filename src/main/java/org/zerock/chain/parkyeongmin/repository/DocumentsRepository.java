@@ -11,11 +11,11 @@ import java.util.List;
 @Repository
 public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 
-    // 보낸문서함 조회
-    @Query("SELECT d FROM Documents d WHERE d.loggedInEmpNo = :loggedInEmpNo ORDER BY d.docNo DESC")
+    // 보낸 문서함 목록 조회
+    @Query("SELECT d FROM Documents d WHERE d.loggedInEmpNo = :loggedInEmpNo AND d.docStatus != '임시저장' ORDER BY d.docNo DESC")
     List<Documents> findSentDocuments(@Param("loggedInEmpNo") Long loggedInEmpNo);
 
-    // 임시문서함 조회
+    // 임시문서함 목록 조회
     @Query("SELECT d FROM Documents d WHERE d.docStatus = '임시저장' AND d.loggedInEmpNo = :loggedInEmpNo ORDER BY d.docNo DESC")
     List<Documents> findDraftDocuments(@Param("loggedInEmpNo") Long loggedInEmpNo);
 

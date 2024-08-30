@@ -50,7 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override  // 전자결재 알림 생성 메서드 (영민)
-    public void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus) {
+    public void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus, String withdraw) {
         // 결재자 사원의 번호를 가져옴
         List<Long> empNos = approvalRepository.findEmpNosByDocNo(docNo);
         // 참조자 사원의 번호를 가져옴
@@ -74,12 +74,15 @@ public class NotificationServiceImpl implements NotificationService {
 
                 String message;
 
-                if (isCurrentApprover(docNo, empNoLong)) {
+                if ("true".equals(withdraw)) {
+                    // 철회된 문서에 대한 맞춤형 알림 메시지
+                    message = String.format("%s 님이 요청한 %d번 문서 '%s'이(가) 철회되었습니다.", senderName, docNo, docTitle);
+                } else if (isCurrentApprover(docNo, empNoLong)) {
                     // 현재 결재 차례인 사람에게 맞춤형 알림 메시지
-                    message = String.format("%s님이 요청한 %d번 문서 '%s'의 결재를 진행해주십시오.", senderName, docNo, docTitle);
+                    message = String.format("%s 님이 요청한 %d번 문서 '%s'의 결재를 진행해주십시오.", senderName, docNo, docTitle);
                 } else {
                     // 일반적인 결재 완료/반려 메시지
-                    message = String.format("%s님이 요청한 %d번 문서 '%s'의 현재 결재 상태는 %s입니다.", senderName, docNo, docTitle, docStatus);
+                    message = String.format("%s 님이 요청한 %d번 문서 '%s'의 현재 결재 상태는 %s입니다.", senderName, docNo, docTitle, docStatus);
                 }
 
                 Notification notification = new Notification();

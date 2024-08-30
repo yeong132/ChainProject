@@ -123,6 +123,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                     .timeStampHtml(documentsDTO.getTimeStampHtml())   // 타임스탬프를 저장
                     .approverNoHtml(documentsDTO.getApproverNoHtml()) // 결재자 순번을 저장
                     .filePath(filePath) // 저장된 파일 경로 설정
+                    .approversJson(documentsDTO.getApproversJson())    // 결재자 정보(결재자 사원 번호, 결재 순번)을 저장
                     .build();
 
             Documents savedDocument = documentsRepository.save(documents);
@@ -166,11 +167,46 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
         document.setApproverNoHtml(documentsDTO.getApproverNoHtml());
         document.setDocStatus(documentsDTO.getDocStatus());
         document.setCategory(documentsDTO.getCategory());
+        document.setApproversJson(documentsDTO.getApproversJson());
 
         // 문서 업데이트
         Documents savedDocument = documentsRepository.save(document);
         log.info("Updated document: {}", savedDocument);
     }
+
+    @Override
+    public void updateDocumentWithoutDeletingApprovals(DocumentsDTO documentsDTO) throws Exception {
+
+        // 기존 문서를 데이터베이스에서 찾음
+        Optional<Documents> optionalDocument = documentsRepository.findById(documentsDTO.getDocNo());
+        if (optionalDocument.isEmpty()) {
+            throw new Exception("Document not found");
+        }
+
+        Documents document = optionalDocument.get();
+
+        // 파일이 있는 경우 파일 저장 처리
+        if (documentsDTO.getFile() != null && !documentsDTO.getFile().isEmpty()) {
+            String filePath = fileService.saveFile(documentsDTO.getFile());  // 파일을 저장하고 경로를 반환
+            documentsDTO.setFilePath(filePath);  // DTO에 파일 경로 설정
+            document.setFilePath(filePath);  // 엔티티의 파일 경로를 업데이트
+        }
+
+        // 문서의 다른 필드들 업데이트
+        document.setDocTitle(documentsDTO.getDocTitle());
+        document.setDocBody(documentsDTO.getDocBody());
+        document.setApprovalLine(documentsDTO.getApprovalLine());
+        document.setTimeStampHtml(documentsDTO.getTimeStampHtml());
+        document.setApproverNoHtml(documentsDTO.getApproverNoHtml());
+        document.setDocStatus(documentsDTO.getDocStatus());
+        document.setCategory(documentsDTO.getCategory());
+        document.setApproversJson(documentsDTO.getApproversJson());
+
+        // 문서 업데이트
+        Documents savedDocument = documentsRepository.save(document);
+        log.info("Updated document without deleting approvals: {}", savedDocument);
+    }
+
 
     @Override
     public void deleteDocument(int docNo) throws Exception {

@@ -11,15 +11,19 @@ import org.zerock.chain.parkyeongmin.dto.*;
 import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
 import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
+import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
 import org.zerock.chain.parkyeongmin.service.ApprovalService;
 import org.zerock.chain.parkyeongmin.service.DocumentsService;
 import org.zerock.chain.parkyeongmin.service.FormService;
 import org.zerock.chain.parkyeongmin.service.UserService;
+import org.zerock.chain.pse.service.NotificationService;
+import org.zerock.chain.pse.service.NotificationServiceImpl;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +41,10 @@ public class ApprovalController {
     private ApprovalRepository approvalRepository;
     @Autowired
     private EmployeesRepository employeesRepository;
+    @Autowired
+    private DocumentsRepository documentsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     public ApprovalController(DocumentsService documentsService,
@@ -54,6 +62,14 @@ public class ApprovalController {
         // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();;
         List<SentDocumentsDTO> sentDocuments = documentsService.getSentDocuments(loggedInEmpNo);
+
+        // 가상 번호 부여
+        int virtualNo = sentDocuments.size();
+        for (DocumentsDTO document : sentDocuments) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("sentDocument: {}, sentVirtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
         model.addAttribute("sentDocuments", sentDocuments);
         return "approval/main";
     }
@@ -71,7 +87,13 @@ public class ApprovalController {
                 .map(approval -> convertToDocumentsDTO(approval.getDocuments()))  // Approval 엔티티에서 Documents 엔티티로 접근
                 .collect(Collectors.toList());
 
-        log.info(receivedDocuments.toString());
+        // 가상 번호 부여 (최신순 정렬에 따라 부여)
+        int virtualNo = receivedDocuments.size();
+        for (DocumentsDTO document : receivedDocuments) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("receiveDocument: {}, receiveVirtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
         model.addAttribute("receivedDocuments", receivedDocuments);
 
         return "approval/receive";
@@ -82,7 +104,14 @@ public class ApprovalController {
         // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
         List<DraftDocumentsDTO> draftDocuments = documentsService.getDraftDocuments(loggedInEmpNo);
-        log.info(draftDocuments.toString());
+
+        // 가상 번호 부여
+        int virtualNo = draftDocuments.size();
+        for (DocumentsDTO document : draftDocuments) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("draftDocument: {}, draftVirtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
         model.addAttribute("draftDocuments", draftDocuments);
         return "approval/draft";
     }
@@ -259,9 +288,23 @@ public class ApprovalController {
         return ResponseEntity.ok(loggedInUser);
     }
 
+    // 임시저장,철회 관련 메서드
     @PostMapping("/update-document")
     public ResponseEntity<String> updateDocument(@ModelAttribute DocumentsDTO documentsDTO) {
         try {
+            // 문서의 senderName을 documents 테이블에서 가져와 DTO에 설정
+            Documents document = documentsRepository.findById(documentsDTO.getDocNo())
+                    .orElseThrow(() -> new RuntimeException("Document not found"));
+            documentsDTO.setSenderName(document.getSenderName());
+
+            // 만약 철회 플래그가 true라면, 알림을 보냄
+            if ("true".equals(documentsDTO.getWithdraw())) {
+                notificationService.createApprovalNotification( documentsDTO.getDocNo(),
+                        documentsDTO.getDocTitle(),
+                        documentsDTO.getSenderName(),
+                        "임시저장",
+                        documentsDTO.getWithdraw());
+            }
 
             // 문서 업데이트
             documentsService.updateDocument(documentsDTO);
@@ -269,6 +312,23 @@ public class ApprovalController {
             return ResponseEntity.ok("Document updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update document");
+        }
+    }
+
+    // 임시문서를 다시 결재요청할 때 쓰는 메서드
+    @PostMapping("/submit-approval")
+    public ResponseEntity<String> submitApproval(@ModelAttribute DocumentsDTO documentsDTO) {
+        try {
+            // 결재자 정보를 삭제하지 않고 문서 업데이트 (상태 변경)
+            documentsService.updateDocumentWithoutDeletingApprovals(documentsDTO);
+            log.info("제발제발제발");
+            // 결재 요청 처리
+            approvalService.requestApproval(documentsDTO);
+            log.info("Approval process completed2 for docNo: {}", documentsDTO.getDocNo());
+
+            return ResponseEntity.ok("Approval submitted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit approval");
         }
     }
 
@@ -414,5 +474,18 @@ public class ApprovalController {
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
         return documentsService.getReferencesDocumentsForUser(loggedInEmpNo);
+    }
+
+    // approvalJson 프론트엔드로 반환하는 메서드
+    @GetMapping("/get-approver-json/{docNo}")
+    public ResponseEntity<Map<String, String>> getApproversJson(@PathVariable int docNo) {
+        Optional<Documents> document = documentsRepository.findById(docNo);
+        if (document.isPresent()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("approversJson", document.get().getApproversJson());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

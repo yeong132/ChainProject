@@ -23,6 +23,8 @@ public interface DocumentsService <T extends DocumentsDTO> {
     void updateTimeStampHtml(int docNo, String timeStampHtml);
     // 문서의 반려 사유를 가져오는 메서드
     String getRejectionReason(int docNo);
+    // 임시문서에서 결재요청하면 임시저장과 달리 결재자 정보 삭제하지않고 그대로 저장되는 메서드
+    void updateDocumentWithoutDeletingApprovals(DocumentsDTO documentsDTO) throws Exception;
 
     // 문서 번호로 문서 조회 (각 read, draftRead 등 read.html 들어갈 때 필요한 메서드)
     T getDocumentById(int docNo);

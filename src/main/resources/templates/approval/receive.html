@@ -481,7 +481,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="document : ${receivedDocuments}">
-                                <td th:text="${document.docNo}"></td>
+                                <td th:text="${document.virtualNo}"></td>
                                 <td>
                                     <a th:if="${document.docStatus == '반려'}"
                                        th:href="@{/approval/rejectionRead/{docNo}(docNo=${document.docNo}, source='receive', category=${document.category})}"

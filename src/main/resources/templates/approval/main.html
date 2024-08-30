@@ -549,8 +549,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:if="${document.docStatus != '임시저장'}" th:each="document : ${sentDocuments}">
-                                <td th:text="${document.docNo}"></td>
+                            <tr th:each="document : ${sentDocuments}">
+                                <td th:text="${document.virtualNo}"></td>
                                 <td>
                                     <!-- 문서 상태에 따라 링크를 다르게 설정 -->
                                     <a th:if="${document.docStatus == '반려'}"
