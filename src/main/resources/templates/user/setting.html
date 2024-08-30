@@ -494,6 +494,12 @@
                                             공지사항 알림
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" id="chartNotification" type="checkbox">
+                                        <label class="form-check-label" for="chartNotification">
+                                            차트 알림
+                                        </label>
+                                    </div>
                                 </form>
                             </div>
 
@@ -623,7 +629,8 @@
         const notificationMap = {
             'projectNotification': '프로젝트',
             'taskNotification': '업무보고서',
-            'noticeNotification': '공지사항'
+            'noticeNotification': '공지사항',
+            'chartNotification': '차트'
         };
 
         const type = notificationMap[notificationType];

@@ -58,6 +58,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+
     // Q&A 상세 페이지 조회
     @GetMapping("/qna/detail/{qnaNo}")
     public String detailQna(@PathVariable Long qnaNo, Model model) {
