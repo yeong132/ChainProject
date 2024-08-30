@@ -35,4 +35,19 @@ public class GlobalControllerAdvice {
         // 인증되지 않았거나 사원번호가 없는 경우 빈 리스트 반환
         return new ArrayList<>();  // 인증 실패 시 또는 사원번호가 없을 때 빈 리스트 반환
     }
+    @ModelAttribute("firstName")
+    public String populateFirstName(HttpSession session) {
+        return (String) session.getAttribute("firstName");
+    }
+
+    @ModelAttribute("lastName")
+    public String populateLastName(HttpSession session) {
+        return (String) session.getAttribute("lastName");
+    }
+
+    @ModelAttribute("rankName")
+    public String populateRankName(HttpSession session) {
+        return (String) session.getAttribute("rankName");
+    }
+
 }

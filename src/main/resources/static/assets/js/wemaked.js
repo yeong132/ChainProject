@@ -271,7 +271,6 @@ function showSuccessAlert() {
 // });
 
 
-
 // 테이블에 링크 적용하기
 function rowClick(url) {
     window.location.href = url;

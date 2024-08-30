@@ -64,8 +64,13 @@ public class SecurityConfig {
                 CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                 HttpSession session = request.getSession();
                 session.setAttribute("empNo", userDetails.getEmpNo());
+                session.setAttribute("firstName", userDetails.getFirstName());
+                session.setAttribute("lastName", userDetails.getLastName());
+                session.setAttribute("rankName", userDetails.getRankName());
                 response.sendRedirect("/");
             }
         };
     }
+
+
 }
