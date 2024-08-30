@@ -538,7 +538,7 @@
                                 </th>
                                 <td th:text="${message.from}">보낸사람</td>
                                 <td>
-                                    <a th:href="@{/mail/view(messageId=${message.id}, returnUrl='/mail/starred')}" th:text="${message.subject}">제목</a>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.subject}">제목</a>
                                 </td>
                                 <td th:text="${message.date}">날짜</td>
                             </tr>
