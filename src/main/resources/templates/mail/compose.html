@@ -36,6 +36,37 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
 
+    <style>
+        #emailContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            min-height: 38px;
+        }
+
+        #emailContainer .badge {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        #emailInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 5px;
+            min-width: 150px;
+        }
+
+        #emailInput:focus {
+            box-shadow: none;
+        }
+    </style>
+
+
 </head>
 
 <body>
@@ -620,7 +651,6 @@
             }
         });
 
-
         console.log("Quill 2.0.2 editor initialized.");
 
         // 서버에서 불러온 메시지를 Quill 에디터에 로드
@@ -662,13 +692,23 @@
         });
 
         function addEmailLabel(email) {
+            // 이메일 유효성 검사
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const isValidEmail = emailPattern.test(email);
+
+            // 이미 존재하는 이메일인지 확인
+            const existingEmails = Array.from(document.querySelectorAll('#emailContainer .badge')).map(label => label.textContent);
+            if (existingEmails.includes(email)) {
+                alert('이미 추가된 이메일 주소입니다.');
+                return;
+            }
+
             const span = document.createElement("span");
-            span.className = "badge bg-primary me-2";
+            span.className = `badge ${isValidEmail ? 'bg-primary' : 'bg-danger'} me-2`;
             span.textContent = email;
 
             const removeBtn = document.createElement("button");
             removeBtn.className = "btn-close ms-2";
-            removeBtn.style.marginLeft = "10px";
             removeBtn.style.fontSize = "small";
             removeBtn.setAttribute("aria-label", "Close");
 
@@ -875,27 +915,33 @@
 
         // 이미 존재하는 addEmailLabel 함수 재사용
         function addEmailLabel(email) {
-            const emailInput = document.getElementById("emailInput");
-            const emailContainer = document.getElementById("emailContainer");
-            const recipientEmailField = document.getElementById("recipientEmail");
+            // 이메일 유효성 검사
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const isValidEmail = emailPattern.test(email);
+
+            // 이미 존재하는 이메일인지 확인
+            const existingEmails = Array.from(document.querySelectorAll('#emailContainer .badge')).map(label => label.textContent);
+            if (existingEmails.includes(email)) {
+                alert('이미 추가된 이메일 주소입니다.');
+                return;
+            }
 
             const span = document.createElement("span");
-            span.className = "badge bg-primary me-2";
+            span.className = `badge ${isValidEmail ? 'bg-primary' : 'bg-danger'} me-2`;
             span.textContent = email;
 
             const removeBtn = document.createElement("button");
             removeBtn.className = "btn-close ms-2";
-            removeBtn.style.marginLeft = "10px";
             removeBtn.style.fontSize = "small";
             removeBtn.setAttribute("aria-label", "Close");
 
             removeBtn.addEventListener("click", function () {
-                emailContainer.removeChild(span);
+                document.getElementById("emailContainer").removeChild(span);
                 updateRecipientEmailField();
             });
 
             span.appendChild(removeBtn);
-            emailContainer.insertBefore(span, emailInput);
+            document.getElementById("emailContainer").insertBefore(span, document.getElementById("emailInput"));
             updateRecipientEmailField();
         }
 
@@ -909,6 +955,7 @@
         }
     });
 </script>
+
 
 
 
