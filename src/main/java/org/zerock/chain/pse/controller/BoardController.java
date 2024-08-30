@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.pse.dto.BoardDTO;
 import org.zerock.chain.pse.dto.BoardRequestDTO;
+import org.zerock.chain.pse.model.Board;
 import org.zerock.chain.pse.service.BoardService;
 
 @Controller
@@ -40,7 +41,9 @@ public class BoardController {
     // 경조사  문서  개별  확인 페이지
     @GetMapping("/detail/{boardNo}")
     public String boardDetail(@PathVariable("boardNo") Long boardNo, Model model) {
-        model.addAttribute("board", boardService.getBoardById(boardNo));
+        BoardDTO boardDTO = boardService.getBoardById(boardNo);
+        System.out.println("Board Location: " + boardDTO.getBoardLocation());
+        model.addAttribute("board", boardDTO);
         return "board/detail";
     }
 
@@ -69,6 +72,13 @@ public class BoardController {
     // 경조사 게시글 수정
     @PostMapping("/modify/{boardNo}")
     public String updateBoard(@PathVariable("boardNo") Long boardNo, @ModelAttribute BoardRequestDTO boardRequestDTO) {
+        // 기존 board 데이터를 가져옴
+        BoardDTO existingBoard = boardService.getBoardById(boardNo);
+
+        // boardRequestDTO의 boardCategory를 기존의 값으로 무조건 덮어씀
+        boardRequestDTO.setBoardCategory(existingBoard.getBoardCategory());
+
+        // 서비스 계층에서 수정 처리
         boardService.updateBoard(boardNo, boardRequestDTO);
         return "redirect:/board/detail/" + boardNo;
     }

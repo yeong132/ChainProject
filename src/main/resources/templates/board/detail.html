@@ -365,11 +365,11 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">첨부 파일</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" id="formFile" name="noticeFiles" th:value="${board.boardFiles}" type="file">
+<!--                                    <input class="form-control" id="formFile" name="noticeFiles" th:value="${board.boardFiles}" type="file">-->
                                     <div th:if="${board.boardFiles != null}">
-                                        <p>첨부된 파일:
+                                        <div class="form-control">
                                             <a download th:href="@{${board.boardFiles}}" th:text="${board.boardFiles}"></a>
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -377,7 +377,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label" >내용</label>
                                 <div class="col-sm-11">
-                                    <textarea id="froala" name="boardContent"  th:text="${board.boardContent}"></textarea>
+                                    <div class="form-control" th:utext="${board.boardContent}" readonly></div>
                                 </div>
                             </div>
 
@@ -485,7 +485,8 @@
     let options;
 
     // boardLocation 값이 존재하는 경우 해당 좌표로 지도 중심 설정
-    const locationValue = /*[[${board.boardLocation}]]*/ '35.8580767172927,128.64125595278'; // 예시 좌표값
+    const locationValue = "[[${board.boardLocation}]]"; // 예시 좌표값
+    console.log("Location Value: " + locationValue);
     if (locationValue) {
         const coords = locationValue.split(',').map(coord => parseFloat(coord));
         options = {

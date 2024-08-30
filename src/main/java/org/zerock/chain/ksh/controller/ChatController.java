@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.ksh.model.ChatMessage;
 import org.zerock.chain.ksh.model.ChatNotification;
 import org.zerock.chain.ksh.service.ChatMessageService;
+import org.zerock.chain.ksh.service.ChatUserService;
 
 import java.util.List;
 
@@ -24,22 +25,24 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
+    private final ChatUserService chatUserService;
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
-        // john/queue/messages
-
-        // 클라이언트로 알림 전송
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(savedMsg.getRecipientEmpNo()), "/queue/messages",
-                ChatNotification.builder() // 채팅 알림
-                        .chatMessage(savedMsg)
-                        .senderEmpNo(savedMsg.getSenderEmpNo())
-                        .recipientEmpNo(savedMsg.getRecipientEmpNo())
-                        .chatContent(savedMsg.getChatContent())
-                        .build()
-        );
+        // 사원 정보 가져오기
+        chatUserService.findEmployeeByEmpNo(savedMsg.getSenderEmpNo()).ifPresent(employeeDTO -> {
+            // 클라이언트로 알림 전송
+            messagingTemplate.convertAndSendToUser(
+                    String.valueOf(savedMsg.getRecipientEmpNo()), "/queue/messages",
+                    ChatNotification.builder()
+                            .chatMessage(savedMsg)
+                            .senderEmpNo(savedMsg.getSenderEmpNo())
+                            .recipientEmpNo(savedMsg.getRecipientEmpNo())
+                            .chatContent(savedMsg.getChatContent())
+                            .build()
+            );
+        });
     }
 
     @GetMapping("/messages/{senderEmpNo}/{recipientEmpNo}")

@@ -39,18 +39,21 @@
             align-items: center;
         }
 
+        /* 별표 아이콘 스타일 */
         .star-icon {
             cursor: pointer;
+            font-size: 1.5rem; /* 아이콘 크기를 적절하게 조정 */
         }
 
+        /* 별표 아이콘 색상 설정 */
         .bi-star-fill {
-            color: #ffd700;
+            color: #ffd700; /* 별표 아이콘을 노란색으로 설정 */
         }
 
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
+        .bi-star {
+            color: #ccc; /* 별표가 비활성화된 상태에서는 회색으로 표시 */
         }
+
     </style>
 
     <!-- =======================================================
@@ -450,18 +453,25 @@
                             <div class="btn-group">
                                 <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
                                 <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">삭제</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">안읽음</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">이동</button>
+                                <button class="btn btn-primary btn-custom me-2 mt-2"
+                                        th:data-message-id="${message.id}"
+                                        th:data-return-url="${returnUrl}"
+                                        onclick="showMoveToTrashModal(this)">삭제</button>
+                                <button id="markUnread" class="btn btn-primary btn-custom me-2 mt-2"
+                                        th:data-message-id="${message.id}"
+                                        th:data-return-url="${returnUrl}">읽지않음으로 표시</button>
+
                             </div>
-                            <a href="#" class="btn btn-primary btn-custom mt-2">목록</a>
+                            <a href="#" id="backToList" class="btn btn-primary btn-custom mt-2" th:href="${returnUrl}">목록</a>
                         </div>
 
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
                             <div class="d-flex align-items-center mb-3">
                                 <!-- 별표 아이콘 -->
-                                <i class="bi bi-star star-icon" onclick="toggleStar(this)"></i>
+                                <i th:class="${message.starred} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"
+                                   th:data-message-id="${message.id}"
+                                   onclick="toggleStar(this)"></i>
                                 <h3 class="ms-2 mb-0" th:text="${message.subject ?: 'No Subject'}"></h3>
                             </div>
                             <div class="mb-2">
@@ -493,6 +503,28 @@
     <!-- 메일 내용 카드 끝 -->
 </main><!-- End main 끝 -->
 
+<!-- 휴지통 이동 경고 모달 -->
+<div class="modal fade" id="moveToTrashModal" tabindex="-1" aria-labelledby="moveToTrashModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveToTrashModalLabel">휴지통으로 이동</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 휴지통으로 이동하겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmMoveToTrash">네</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 휴지통 이동 경고 모달 끝 -->
+
+
+
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
@@ -521,6 +553,121 @@
 </a>
 <!-- 채팅창 끝-->
 
+<script th:inline="javascript">
+    const messageId = /*[[${message.id}]]*/ 'default_value'; // message.id 값을 가져옵니다.
+
+    document.getElementById('markUnread').addEventListener('click', function() {
+        const messageId = this.getAttribute('data-message-id');
+        const returnUrl = this.getAttribute('data-return-url');
+
+        console.log("Message ID: ", messageId);  // 콘솔에 출력하여 확인
+
+        if (!messageId || messageId === 'default_value') {
+            console.error('Message ID is missing or not properly bound');
+            return;
+        }
+
+        $.ajax({
+            url: '/mail/toggleReadStatus',
+            type: 'POST',
+            data: JSON.stringify({ messageId: messageId, markAsRead: false }),
+            contentType: 'application/json',
+            success: function(response) {
+                if (returnUrl) {
+                    window.location.href = returnUrl;
+                } else {
+                    window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to mark as unread:', error);
+                alert('Error: ' + error);
+            }
+        });
+    });
+
+    document.getElementById('backToList').addEventListener('click', function(event) {
+        event.preventDefault();
+        const returnUrl = this.getAttribute('href');
+
+        if (returnUrl && returnUrl !== 'null') {
+            window.location.href = returnUrl;
+        } else {
+            window.location.href = "/mail/inbox";  // 기본적으로 수신메일함으로 리다이렉트
+        }
+    });
+
+
+
+
+    function showMoveToTrashModal(buttonElement) {
+        const messageId = buttonElement.getAttribute('data-message-id');
+        const returnUrl = buttonElement.getAttribute('data-return-url');
+
+        console.log("Delete button clicked, message ID:", messageId); // 디버깅 용도
+        console.log("Return URL: ", returnUrl); // Return URL 확인
+
+        if (messageId) {
+            $('#moveToTrashModal').modal('show');
+            document.getElementById('confirmMoveToTrash').addEventListener('click', function() {
+                moveToTrash(messageId, returnUrl);
+            }, { once: true }); // 한 번만 실행되도록 설정
+        } else {
+            console.error("Failed to retrieve message ID.");
+        }
+    }
+
+    function moveToTrash(messageId, returnUrl) {
+        $.ajax({
+            url: '/mail/trash/' + encodeURIComponent(messageId),
+            type: 'POST',
+            success: function(response) {
+                $('#moveToTrashModal').modal('hide');
+                if (returnUrl && returnUrl !== 'null') {
+                    window.location.href = returnUrl;
+                } else {
+                    window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to move email to trash:', error);
+                alert('Failed to move email to trash: ' + error);
+            }
+        });
+    }
+
+
+    function toggleStar(element) {
+        const messageId = element.getAttribute('data-message-id');
+        const isStarred = element.classList.contains('bi-star-fill');
+
+        $.ajax({
+            url: '/mail/toggleStar',
+            type: 'POST',
+            data: JSON.stringify({
+                messageId: messageId,
+                starred: !isStarred
+            }),
+            contentType: 'application/json',
+            success: function (response) {
+                if (isStarred) {
+                    element.classList.remove('bi-star-fill');
+                    element.classList.add('bi-star');
+                } else {
+                    element.classList.remove('bi-star');
+                    element.classList.add('bi-star-fill');
+                }
+                console.log('Starred status updated successfully.');
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to update starred status:', error);
+            }
+        });
+    }
+
+</script>
+
+
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -535,10 +682,8 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-<script src="/assets/js/wemaked.js"></script>
+<!--<script src="/assets/js/wemaked.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 
 
 </body>

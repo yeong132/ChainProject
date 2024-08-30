@@ -11,9 +11,8 @@ import org.zerock.chain.imjongha.model.Department;
 import org.zerock.chain.imjongha.repository.DepartmentRepository;
 import org.zerock.chain.imjongha.service.EmployeeService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
@@ -26,20 +25,29 @@ public class ChatPageController {
 
     // 조직도
     @GetMapping("/chatting")
-    public String chat (@RequestParam("empNo") String empNo, Model model) {
+    public String chat(@RequestParam("empNo") String empNo, Model model) {
         // index.html에서 empNo의 세션값 받아서 empNo를 모델에 추가하여 템플릿에 전달
         model.addAttribute("empNo", empNo);
 
-        // 모든 부서를 가져옴
-        List<Department> departments = departmentRepository.findAll();
+        // 모든 부서를 가져옴 (DepartmentId로 정렬)
+        List<Department> departments = departmentRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Department::getDmpNo))  // DepartmentId로 부서 정렬
+                .collect(Collectors.toList());
 
         // 부서별로 사원들을 그룹화하여 저장할 맵
-        Map<String, List<EmployeeDTO>> departmentMap = new HashMap<>();
+        Map<String, List<EmployeeDTO>> departmentMap = new LinkedHashMap<>();  // LinkedHashMap 사용
 
         // 각 부서에 속한 사원들을 가져와서 맵에 추가
         for (Department department : departments) {
             List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(department.getDmpNo());
-            departmentMap.put(department.getDmpName(), employees);
+
+            // 사원들을 RankId로 정렬
+            List<EmployeeDTO> sortedEmployees = employees.stream()
+                    .sorted(Comparator.comparing(EmployeeDTO::getRankId))
+                    .collect(Collectors.toList());
+
+            departmentMap.put(department.getDmpName(), sortedEmployees);
         }
 
         // 모델에 부서명과 사원 데이터를 추가
@@ -47,4 +55,5 @@ public class ChatPageController {
 
         return "chatting";
     }
+
 }
