@@ -421,7 +421,7 @@ const GoalComparisonModule = (function () {
     let compareChart = null;
     let allGoals = []; // 모든 목표를 저장할 배열
 
-// 선택 항목 초기화 함수
+    // 선택 항목 초기화 함수
     function resetSelection() {
         selectedGoals = []; // 선택한 목표 목록 초기화
         document.querySelectorAll('.goal-checkbox').forEach(checkbox => {
@@ -463,19 +463,13 @@ const GoalComparisonModule = (function () {
         selectedGoalsList.innerHTML = ''; // 기존 내용을 지움
 
         selectedGoals.forEach(goalId => {
-            $.ajax({
-                url: `/chart/detail/${goalId}`, // 각 goalId에 대해 개별 요청
-                method: 'GET',
-                success: function (response) {
-                    const goalName = response.chartName; // 예시로 가져온 정보 중 이름을 사용
-                    const listItem = document.createElement('li');
-                    listItem.textContent = goalName;
-                    selectedGoalsList.appendChild(listItem);
-                },
-                error: function (xhr, status, error) {
-                    console.error('차트 정보를 가져오는 데 실패했습니다:', error);
-                }
-            });
+            // 선택된 목표를 로컬에서 찾기 (모든 목표는 allGoals에 저장되어 있음)
+            const selectedGoal = allGoals.find(goal => goal.chartNo === goalId);
+            if (selectedGoal) {
+                const listItem = document.createElement('li');
+                listItem.textContent = selectedGoal.chartName;
+                selectedGoalsList.appendChild(listItem);
+            }
         });
     }
 
@@ -647,6 +641,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
 // 7. 페이지네이션 관련 변수 및 함수
 let currentPage = 1;
 const itemsPerPage = 5;
@@ -668,6 +663,7 @@ function initPagination(totalItems) {
         paginationElement.appendChild(li);
     }
 }
+
 // 목표 목록 로드
 function loadGoals(page) {
     $.ajax({
@@ -697,6 +693,3 @@ function loadGoals(page) {
         }
     });
 }
-
-
-
