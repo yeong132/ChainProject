@@ -35,13 +35,7 @@
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 
-    <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-    ======================================================== -->
+
 </head>
 
 <body>
@@ -455,7 +449,10 @@
                             <div class="row mb-3">
                                 <label for="recipientEmail" class="col-sm-1 col-form-label">받는사람</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="recipientEmail" name="recipientEmail" placeholder="여러 이메일 주소를 콤마로 구분하여 입력하세요">
+                                    <div id="emailContainer" class="form-control" style="height:auto;">
+                                        <input type="text" class="form-control border-0" id="emailInput" placeholder="이메일 주소를 입력하세요">
+                                    </div>
+                                    <input type="hidden" id="recipientEmail" name="recipientEmail">
                                 </div>
                                 <div class="col-sm-2">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#organizationChartModal">
@@ -463,6 +460,7 @@
                                     </button>
                                 </div>
                             </div>
+
 
 
                             <!-- 이메일 제목 입력 -->
@@ -622,6 +620,7 @@
             }
         });
 
+
         console.log("Quill 2.0.2 editor initialized.");
 
         // 서버에서 불러온 메시지를 Quill 에디터에 로드
@@ -644,6 +643,52 @@
                     + '<button type="button" onclick="removeExistingAttachment(\'' + attachment + '\')">삭제</button>';
                 savedAttachmentsContainer.appendChild(fileItem);
             });
+        }
+
+        // 이메일 입력 기능 추가
+        const emailInput = document.getElementById("emailInput");
+        const emailContainer = document.getElementById("emailContainer");
+        const recipientEmailField = document.getElementById("recipientEmail");
+
+        emailInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter" || e.key === ",") {
+                e.preventDefault();
+                const email = emailInput.value.trim();
+                if (email) {
+                    addEmailLabel(email);
+                    emailInput.value = "";
+                }
+            }
+        });
+
+        function addEmailLabel(email) {
+            const span = document.createElement("span");
+            span.className = "badge bg-primary me-2";
+            span.textContent = email;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn-close ms-2";
+            removeBtn.style.marginLeft = "10px";
+            removeBtn.style.fontSize = "small";
+            removeBtn.setAttribute("aria-label", "Close");
+
+            removeBtn.addEventListener("click", function () {
+                emailContainer.removeChild(span);
+                updateRecipientEmailField();
+            });
+
+            span.appendChild(removeBtn);
+            emailContainer.insertBefore(span, emailInput);
+            updateRecipientEmailField();
+        }
+
+        function updateRecipientEmailField() {
+            const labels = emailContainer.querySelectorAll(".badge");
+            const emails = [];
+            labels.forEach(label => {
+                emails.push(label.textContent);
+            });
+            recipientEmailField.value = emails.join(",");
         }
     });
 
@@ -815,11 +860,11 @@
                         tableBody.append(row);
                     });
 
-                    // 이메일 링크 클릭 시 수신자 이메일 입력란에 이메일 주소 입력
+                    // 이메일 링크 클릭 시 수신자 이메일 입력란에 이메일 라벨 추가
                     $('.select-email').on('click', function (e) {
                         e.preventDefault();
                         const email = $(this).data('email');
-                        $('#recipientEmail').val(email);
+                        addEmailLabel(email); // 선택한 이메일을 라벨로 추가
                         $('#organizationChartModal').modal('hide');
                     });
                 })
@@ -827,8 +872,44 @@
                     console.error("조직도 데이터를 불러오는 데 실패했습니다.");
                 });
         }
+
+        // 이미 존재하는 addEmailLabel 함수 재사용
+        function addEmailLabel(email) {
+            const emailInput = document.getElementById("emailInput");
+            const emailContainer = document.getElementById("emailContainer");
+            const recipientEmailField = document.getElementById("recipientEmail");
+
+            const span = document.createElement("span");
+            span.className = "badge bg-primary me-2";
+            span.textContent = email;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn-close ms-2";
+            removeBtn.style.marginLeft = "10px";
+            removeBtn.style.fontSize = "small";
+            removeBtn.setAttribute("aria-label", "Close");
+
+            removeBtn.addEventListener("click", function () {
+                emailContainer.removeChild(span);
+                updateRecipientEmailField();
+            });
+
+            span.appendChild(removeBtn);
+            emailContainer.insertBefore(span, emailInput);
+            updateRecipientEmailField();
+        }
+
+        function updateRecipientEmailField() {
+            const labels = document.getElementById("emailContainer").querySelectorAll(".badge");
+            const emails = [];
+            labels.forEach(label => {
+                emails.push(label.textContent);
+            });
+            document.getElementById("recipientEmail").value = emails.join(",");
+        }
     });
 </script>
+
 
 
 </body>
