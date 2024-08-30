@@ -1,3 +1,4 @@
+// TodoController.java
 package org.zerock.chain.pse.controller;
 
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TodoController {
 
-    private final TodoService todoService;
+    private final TodoService todoService;  // Todo 서비스 계층 의존성 주입
 
     // 리스트 등록
     @PostMapping("/add")
     public String addTodo(TodoRequestDTO todoRequestDTO) {
-        todoService.saveOrUpdate(todoRequestDTO);
-        return "redirect:/todo/list";
+        todoService.saveOrUpdate(todoRequestDTO);  // 새로운 Todo 저장 또는 업데이트
+        return "redirect:/todo/list";  // 리스트 페이지로 리다이렉트
     }
 
     // 리스트 조회
@@ -52,33 +53,33 @@ public class TodoController {
         // 진행 중인 항목 필터링
         List<TodoDTO> incompleteTodos = todoService.getIncompleteTodos();
 
-        model.addAttribute("todos", todos);
-        model.addAttribute("todayTodos", todayTodos);  // 오늘 날짜 항목
-        model.addAttribute("favoriteTodos", favoriteTodos);
-        model.addAttribute("completedTodos", completedTodos);
-        model.addAttribute("incompleteTodos", incompleteTodos);
+        model.addAttribute("todos", todos);  // 전체 목록을 모델에 추가
+        model.addAttribute("todayTodos", todayTodos);  // 오늘 날짜 항목을 모델에 추가
+        model.addAttribute("favoriteTodos", favoriteTodos);  // 즐겨찾기 목록을 모델에 추가
+        model.addAttribute("completedTodos", completedTodos);  // 완료된 항목을 모델에 추가
+        model.addAttribute("incompleteTodos", incompleteTodos);  // 진행 중인 항목을 모델에 추가
 
-        return "todo/list";
+        return "todo/list";  // Todo 리스트 페이지로 이동
     }
 
     // 완료 리스트 삭제
     @GetMapping("/deleteCompleted")
     public String deleteCompletedTodos() {
-        todoService.deleteCompletedTodos();
-        return "redirect:/todo/list";
+        todoService.deleteCompletedTodos();  // 완료된 항목 삭제 처리
+        return "redirect:/todo/list";  // 삭제 후 리스트 페이지로 리다이렉트
     }
 
-    // 상태 업데이트 (완료여부)
+    // 상태 업데이트 (완료 여부)
     @PostMapping("/updateStatus")
     public String updateStatus(@RequestParam("todoNo") Long todoNo, @RequestParam("todoStatus") boolean todoStatus) {
-        todoService.updateTodoStatus(todoNo, todoStatus);
-        return "redirect:/todo/list";
+        todoService.updateTodoStatus(todoNo, todoStatus);  // 완료 상태 업데이트
+        return "redirect:/todo/list";  // 업데이트 후 리스트 페이지로 리다이렉트
     }
 
     // 즐겨찾기 상태 업데이트
     @PostMapping("/updateFavoriteStatus")
     public String updateFavoriteStatus(@RequestParam("todoNo") Long todoNo, @RequestParam("todoFavorite") boolean todoFavorite) {
-        todoService.updateTodoFavoriteStatus(todoNo, todoFavorite);
-        return "redirect:/todo/list";
+        todoService.updateTodoFavoriteStatus(todoNo, todoFavorite);  // 즐겨찾기 상태 업데이트
+        return "redirect:/todo/list";  // 업데이트 후 리스트 페이지로 리다이렉트
     }
 }

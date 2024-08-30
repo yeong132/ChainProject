@@ -60,16 +60,16 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("firstName")
     public String populateFirstName(HttpSession session) {
-        return (String) session.getAttribute("firstName");
+        return (String) session.getAttribute("firstName");  // 세션에서 firstName 가져와서 반환
     }
 
     @ModelAttribute("lastName")
     public String populateLastName(HttpSession session) {
-        return (String) session.getAttribute("lastName");
+        return (String) session.getAttribute("lastName");  // 세션에서 lastName 가져와서 반환
     }
 
     @ModelAttribute("rankName")
     public String populateRankName(HttpSession session) {
-        return (String) session.getAttribute("rankName");
+        return (String) session.getAttribute("rankName");  // 세션에서 rankName 가져와서 반환
     }
 }

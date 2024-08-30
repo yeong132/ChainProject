@@ -1,6 +1,7 @@
 package org.zerock.chain.pse.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.pse.dto.BoardDTO;
 import org.zerock.chain.pse.dto.BoardRequestDTO;
@@ -11,39 +12,38 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class BoardServiceImpl  implements  BoardService{
+public class BoardServiceImpl implements BoardService {
 
-    private final ModelMapper modelMapper;
-    private final BoardRepository boardRepository;
+    private final ModelMapper modelMapper; // ModelMapper를 통한 객체 변환을 위한 필드
+    private final BoardRepository boardRepository; // 게시글 관련 DB 작업을 위한 레포지토리 필드
 
     public BoardServiceImpl(ModelMapper modelMapper, BoardRepository boardRepository) {
-        this.modelMapper = modelMapper;
-        this.boardRepository = boardRepository;
+        this.modelMapper = modelMapper; // ModelMapper 초기화
+        this.boardRepository = boardRepository; // BoardRepository 초기화
     }
 
-    @Override   // 전체 목록 조회
+    @Override // 전체 목록 조회
     public List<BoardDTO> getAllBoards() {
-        return boardRepository.findAll().stream()
-                .map(board -> modelMapper.map(board, BoardDTO.class))
-                .collect(Collectors.toList());
+        return boardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardUploadDate")).stream()
+                .map(board -> modelMapper.map(board, BoardDTO.class)) // Board 엔티티를 BoardDTO로 변환
+                .collect(Collectors.toList()); // 변환된 DTO 리스트 반환
     }
 
-    @Override   // 개별조회
+    @Override // 개별 게시글 조회
     public BoardDTO getBoardById(Long boardNo) {
-        Board board = boardRepository.findById(boardNo).orElseThrow();
-        return modelMapper.map(board, BoardDTO.class);
+        Board board = boardRepository.findById(boardNo).orElseThrow(); // ID로 게시글 조회, 없을 경우 예외 발생
+        return modelMapper.map(board, BoardDTO.class); // 조회된 게시글을 DTO로 변환하여 반환
     }
 
-    @Override   // 게시글 생성
+    @Override // 게시글 생성
     public BoardDTO createBoard(BoardRequestDTO boardRequestDTO) {
-        Board board = modelMapper.map(boardRequestDTO, Board.class);
-        board = boardRepository.save(board);
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
-        return boardDTO;
+        Board board = modelMapper.map(boardRequestDTO, Board.class); // 요청 DTO를 Board 엔티티로 변환
+        board = boardRepository.save(board); // 변환된 엔티티를 DB에 저장
+        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class); // 저장된 엔티티를 DTO로 변환
+        return boardDTO; // 생성된 게시글 DTO 반환
     }
 
-    // 예시: BoardServiceImpl의 updateBoard 메서드에서 로그 추가
-    @Override   // 게시글 수정
+    @Override // 게시글 수정
     public BoardDTO updateBoard(Long boardNo, BoardRequestDTO boardRequestDTO) {
         // 로그 추가
         System.out.println("Original boardFiles: " + boardRequestDTO.getBoardFiles());
@@ -59,10 +59,10 @@ public class BoardServiceImpl  implements  BoardService{
 
         // boardFiles와 boardLocation을 명시적으로 설정
         if (boardRequestDTO.getBoardFiles() != null && !boardRequestDTO.getBoardFiles().isEmpty()) {
-            board.setBoardFiles(boardRequestDTO.getBoardFiles().trim());
+            board.setBoardFiles(boardRequestDTO.getBoardFiles().trim()); // boardFiles 설정
         }
         if (boardRequestDTO.getBoardLocation() != null && !boardRequestDTO.getBoardLocation().isEmpty()) {
-            board.setBoardLocation(boardRequestDTO.getBoardLocation().trim());
+            board.setBoardLocation(boardRequestDTO.getBoardLocation().trim()); // boardLocation 설정
         }
 
         // 로그 추가
@@ -73,13 +73,13 @@ public class BoardServiceImpl  implements  BoardService{
         modelMapper.map(boardRequestDTO, board);
 
         // 변경된 게시글 저장
-        board = boardRepository.save(board);
+        board = boardRepository.save(board); // 수정된 엔티티를 DB에 저장
 
-        return modelMapper.map(board, BoardDTO.class);
+        return modelMapper.map(board, BoardDTO.class); // 수정된 게시글을 DTO로 변환하여 반환
     }
 
-    @Override   // 게시글 삭제
+    @Override // 게시글 삭제
     public void deleteBoard(Long boardNo) {
-        boardRepository.deleteById(boardNo);
+        boardRepository.deleteById(boardNo); // ID로 게시글 삭제
     }
 }
