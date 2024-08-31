@@ -29,8 +29,8 @@ public class DocumentsDTO {
     private String filePath;          // 파일 경로
     private LocalDate reqDate;        // 요청, 저장일
     private String category;          // 양식 종류
-    private String approversJson;     // 결재자 목록을 JSON 형식으로 저장 - 엔티티에 추가 함
-    private String referencesJson;    // 참조자 번호를 JSON 형식으로 저장 - 엔티티에 없는 부분
+    private String approversJson;     // 결재자 목록을 JSON 형식으로 저장
+    private String referencesJson;    // 참조자 번호를 JSON 형식으로 저장
     private int approvalOrder;        // 결재 순서 - 다른 엔티티 부분
     private String approvalStatus;    // 결재 상태 - 다른 엔티티 부분
     private String rejectionReason;   // 반려 사유 - 다른 엔티티 부분

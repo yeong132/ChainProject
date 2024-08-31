@@ -113,17 +113,18 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
                     .reqDate(LocalDate.now())
                     .loggedInEmpNo(loggedInEmpNo)
                     .senderName(senderName)                  // 작성자를 저장
-                    .senderDmpName(senderDmpName) // 작성자 부서명
-                    .senderRankName(senderRankName) // 작성자 직급명
+                    .senderDmpName(senderDmpName)            // 작성자 부서명
+                    .senderRankName(senderRankName)          // 작성자 직급명
                     .docStatus(documentsDTO.getDocStatus())  // 요청된 상태를 사용
                     .category(documentsDTO.getCategory())    // 클라이언트가 보낸 카테고리 설정
                     .docTitle(documentsDTO.getDocTitle())    // 문서 제목을 설정
                     .docBody(documentsDTO.getDocBody())      // 내용 입력값을 저장
-                    .approvalLine(documentsDTO.getApprovalLine())     // 결재자 정보를 저장
-                    .timeStampHtml(documentsDTO.getTimeStampHtml())   // 타임스탬프를 저장
-                    .approverNoHtml(documentsDTO.getApproverNoHtml()) // 결재자 순번을 저장
-                    .filePath(filePath) // 저장된 파일 경로 설정
+                    .approvalLine(documentsDTO.getApprovalLine())      // 결재자 정보를 저장
+                    .timeStampHtml(documentsDTO.getTimeStampHtml())    // 타임스탬프를 저장
+                    .approverNoHtml(documentsDTO.getApproverNoHtml())  // 결재자 순번을 저장
+                    .filePath(filePath)                                // 저장된 파일 경로 설정
                     .approversJson(documentsDTO.getApproversJson())    // 결재자 정보(결재자 사원 번호, 결재 순번)을 저장
+                    .referencesJson(documentsDTO.getReferencesJson())  // 참조자 정보 - 참조자 사원 번호
                     .build();
 
             Documents savedDocument = documentsRepository.save(documents);
@@ -168,6 +169,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
         document.setDocStatus(documentsDTO.getDocStatus());
         document.setCategory(documentsDTO.getCategory());
         document.setApproversJson(documentsDTO.getApproversJson());
+        document.setReferencesJson(documentsDTO.getReferencesJson());
 
         // 문서 업데이트
         Documents savedDocument = documentsRepository.save(document);
@@ -201,6 +203,7 @@ public class DocumentsServiceImpl implements DocumentsService<DocumentsDTO> {
         document.setDocStatus(documentsDTO.getDocStatus());
         document.setCategory(documentsDTO.getCategory());
         document.setApproversJson(documentsDTO.getApproversJson());
+        document.setReferencesJson(documentsDTO.getReferencesJson());
 
         // 문서 업데이트
         Documents savedDocument = documentsRepository.save(document);

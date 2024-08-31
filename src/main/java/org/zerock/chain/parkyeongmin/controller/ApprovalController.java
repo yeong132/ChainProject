@@ -321,7 +321,14 @@ public class ApprovalController {
         try {
             // 결재자 정보를 삭제하지 않고 문서 업데이트 (상태 변경)
             documentsService.updateDocumentWithoutDeletingApprovals(documentsDTO);
-            log.info("제발제발제발");
+            log.info("ApproversJson: {}", documentsDTO.getApproversJson());
+            log.info("ReferencesJson: {}", documentsDTO.getReferencesJson());
+
+            // 문서의 senderName을 documents 테이블에서 가져와 DTO에 설정
+            Documents document = documentsRepository.findById(documentsDTO.getDocNo())
+                    .orElseThrow(() -> new RuntimeException("Document not found"));
+            documentsDTO.setSenderName(document.getSenderName());
+
             // 결재 요청 처리
             approvalService.requestApproval(documentsDTO);
             log.info("Approval process completed2 for docNo: {}", documentsDTO.getDocNo());
@@ -476,16 +483,19 @@ public class ApprovalController {
         return documentsService.getReferencesDocumentsForUser(loggedInEmpNo);
     }
 
-    // approvalJson 프론트엔드로 반환하는 메서드
-    @GetMapping("/get-approver-json/{docNo}")
-    public ResponseEntity<Map<String, String>> getApproversJson(@PathVariable int docNo) {
-        Optional<Documents> document = documentsRepository.findById(docNo);
-        if (document.isPresent()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("approversJson", document.get().getApproversJson());
+    @GetMapping("/get-approvers-and-references-json/{docNo}")
+    public ResponseEntity<Map<String, Object>> getApprovalAndReferencesJson(@PathVariable int docNo) {
+        Optional<Documents> documentOptional = documentsRepository.findById(docNo);
+
+        if (documentOptional.isPresent()) {
+            Documents document = documentOptional.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("approversJson", document.getApproversJson());
+            response.put("referencesJson", document.getReferencesJson());
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 }

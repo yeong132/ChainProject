@@ -60,6 +60,9 @@ public class Documents {
     @Column(name = "approver_json", columnDefinition = "text")
     private String approversJson;        // 결재자 정보(결재자 사원 번호, 결재 순번)
 
+    @Column(name = "reference_json", columnDefinition = "text")
+    private String referencesJson;        // 결재자 정보(결재자 사원 번호, 결재 순번)
+
     @Transient
     private int virtualNo;              // 사용자에게 표시할 가상의 번호
 

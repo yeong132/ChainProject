@@ -581,8 +581,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const category = getQueryParam('category');
     // URL 경로에서 docNo 경로변수를 가져옴
     const docNo = window.location.pathname.split('/').pop();
-    // approversJson 선언
-    let approversJson = '';
+    // 결재자, 참조자 Json 선언
+    let approversJson = [];
+    let referencesJson = [];
 
     fetch(`/approval/getForm/${category}`)
         .then(response => {
@@ -682,12 +683,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error fetching form or document data:', error));
 
     // 서버에서 approversJson을 가져와서 처리
-    fetch(`/approval/get-approver-json/${docNo}`, {
+    fetch(`/approval/get-approvers-and-references-json/${docNo}`, {
         method: 'GET'
     })
         .then(response => response.json())
         .then(data => {
-            approversJson = data.approversJson;
+            approversJson = data.approversJson || [];  // 기본값으로 빈 배열 설정
+            referencesJson = data.referencesJson || [];  // 기본값으로 빈 배열 설정
         })
         .catch(error => console.error('Error fetching approversJson:', error));
 
@@ -695,11 +697,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // 철회 버튼 이벤트리스너
     document.getElementById('cancelBtn').addEventListener('click', (e) => {
         e.stopPropagation();
-        saveDocumentAsDraft(true, approversJson);
+        // fetch가 완료된 후에 철회 작업이 실행되도록 보장
+        if (!approversJson.length && !referencesJson.length) {
+            console.warn('ApproversJson or ReferencesJson is empty or not loaded yet.');
+            return;
+        }
+
+        saveDocumentAsDraft(true, approversJson, referencesJson);
     })
 
     // 임시저장을 위한 함수
-    function saveDocumentAsDraft(isWithdraw = false, approversJson = '') {
+    function saveDocumentAsDraft(isWithdraw = false, approversJson = [], referencesJson = []) {
         const docNo = window.location.pathname.split('/').pop();  // URL에서 문서 번호를 가져옴
         const docTitle = document.querySelector('input[name="docTitle"]').value;
         const docBody = document.querySelector('textarea[name="docBody"]').value;
@@ -719,7 +727,8 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append('approverNoHtml', approverContainerNumbersHtml);
         formData.append('category', category);
         formData.append('docStatus', '임시저장');  // 임시저장 상태로 설정
-        formData.append('approversJson', approversJson);  // 서버에서 불러온 approversJson 추가
+        formData.append('approversJson', approversJson);  // JSON으로 변환하여 추가
+        formData.append('referencesJson', referencesJson);  // JSON으로 변환하여 추가
         if (file) {
             formData.append('file', file);
         }
