@@ -463,7 +463,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -852,9 +852,9 @@
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
     <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
 </a>
 <!-- 채팅창 끝-->
 
@@ -945,6 +945,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     const fileName = originalPath.split("|")[0];
                     console.log("fileName: " + fileName);
 
+                    // "임시저장한 파일 :" 텍스트 노드 추가
+                    const fileLabel = document.createElement('span');
+                    fileLabel.textContent = "임시저장한 파일 : ";
+                    fileLabel.style.marginRight = '10px'; // 텍스트와 파일 링크 간의 간격 추가
+
                     // 다운로드 링크 생성
                     const fileLink = document.createElement('a');
                     fileLink.textContent = fileName;
@@ -952,7 +957,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
                     fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
-                    // 파일 선택 필드의 부모 요소에 파일 링크를 추가
+                    // 파일 선택 필드의 부모 요소에 텍스트와 파일 링크를 추가
+                    fileInput.parentNode.appendChild(fileLabel);
                     fileInput.parentNode.appendChild(fileLink);
 
                     // 파일 선택 필드를 숨김 (disabled만으로는 충분하지 않을 수 있음)
@@ -1357,6 +1363,11 @@ document.getElementById('editBtn').addEventListener('click', function () {
 
     // rightContainer의 display 속성에 flex를 추가하여 보이게 함
     document.querySelector('.right-container').style.display = 'flex';
+
+    const fileInput = document.querySelector('input[name="file"]');
+    if (fileInput) {
+        fileInput.style.display = 'block'; // 파일 입력 필드를 다시 보이도록 설정
+    }
 });
 
 // 돌아가기 버튼 눌렀을 때 이벤트 리스너

@@ -293,7 +293,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -574,6 +574,19 @@
     </div>
 </footer>
 <!-- Footer 끝 -->
+
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
+</a>
+<!-- 채팅창 끝-->
 
 <script><!-- 추가한 스크립트 입니다 -->
 document.addEventListener("DOMContentLoaded", function () {
