@@ -20,7 +20,7 @@ public class Notification {
     private long notificationNo;
 
     @Column(name = "emp_no")
-    private Integer empNo;
+    private Long empNo;
 
     @Column(name = "notification_type")
     private String notificationType;
@@ -35,5 +35,21 @@ public class Notification {
     private LocalDateTime notificationDate = LocalDateTime.now();
 
     @Column(name = "is_read")
-    private Boolean isRead;
+    private boolean isRead = false;
+
+    @Column(name = "enabled")
+    private boolean enabled = true; // 활성화 여부
+
+    public String getRedirectUrl() {
+        switch (this.notificationType) {
+            case "프로젝트":
+                return "/project/detail/" + this.referenceId; // 프로젝트 관련 페이지로 이동
+            case "공지사항":
+                return "/notice/detail/" + this.referenceId; // 공지사항 관련 페이지로 이동
+            case "업무보고서":
+                return "/report/detail/" + this.referenceId; // 업무 보고서 관련 페이지로 이동
+            default:
+                return "/user/alarm"; // 기본적으로 알림 페이지로 이동
+        }
+    }
 }

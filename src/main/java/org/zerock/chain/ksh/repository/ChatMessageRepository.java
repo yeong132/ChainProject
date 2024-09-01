@@ -11,14 +11,19 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
+    // 특정 채팅방의 메시지 목록 조회
     List<ChatMessage> findByChatNo(String chatNo);
 
-    // 읽지 않은 메시지를 조회하기 위한 메서드
+    // 특정 수신자의 읽지 않은 메시지 목록 조회
     List<ChatMessage> findByRecipientEmpNoAndIsReadFalse(Long recipientEmpNo);
 
-    // 메시지 읽음 처리하는 쿼리 추가 (Custom Query 필요)
+    // 특정 채팅방의 모든 메시지를 읽음 처리
     @Modifying
     @Query("UPDATE ChatMessage m SET m.isRead = true WHERE m.chatNo = :chatNo")
     void markMessagesAsRead(@Param("chatNo") String chatNo);
 
+    // 특정 채팅방의 모든 메시지 삭제
+    @Modifying
+    @Query("DELETE FROM ChatMessage m WHERE m.chatNo = :chatNo")
+    void deleteByChatNo(@Param("chatNo") String chatNo);
 }

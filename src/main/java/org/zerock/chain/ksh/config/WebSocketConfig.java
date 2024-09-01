@@ -22,12 +22,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/user", "/topic");
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
-//        registry.setUserDestinationPrefix("/user/{userId}/**");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/ws").withSockJS(); // setAllowedOrigins("*")
     }
 
     // 메시지 번환기

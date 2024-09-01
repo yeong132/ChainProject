@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "project")
@@ -23,7 +23,7 @@ public class Project {
     private String projectName;
 
     @Column(name = "emp_no")
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     @Column(name = "project_start_date")
     private LocalDate projectStartDate;
@@ -31,8 +31,6 @@ public class Project {
     @Column(name = "project_end_date")
     private LocalDate projectEndDate;
 
-    @Column(length = 100, name = "dmp_no")
-    private String dmpNo;
 
     @Column(columnDefinition = "TEXT")
     private String participants;
@@ -55,6 +53,8 @@ public class Project {
     @Column(name = "upload_date")
     private LocalDateTime uploadDate = LocalDateTime.now();
 
+    @Column(name = "progress_labels")
+    private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장
 
     public void setProjectFavorite(boolean projectFavorite) {
         this.projectFavorite = projectFavorite;

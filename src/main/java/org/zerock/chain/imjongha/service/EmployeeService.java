@@ -20,4 +20,7 @@ public interface EmployeeService {
 //
     void updateEmployeePermissions(Long empNo, List<Long> permissionIds);
     List<PermissionDTO> getEmployeePermissions(Long empNo);
+
+    // 박성은 추가 코드
+    List<EmployeeDTO> getAllEmployeesExcept(Long loggedInEmpNo); // 로그인 사원번호 제외 조직도 구현
 }

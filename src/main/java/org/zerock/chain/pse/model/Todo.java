@@ -1,15 +1,12 @@
 package org.zerock.chain.pse.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "todo")
@@ -22,7 +19,7 @@ public class Todo {
     private Long todoNo;
 
     @Column(name = "emp_no")
-    private Integer empNo = 1; // Integer로 변경하고 기본값 설정
+    private Long empNo;
 
     @Column(name = "todo_content")
     private String todoContent;
@@ -31,10 +28,10 @@ public class Todo {
     private String todoCategory;
 
     @Column(name = "todo_status")
-    private boolean todoStatus;
+    private boolean todoStatus= false;
 
     @Column(name = "todo_favorite")
-    private boolean todoFavorite;
+    private boolean todoFavorite = false;
 
     @Column(name = "todo_created_date")
     private LocalDate todoCreatedDate = LocalDate.now();

@@ -1,6 +1,5 @@
 package org.zerock.chain.pse.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,18 +7,18 @@ import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
 import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
 import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
-import org.zerock.chain.parkyeongmin.service.ApprovalService;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.repository.NotificationRepository;
 
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.Set;
 
-@Log4j2 // 로그 확인을 위해 임시로 추가 << 확인하고나서 삭제할것
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationServiceImpl extends BaseService<Notification> implements NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -28,25 +27,71 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired  // (영민)이 추가
     private DocumentsRepository documentsRepository;
 
+    // 사원번호와 알림 타입으로 알림 상태 업데이트
     @Override
-    public List<Notification> getNotificationsByType(int empNo, String type) {
-        return notificationRepository.findByEmpNoAndNotificationType(empNo, type);
+    @Transactional
+    public void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled) {
+        notificationRepository.updateEnabledByEmpNoAndType(empNo, notificationType, enabled);
     }
 
+    // 특정 사원번호(empNo)로 모든 알림을 가져옴
     @Override
-    public List<Notification> getAllNotifications(int empNo) {
+    protected List<Notification> getAllItemsByEmpNo(Long empNo) {
         return notificationRepository.findByEmpNo(empNo);
     }
 
+    // 특정 타입의 알림을 가져옴
+    @Override
+    public List<Notification> getNotificationsByType(Long empNo, String type) {
+        return getItemsByEmpNo(empNo, empNoParam -> notificationRepository.findByEmpNoAndNotificationType(empNoParam, type));
+    }
+
+    // 특정 사원의 모든 알림을 최신순으로 가져옴
+    @Override
+    public List<Notification> getAllNotifications(Long empNo) {
+        return getItemsByEmpNo(empNo, this::getAllItemsByEmpNo).stream()
+                .sorted(Comparator.comparing(Notification::getNotificationDate).reversed()) // 최신순으로 정렬
+                .collect(Collectors.toList());
+    }
+
+    // 특정 사원의 모든 알림을 삭제함
     @Override
     @Transactional
-    public void deleteAllNotifications(int empNo) {
+    public void deleteAllNotifications(Long empNo) {
         notificationRepository.deleteByEmpNo(empNo);
     }
 
+    // 특정 알림을 삭제함
     @Override
     public void deleteNotification(Long notificationNo) {
         notificationRepository.deleteById(notificationNo);
+    }
+
+    // 특정 알림을 읽음 상태로 변경함
+    @Override
+    @Transactional
+    public void markAsRead(Long notificationNo) {
+        Optional<Notification> notificationOpt = notificationRepository.findById(notificationNo);
+        if (notificationOpt.isPresent()) {
+            Notification notification = notificationOpt.get();
+            notification.setRead(true);
+            notificationRepository.save(notification);
+        }
+    }
+
+    // 특정 알림을 ID로 조회함
+    @Override
+    public Notification getNotificationById(Long notificationNo) {
+        return notificationRepository.findById(notificationNo)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+    }
+
+    // 새로운 메서드: 특정 사원의 읽은 알림을 모두 삭제함
+    @Override
+    @Transactional
+    public void deleteReadNotifications(Long empNo) {
+        // NotificationRepository의 새로운 메서드를 호출하여 읽은 알림을 삭제
+        notificationRepository.deleteByEmpNoAndIsRead(empNo);
     }
 
     @Override  // 전자결재 알림 생성 메서드 (영민)
@@ -70,7 +115,6 @@ public class NotificationServiceImpl implements NotificationService {
         // 각 사원에게 알림 생성
         for (Long empNoLong : allEmpNos) {
             if (empNoLong != null) {
-                int empNo = empNoLong.intValue();  // Long을 int로 변환
 
                 String message;
 
@@ -86,16 +130,14 @@ public class NotificationServiceImpl implements NotificationService {
                 }
 
                 Notification notification = new Notification();
-                notification.setEmpNo(empNo);  // int로 변환된 값을 사용
-                notification.setIsRead(false);
+                notification.setEmpNo(empNoLong);
+                notification.setRead(false);
                 notification.setNotificationDate(notification.getNotificationDate());
                 notification.setNotificationMessage(message);
                 notification.setNotificationType("전자결재");
                 notification.setReferenceId(0L);
 
-                log.info("NotificationDate: {}", notification.getNotificationDate());
                 notificationRepository.save(notification);
-                log.info("Saved Notification with Date: {}", notification.getNotificationDate());
             }
         }
     }

@@ -15,4 +15,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Emplo
 
     @EntityGraph(attributePaths = {"department", "rank", "employeePermissions.permission"})
     Optional<Employee> findById(Long id);
+
+    // 박성은 추가 코드
+    List<Employee> findAllByEmpNoNot(Long empNo);
 }

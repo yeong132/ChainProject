@@ -16,4 +16,5 @@ public class NoticeRequestDTO {
     private String noticeFiles;
     private String noticeAuthor;
     private LocalDate noticePinnedDate;
+    private Boolean noticePinned;
 }

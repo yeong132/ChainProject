@@ -56,19 +56,38 @@
             cursor: pointer;
         }
 
-        /* 체크박스와 별표 아이콘을 가깝게 배치하기 위한 스타일 */
+        /* 체크박스, 별표 아이콘, 이메일 아이콘 간격 조정 */
         .checkbox-star-container {
-            display: flex; /* flexbox를 사용하여 요소를 가로로 배치 */
-            align-items: center; /* 요소를 세로축 중앙에 정렬 */
+            display: flex;
+            align-items: center;
         }
 
         .checkbox-star-container input[type="checkbox"] {
-            margin-right: 15px; /* 체크박스와 별표 사이의 간격을 설정 */
+            margin-right: 10px; /* 체크박스와 별표 아이콘 사이의 간격 */
+        }
+
+        .checkbox-star-container .star-icon {
+            margin-right: 10px; /* 별표 아이콘과 이메일 아이콘 사이의 간격 */
+        }
+
+        .checkbox-star-container .bi-envelope-fill,
+        .checkbox-star-container .bi-envelope-open {
+            margin-right: 10px; /* 이메일 아이콘과 나머지 내용 사이의 간격 */
         }
 
         /* 별표 아이콘 색상 설정 */
         .bi-star-fill {
             color: #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+        }
+
+        /* 이메일 아이콘 스타일 */
+        .bi-envelope-fill {
+            color: #87CEEB; /* 옅은 하늘색 */
+        }
+
+        .bi-envelope-open {
+           /* color: #000; !* 기본 검은색 *!  */
+            color: 	#b0c4de; /* 회끼도는 하늘색 */
         }
 
         /* 마우스커서 표시 */
@@ -459,6 +478,7 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
+
 <!--메인 몸통-->
 <main id="main" class="main">
     <div class="pagetitle">
@@ -484,6 +504,8 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="card-title"></div>
+                        <!-- Table with stripped rows -->
                         <table class="table table-hover datatable" id="dataTable">
                             <thead>
                             <tr id="title-name">
@@ -516,19 +538,29 @@
                                 <th>
                                     <div class="checkbox-star-container">
                                         <input type="checkbox">
+                                        <!-- 별표 아이콘 -->
                                         <i th:class="${message.starred} ? 'bi-star-fill star-icon' : 'bi-star star-icon'" onclick="toggleStar(this)"></i>
+                                        <!-- 읽음 상태에 따라 아이콘을 표시 -->
+                                        <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'" class="ms-2"></i>
                                     </div>
                                 </th>
-                                <td th:text="${message.from}">보낸사람</td>
+
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.from}">보낸사람</a>
+                                </td>
                                 <td>
                                     <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.subject}">제목</a>
                                 </td>
-                                <td th:text="${message.date}">날짜</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.date}">날짜</a>
+                                </td>
                             </tr>
+
                             <!-- 메시지가 없을 경우 -->
                             <tr th:if="${messages.empty}">
                                 <td colspan="4">No emails found in your inbox.</td>
                             </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -837,6 +869,8 @@
             });
         };
     });
+
+
 </script>
 
 

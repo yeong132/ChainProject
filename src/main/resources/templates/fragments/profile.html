@@ -1,0 +1,61 @@
+<!-- src/main/resources/templates/fragments/profile.html -->
+<!-- 고정 헤더 : profile -->
+<div th:fragment="profile">
+    <li class="nav-item dropdown pe-3">
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+            <!-- 사원번호를 출력-->
+            <span id="empNo" class="d-none d-md-block dropdown-toggle ps-2" th:text="${session.lastName + ' ' + session.firstName}"></span>
+        </a>
+        <!-- 프로필 이미지 항목 끝 -->
+
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 th:text="${session.lastName + ' ' + session.firstName}">사원이름</h6>
+                <span th:text="${session.rankName}">직급</span>
+                <br>
+                <span th:text="${session.empNo}">사원번호</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider"/>
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                    <i class="bi bi-person"></i>
+                    <span>마이 페이지</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider"/>
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                    <i class="bi bi-diagram-2"></i>
+                    <span>조직도</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider"/>
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
+                    <i class="bi bi-power"></i>
+                    <span>로그아웃</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider"/>
+            </li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                    <i class="bi bi-tools"></i>
+                    <span>회사 관리자</span>
+                </a>
+            </li>
+        </ul>
+        <!-- 프로필 드롭다운 목록 끝 -->
+    </li>
+</div>
+

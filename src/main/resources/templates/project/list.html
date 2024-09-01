@@ -37,10 +37,10 @@
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -66,80 +66,12 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -151,64 +83,13 @@
             <!-- 환경설정 전체 끝 -->
 
 
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
     <!-- 상단바 끝 -->
 </header>
+
 <!-- Header 끝 -->
 
 <!-- Header Modal -->

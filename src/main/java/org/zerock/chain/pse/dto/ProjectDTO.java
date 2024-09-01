@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
@@ -17,14 +15,13 @@ public class ProjectDTO {
     private Long projectNo;
     private String projectName;
 
-    private Integer empNo = 1; // 기본값 설정
+    private Long empNo;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectStartDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectEndDate;
 
-    private String dmpNo;
     private String participants;
     private String projectContent;
     private String projectFiles;
@@ -33,7 +30,14 @@ public class ProjectDTO {
     private boolean projectFavorite = false;
     private int projectProgress;
     private boolean isTemporary; // 임시 보관 여부
+    private String progressLabels; // 진행도 라벨들을 쉼표로 구분된 문자열로 저장
 
+    // 각 라벨을 받을 필드 추가
+    private String progressLabel20;
+    private String progressLabel40;
+    private String progressLabel60;
+    private String progressLabel80;
+    private String progressLabel100;
 
     public void setIsTemporary(boolean isTemporary) {
         this.isTemporary = isTemporary;
@@ -44,4 +48,5 @@ public class ProjectDTO {
     public void setProjectProgress(Integer projectProgress) {
         this.projectProgress = projectProgress;
     }
+
 }

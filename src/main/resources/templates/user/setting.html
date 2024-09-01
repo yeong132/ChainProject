@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="${session.getAttribute('empNo')}" name="empNo">
 
     <title>환경설정</title>
     <meta content="" name="description"/>
@@ -11,29 +12,29 @@
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
 
     <!-- 폰트 설정  -->
-    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"/>
     <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
             rel="stylesheet"
     />
 
     <!-- Vendor CSS Files -->
-    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}"/>
+    <link rel="stylesheet" th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -46,10 +47,10 @@
 
 <body>
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
             <span class="d-none d-lg-block">CHAIN</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -75,83 +76,12 @@
 
             <li class="nav-item dropdown" id="commuteIcon">
                 <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
                 </div>
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -163,66 +93,13 @@
             <!-- 환경설정 전체 끝 -->
 
 
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
     <!-- 상단바 끝 -->
 </header>
+
 <!-- Header 끝 -->
 
 <!-- Header Modal -->
@@ -232,7 +109,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
 
 
@@ -241,9 +118,9 @@
                 출근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
                     아니오
                 </button>
             </div>
@@ -255,16 +132,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <div id="currentTimes">현재 시간:</div>
                 퇴근하시겠습니까?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
                 </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
                 </button>
             </div>
         </div>
@@ -274,7 +151,7 @@
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<aside class="sidebar" id="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item ">
             <a class="nav-link dash collapsed" href="/">
@@ -290,7 +167,7 @@
                 <span>기본 사항</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="menu-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
                     <ul>
@@ -310,7 +187,7 @@
                 <span>업무</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="work-nav">
                 <li>
                     <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
                 </li>
@@ -333,7 +210,7 @@
                 <span>전자결재</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
                 </li>
@@ -350,7 +227,7 @@
                 <span>게시판</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="board-nav">
                 <li>
                     <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
                 </li>
@@ -373,7 +250,7 @@
                 <span>일정</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="calendar-nav">
                 <li>
                     <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
                 </li>
@@ -387,7 +264,7 @@
                 <span>이메일</span>
                 <i class="bi bi-chevron-down ms-menu"></i>
             </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="email-nav">
                 <li>
                     <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
                 </li>
@@ -435,11 +312,11 @@
             </ol>
         </nav>
     </div>
-<!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
     <section class="section ">
         <div class="row">
-<!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
+            <!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
             <div class="col-xl-5">
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
@@ -447,7 +324,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-8 col-lg-9">
-                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">
+                                <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img1.jpg">
                                 <div class="pt-2">
                                     <a class="btn btn-primary btn-sm" href="#" title="Upload new profile image"><i
                                             class="bi bi-upload"></i></a>
@@ -460,58 +337,60 @@
                     <!------------------------------------------------------------- 프로필 사진 수정--------------------------------------------------------->
 
                     <div class="card-body profile-card pt-4 d-flex flex-column">
-                        <form>
+                        <form th:action="@{/user/update}" method="post">
+                            <div class="row mb-3">
+                                <label class="col-md-4 col-lg-3 col-form-label" for="lastName">Last Name</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <input class="form-control" id="lastName" name="lastName" th:value="${employee.lastName}" type="text">
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
-                                <label class="col-md-4 col-lg-3 col-form-label" for="firstName">Name</label>
+                                <label class="col-md-4 col-lg-3 col-form-label" for="firstName">First Name</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="firstName" name="firstName" type="text"
-                                           value=" 즈라쟈나이">
+                                    <input class="form-control" id="firstName" name="firstName" th:value="${employee.firstName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="company">부서</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="company" name="company" type="text" value="카츠라 고타로">
+                                    <input class="form-control" id="company" name="company" readonly th:value="${employee.departmentName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Job">직급</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Job" name="job" type="text" value="양이지사">
+                                    <input class="form-control" id="Job" name="job" readonly th:value="${employee.rankName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-md-3 col-lg-3 col-form-label" for="Address">주소</label>
+                                <label class="col-md-4 col-lg-3 col-form-label" for="Address">주소</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Address" name="address" type="text"
-                                           value="소인은 그런 것이 없소다">
+                                    <input class="form-control" id="Address" name="address" th:value="${employee.addr}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Phone">Phone</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Phone" name="phone" type="text"
-                                           value="엘리자베스는 어딨는가 - !! ">
+                                    <input class="form-control" id="Phone" name="phone" th:value="${employee.phoneNum}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Email">Email</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Email" name="email" type="email"
-                                           value="joyJoy@example.com">
+                                    <input class="form-control" id="Email" name="email" th:value="${employee.email}" type="email">
                                 </div>
                             </div>
 
                             <div class="text-center">
-                                <button class="btn btn-primary" onclick="showSuccessAlert()" type="submit">저장</button>
+                                <button class="btn btn-primary" type="submit">수정</button>
                             </div>
-                        </form><!-- End Profile Edit Form -->
+                        </form>
 
                     </div>
                 </div>
@@ -546,24 +425,24 @@
                             <div class="tab-pane fade show active profile-overview " id="profile-overview">
                                 <form style="display: flex; justify-content: center;">
                                     <div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="1" type="radio">
-                                        <label class="form-check-label" for="1">
-                                            테마1
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="2" type="radio">
-                                        <label class="form-check-label" for="2">
-                                            테마2
-                                        </label>
-                                    </div>
-                                    <div class="form-check" >
-                                        <input checked class="form-check-input" disabled id="3" type="radio">
-                                        <label class="form-check-label" for="3">
-                                            테마3
-                                        </label>
-                                    </div>
+                                        <div class="form-check">
+                                            <input checked class="form-check-input" id="1" type="radio">
+                                            <label class="form-check-label" for="1">
+                                                테마1
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input checked class="form-check-input" id="2" type="radio">
+                                            <label class="form-check-label" for="2">
+                                                테마2
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input checked class="form-check-input" disabled id="3" type="radio">
+                                            <label class="form-check-label" for="3">
+                                                테마3
+                                            </label>
+                                        </div>
                                     </div>
                                 </form><!-- End settings Form -->
                             </div>
@@ -595,51 +474,74 @@
                             </div>
 
                             <!-- --------------------------------------------------------환경 설정 -------------------------------------------------------- -->
-                            <div class="tab-pane fade   profile-change-password" id="profile-change-password">
-                                <form style="display: flex; justify-content: center;">
-                                    <div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="10" type="radio">
-                                            <label class="form-check-label" for="10">
-                                                알림1
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="20" type="radio">
-                                            <label class="form-check-label" for="20">
-                                                알림2
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" disabled id="30" type="radio">
-                                            <label class="form-check-label" for="30">
-                                                알림3
-                                            </label>
-                                        </div>
+                            <!-- 알림 설정 폼 -->
+                            <div class="tab-pane fade" id="profile-change-password">
+                                <form id="notificationSettingsForm">
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" id="projectNotification"
+                                               type="checkbox">
+                                        <label class="form-check-label" for="projectNotification">
+                                            프로젝트 알림
+                                        </label>
                                     </div>
-                                </form><!-- End Change Password Form -->
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" id="taskNotification" type="checkbox">
+                                        <label class="form-check-label" for="taskNotification">
+                                            업무보고서 알림
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" id="noticeNotification" type="checkbox">
+                                        <label class="form-check-label" for="noticeNotification">
+                                            공지사항 알림
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" id="chartNotification" type="checkbox">
+                                        <label class="form-check-label" for="chartNotification">
+                                            차트 알림
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- ------------------------------------------------탭 내용 끝// 저장 버튼 --------------------------------------------------------- -->
+                            <div class="text-center mt-5">
+                                <button class="btn btn-primary" onclick="showSuccessAlert()" type="submit">저장</button>
                             </div>
 
                         </div>
-
-                        <!-- ------------------------------------------------탭 내용 끝// 저장 버튼 --------------------------------------------------------- -->
-                        <div class="text-center mt-5">
-                            <button class="btn btn-primary" onclick="showSuccessAlert()" type="submit">저장</button>
-                        </div>
-
                     </div>
                 </div>
             </div>
+            <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
         </div>
-        <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
-
     </section>
 </main><!-- End #main -->
 
+<!-- 모달 창 -->
+<div aria-hidden="true" aria-labelledby="confirmationModalLabel" class="modal fade" id="confirmationModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">알림 설정 변경</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                정말 이 알림을 끄시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">아니요</button>
+                <button class="btn btn-primary" id="confirmDisable" type="button">예</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
+<footer class="footer" id="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
@@ -656,12 +558,12 @@
 
 <!-- 채팅창 및 맨위로 가기 -->
 <!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+<a class="back-to-top d-flex align-items-center justify-content-center" href="#">
     <i class="bi bi-arrow-up-short"></i>
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success" onclick="chatOpenPopup()">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
 </a>
@@ -676,12 +578,90 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<script src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js" type="text/javascript"></script>
+<script src="/node_modules/froala-editor/js/languages/ko.js" type="text/javascript"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 모달 및 스크립트 -->
+<script>
+    // 페이지가 로드될 때 로컬스토리지에서 값을 불러와 체크박스를 설정합니다.
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationSettingsForm = document.getElementById('notificationSettingsForm');
+        const checkboxes = notificationSettingsForm.querySelectorAll('input[type="checkbox"]');
+
+        checkboxes.forEach(checkbox => {
+            const savedValue = localStorage.getItem(checkbox.id);
+            if (savedValue !== null) {
+                checkbox.checked = savedValue === 'true'; // 로컬스토리지에서 불러온 값에 따라 체크박스 상태 설정
+            }
+        });
+
+        // 체크박스가 변경될 때 로컬스토리지에 값을 저장하고 서버에 업데이트 요청을 보냅니다.
+        notificationSettingsForm.addEventListener('change', function (event) {
+            const checkbox = event.target;
+            const notificationType = checkbox.id;
+            const enabled = checkbox.checked;
+
+            // 로컬스토리지에 체크박스 상태 저장
+            localStorage.setItem(notificationType, enabled);
+
+            if (!enabled) {
+                showConfirmationModal(notificationType);
+            } else {
+                updateNotificationSetting(notificationType, enabled);
+            }
+        });
+    });
+
+    function showConfirmationModal(notificationType) {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+
+        document.getElementById('confirmDisable').onclick = function () {
+            updateNotificationSetting(notificationType, false);
+            modal.hide();
+        };
+    }
+
+    function updateNotificationSetting(notificationType, enabled) {
+        const notificationMap = {
+            'projectNotification': '프로젝트',
+            'taskNotification': '업무보고서',
+            'noticeNotification': '공지사항',
+            'chartNotification': '차트'
+        };
+
+        const type = notificationMap[notificationType];
+
+        // 로그인된 사용자 정보(사원번호)를 세션에서 가져오기
+        const empNo = document.querySelector('meta[name="empNo"]').content; // empNo를 메타 태그에서 가져옵니다.
+
+        if (!empNo) {
+            console.error('사원번호를 가져올 수 없습니다.');
+            return;
+        }
+
+        // AJAX 요청을 통해 서버로 데이터 전송
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/update-notification-setting", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(type + ' 알림 설정이 업데이트되었습니다.');
+            } else if (xhr.readyState === 4) {
+                alert('알림 설정 업데이트 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify({empNo: empNo, notificationType: type, enabled: enabled}));
+    }
+</script>
+
+
 </body>
 </html>

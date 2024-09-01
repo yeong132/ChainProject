@@ -51,14 +51,38 @@
             margin-right: 5px;
         }
 
-        /* 체크박스와 별표 아이콘을 가깝게 배치하기 위한 스타일 */
+        /* 이메일 아이콘 스타일 */
+
+        .bi-envelope-fill {
+            color: #87CEEB; /* 옅은 하늘색 */
+        }
+
+        .bi-envelope-open {
+            color: #b0c4de; /* 회끼 도는 하늘색 */
+        }
+
+        /* 휴지통 아이콘 스타일 */
+        .bi-trash-fill {
+            color: #696969;
+        }
+
+        /* 체크박스, 휴지통 아이콘, 이메일 아이콘 간격 조정 */
         .checkbox-star-container {
-            display: flex; /* flexbox를 사용하여 요소를 가로로 배치 */
-            align-items: center; /* 요소를 세로축 중앙에 정렬 */
+            display: flex;
+            align-items: center;
         }
 
         .checkbox-star-container input[type="checkbox"] {
-            margin-right: 15px; /* 체크박스와 별표 사이의 간격을 설정 */
+            margin-right: 7px; /* 체크박스와 휴지통 아이콘 사이의 간격 */
+        }
+
+        .checkbox-star-container .bi-trash-fill {
+            margin-right: 10px; /* 휴지통 아이콘과 이메일 아이콘 사이의 간격 */
+        }
+
+        .checkbox-star-container .bi-envelope-fill,
+        .checkbox-star-container .bi-envelope-open {
+            margin-right: 10px; /* 이메일 아이콘과 나머지 내용 사이의 간격 */
         }
 
         /* 마우스커서 표시 */
@@ -304,6 +328,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/mail/inbox">Email</a></li>
                 <li class="breadcrumb-item active">Trash</li>
             </ol>
         </nav>
@@ -315,6 +340,7 @@
         </div>
     </div>
 
+    <!-- 받은 휴지통 메일 리스트 섹션 -->
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
@@ -349,12 +375,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb"
-                                th:data-message-id="${message.id}">
+                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}">
                                 <td>
                                     <div class="checkbox-star-container">
                                         <input type="checkbox" class="form-check-input trash-checkbox" th:value="${message.id}" onclick="event.stopPropagation();">
-                                        <i class="bi bi-trash-fill ms-2"></i>
+                                        <!--휴지통 아이콘을 표시 -->
+                                        <i class="bi bi-trash-fill" style="margin-right: 5px;"></i>
+                                        <!-- 읽음 상태에 따라 아이콘을 표시 -->
+                                        <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'" style="margin-right: 10px;"></i>
                                     </div>
                                 </td>
                                 <td th:text="${message.from}">From</td>

@@ -1,132 +1,211 @@
-// <button onClick="chatOpenPopup()">메신저</button>
 
-let stompClient = null; // 클라이언트 객체 생성
+// 알림창 시간 표시
+function timeAgo(timestamp) {
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    return `${days}일 전`;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notificationTimes = document.querySelectorAll('.notification-time');
+
+    notificationTimes.forEach(function (element) {
+        const timestamp = element.getAttribute('data-timestamp');
+        if (timestamp) {
+            element.textContent = timeAgo(new Date(timestamp));
+        }
+    });
+});
+
+
+// <button onClick="chatOpenPopup()">메신저</button>
+let stompClient = null; // 소켓 클라이언트 객체 생성
 const empNo = sessionStorage.getItem('empNo');
-const chatAlarm = document.querySelector('#chatAlarm');
+const chatAlarm = document.querySelector('#chatAlarm'); // 채팅 알람
+let selectedEmpNo = null; // 채팅 선택된 사원
+let chatWindow = null; // 팝업창 객체
+let unreadMessages = {}; // 안 읽은 메시지를 사용자별로 저장
+let logout = document.querySelector("#logout");
+let reconnectAttempts = 0; // 소켓 재연결 시도 횟수
+let maxReconnectAttempts = 5; // 최대 재연결 시도 횟수
+let reconnectInterval = 5000; // 재연결 시도 간격(밀리초)
 
 // 소켓 연결
 document.addEventListener('DOMContentLoaded', function() {
-    if (empNo) {
+    connectSocket(); // 소켓 연결 시도
+});
+
+function connectSocket() {
+    if (empNo && !stompClient) {
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
+        // 소켓 연결 시도
         stompClient.connect({}, onConnected, onError);
+    }
+}
+// 부모 창이 닫히거나 새로고침될 때 자식 창 닫기
+window.addEventListener('beforeunload', function() {
+    if (chatWindow && !chatWindow.closed) {
+        chatWindow.close();
     }
 });
 
 // 소켓 연결(로그인) 성공
 function onConnected() {
-    // 구독 설정 및 소켓 통신 초기화
+    reconnectAttempts = 0; // 연결 성공 시, 재연결 시도 횟수 초기화
     stompClient.subscribe(`/user/${empNo}/queue/messages`, onMessageReceived);
     stompClient.subscribe(`/user/public`, onMessageReceived);
 
     // 접속한 사용자 등록: 사용자 컨트롤러로 사용자 정보 전달
     stompClient.send("/app/user.addUser", {}, JSON.stringify(empNo));
+    console.log("소켓 연결 성공");
 
-    findAndDisplayConnectedUsers().then(); // 연결된 사용자 찾고 대화 목록 불러오기
     displayUnreadMessages(); // 로그인 시 읽지 않은 메시지 불러오기
 }
 
 // 소켓 연결 끊김
 function onError() {
-    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-    connectingElement.style.color = 'red';
+    console.error('WebSocket 서버에 연결할 수 없습니다. 다시 연결을 시도하는 중...');
+    if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        setTimeout(() => {
+            connectSocket(); // 재연결 시도
+        }, reconnectInterval);
+    } else {
+        console.error('MWebSocket 서버가 종료되었습니다. 재연결하려면 새로고침하세요.');
+    }
 }
 
 // 수신 메시지 처리
 async function onMessageReceived(payload) {
-    // console.log("수신메시지 페이뤄드----");
-    // console.log(payload);
-    // await findAndDisplayConnectedUsers(); // 연결된 사용자 목록 업데이트 및 사용자 연결 확인
-    //
-    // const message = JSON.parse(payload.body);
-    //
-    // // 메시지를 수신한 사용자가 선택된 사용자이거나 수신자가 나 자신인 경우에만 메시지를 표시
-    // if (!(selectedEmpNo && selectedEmpNo === message.senderEmpNo)) {
-    //     console.log("수신메시지 안에 --selectedEmpNo && selectedEmpNo === message.senderEmpNo--")
-    //     // displayMessage(message.senderEmpNo, message.chatContent); // 메시지 출력
-    // } else {
-    //     console.log("수신메시지 안에 알람 함수----")
-    //     updateUserNotification(message.senderEmpNo); // 선택된 사용자가 아닌 경우 알림 증가
-    // }
+    const message = JSON.parse(payload.body);
+    const senderEmpNo = message.senderEmpNo;
+
+    // 현재 선택된 사원의 채팅창이 열려 있을 경우
+    if (selectedEmpNo === senderEmpNo) {
+        if (chatWindow && !chatWindow.closed) {
+            chatWindow.postMessage(message, '*'); // 자식창에 메시지 전달
+            // 자식창이 활성화된 경우 알림 수 감소
+            if (document.hasFocus()) {
+                delete unreadMessages[senderEmpNo];
+                updateUserNotification(); // ㅇㅇㅇ자식창에게 전달?
+            } else {
+                incrementUnreadMessages(senderEmpNo);
+            }
+        }
+    } else {
+        // 선택되지 않은 사원의 메시지일 경우 알림 업데이트
+        incrementUnreadMessages(senderEmpNo);
+    }
+    // 자식 창이 활성화되어 있지 않으면 알람 수 업데이트
+    if (chatWindow && !chatWindow.closed) {
+        chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+    }
 }
 
-// 전체 연결된 사용자 목록을 가져옴
-async function findAndDisplayConnectedUsers() {
-    // const connectedUsersResponse = await fetch(`/chat/activeUsers?empNo=${empNo}`); // 사원의 대화 목록 호출
-    // let connectedUsers = await connectedUsersResponse.json(); // JSON 형식으로 변환된 응답 데이터
-    //
-    // connectedUsers.forEach(user => { // 목록에 있는 사용자는 유지, 새롭게 로그인한 사용자는 추가
-    //     let listItem = user.empNo; // empNo사원번호
-    //
-    //     if (!listItem) { // 신규 사원 추가(not null)
-    //         appendUserElement(user);
-    //     } else { // 이미 존재하는 사용자의 알림 값 유지(null)
-    //         chatAlarm.textContent = chatAlarm.textContent || '0'; // 현재 값 유지
-    //     }
-    // });
-}
 
 // 로그인 시 읽지 않은 메시지 불러오기
 async function displayUnreadMessages() {
-    // const unreadMessagesResponse = await fetch(`/messages/unread?recipientEmpNo=${empNo}`);
-    // let unreadMessages = await unreadMessagesResponse.json();
-    //
-    // unreadMessages.forEach(message => {
-    //     updateUserNotification(message.senderEmpNo); // 안 읽음 채팅 알림
-    // });
+    try {
+        const unreadMessagesResponse = await fetch(`/messages/unread?recipientEmpNo=${empNo}`);
+        let messages = await unreadMessagesResponse.json();
+
+        // 안 읽은 메시지를 사용자별로 그룹화
+        messages.forEach(message => {
+            const senderEmpNo = message.senderEmpNo;
+            incrementUnreadMessages(senderEmpNo);
+        });
+        // updateUserNotification();
+
+        // 자식 창이 열려 있을 경우 알람 상태 전달
+        if (chatWindow && !chatWindow.closed) {
+            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+        }
+    } catch (error) {
+        console.error('Error fetching unread messages:', error);
+    }
 }
 
-// 안 읽은 채팅 수 카운트
-function updateUserNotification(senderEmpNo) {
-    // if (empNo == senderEmpNo) {
-        // 현재 알림 숫자 값을 가져오고, 증가
-        let currentCount = parseInt(chatAlarm.textContent) || 0;
+// 알림 수 증가 및 업데이트
+function incrementUnreadMessages(senderEmpNo) {
+    if (!unreadMessages[senderEmpNo]) {
+        unreadMessages[senderEmpNo] = 0;
+    }
+    unreadMessages[senderEmpNo]++;
+    updateUserNotification();
+}
 
-        chatAlarm.textContent = (++currentCount).toString(); // 증가된 숫자 설정
+// 안 읽은 채팅 수 카운트 및 UI 업데이트
+function updateUserNotification() {
+    let currentCount = 0;
+
+    // 모든 안 읽은 메시지의 합계를 계산
+    for (let empNo in unreadMessages) {
+        currentCount += unreadMessages[empNo];
+    }
+
+    if (currentCount > 0) {
+        chatAlarm.textContent = currentCount.toString();
         chatAlarm.classList.remove('hidden');
-    // }
+    } else {
+        chatAlarm.textContent = '';
+        chatAlarm.classList.add('hidden');
+    }
 }
 
-// 방 목록 추가
-// function appendUserElement(user) {
-//     console.log("목록에 방 추가 empNo:", user.empNo, "이름 성:", user.firstName + " " + user.lastName, "Rank:", user.rankName);
-//
-//     const listItem = document.createElement('div');
-//     listItem.classList.add('chat_room_item');
-//     listItem.id = addEmpNoPrefix(user.empNo);
-//
-//     const roomImg = document.createElement('div');
-//     roomImg.className = "room_img";
-//     const img = document.createElement("img");
-//     img.src = "/assets/img/보노보노.png";
-//     img.alt = `${user.lastName}${user.firstName}`; // 사용자 이름 불러와야 함
-//     roomImg.appendChild(img);
-//
-//     const roomInfo = document.createElement("ul");
-//     const roomName = document.createElement("li");
-//     roomName.className = "room_name";
-//     roomName.textContent = `${user.lastName}${user.firstName} ${user.rankName}님`; // 사용자 이름 불러와야 함
-//     const roomContent = document.createElement("li");
-//     roomContent.className = "room_content"; // 최근 메시지 표시
-//     roomContent.textContent = "새로운 메시지가 없습니다.";
-//     roomInfo.appendChild(roomName);
-//     roomInfo.appendChild(roomContent);
-//
-//     const roomAlarm = document.createElement('span');
-//     roomAlarm.textContent = '0'; // 메시지 번호
-//     roomAlarm.classList.add('room_alarm', 'hidden'); // 메시지 알림 숨김
-//
-//     listItem.appendChild(roomImg);
-//     listItem.appendChild(roomInfo);
-//     listItem.appendChild(roomAlarm);
-//
-//     listItem.addEventListener('dblclick', roomItemClick); // 채팅방 선택
-//
-//     chatRoomUsersList.appendChild(listItem);
-//
-//     // 최신 메시지 가져와서 표시
-//     // updateLatestMessage(user.empNo);
-// }
+// 사용자가 선택한 사원번호 전달
+function selectUser(empNo) {
+    selectedEmpNo = empNo;
+
+    // 선택한 사용자에 대해 안 읽은 메시지를 초기화
+    if (unreadMessages[empNo]) {
+        delete unreadMessages[empNo];
+        updateUserNotification(empNo);
+    }
+    console.log("Selected user:", selectedEmpNo);
+
+    // 자식 창이 열려 있을 경우 알람 상태 전달
+    if (chatWindow && !chatWindow.closed) {
+        chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+    } // 자식창에서 받음ㅇㅇㅇ
+}
+
+// 채팅창을 닫을 때 selectedEmpNo 초기화
+function resetSelectedEmpNo() {
+    selectedEmpNo = null;
+}
+
+// 자식 창으로부터 메시지를 받는 이벤트 리스너
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'SELECT_USER') {
+        selectUser(event.data.empNo);
+    } else if (event.data.type === 'REQUEST_ALARM_STATUS') {
+        // 자식 창에서 알람 상태 요청 시, 현재 상태를 자식 창에 전달
+        if (chatWindow && !chatWindow.closed) {
+            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+            console.log("녜 제대로 되고 있어염!");
+        }
+    } else if (event.data.type === 'RESET_SELECTED_USER') {
+        resetSelectedEmpNo();
+    } else if (event.data.type === 'RESET_ALARM') {
+        // 특정 사원의 알람 초기화 처리
+        if (unreadMessages[event.data.empNo]) {
+            delete unreadMessages[event.data.empNo];
+            updateUserNotification(); // 알람 UI 업데이트
+            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+        }
+    }
+}, false);
+// --------------------/end 메신저---------------------------
 
 // 메신저 팝업창 오픈
 function chatOpenPopup() {
@@ -137,14 +216,38 @@ function chatOpenPopup() {
     const chatUrl = `/chatting?empNo=${empNo}`; // 사원번호 전달
 
     // 팝업창 옵션
-    popupSize = window.open(chatUrl, 'chat', `toolbar=no, menubar=no, scrollbars=no, resizable=no, width=${width}, height=${height}, left=${left}, top=${top}`);
+    chatWindow = window.open(chatUrl, 'chat', `toolbar=no, menubar=no, scrollbars=no, resizable=no, width=${width}, height=${height}, left=${left}, top=${top}`);
 
     // 팝업창 크기 고정
-    if (popupSize) {
-        popupSize.onresize = () => {
-            popupSize.resizeTo(width, height);
-        }
+    if (chatWindow) {
+        chatWindow.onresize = () => {
+            chatWindow.resizeTo(width, height);
+        };
+
+        // 팝업창이 로드된 후에 현재 알람 수를 자식 창에 전달
+        let interval = setInterval(() => {
+            if (chatWindow && !chatWindow.closed) {
+                chatWindow.postMessage({ type: 'INITIAL_ALARM', unreadMessages: unreadMessages }, '*');
+                clearInterval(interval); // 메시지 전달 후 interval 멈춤
+            }
+        }, 500);
     }
+}
+
+function onLogout() {
+    if (stompClient) {
+        stompClient.send("/app/user.disconnectUser", {}, JSON.stringify(empNo));
+        stompClient.disconnect();
+    }
+
+    if (chatWindow && !chatWindow.closed) {
+        chatWindow.postMessage({ type: 'LOGOUT' }, '*');
+        setTimeout(() => {
+            chatWindow.close(); // 0.5초 후 창을 닫음
+        }, 500);
+    }
+    // 실제 로그아웃 처리
+    sessionStorage.clear();
 }
 // -- 메신저 end
 
@@ -152,6 +255,17 @@ function chatOpenPopup() {
 // Froala Editor 한국어 적용
 var editor = new FroalaEditor('#froala', {
     language: 'ko',
+    htmlRemoveTags: ['p'], // <p> 태그만 제거
+    enter: FroalaEditor.ENTER_BR,   // Enter 키를 누르면 <br> 태그로 변환
+
+    // 이미지 업로드 옵션 추가
+    imageUploadURL: '/upload_image', // 이미지 업로드를 처리하는 엔드포인트
+    imageUploadParams: {
+        id: 'my_editor'  // 추가 파라미터를 전달할 수 있음
+    },
+    imageUploadMethod: 'POST',
+    imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+    imageMaxSize: 5 * 1024 * 1024, // 최대 이미지 파일 크기: 5MB
 });
 
 // 출퇴근 Modal용
@@ -228,33 +342,22 @@ function showSuccessAlert() {
 }
 
 //  그래프 저장 자스
-document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const data = myChart.data.datasets[0].data;
-            const index = Array.from(checkboxes).indexOf(checkbox);
-            data[index] = checkbox.checked ? parseInt(checkbox.value) : 0;
-            myChart.update();
-        });
-    });
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+//     checkboxes.forEach(checkbox => {
+//         checkbox.addEventListener('change', () => {
+//             const data = myChart.data.datasets[0].data;
+//             const index = Array.from(checkboxes).indexOf(checkbox);
+//             data[index] = checkbox.checked ? parseInt(checkbox.value) : 0;
+//             myChart.update();
+//         });
+//     });
+// });
 
-// 체크박스 진행도가 차는 자스-
-function updateProgress() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-    const totalProgress = Array.from(checkboxes).reduce((acc, checkbox) => acc + parseInt(checkbox.value), 0);
-    const progressBar = document.getElementById('progress-bar');
-    progressBar.style.width = totalProgress + '%';
-    progressBar.setAttribute('aria-valuenow', totalProgress);
-    progressBar.textContent = totalProgress + '%';
-    // 숨겨진 입력 필드를 총 진행률 값으로 업데이트
-    document.getElementById('projectProgress').value = totalProgress;
-}
 
 // 테이블에 링크 적용하기
 function rowClick(url) {
     window.location.href = url;
 }
 
-
+logout.addEventListener('click', onLogout); // 로그아웃 클릭 시, 로그아웃

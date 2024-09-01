@@ -46,10 +46,10 @@
 
   <body>
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-      <a href="/" class="logo d-flex align-items-center">
-        <img src="/assets/img/logo.png" alt=""/>
+      <a class="logo d-flex align-items-center" href="/">
+        <img alt="" src="/assets/img/logo.png"/>
         <span class="d-none d-lg-block">CHAIN</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -75,83 +75,12 @@
 
         <li class="nav-item dropdown" id="commuteIcon">
           <div class="from-check form-switch me-3">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+            <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
           </div>
         </li>
         <!-- 출퇴근 아이콘 끝 -->
 
-        <li class="nav-item dropdown">
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge btn-secondary badge-number">4</span> </a>
-          <!-- 알림창 아이콘 끝 -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              4개의 새 알림이 있습니다
-              <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Lorem Ipsum</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-x-circle text-danger"></i>
-              <div>
-                <h4>Atque rerum nesciunt</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>1 hr. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-check-circle text-success"></i>
-              <div>
-                <h4>Sit rerum fuga</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>2 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-info-circle text-primary"></i>
-              <div>
-                <h4>Dicta reprehenderit</h4>
-                <p>Quae dolorem earum veritatis oditseno</p>
-                <p>4 hrs. ago</p>
-              </div>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-            <li class="dropdown-footer">
-              <a href="/user/alarm">모든 알림 표시</a>
-            </li>
-          </ul>
-          <!-- 알림 드롭다운 목록 끝 -->
-        </li>
+        <th:block th:include="fragments/notifications :: notifications"></th:block>
         <!-- 알림 전체 끝 -->
 
         <li class="nav-item dropdown">
@@ -163,66 +92,13 @@
         <!-- 환경설정 전체 끝 -->
 
 
-        <li class="nav-item dropdown pe-3">
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-            <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-          <!-- 프로필 이미지 항목 끝 -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>박영민</h6>
-              <span>사원</span>
-            </li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                <i class="bi bi-person"></i>
-                <span>마이 페이지</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                <i class="bi bi-diagram-2"></i>
-                <span>조직도</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-                <i class="bi bi-power"></i>
-                <span>로그아웃</span>
-              </a>
-            </li>
-
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                <i class="bi bi-tools"></i>
-                <span>회사 관리자</span>
-              </a>
-            </li>
-          </ul>
-          <!-- 프로필 드롭다운 목록 끝 -->
-        </li>
+        <th:block th:include="fragments/profile :: profile"></th:block>
         <!-- 프로필 전체 끝 -->
       </ul>
     </nav>
     <!-- 상단바 끝 -->
   </header>
+
   <!-- Header 끝 -->
 
   <!-- Header Modal -->
@@ -452,7 +328,7 @@
                 <form id="boardForm" method="post" th:action="@{/board/modify/{boardNo}(boardNo=${board.boardNo})}">
                   <input name="boardFiles" th:value="${board.boardFiles}" type="hidden">
                   <input name="boardFiles" th:value="${board.boardLocation}" type="hidden">
-
+                  <input name="boardCategory" th:value="${board.boardCategory}" type="hidden">
 
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label" >제목</label>
@@ -465,11 +341,10 @@
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label">카테고리</label>
                     <div class="col-sm-11">
-                      <select aria-label="Default select example" class="form-select" name="boardCategory" >
-                        <option value="" disabled selected>카테고리</option>
-                        <option value="결혼식">결혼식</option>
-                        <option value="장례식">장례식</option>
-                        <option value="기타">기타</option>
+                      <select aria-label="Default select example" class="form-select" name="boardCategory" disabled>
+                        <option th:checked="${board.boardCategory == '결혼식'}">결혼식</option>
+                        <option th:checked="${board.boardCategory == '장례식'}" >장례식</option>
+                        <option th:checked="${board.boardCategory == '기타'}" >기타</option>
                       </select>
                     </div>
                   </div>
@@ -478,7 +353,8 @@
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label" >작성자</label>
                     <div class="col-sm-11">
-                      <input class="form-control"  name="boardAuthor" type="text" th:value="${board.boardAuthor}">
+                      <input id="boardAuthorInput" class="form-control" readonly type="text" th:value="${board.boardAuthor}">
+                      <input name="boardAuthor" type="hidden" th:value="${board.boardAuthor}">
                     </div>
                   </div>
 
@@ -495,14 +371,38 @@
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label">첨부 파일</label>
                     <div class="col-sm-11">
-                      <input class="form-control" id="formFile" name="noticeFiles" th:value="${board.boardFiles}" type="file">
-                      <div th:if="${board.boardFiles != null}">
+                      <input class="form-control" id="formFile" name="boardFiles" th:value="${board.boardFiles}" type="file">
+
+                      <!-- 파일 삭제 기능 추가 -->
+                      <div id="attachedFileContainer" th:if="${board.boardFiles != null}">
                         <p>첨부된 파일:
-                          <a download th:href="@{${board.boardFiles}}" th:text="${board.boardFiles}"></a>
+                          <a id="attachedFileLink" download th:href="@{${board.boardFiles}}" th:text="${board.boardFiles}"></a>
+                          <button type="button" class="btn btn-danger btn-sm" id="deleteFileButton">삭제</button>
                         </p>
                       </div>
+
+                      <!-- 삭제된 파일 경로를 저장할 hidden input -->
+                      <input type="hidden" id="deletedFile" name="deletedFile" value="">
                     </div>
                   </div>
+
+                  <script>
+                    document.getElementById('deleteFileButton').addEventListener('click', function() {
+                      if (confirm("첨부된 파일을 삭제하시겠습니까?")) {
+                        // 파일 경로를 삭제 input에 설정
+                        document.getElementById('deletedFile').value = document.getElementById('attachedFileLink').textContent;
+
+                        // 파일 input을 초기화
+                        document.getElementById('formFile').value = "";
+
+                        // 첨부된 파일 링크와 삭제 버튼을 숨김
+                        var attachedFileContainer = document.getElementById('attachedFileContainer');
+                        if (attachedFileContainer) {
+                          attachedFileContainer.style.display = "none";
+                        }
+                      }
+                    });
+                  </script>
 
                   <div class="row mb-3">
                     <label class="col-sm-1 col-form-label" >내용</label>
@@ -719,7 +619,7 @@
     let options;
 
     // boardLocation 값이 존재하는 경우 해당 좌표로 지도 중심 설정
-    const locationValue = /*[[${board.boardLocation}]]*/ '35.8580767172927,128.64125595278'; // 예시 좌표값
+    const locationValue = "[[${board.boardLocation}]]"; // 예시 좌표값
     if (locationValue) {
       const coords = locationValue.split(',').map(coord => parseFloat(coord));
       options = {
@@ -786,6 +686,44 @@
       }
       return true; // 폼 제출을 계속 진행
     }
+  </script>
+
+  <!-- 사원번호로 작성자 이름 출력 -->
+  <script>
+    $(document).ready(function () {
+      // 작성자 사원 번호를 처리하는 함수
+      function processBoardAuthor() {
+        const boardAuthorInput = $('#boardAuthorInput'); // 작성자 입력 요소 선택
+        const empNo = boardAuthorInput.val(); // 작성자 사원번호를 가져옴
+
+        if (empNo) {
+          // 서버에서 모든 직원 데이터를 가져옴
+          $.getJSON('/api/employees/all', function (employees) {
+            const employeeMap = {};
+
+            // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
+            employees.forEach(employee => {
+              employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
+            });
+
+            // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+            if (employeeMap[empNo]) {
+              boardAuthorInput.val(employeeMap[empNo]); // 사원이름으로 텍스트 변경
+            } else {
+              boardAuthorInput.val("정보 없음");
+            }
+          }).fail(function () {
+            console.error("Failed to fetch employee data.");
+            boardAuthorInput.val("정보 없음");
+          });
+        } else {
+          boardAuthorInput.val("정보 없음");
+        }
+      }
+
+      // 페이지 로드 시 작성자 사원 번호를 처리
+      processBoardAuthor();
+    });
   </script>
   </body>
 </html>

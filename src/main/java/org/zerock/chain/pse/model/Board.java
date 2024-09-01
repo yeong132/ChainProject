@@ -22,23 +22,21 @@ public class Board {
     @Column(name = "board_category")  // 카테고리
     private String boardCategory;
 
-    @Column(name = "board_name")    // 제목
+    @Column(name = "board_name")  // 제목
     private String boardName;
 
-    @Column(name = "board_content") // 내용
+    @Column(name = "board_content", columnDefinition = "LONGTEXT")  // 내용
     private String boardContent;
 
-    @Column(name = "board_location")  // 지도위치 api 연동 예정
+    @Column(name = "board_location")  // 지도 위치 (API 연동 예정)
     private String boardLocation;
 
-    @Column(name = "board_files")   // 첨부파일
+    @Column(name = "board_files")  // 첨부파일
     private String boardFiles;
 
     @Column(name = "board_author")  // 작성자
     private String boardAuthor;
 
-    @Column(name = "board_upload_date") // 작성일
+    @Column(name = "board_upload_date")  // 작성일
     private LocalDate boardUploadDate = LocalDate.now();
-
-
 }

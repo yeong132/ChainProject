@@ -9,13 +9,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 기존 업로드 경로 설정
+        // 모든 파일을 C:/upload/ 폴더에서 서빙하도록 설정
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations("file:///C:/upload/");
 
-        // 새로운 메일 이미지 경로 설정
+        // 메일 이미지 경로도 C:/upload/로 설정
         registry.addResourceHandler("/assets/img/mailimg/**")
-                .addResourceLocations("classpath:/static/assets/img/mailimg/",
-                        "file:src/main/resources/static/assets/img/mailimg/");
+                .addResourceLocations("file:///C:/upload/");
     }
 }
