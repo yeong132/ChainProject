@@ -45,14 +45,14 @@ public class ReportController {
         model.addAttribute("temporaryReports", temporaryReports);  // 정렬된 임시 보관 문서를 모델에 추가
         return "report/temporary";  // 임시 보관 문서 목록 페이지로 이동
     }
-
     // 문서 개별 상세 조회
     @GetMapping("/detail/{reportNo}")
-    public String detailGET(@PathVariable Long reportNo, ProjectRequestDTO projectRequestDTO, Model model) {
+    public String detailGET(@PathVariable("reportNo") Long reportNo, ProjectRequestDTO projectRequestDTO, Model model) {
         ReportDTO reportDTO = reportService.getReportById(reportNo);  // 특정 보고서 번호로 보고서 조회
         model.addAttribute("report", reportDTO);  // 조회된 보고서를 모델에 추가
         return "report/detail";  // 보고서 상세 페이지로 이동
     }
+
 
     // 문서 수정 페이지
     @GetMapping("/modify/{reportNo}")

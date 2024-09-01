@@ -4,18 +4,25 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.zerock.chain.imjongha.dto.AttendanceRecordDTO;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
+import org.zerock.chain.imjongha.dto.MonthlyAttendanceSummaryDTO;
+import org.zerock.chain.imjongha.service.AttendanceRecordService;
 import org.zerock.chain.imjongha.service.EmployeeService;
+import org.zerock.chain.imjongha.service.MonthlyAttendanceSummaryService;
 import org.zerock.chain.pse.dto.*;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.service.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +33,7 @@ import java.util.Map;
 @Log4j2
 public class UserController {
 
+
     private final FavoriteQnaService favoriteQnaService;  // 즐겨찾기 QnA 서비스 의존성 주입
     private final QnaService qnaService;  // QnA 서비스 의존성 주입
     private final CommentService commentService;  // 댓글 서비스 의존성 주입
@@ -33,14 +41,19 @@ public class UserController {
     private final SystemNotificationService systemNotificationService;  // 시스템 알림 서비스 의존성 주입
     private final EmployeeService employeeService;  // 사원 서비스 의존성 주입
 
+    private final AttendanceRecordService attendanceRecordService;
+    private final MonthlyAttendanceSummaryService monthlyAttendanceSummaryService;
+
     @Autowired
-    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService, EmployeeService employeeService) {
+    public UserController(FavoriteQnaService favoriteQnaService, QnaService qnaService, CommentService commentService, NotificationService notificationService, SystemNotificationService systemNotificationService, EmployeeService employeeService, AttendanceRecordService attendanceRecordService, MonthlyAttendanceSummaryService monthlyAttendanceSummaryService) {
         this.favoriteQnaService = favoriteQnaService;  // FavoriteQnaService 초기화
         this.qnaService = qnaService;  // QnaService 초기화
         this.commentService = commentService;  // CommentService 초기화
         this.notificationService = notificationService;  // NotificationService 초기화
         this.systemNotificationService = systemNotificationService;  // SystemNotificationService 초기화
         this.employeeService = employeeService;  // EmployeeService 초기화
+        this.attendanceRecordService = attendanceRecordService;
+        this.monthlyAttendanceSummaryService = monthlyAttendanceSummaryService;
     }
 
     // 환경설정에서 알람 온오프
@@ -68,10 +81,43 @@ public class UserController {
         return "user/qaDetail";  // QnA 상세 페이지로 이동
     }
 
-    // 마이페이지로 이동
+    // 마이페이지 조회
     @GetMapping("/mypage")
-    public String userMypage(Model model) {
-        return "user/mypage";  // 마이페이지로 이동
+    public String getMypage(Model model) {
+        // SecurityContextHolder에서 현재 인증된 사용자의 이름(사원 번호)을 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String empNo = authentication.getName();
+
+        if (empNo == null) {
+            // 사원번호가 없으면 에러 처리
+            model.addAttribute("employeeError", "로그인 정보가 없습니다.");
+            return "error"; // 적절한 에러 페이지로 리다이렉트
+        }
+
+        try {
+            // 사원 정보 조회
+            EmployeeDTO employee = employeeService.getEmployeeById(Long.parseLong(empNo));
+            model.addAttribute("employee", employee);
+
+            // 현재 연도와 월에 해당하는 근태 요약 정보 가져오기
+            LocalDate currentDate = LocalDate.now();
+            List<MonthlyAttendanceSummaryDTO> monthlySummaries = monthlyAttendanceSummaryService.getSummariesByYearAndMonth(currentDate.getYear(), currentDate.getMonthValue());
+
+            // 최근 월별 근태 요약 정보 가져오기
+            MonthlyAttendanceSummaryDTO currentMonthSummary = monthlySummaries.stream().findFirst().orElse(null);
+            model.addAttribute("monthlyAttendanceSummary", currentMonthSummary);
+
+            // 오늘 날짜의 출퇴근 기록 가져오기
+            AttendanceRecordDTO attendance = attendanceRecordService.getAttendanceRecordByDateAndEmpNo(currentDate, Long.parseLong(empNo));
+            model.addAttribute("dailyAttendance", attendance);
+
+        } catch (Exception e) {
+            model.addAttribute("employeeError", "사원 정보를 찾을 수 없습니다.");
+            log.error("사원 정보 조회 실패: {}", e.getMessage());
+            return "error"; // 에러 페이지로 리다이렉트
+        }
+
+        return "user/mypage";
     }
 
     // 설정 페이지로 이동

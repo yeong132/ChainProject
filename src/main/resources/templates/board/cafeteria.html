@@ -311,10 +311,11 @@
     </nav>
   </div>
   <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
-
   <div class="row gy-4 mb-3">
     <div class="col-xl-6">
-      <button type="button" class="btn btn-primary uploadFileBtn">식당표 업로드</button>
+      <button class="btn btn-primary"
+              th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
+              type="button">구내식당 업로드</button>
       <button type="submit" class="btn btn-primary submitBtn">저장</button>
     </div>
   </div>

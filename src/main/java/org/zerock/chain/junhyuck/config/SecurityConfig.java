@@ -36,8 +36,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/signup", "/assets/**", "/uploads/**").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/signup", "/assets/**", "/uploads/**").permitAll()
+                                .requestMatchers("/notice/register").hasAuthority("공지사항 작성")
+                                .requestMatchers("/notice/modify/**").hasAuthority("공지사항 수정")
+//                        .requestMatchers("/notice/delete/**").hasAuthority("공지사항 삭제")
+                                .requestMatchers("/board/modify/**").hasAuthority("경조사 수정")
+                                .requestMatchers("/board/cafeteria").hasAuthority("구내식당 사진 업로드")
+                                .requestMatchers("/admin/**").hasAuthority("관리자") // 관리자 접근 권한이 있는 사용자만 접근 가능
+                                .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")

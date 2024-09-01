@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -44,7 +43,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long id) {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long id) {  // "id" 명시적으로 지정
         EmployeeDTO employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
@@ -56,35 +55,16 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {  // "id" 명시적으로 지정
         EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {  // "id" 명시적으로 지정
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
-//
-//    @GetMapping("/search")
-//    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String departmentName,
-//            @RequestParam(required = false) String rankName) {
-//        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
-//        return ResponseEntity.ok(employees);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size) {
-//        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
-//        return ResponseEntity.ok(employeePage);
-//    }
-
-
 
     // 박성은 추가 코드
     @GetMapping("/employee-info")

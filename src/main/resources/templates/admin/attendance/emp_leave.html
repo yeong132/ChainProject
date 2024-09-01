@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>사원별 연차 관리</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+
+    <!-- CSS 링크 -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
+            <span class="d-none d-lg-block">연차 관리</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <!-- 프로필 -->
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">관리자</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<!-- Header 끝 -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link dash collapsed" href="/admin/main">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+        <!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/admin/personnel/management"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
+                </li>
+                <li>
+                    <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
+                </li>
+
+            </ul>
+        </li>
+        <!-- End Components Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="attendance-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
+                </li>
+                <li>
+                    <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
+                </li>
+
+            </ul>
+        </li>
+    </ul>
+</aside>
+<!-- End Sidebar-->
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>사원별 연차 관리</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/leave">Leave</a></li>
+                <li class="breadcrumb-item active">Employee</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">홍길동 - 연차 상세 내역</h5>
+                        <table class="table table-hover table-borderless datatable">
+                            <thead>
+                            <tr>
+                                <th scope="col">신청일</th>
+                                <th scope="col">시작일</th>
+                                <th scope="col">종료일</th>
+                                <th scope="col">상태</th>
+                                <th scope="col">사유</th>
+                                <th scope="col">승인/반려</th>
+                                <th scope="col">수정/삭제</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>2024-08-01</td>
+                                <td>2024-08-10</td>
+                                <td>2024-08-15</td>
+                                <td><span class="badge bg-success">승인</span></td>
+                                <td>가족 여행</td>
+                                <td><button class="btn btn-secondary" disabled>승인됨</button></td>
+                                <td>
+                                    <button class="btn btn-warning">수정</button>
+                                    <button class="btn btn-danger">삭제</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-09-01</td>
+                                <td>2024-09-10</td>
+                                <td>2024-09-12</td>
+                                <td><span class="badge bg-danger">반려</span></td>
+                                <td>개인 사정</td>
+                                <td><button class="btn btn-warning" disabled>반려됨</button></td>
+                                <td>
+                                    <button class="btn btn-warning">수정</button>
+                                    <button class="btn btn-danger">삭제</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

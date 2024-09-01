@@ -24,7 +24,7 @@ public class Permission {
     private Long perNo;
 
     @Column(name = "per_name")
-    private String pername;
+    private String perName;
 
     @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EmployeePermission> employeePermissions = new ArrayList<>();

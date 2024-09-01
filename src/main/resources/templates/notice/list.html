@@ -314,7 +314,9 @@
 
       <div class="row gy-4 mb-3">
         <div class="col-xl-6">
-          <button class="btn btn-primary"  onclick="location.href='/notice/register'">공지사항 작성(관리자)</button>
+          <button class="btn btn-primary" th:if="${#authorization.expression('hasAuthority(''공지사항 작성'')')}" onclick="location.href='/notice/register'">
+            공지사항 작성
+          </button>
         </div>
       </div>
       <!------------------------------------------------------------------검색  --------------------------------------------------------------------->
