@@ -38,8 +38,6 @@ public class ApprovalRepositoryTests {
             Documents document = Documents.builder()
                     .docTitle("결재 문서입니다. 확인 부탁드립니다.")
                     .docStatus("임시저장")
-                    .draftDate(LocalDate.now())
-                    .senderEmpNo(1) // 사원 번호
                     .category("일반 기안")
                     .build();
             documentsRepository.save(document);
@@ -53,8 +51,6 @@ public class ApprovalRepositoryTests {
                     .docTitle("결재 문서입니다. 확인 부탁드립니다.")
                     .docStatus("요청")
                     .reqDate(LocalDate.now())
-                    .senderEmpNo(1) // 보내는 사원 번호
-                    .receiverEmpNo(2) // 받는 사원 번호
                     .category("일반기안")
                     .build();
             documentsRepository.save(document);
@@ -70,7 +66,6 @@ public class ApprovalRepositoryTests {
                 .hireDate(LocalDate.now().minusYears(1))
                 .lastDate(null)
                 .phoneNum("010-1234-5678")
-                .profileImg("profile1.png")
                 .build();
         employeesRepository.save(employee);
     }
@@ -82,9 +77,6 @@ public class ApprovalRepositoryTests {
             Employee employee = employeesRepository.findById((long) i).orElseThrow();
 
             Approval approval = Approval.builder()
-                    .docNo(document)
-                    .empNo(employee)
-                    .approvalDate(LocalDate.now())
                     .rejectionReason("Sample rejection reason " + i)
                     .build();
 
@@ -98,8 +90,6 @@ public class ApprovalRepositoryTests {
                 .docTitle("결재 올려드립니다")
                 .docStatus("요청")
                 .reqDate(LocalDate.now())
-                .senderEmpNo(1)
-                .receiverEmpNo(2)
                 .category("일반기안")
                 .build();
 
