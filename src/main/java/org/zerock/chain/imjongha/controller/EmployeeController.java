@@ -26,6 +26,17 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    private CustomUserDetails getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                return (CustomUserDetails) principal;
+            }
+        }
+        return null;
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employees = employeeService.getAllEmployees();
@@ -33,7 +44,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long id) {
         EmployeeDTO employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
@@ -45,51 +56,35 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
         EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
+//
+//    @GetMapping("/search")
+//    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
+//            @RequestParam(required = false) String name,
+//            @RequestParam(required = false) String departmentName,
+//            @RequestParam(required = false) String rankName) {
+//        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
+//        return ResponseEntity.ok(employees);
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
+//        return ResponseEntity.ok(employeePage);
+//    }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<EmployeeDTO>> searchEmployees(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String departmentName,
-            @RequestParam(required = false) String rankName) {
-        List<EmployeeDTO> employees = employeeService.searchEmployees(name, departmentName, rankName);
-        return ResponseEntity.ok(employees);
-    }
 
-    @GetMapping
-    public ResponseEntity<Page<EmployeeDTO>> getEmployeesPaged(
-            @RequestParam int page,
-            @RequestParam int size) {
-        Page<EmployeeDTO> employeePage = employeeService.getEmployeesPaged(page, size);
-        return ResponseEntity.ok(employeePage);
-    }
-
-    @GetMapping("/department/{departmentId}")
-    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
-        List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
-        return ResponseEntity.ok(employees);
-    }
-
-    @GetMapping("/{id}/permissions")
-    public ResponseEntity<List<PermissionDTO>> getEmployeePermissions(@PathVariable Long id) {
-        List<PermissionDTO> permissions = employeeService.getEmployeePermissions(id);
-        return ResponseEntity.ok(permissions);
-    }
-
-    @PutMapping("/{id}/permissions")
-    public ResponseEntity<Void> updateEmployeePermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
-        employeeService.updateEmployeePermissions(id, permissionIds);
-        return ResponseEntity.noContent().build();
-    }
 
     // 박성은 추가 코드
     @GetMapping("/employee-info")
@@ -115,18 +110,12 @@ public class EmployeeController {
 
         return ResponseEntity.ok(response);
     }
+
     // 로그인한 사원번호를 제외한 전체 사원 목록 조회
     @GetMapping("/all-except-logged-in")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployeesExceptLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long loggedInEmpNo = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof CustomUserDetails) {
-                loggedInEmpNo = ((CustomUserDetails) principal).getEmpNo();
-            }
-        }
+        CustomUserDetails loggedInUser = getAuthenticatedUser();
+        Long loggedInEmpNo = loggedInUser != null ? loggedInUser.getEmpNo() : null;
 
         List<EmployeeDTO> employees = employeeService.getAllEmployeesExcept(loggedInEmpNo);
         return ResponseEntity.ok(employees);

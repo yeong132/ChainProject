@@ -504,13 +504,18 @@
                                 </div>
                             </div>
                         <!-------------- 전자결제 알림 목록 -------------------------------->
-                        <div aria-labelledby="schedule-tab" class="tab-pane fade" id="schedule" role="tabpanel">
-                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                                A simple secondary alert—check it out!
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
-                                        type="button"></button>
+                            <div aria-labelledby="payment-tab" class="tab-pane fade" id="schedule" role="tabpanel">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert" th:each="notification : ${approvalNotifications}">
+                                    <a th:text="'전자결재 '"></a>
+                                    <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                    <hr>
+                                    <a th:text="' 알림: ' + ${notification.notificationMessage}"></a>
+                                    <!-- 상세보기 링크 제거됨 -->
+                                    <form method="post" style="display:inline;" th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                        <button aria-label="Close" class="btn-close" type="submit"></button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
                         <!--------------- 계정 알림 목록 --------------------->
                         <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
                             <div class="alert alert-secondary alert-dismissible fade show" role="alert">
