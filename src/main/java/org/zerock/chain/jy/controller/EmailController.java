@@ -317,12 +317,16 @@ public class EmailController {
             // 이메일이 휴지통(TRASH) 라벨이 있는지 확인
             boolean isInTrash = message.getLabelIds() != null && message.getLabelIds().contains("TRASH");
 
+            // 이메일이 발신함(SENT) 라벨에 있는지 확인
+            boolean isInSent = message.getLabelIds() != null && message.getLabelIds().contains("SENT");
+
             log.info("Final message content: {}", messageContent);
 
             model.addAttribute("message", messageDTO);
             model.addAttribute("messageContent", messageContent);
             model.addAttribute("messageId", messageId);
             model.addAttribute("isInTrash", isInTrash); // 휴지통 여부를 모델에 추가
+            model.addAttribute("isInSent", isInSent); // 발신함 여부를 모델에 추가
 
             // returnUrl 처리
             if (returnUrl != null && !returnUrl.isEmpty()) {

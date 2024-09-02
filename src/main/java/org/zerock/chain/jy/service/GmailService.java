@@ -442,32 +442,47 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching sent emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("SENT"))
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("SENT"))
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch sent messages for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
-                MessagePart payload = fullMessage.getPayload();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
+                    MessagePart payload = fullMessage.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
+                    if (payload != null) {
+                        List<MessagePartHeader> headers = payload.getHeaders();
 
-                    MessageDTO messageDTO = new MessageDTO();
-                    messageDTO.setId(message.getId());
-                    messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
-                    messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
-                    messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
-                    messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+                        MessageDTO messageDTO = new MessageDTO();
+                        messageDTO.setId(message.getId());
+                        messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                        messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
+                        messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                        messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
 
-                    boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
-                    messageDTO.setStarred(isStarred);
+                        boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
+                        messageDTO.setStarred(isStarred);
 
-                    messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Payload is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
                 }
             }
         } else {
@@ -476,6 +491,7 @@ public class GmailService {
 
         return messageDTOList;
     }
+
 
     //휴지통 라벨로 이동시키는 메서드
     public void moveToTrash(String userId, String messageId) throws IOException {
@@ -609,8 +625,17 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching drafts for user: {}", userId);
 
-        ListDraftsResponse response = service.users().drafts().list(userId).execute();
-        List<Draft> drafts = response.getDrafts();
+        ListDraftsResponse response = null;
+        List<Draft> drafts = null;
+
+        try {
+            response = service.users().drafts().list(userId).execute();
+            drafts = response.getDrafts();
+        } catch (Exception e) {
+            log.error("Failed to fetch drafts for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
@@ -620,31 +645,39 @@ public class GmailService {
             log.info("Number of drafts found: {}", drafts.size());
 
             for (Draft draft : drafts) {
-                String messageId = draft.getMessage().getId();
-                Message message = service.users().messages().get(userId, messageId).execute();
-                MessagePart payload = message.getPayload();
+                try {
+                    String messageId = draft.getMessage().getId();
+                    Message message = service.users().messages().get(userId, messageId).execute();
+                    MessagePart payload = message.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
+                    if (payload != null) {
+                        List<MessagePartHeader> headers = payload.getHeaders();
 
-                    MessageDTO messageDTO = new MessageDTO();
-                    messageDTO.setId(message.getId());
-                    messageDTO.setDraftId(draft.getId());
-                    messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
-                    messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
-                    messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
-                    messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+                        MessageDTO messageDTO = new MessageDTO();
+                        messageDTO.setId(message.getId());
+                        messageDTO.setDraftId(draft.getId());
+                        messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                        messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
+                        messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                        messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
 
-                    boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
-                    messageDTO.setStarred(isStarred);
+                        boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
+                        messageDTO.setStarred(isStarred);
 
-                    messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Payload is null for message ID: {}", messageId);
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process draft with ID: {}: {}", draft.getId(), e.getMessage());
+                    // 특정 드래프트를 처리하지 못했을 경우, 해당 드래프트를 건너뜀
                 }
             }
         }
 
         return messageDTOList;
     }
+
 
     public void deleteDraft(String userId, String draftId) throws IOException {
         Gmail service = getInstance();
@@ -737,27 +770,44 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching starred emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("STARRED"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("STARRED"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch starred messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                    if (fullMessage != null) {
+                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                // 읽음/안읽음 상태 설정
-                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                messageDTO.setRead(!isUnread);
+                        // 읽음/안읽음 상태 설정
+                        boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+                        messageDTO.setRead(!isUnread);
 
-                messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to fetch full message for message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 가져오지 못했을 경우, 해당 메시지를 건너뜀
+                }
             }
         } else {
             log.info("No starred emails found for user: {}", userId);
@@ -767,34 +817,48 @@ public class GmailService {
     }
 
 
+
     public List<MessageDTO> listImportantMessages(String userId) throws IOException {
         Gmail service = getInstance();
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("IMPORTANT"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("IMPORTANT"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch important messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
+
+        if (messages == null || messages.isEmpty()) {
+            log.info("No important messages found for user: {}", userId);
+            // 빈 리스트 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
-        if (messages != null && !messages.isEmpty()) {
-            for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+        for (Message message : messages) {
+            Message fullMessage = service.users().messages().get(userId, message.getId())
+                    .setFields("id,labelIds,payload(headers)")
+                    .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+            MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                // 읽음/안읽음 상태 설정
-                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                messageDTO.setRead(!isUnread);
+            // 읽음/안읽음 상태 설정
+            boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+            messageDTO.setRead(!isUnread);
 
-                messageDTOList.add(messageDTO);
-            }
+            messageDTOList.add(messageDTO);
         }
 
         return messageDTOList;
     }
+
 
 
     public void addStar(String userId, String messageId) throws IOException {
@@ -894,23 +958,40 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching inbox emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("INBOX"))
-                .setFields("messages(id,labelIds,payload(headers))") // 필요한 필드만 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("INBOX"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 필요한 필드만 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch inbox messages for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                // fullMessage를 가져와서 필요한 필드를 사용
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    // fullMessage를 가져와서 필요한 필드를 사용
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
-                messageDTOList.add(messageDTO);
+                    if (fullMessage != null) {
+                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
+                }
             }
         } else {
             log.info("No inbox emails found for user: {}", userId);
@@ -918,6 +999,7 @@ public class GmailService {
 
         return messageDTOList;
     }
+
 
 
     public String createMyselfLabel(String userId) throws IOException {
@@ -938,42 +1020,61 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching emails sent to myself for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("SENT"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("SENT"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch messages sent to myself: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessagePart payload = fullMessage.getPayload();
+                    if (fullMessage != null) {
+                        MessagePart payload = fullMessage.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
-                    String from = getHeader(headers, "From").orElse("");
-                    String to = getHeader(headers, "To").orElse("");
+                        if (payload != null) {
+                            List<MessagePartHeader> headers = payload.getHeaders();
+                            String from = getHeader(headers, "From").orElse("");
+                            String to = getHeader(headers, "To").orElse("");
 
-                    if (from.equalsIgnoreCase(to)) {
-                        String labelId = getOrCreateLabelId(userId, "내게 쓴 메일함");
+                            if (from.equalsIgnoreCase(to)) {
+                                String labelId = getOrCreateLabelId(userId, "내게 쓴 메일함");
 
-                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                        // 읽음/안읽음 상태 설정
-                        boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                        messageDTO.setRead(!isUnread);
+                                // 읽음/안읽음 상태 설정
+                                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+                                messageDTO.setRead(!isUnread);
 
-                        messageDTOList.add(messageDTO);
+                                messageDTOList.add(messageDTO);
 
-                        if (fullMessage.getLabelIds() == null || !fullMessage.getLabelIds().contains(labelId)) {
-                            addLabelToMessage(userId, message.getId(), "내게 쓴 메일함");
+                                if (fullMessage.getLabelIds() == null || !fullMessage.getLabelIds().contains(labelId)) {
+                                    addLabelToMessage(userId, message.getId(), "내게 쓴 메일함");
+                                }
+                            }
+                        } else {
+                            log.warn("Payload is null for message ID: {}", message.getId());
                         }
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
                     }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
                 }
             }
         } else {
@@ -983,5 +1084,6 @@ public class GmailService {
         log.info("Number of messages processed: {}", messageDTOList.size());
         return messageDTOList;
     }
+
 
 }
