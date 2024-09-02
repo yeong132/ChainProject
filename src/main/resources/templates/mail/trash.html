@@ -379,8 +379,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="message : ${messages}" class="listTb" th:data-message-id="${message.id}"
-                                onclick="rowClick(this)"> <!-- rowClick 함수 호출 -->
+                            <tr th:each="message : ${messages}" class="listTb">
                                 <td>
                                     <div class="checkbox-star-container">
                                         <input type="checkbox" class="form-check-input trash-checkbox"
@@ -390,9 +389,15 @@
                                            style="margin-right: 10px;"></i>
                                     </div>
                                 </td>
-                                <td th:text="${message.from}">From</td>
-                                <td th:text="${message.subject}">Subject</td>
-                                <td th:text="${message.date}">Date</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.from}"></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.subject}"></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.date}"></a>
+                                </td>
                                 <td>
                                     <!-- 개별 삭제 버튼 -->
                                     <form th:action="@{/mail/trash/delete/{messageId}(messageId=${message.id})}"

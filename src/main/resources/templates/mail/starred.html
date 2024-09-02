@@ -536,11 +536,15 @@
                                         <i th:class="${message.read} ? 'bi-envelope-open' : 'bi-envelope-fill'" class="ms-2"></i>
                                     </div>
                                 </th>
-                                <td th:text="${message.from}">보낸사람</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.from}">보낸사람</a>
+                                </td>
                                 <td>
                                     <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.subject}">제목</a>
                                 </td>
-                                <td th:text="${message.date}">날짜</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.date}">날짜</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
