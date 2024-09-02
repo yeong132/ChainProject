@@ -1,3 +1,37 @@
+let stompClient = null; // 소켓 클라이언트 객체 생성
+const empNo = sessionStorage.getItem('empNo');
+const chatAlarm = document.querySelector('#chatAlarm'); // 채팅 알람
+let selectedEmpNo = null; // 채팅 선택된 사원
+let chatWindow = null; // 팝업창 객체
+let unreadMessages = {}; // 안 읽은 메시지를 사용자별로 저장
+let messageSenders = {}; // 메시지 보낸 사원 저장
+let logout = document.querySelector("#logout");
+let reconnectAttempts = 0; // 소켓 재연결 시도 횟수
+let maxReconnectAttempts = 5; // 최대 재연결 시도 횟수
+let reconnectInterval = 5000; // 재연결 시도 간격(밀리초)
+
+// 소켓 연결
+document.addEventListener('DOMContentLoaded', function() {
+    const storedUnreadMessages = sessionStorage.getItem('unreadMessagesTemp');
+    if (storedUnreadMessages) {
+        unreadMessages = JSON.parse(storedUnreadMessages);
+        updateUserNotification(); // 알람 수 UI 업데이트
+    }
+    // unreadMessages를 초기화하여 새로운 알람 수가 추가되지 않도록 함
+    unreadMessages = {};
+    // 스토리지의 특정 값 초기화
+    sessionStorage.removeItem('unreadMessagesTemp');
+
+    connectSocket(); // 소켓 연결 시도
+});
+
+// 페이지 언로드 전에 읽지 않은 알람 수를 세션 스토리지에 저장
+window.addEventListener('beforeunload', function() {
+    if (chatWindow && !chatWindow.closed) {
+         chatWindow.close();
+    }
+    sessionStorage.setItem('unreadMessagesTemp', JSON.stringify(unreadMessages));
+});
 
 // 알림창 시간 표시
 function timeAgo(timestamp) {
@@ -26,24 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-// <button onClick="chatOpenPopup()">메신저</button>
-let stompClient = null; // 소켓 클라이언트 객체 생성
-const empNo = sessionStorage.getItem('empNo');
-const chatAlarm = document.querySelector('#chatAlarm'); // 채팅 알람
-let selectedEmpNo = null; // 채팅 선택된 사원
-let chatWindow = null; // 팝업창 객체
-let unreadMessages = {}; // 안 읽은 메시지를 사용자별로 저장
-let logout = document.querySelector("#logout");
-let reconnectAttempts = 0; // 소켓 재연결 시도 횟수
-let maxReconnectAttempts = 5; // 최대 재연결 시도 횟수
-let reconnectInterval = 5000; // 재연결 시도 간격(밀리초)
-
-// 소켓 연결
-document.addEventListener('DOMContentLoaded', function() {
-    connectSocket(); // 소켓 연결 시도
-});
-
 function connectSocket() {
     if (empNo && !stompClient) {
         const socket = new SockJS('/ws');
@@ -52,12 +68,6 @@ function connectSocket() {
         stompClient.connect({}, onConnected, onError);
     }
 }
-// 부모 창이 닫히거나 새로고침될 때 자식 창 닫기
-window.addEventListener('beforeunload', function() {
-    if (chatWindow && !chatWindow.closed) {
-        chatWindow.close();
-    }
-});
 
 // 소켓 연결(로그인) 성공
 function onConnected() {
@@ -81,7 +91,7 @@ function onError() {
             connectSocket(); // 재연결 시도
         }, reconnectInterval);
     } else {
-        console.error('MWebSocket 서버가 종료되었습니다. 재연결하려면 새로고침하세요.');
+        console.error('WebSocket 서버가 종료되었습니다. 재연결하려면 새로고침하세요.');
     }
 }
 
@@ -90,14 +100,17 @@ async function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
     const senderEmpNo = message.senderEmpNo;
 
+    // 메시지를 보낸 사원의 상태를 저장
+    messageSenders[senderEmpNo] = true;
+
     // 현재 선택된 사원의 채팅창이 열려 있을 경우
-    if (selectedEmpNo === senderEmpNo) {
+    if (selectedEmpNo == senderEmpNo) {
         if (chatWindow && !chatWindow.closed) {
             chatWindow.postMessage(message, '*'); // 자식창에 메시지 전달
             // 자식창이 활성화된 경우 알림 수 감소
             if (document.hasFocus()) {
                 delete unreadMessages[senderEmpNo];
-                updateUserNotification(); // ㅇㅇㅇ자식창에게 전달?
+                updateUserNotification();
             } else {
                 incrementUnreadMessages(senderEmpNo);
             }
@@ -106,12 +119,14 @@ async function onMessageReceived(payload) {
         // 선택되지 않은 사원의 메시지일 경우 알림 업데이트
         incrementUnreadMessages(senderEmpNo);
     }
-    // 자식 창이 활성화되어 있지 않으면 알람 수 업데이트
+    // 자식 창 알람 수 업데이트
     if (chatWindow && !chatWindow.closed) {
-        chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+        chatWindow.postMessage({
+            type: 'UPDATE_ALARM',
+            unreadMessages: unreadMessages,
+            messageSenders: messageSenders }, '*');
     }
 }
-
 
 // 로그인 시 읽지 않은 메시지 불러오기
 async function displayUnreadMessages() {
@@ -124,11 +139,13 @@ async function displayUnreadMessages() {
             const senderEmpNo = message.senderEmpNo;
             incrementUnreadMessages(senderEmpNo);
         });
-        // updateUserNotification();
 
         // 자식 창이 열려 있을 경우 알람 상태 전달
         if (chatWindow && !chatWindow.closed) {
-            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+            chatWindow.postMessage({
+                type: 'UPDATE_ALARM',
+                unreadMessages: unreadMessages,
+                messageSenders: messageSenders }, '*');
         }
     } catch (error) {
         console.error('Error fetching unread messages:', error);
@@ -175,8 +192,11 @@ function selectUser(empNo) {
 
     // 자식 창이 열려 있을 경우 알람 상태 전달
     if (chatWindow && !chatWindow.closed) {
-        chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
-    } // 자식창에서 받음ㅇㅇㅇ
+        chatWindow.postMessage({
+            type: 'UPDATE_ALARM',
+            unreadMessages: unreadMessages,
+            messageSenders: messageSenders }, '*');
+    }
 }
 
 // 채팅창을 닫을 때 selectedEmpNo 초기화
@@ -191,8 +211,10 @@ window.addEventListener('message', function(event) {
     } else if (event.data.type === 'REQUEST_ALARM_STATUS') {
         // 자식 창에서 알람 상태 요청 시, 현재 상태를 자식 창에 전달
         if (chatWindow && !chatWindow.closed) {
-            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
-            console.log("녜 제대로 되고 있어염!");
+            chatWindow.postMessage({
+                type: 'UPDATE_ALARM',
+                unreadMessages: unreadMessages,
+                messageSenders: messageSenders }, '*');
         }
     } else if (event.data.type === 'RESET_SELECTED_USER') {
         resetSelectedEmpNo();
@@ -201,7 +223,10 @@ window.addEventListener('message', function(event) {
         if (unreadMessages[event.data.empNo]) {
             delete unreadMessages[event.data.empNo];
             updateUserNotification(); // 알람 UI 업데이트
-            chatWindow.postMessage({ type: 'UPDATE_ALARM', unreadMessages }, '*');
+            chatWindow.postMessage({
+                type: 'UPDATE_ALARM',
+                unreadMessages: unreadMessages,
+                messageSenders: messageSenders }, '*');
         }
     }
 }, false);
@@ -227,13 +252,16 @@ function chatOpenPopup() {
         // 팝업창이 로드된 후에 현재 알람 수를 자식 창에 전달
         let interval = setInterval(() => {
             if (chatWindow && !chatWindow.closed) {
-                chatWindow.postMessage({ type: 'INITIAL_ALARM', unreadMessages: unreadMessages }, '*');
+                chatWindow.postMessage({
+                    type: 'INITIAL_ALARM',
+                    unreadMessages: unreadMessages,
+                    messageSenders: messageSenders }, '*');
                 clearInterval(interval); // 메시지 전달 후 interval 멈춤
             }
         }, 500);
     }
 }
-
+// 메신저 로그아웃
 function onLogout() {
     if (stompClient) {
         stompClient.send("/app/user.disconnectUser", {}, JSON.stringify(empNo));
@@ -250,7 +278,6 @@ function onLogout() {
     sessionStorage.clear();
 }
 // -- 메신저 end
-
 
 // Froala Editor 한국어 적용
 var editor = new FroalaEditor('#froala', {

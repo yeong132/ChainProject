@@ -20,6 +20,7 @@ const empNo = sessionStorage.getItem('empNo') || new URLSearchParams(window.loca
 let selectedEmpNo = null; // 선택된 사원
 let selectedEmployeeInfo = null; // 선택된 사원의 정보
 let unreadMessages = {}; // 안 읽은 메시지를 사용자별로 저장
+let messageSenders = {}; // 메시지 보낸 사원 저장
 let reconnectAttempts = 0; // 소켓 재연결 시도 횟수
 let maxReconnectAttempts = 5; // 최대 재연결 시도 횟수
 let reconnectInterval = 5000; // 재연결 시도 간격(밀리초)
@@ -36,42 +37,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 부모 창으로부터 메시지를 받는 이벤트 리스너
-    window.addEventListener('message', function(event){
+    window.addEventListener('message', function(event) {
         if (event.data.type === 'LOGOUT') {
             onLogout();
         } else if (event.data.type === 'UPDATE_ALARM' || event.data.type === 'INITIAL_ALARM') {
+            console.log("11111 업데이트 무");
             updateAlarmUI(event.data.unreadMessages); // 부모 창에서 받은 알람 상태 업데이트
-            console.log("상태 업데이트 1-2 업데이트 알람")
-            console.log(event.data.unreadMessages);
+            messageSenders = event.data.messageSenders; // messageSenders 상태 업데이트
 
             // menu_alarm 클래스 업데이트
             const totalUnreadMessages = Object.values(event.data.unreadMessages).reduce((a, b) => a + b, 0);
-            const menuAlarm = document.querySelector('.menu_alarm');
-            if (totalUnreadMessages > 0) {
-                menuAlarm.textContent = totalUnreadMessages;
-                menuAlarm.classList.remove('hidden');
-            } else {
-                menuAlarm.textContent = '0';
-                menuAlarm.classList.add('hidden');
-            }
+            menuAlarmUpdate(totalUnreadMessages);
         } else if (event.data.type === 'RESET_ALARM') {
             // 자식 창에서 알람 수를 초기화
-            updateAlarmUI({ [selectedEmpNo]: 0 });
-        } else {
-            const message = event.data;
-            displayMessage(message.senderEmpNo, message.chatContent);
+            updateAlarmUI({[selectedEmpNo]: 0});
         }
     });
 
     // 자식 창이 활성화되었을 때 알림 처리
     window.addEventListener('focus', function() {
-        if (selectedEmpNo) {
+        if(selectedEmpNo == null || messageSenders?.[selectedEmpNo] == undefined) {
+            return;
+       } else if (selectedEmpNo !== messageSenders[selectedEmpNo]) {
             markMessagesAsRead(selectedEmpNo); // 현재 열려 있는 채팅창에 대한 알림 제거
             selectChatUser(selectedEmpNo); // 부모 창에 알림 제거 요청
-        }
-        // 현재 선택된 사원의 알람이 초기화되도록 부모 창에 상태 전달
-        if (window.opener) {
-            window.opener.postMessage({ type: 'RESET_ALARM', empNo: selectedEmpNo }, '*');
+            delete messageSenders[selectedEmpNo]; // 메시지를 보낸 사원 목록에서 해당 사원 제거
         }
     });
     // 자식 창이 비활성화되었을 때 부모 창에 알림 전달
@@ -111,12 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
     closeExitModalButton.addEventListener('click', function() {
         closeModal(exitChatRoomModal);
     });
-
-    // // 채팅방 나가기: 모달 창 확인 버튼
-    // confirmExitRoomButton.addEventListener('click', function() {
-    //     exitChatRoom(empNo, selectedEmpNo);
-    //     closeModal(exitChatRoomModal); // 모달 창 닫기
-    // });
 
     // 모달창 외부 클릭 시 닫기 (채팅방 생성 모달창)
     window.onclick = function(e) {
@@ -161,10 +145,8 @@ function onConnected() {
     }, (error) => {
         console.error('메시지 구독 실패:', error);
     });
-
-    console.log('메시지 구독 설정 완료');
-
     requestAlarmStatus(); // 자식창 새로고침 시, 부모 창에 알람 상태 요청
+    console.log("ㅁ3333")
 }
 // 소켓 연결 끊김
 function onError() {
@@ -192,7 +174,18 @@ function requestAlarmStatus() {
     }
 }
 
-// 사원 정보를 가져오는 비동기 함수 // ㅇㅇ
+function menuAlarmUpdate(totalUnreadMessages) {
+    const menuAlarm = document.querySelector('.menu_alarm');
+    if (totalUnreadMessages > 0) {
+        menuAlarm.textContent = totalUnreadMessages;
+        menuAlarm.classList.remove('hidden');
+    } else {
+        menuAlarm.textContent = '0';
+        menuAlarm.classList.add('hidden');
+    }
+}
+
+// 사원 정보를 가져오는 비동기 함수
 async function fetchEmployeeInfo(empNo) {
     try {
         const response = await fetch(`/employees/${empNo}`);
@@ -210,12 +203,8 @@ async function fetchEmployeeInfo(empNo) {
 
 // 수신 메시지 처리
 async function onMessageReceived(payload) {
-    console.log("onMessageReceived 호출됨");
-    console.log(empNo);
     try {
         const message = JSON.parse(payload.body);
-        console.log("수신된 메시지:", message);
-
         // 방이 존재하지 않으면 방을 새로 추가
         let existingChatRoom = document.getElementById(addEmpNoPrefix(message.senderEmpNo));
         if (!existingChatRoom) {
@@ -224,16 +213,16 @@ async function onMessageReceived(payload) {
             unreadMessages[message.senderEmpNo] = (unreadMessages[message.senderEmpNo] || 0) + 1; // 지우면 알람 안뜸
             // 이미 서버에 방이 있는지 확인하여 중복 생성 방지
             if (employeeInfo) {
-                console.log("새 방 생성")
                 await checkAndCreateRoom(message.senderEmpNo, employeeInfo.lastName, employeeInfo.firstName, employeeInfo.rankName);
             }
         } else { // 방이 존재하면
             // 현재 선택된 사원의 메시지일 경우에만 채팅창에 표시
             if (selectedEmpNo == message.senderEmpNo) { // '=='
+                console.log("선택된 사원이무 알람 x")
                 displayMessage(message.senderEmpNo, message.chatContent);
             } else { // 선택된 사원이 아닌 경우 알림만 업데이트
-                // unreadMessages[message.senderEmpNo] = (unreadMessages[message.senderEmpNo] || 0) + 1;
-                updateAlarmUI(unreadMessages);
+                console.log("선택된 사원이 아니무 알람 //+1")
+                // updateAlarmUI(unreadMessages);
             }
             updateLatestMessage(message.senderEmpNo); // 방목록에 최신 채팅 업데이트
         }
@@ -242,31 +231,19 @@ async function onMessageReceived(payload) {
     }
 }
 
-// 방이 중복 생성되지 않도록 서버에 방 존재 여부 확인 후 생성 //ㅇㅇ
+// 방이 중복 생성되지 않도록 서버에 방 존재 여부 확인 후 생성
 async function checkAndCreateRoom(senderEmpNo, lastName, firstName, rankName) {
     try {
         const response = await fetch(`/chatrooms/checkRoomExistence?senderEmpNo=${empNo}&recipientEmpNo=${senderEmpNo}`);
         const roomExists = await response.json();
-        console.log(" 새 채팅방 만들때 여기 오는감 1");
 
         if (!roomExists || roomExists) {  // 방이 삭제된 경우(false)거나, 방이 없는 경우(true)..?
-            console.log(" 새 채팅방 만들때 여기 오는감 2");
             appendUserElement({
                 empNo: senderEmpNo,
                 lastName: lastName || '알 수 없음',
                 firstName: firstName || '',
                 rankName: rankName || ''
             });
-            console.log(" 새 채팅방 만들때 여기 오는감 3");
-            // 새로 생성된 방에 대해 알림 설정
-            // const notifiedUser = document.querySelector(`#${addEmpNoPrefix(senderEmpNo)}`);
-            // const roomAlarm = notifiedUser.querySelector('.room_alarm');
-            // roomAlarm.classList.add('hidden');
-            // roomAlarm.textContent = '0';
-            // await markMessagesAsRead(senderEmpNo); // ㄴㄴ
-            // if (unreadMessages[senderEmpNo] && unreadMessages[senderEmpNo] > 0) {
-            //     updateAlarmUI(unreadMessages);  // 알림 업데이트
-            // }
             // 방 생성 후 최신 메시지 가져오기
             updateLatestMessage(senderEmpNo);
         }
@@ -305,20 +282,12 @@ function updateLatestMessageContent(userId, messageContent) {
 // 알람 상태를 업데이트하는 함수
 function updateAlarmUI(unreadMessages) {
     for (let empNo in unreadMessages) {
-        console.log("알람 상태 업데이트 empNo"); // ㄴㄴ
-        console.log(empNo);
-        console.log("알람 상태 업데이트 unreadMessages"); // ㄴㄴ
-        console.log(unreadMessages);
         const notifiedUser = document.querySelector(`#${addEmpNoPrefix(empNo)}`);
-        console.log("notifiedUser");
-console.log(notifiedUser);
+        console.log("며ㅑㄱ?")
+        console.log(notifiedUser);
         if (notifiedUser) {
             const roomAlarm = notifiedUser.querySelector('.room_alarm');
-            console.log("알람 상태 업데이트 notifiedUser"); // ㄴㄴ
-            console.log(notifiedUser);
             if (roomAlarm) {
-                console.log("알람 상태 업데이트"); // ㄴㄴ
-                console.log(roomAlarm);
                 roomAlarm.textContent = unreadMessages[empNo].toString();
                 roomAlarm.classList.remove('hidden');
             }
@@ -359,7 +328,6 @@ async function findAndDisplayConnectedUsers() {
         } else { // 이미 존재하는 사용자의 알림 값 유지 (null)
             const roomAlarm = listItem.querySelector('.room_alarm');
             roomAlarm.textContent = roomAlarm.textContent || '0'; // 현재 값 유지
-            // ㄴㄴ
         }
     });
     initializeContextMenu(); // 오른쪽 마우스 클릭: 드롭다운메뉴
@@ -403,6 +371,8 @@ function appendUserElement(user) {
     if (unreadMessages[user.empNo] && unreadMessages[user.empNo] > 0) {
         console.log("상태 업데이트 5-1 방 목록 추가할 때 appendUserElement")
         console.log(unreadMessages[user.empNo]);
+        unreadMessages[user.empNo] = 1;
+        console.log(unreadMessages[user.empNo]);
         updateAlarmUI(unreadMessages);  // 알림 업데이트
         console.log("상태 업데이트 5-2 방 목록 추가할 때 appendUserElement")
         console.log(unreadMessages[user.empNo]);
@@ -426,10 +396,6 @@ function roomItemClick(event) {
     selectedEmpNo = removeEmpNoPrefix(clickedUser.getAttribute('id'));
     document.getElementById('chatRoomName').textContent = clickedUser.querySelector('.room_name').textContent;
 
-    // 선택된 사용자의 메시지 알림 제거
-    // roomAlarm = clickedUser.querySelector('.room_alarm');
-    // roomAlarm.classList.add('hidden');
-    // roomAlarm.textContent = '0';
     markMessagesAsRead(selectedEmpNo); // 서버에 알림 초기화를 요청
 
     chatRoom.classList.remove('hidden'); // 채팅창 활성화
@@ -437,15 +403,14 @@ function roomItemClick(event) {
     fetchAndDisplayUserChat(); // 사용자 채팅창 오픈
 }
 
-// 채팅 메시지 읽음 처리 //ㄴㄴ
+// 채팅 메시지 읽음 처리
 async function markMessagesAsRead(userId) {
     let existingChatRoom = document.getElementById(addEmpNoPrefix(userId));
-    // if (existingChatRoom) { // 방 있으면 알람 0
-        const notifiedUser = document.querySelector(`#${addEmpNoPrefix(userId)}`);
-        const roomAlarm = notifiedUser.querySelector('.room_alarm');
+    if (existingChatRoom) { // 방 있으면 알람 0
+        const roomAlarm = existingChatRoom.querySelector('.room_alarm');
         roomAlarm.classList.add('hidden');
         roomAlarm.textContent = '0';
-    // }
+    }
 
     await fetch(`/chatrooms/markAsRead`, {
         method: 'POST',
@@ -565,11 +530,6 @@ function handleEmployeeClick(event) {
     closeButton.onclick = function(){
         closeModal(chatModal);
     }
-    // window.onclick = function(e) {
-    //     if (e.target == chatModal) {
-    //         closeModal(chatModal);
-    //     }
-    // }
     // 모달 창 확인: 채팅방 생성
     confirmCreateRoomButton.onclick = function() {
         closeModal(chatModal);
@@ -588,7 +548,7 @@ function newRoomItemClick(userId) {
     document.querySelector('.info_text').classList.add('hidden');
 
     selectedEmpNo = userId.empNo;
-    document.getElementById('chatRoomName').textContent = `${userId.lastName}${userId.firstName} ${userId.rankName}님`; // 지우면 안됨 ㅎㅎ
+    document.getElementById('chatRoomName').textContent = `${userId.lastName}${userId.firstName} ${userId.rankName}님`;
 
     chatRoom.classList.remove('hidden'); // 채팅창 활성화
     fetchAndDisplayUserChat(); // 사용자 채팅창 오픈
