@@ -319,7 +319,7 @@
 
     <section class="section ">
         <div class="row">
-<!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
+            <!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
             <div class="col-xl-8">
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
@@ -327,7 +327,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-8 col-lg-9">
-<!--                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">-->
+                                <!--                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">-->
                                 <i class="bi bi-person-circle" style="font-size: 100px"></i>
                                 <div class="pt-2">
                                     <a class="btn btn-primary btn-sm" href="#" title="Upload new profile image"><i
@@ -340,54 +340,68 @@
                     </div>
                     <!------------------------------------------------------------- 프로필 사진 수정--------------------------------------------------------->
 
-                    <div class="card-body profile-card pt-4 d-flex flex-column">
+                    <div class="card-body profile-card pt-4 d-flex flex-column" style="padding: 0 100px 20px 100px">
                         <form th:action="@{/user/update}" method="post">
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="lastName">Last Name</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="lastName" name="lastName" th:value="${employee.lastName}" type="text">
+                                    <input class="form-control" id="lastName" name="lastName"
+                                           th:value="${employee.lastName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="firstName">First Name</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="firstName" name="firstName" th:value="${employee.firstName}" type="text">
+                                    <input class="form-control" id="firstName" name="firstName"
+                                           th:value="${employee.firstName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="company">부서</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="company" name="company" readonly th:value="${employee.departmentName}" type="text">
+                                    <input class="form-control" id="company" name="company" disabled
+                                           th:value="${employee.departmentName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Job">직급</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Job" name="job" readonly th:value="${employee.rankName}" type="text">
+                                    <input class="form-control" id="Job" name="job" disabled
+                                           th:value="${employee.rankName}" type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Address">주소</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Address" name="address" th:value="${employee.addr}" type="text">
+                                    <input class="form-control" id="Address" name="address" th:value="${employee.addr}"
+                                           type="text">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Phone">Phone</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Phone" name="phone" th:value="${employee.phoneNum}" type="text">
+                                    <input class="form-control" id="Phone" name="phone" th:value="${employee.phoneNum}"
+                                           type="number">
+                                    <style>
+                                        input::-webkit-outer-spin-button,
+                                        input::-webkit-inner-spin-button {
+                                            -webkit-appearance: none;
+                                            margin: 0;
+                                        }
+                                    </style>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Email">Email</label>
                                 <div class="col-md-8 col-lg-9">
-                                    <input class="form-control" id="Email" name="email" th:value="${employee.email}" type="email">
+                                    <input class="form-control" id="Email" name="email" th:value="${employee.email}"
+                                           type="email">
                                 </div>
                             </div>
 
@@ -406,99 +420,74 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">테마 설정</h5>
-                        <form style="display: flex; justify-content: center;">
+                        <form style="padding: 0 20px;"> <!--style="display: flex; justify-content: center;"-->
                             <div>
                                 <div class="form-check">
-                                    <input checked class="form-check-input" id="1" type="radio">
+                                    <input checked class="form-check-input" id="1" type="radio" name="theme">
                                     <label class="form-check-label" for="1">
-                                        테마1
+                                        화이트 테마
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input checked class="form-check-input" id="2" type="radio">
+                                    <input class="form-check-input" id="2" type="radio" name="theme">
                                     <label class="form-check-label" for="2">
-                                        테마2
+                                        다크 테마
                                     </label>
                                 </div>
-                                <div class="form-check" >
-                                    <input checked class="form-check-input" disabled id="3" type="radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" disabled id="3" type="radio" name="theme">
                                     <label class="form-check-label" for="3">
-                                        테마3
+                                        준비중
                                     </label>
                                 </div>
                             </div>
                         </form>
-                        <!-- End settings Form -->
-
-                            <!-- --------------------------------------------------------위젯 설정 --------------------------------------------------------------- -->
-                            <div class="tab-pane fade   profile-settings" id="profile-settings">
-                                <form style="display: flex; justify-content: center;">
-                                    <div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="11" type="radio">
-                                            <label class="form-check-label" for="11">
-                                                위젯1
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" id="22" type="radio">
-                                            <label class="form-check-label" for="22">
-                                                위젯2
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input checked class="form-check-input" disabled id="33" type="radio">
-                                            <label class="form-check-label" for="33">
-                                                위젯3
-                                            </label>
-                                        </div>
-                                    </div>
-                                </form><!-- End settings Form -->
-                            </div>
-
-                            <!-- --------------------------------------------------------환경 설정 -------------------------------------------------------- -->
-                            <!-- 알림 설정 폼 -->
-                            <div class="tab-pane fade" id="profile-change-password">
-                                <form id="notificationSettingsForm">
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="projectNotification"
-                                               type="checkbox">
-                                        <label class="form-check-label" for="projectNotification">
-                                            프로젝트 알림
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="taskNotification" type="checkbox">
-                                        <label class="form-check-label" for="taskNotification">
-                                            업무보고서 알림
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="noticeNotification" type="checkbox">
-                                        <label class="form-check-label" for="noticeNotification">
-                                            공지사항 알림
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input checked class="form-check-input" id="chartNotification" type="checkbox">
-                                        <label class="form-check-label" for="chartNotification">
-                                            차트 알림
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- ------------------------------------------------탭 내용 끝// 저장 버튼 --------------------------------------------------------- -->
-                            <div class="text-center mt-5">
-                                <button class="btn btn-primary" onclick="showSuccessAlert()" type="submit">저장</button>
-                            </div>
-
-                        </div>
                     </div>
                 </div>
+                <!-- End settings Form -->
+
+                <!-- 알림 설정 폼 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">알림 설정</h5>
+                        <form id="notificationSettingsForm" style="padding: 0 20px;">
+                            <div class="form-check">
+                                <input checked class="form-check-input" id="projectNotification"
+                                       type="checkbox">
+                                <label class="form-check-label" for="projectNotification">
+                                    프로젝트 알림
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input checked class="form-check-input" id="taskNotification" type="checkbox">
+                                <label class="form-check-label" for="taskNotification">
+                                    업무보고서 알림
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input checked class="form-check-input" id="noticeNotification" type="checkbox">
+                                <label class="form-check-label" for="noticeNotification">
+                                    공지사항 알림
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input checked class="form-check-input" id="chartNotification" type="checkbox">
+                                <label class="form-check-label" for="chartNotification">
+                                    차트 알림
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- ------------------------------------------------탭 내용 끝// 저장 버튼 --------------------------------------------------------- -->
+                    <!--<div class="text-center mt-5">
+                        <button class="btn btn-primary" onclick="showSuccessAlert()" type="submit">저장</button>
+                    </div>-->
+
+                </div>
             </div>
-            <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
         </div>
+        <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
     </section>
 </main><!-- End #main -->
 
