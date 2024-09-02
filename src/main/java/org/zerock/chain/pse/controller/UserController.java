@@ -232,6 +232,7 @@ public class UserController {
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");  // 공지사항 알림 조회
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");  // 업무보고서 알림 조회
         List<Notification> chartNotifications = notificationService.getNotificationsByType(empNo, "차트");  // 차트 알림 조회
+        List<Notification> approvalNotifications = notificationService.getNotificationsByType(empNo, "전자결재");  // 전자결재 알림 조회(영민 추가)
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications(empNo);  // 시스템 알림 조회
 
         allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());  // 최신순으로 정렬
@@ -242,6 +243,7 @@ public class UserController {
         model.addAttribute("noticeNotifications", noticeNotifications != null ? noticeNotifications : List.of());  // 공지사항 알림을 모델에 추가
         model.addAttribute("reportNotifications", reportNotifications != null ? reportNotifications : List.of());  // 업무보고서 알림을 모델에 추가
         model.addAttribute("chartNotifications", chartNotifications != null ? chartNotifications : List.of());  // 차트 알림을 모델에 추가
+        model.addAttribute("approvalNotifications", approvalNotifications != null ? approvalNotifications : List.of());  // 전자결재 알림을 모델에 추가(영민 추가)
         model.addAttribute("systemNotifications", systemNotifications != null ? systemNotifications : List.of());  // 시스템 알림을 모델에 추가
 
         return "user/alarm";  // 알림 페이지로 이동
@@ -250,6 +252,16 @@ public class UserController {
     // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트
     @GetMapping("/alarm/read/notification/{notificationNo}")
     public String readNotificationAndRedirect(@PathVariable Long notificationNo) {
+        Notification notification = notificationService.getNotificationById(notificationNo);  // 특정 알림 번호로 알림 조회
+        notificationService.markAsRead(notificationNo);  // 알림 읽음 상태로 업데이트
+
+        String redirectUrl = notification.getRedirectUrl();  // 리다이렉트 URL 가져오기
+        return "redirect:" + redirectUrl;  // 해당 URL로 리다이렉트
+    }
+
+    // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트(영민 추가)
+    @GetMapping("/alarm/read/{notificationNo}")
+    public String yeongReadNotificationAndRedirect(@PathVariable Long notificationNo) {
         Notification notification = notificationService.getNotificationById(notificationNo);  // 특정 알림 번호로 알림 조회
         notificationService.markAsRead(notificationNo);  // 알림 읽음 상태로 업데이트
 
