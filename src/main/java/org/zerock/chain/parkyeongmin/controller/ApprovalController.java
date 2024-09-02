@@ -18,7 +18,6 @@ import org.zerock.chain.parkyeongmin.service.DocumentsService;
 import org.zerock.chain.parkyeongmin.service.FormService;
 import org.zerock.chain.parkyeongmin.service.UserService;
 import org.zerock.chain.pse.service.NotificationService;
-import org.zerock.chain.pse.service.NotificationServiceImpl;
 
 import java.util.HashMap;
 import java.util.List;

@@ -329,59 +329,39 @@
         </nav>
     </div><!-- End Page Title -->
 
-    <section class="section">
+    <section class="section dashboard"><!-- 영민이 수정 -->
         <div class="row">
             <div class="col-lg-12">
-                <!-- 연차 신청자 명단 -->
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">연차 신청자 명단</h5>
+                        <h5 class="card-title">연차 신청서</h5>
+                        <!-- 연차신청서 데이터 테이블 -->
                         <table class="table table-hover table-borderless datatable">
                             <thead>
                             <tr>
-                                <th scope="col">사원 번호</th>
-                                <th scope="col">이름</th>
-                                <th scope="col">부서</th>
-                                <th scope="col">직급</th>
-                                <th scope="col">신청일</th>
-                                <th scope="col">시작일</th>
-                                <th scope="col">종료일</th>
-                                <th scope="col">상태</th>
-                                <th scope="col">승인/반려</th>
+                                <th>사원번호</th>
+                                <th>신청자</th>
+                                <th>제목</th>
+                                <th>신청일</th>
+                                <th>상태</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- 서버에서 가져온 데이터를 바인딩 -->
-                            <tr>
-                                <td>1001</td>
-                                <td>홍길동</td>
-                                <td>기획부</td>
-                                <td>과장</td>
-                                <td>2024-08-01</td>
-                                <td>2024-08-10</td>
-                                <td>2024-08-15</td>
-                                <td><span class="badge bg-warning">대기 중</span></td>
+                            <tr th:each="document : ${receivedDocuments}"
+                                th:if="${document.category == '연차신청서' && document.docStatus == '완료'}">
+                                <td th:text="${document.virtualNo}"></td>
+                                <td th:text="${document.senderName}"></td>
                                 <td>
-                                    <button class="btn btn-success btn-sm">승인</button>
-                                    <button class="btn btn-danger btn-sm">반려</button>
+                                    <!-- 완료된 연차신청서 제목 링크 -->
+                                    <a th:href="@{/approval/adminRequest/{docNo}(docNo=${document.docNo}, category=${document.category})}"
+                                       th:text="${document.docTitle}"></a>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>1002</td>
-                                <td>김철수</td>
-                                <td>영업부</td>
-                                <td>차장</td>
-                                <td>2024-08-05</td>
-                                <td>2024-08-20</td>
-                                <td>2024-08-25</td>
-                                <td><span class="badge bg-success">승인</span></td>
-                                <td>
-                                    <button class="btn btn-success btn-sm" disabled>승인</button>
-                                    <button class="btn btn-danger btn-sm" disabled>반려</button>
-                                </td>
+                                <td th:text="${document.reqDate}"></td>
+                                <td th:text="${document.docStatus}"></td>
                             </tr>
                             </tbody>
                         </table>
+                        <!-- 연차신청서 테이블 부분 종료 -->
                     </div>
                 </div>
 
@@ -402,27 +382,19 @@
                                 <th scope="col">상세 보기</th>
                             </tr>
                             </thead>
-                            <tbody>
                             <!-- 서버에서 가져온 데이터를 바인딩 -->
-                            <tr>
-                                <td>1001</td>
-                                <td>홍길동</td>
-                                <td>기획부</td>
-                                <td>과장</td>
-                                <td>25일</td>
-                                <td>10일</td>
-                                <td>15일</td>
-                                <td><a href="/admin/attendance/emp_leave" class="btn btn-primary">상세 보기</a></td>
-                            </tr>
-                            <tr>
-                                <td>1002</td>
-                                <td>김철수</td>
-                                <td>영업부</td>
-                                <td>차장</td>
-                                <td>25일</td>
-                                <td>8일</td>
-                                <td>17일</td>
-                                <td><a href="/admin/attendance/emp_leave" class="btn btn-primary">상세 보기</a></td>
+                            <tbody>
+                            <tr th:each="employeeLeave : ${employeeLeaveList}">
+                                <td th:text="${employeeLeave.empNo}"></td>
+                                <td th:text="${employeeLeave.department.dmpName}"></td>
+                                <td th:text="${employeeLeave.rank.rankName}"></td>
+                                <td th:text="${employeeLeave.fullName}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.usedLeaveDays != null ? employeeLeave.employeeLeave.usedLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.unusedLeaveDays != null ? employeeLeave.employeeLeave.unusedLeaveDays + '일' : '0일'}"></td>
+                                <td>
+                                    <a th:href="@{/admin/attendance/emp_leave/{empNo}(empNo=${employeeLeave.empNo})}" class="btn btn-secondary">상세 보기</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -444,8 +416,21 @@
 </a>
 
 <!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
 
