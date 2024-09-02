@@ -35,6 +35,7 @@
     <!-- Template Main CSS File -->
     <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
     <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
+    <script src="/assets/js/theme.js"></script>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -378,19 +379,19 @@
                         <form style="padding: 0 20px;"> <!--style="display: flex; justify-content: center;"-->
                             <div>
                                 <div class="form-check">
-                                    <input checked class="form-check-input" id="1" type="radio" name="theme">
-                                    <label class="form-check-label" for="1">
+                                    <input checked class="form-check-input" id="light-theme" type="radio" name="theme" value="light">
+                                    <label class="form-check-label" for="light-theme">
                                         화이트 테마
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" id="2" type="radio" name="theme">
-                                    <label class="form-check-label" for="2">
-                                        다크 테마
+                                    <input class="form-check-input" id="dark-theme" type="radio" name="theme" value="dark">
+                                    <label class="form-check-label" for="dark-theme">
+                                        다크 테마(오류 많음)
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" disabled id="3" type="radio" name="theme">
+                                    <input class="form-check-input" disabled id="3" type="radio" name="theme" value="upcoming">
                                     <label class="form-check-label" for="3">
                                         준비중
                                     </label>

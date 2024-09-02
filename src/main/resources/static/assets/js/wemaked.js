@@ -1,3 +1,34 @@
+// 페이지 로드 시, 로컬 스토리지에서 테마를 가져와 적용
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    // 저장된 테마에 따라 라디오 버튼 상태 설정 (이 부분은 페이지에 따라 선택적으로 사용)
+    const darkThemeRadio = document.getElementById('dark-theme');
+    const lightThemeRadio = document.getElementById('light-theme');
+
+    if (darkThemeRadio && lightThemeRadio) {
+        if (savedTheme === 'dark') {
+            darkThemeRadio.checked = true;
+        } else {
+            lightThemeRadio.checked = true;
+        }
+    }
+});
+
+// 라디오 버튼 클릭 시 테마 변경
+document.querySelectorAll('input[name="theme"]').forEach((elem) => {
+    elem.addEventListener('change', function(event) {
+        const selectedTheme = event.target.value;
+        applyTheme(selectedTheme);
+        localStorage.setItem('theme', selectedTheme);
+    });
+});
+
+// 테마 적용 함수
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+}
 
 // 알림창 시간 표시
 function timeAgo(timestamp) {

@@ -38,6 +38,7 @@
     <!-- Template Main CSS File -->
     <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
     <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
+    <script src="/assets/js/theme.js"></script>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -297,7 +298,7 @@
                             <!-- 참여자 목록 -->
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">참여자</label>
-                                <div class="col-sm-10" id="participantList">
+                                <div class="col-sm-10" id="participantList" style="display: flex; align-items: center;">
                                     <!-- 선택된 사람 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
@@ -313,15 +314,14 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">기간</label>
                                 <div class="col-sm-10">
-                                    <p th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></p>
+                                    <div class="form-control" th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></div>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="froala">내용</label>
+                                <label class="col-sm-2 col-form-label" for="projectText">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea id="froala" name="projectContent" readonly
-                                              th:text="${project.projectContent}"></textarea>
+                                    <div class="form-control" readonly id="projectText" th:text="${project.projectContent}" type="text"></div>
                                 </div>
                             </div>
                         </form>
