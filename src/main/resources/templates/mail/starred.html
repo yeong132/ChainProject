@@ -546,6 +546,9 @@
                                     <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.date}">날짜</a>
                                 </td>
                             </tr>
+                            <tr th:if="${#lists.isEmpty(messages)}">
+                                <td colspan="4">별표메일함이 비워져있습니다.</td>
+                            </tr>
                             </tbody>
                         </table>
                         <!-- 테이블 끝 -->

@@ -406,6 +406,9 @@
                                     </form>
                                 </td>
                             </tr>
+                            <tr th:if="${#lists.isEmpty(messages)}">
+                                <td colspan="4">휴지통이 비워져있습니다.</td>
+                            </tr>
                             </tbody>
 
                         </table>
