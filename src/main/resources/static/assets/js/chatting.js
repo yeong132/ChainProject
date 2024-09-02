@@ -41,10 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.data.type === 'LOGOUT') {
             onLogout();
         } else if (event.data.type === 'UPDATE_ALARM' || event.data.type === 'INITIAL_ALARM') {
-            console.log("11111 업데이트 무");
             updateAlarmUI(event.data.unreadMessages); // 부모 창에서 받은 알람 상태 업데이트
             messageSenders = event.data.messageSenders; // messageSenders 상태 업데이트
-
             // menu_alarm 클래스 업데이트
             const totalUnreadMessages = Object.values(event.data.unreadMessages).reduce((a, b) => a + b, 0);
             menuAlarmUpdate(totalUnreadMessages);
@@ -146,7 +144,6 @@ function onConnected() {
         console.error('메시지 구독 실패:', error);
     });
     requestAlarmStatus(); // 자식창 새로고침 시, 부모 창에 알람 상태 요청
-    console.log("ㅁ3333")
 }
 // 소켓 연결 끊김
 function onError() {
@@ -163,7 +160,6 @@ function onError() {
 
 // 자식창 새로고침 시, 부모 창에 알람 상태 요청
 function requestAlarmStatus() {
-    console.log("제대로 실행되구 있니?");
     if (window.opener) {
         window.opener.postMessage({ type: 'REQUEST_ALARM_STATUS' }, '*');
     } else if (reconnectAttempts < maxReconnectAttempts) {
@@ -283,8 +279,6 @@ function updateLatestMessageContent(userId, messageContent) {
 function updateAlarmUI(unreadMessages) {
     for (let empNo in unreadMessages) {
         const notifiedUser = document.querySelector(`#${addEmpNoPrefix(empNo)}`);
-        console.log("며ㅑㄱ?")
-        console.log(notifiedUser);
         if (notifiedUser) {
             const roomAlarm = notifiedUser.querySelector('.room_alarm');
             if (roomAlarm) {
@@ -342,7 +336,7 @@ function appendUserElement(user) {
     const roomImg = document.createElement('div');
     roomImg.className = "room_img";
     const img = document.createElement("img");
-    img.src = "/assets/img/profile_m.png";
+    img.src = "/assets/img/profile_m1.png";
     img.alt = `${user.lastName}${user.firstName}`; // 사용자 이름 불러와야 함
     roomImg.appendChild(img);
 
@@ -369,13 +363,8 @@ function appendUserElement(user) {
     chatRoomUsersList.appendChild(listItem);
 
     if (unreadMessages[user.empNo] && unreadMessages[user.empNo] > 0) {
-        console.log("상태 업데이트 5-1 방 목록 추가할 때 appendUserElement")
-        console.log(unreadMessages[user.empNo]);
         unreadMessages[user.empNo] = 1;
-        console.log(unreadMessages[user.empNo]);
         updateAlarmUI(unreadMessages);  // 알림 업데이트
-        console.log("상태 업데이트 5-2 방 목록 추가할 때 appendUserElement")
-        console.log(unreadMessages[user.empNo]);
     }
     // 새 채팅방 생성 시 기존 방목록의 최신 메시지를 업데이트하지 않음
     if (selectedEmpNo !== user.empNo) {
@@ -577,7 +566,6 @@ function closeModal(modal) {
 
 // 조직도: 부서 펼침/닫힘 토글
 function toggleDepartment(event) {
-    // event.preventDefault();
     const link = event.currentTarget;
     const empList = link.parentElement;
 

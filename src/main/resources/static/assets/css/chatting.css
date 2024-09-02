@@ -70,7 +70,7 @@ body {
 .chat_left_bar {
     display: flex;
     flex-direction: column;
-    background-color: #d5ecff;
+    background-color: rgb(189 183 183 / 27%);
     width: 55px;
     height: 100%;
 }
@@ -91,16 +91,16 @@ body {
 
 /* 왼쪽 탭키 이미지 - 기본 색상 */
 .menu_icon i {
-    color: #4b93cd !important;
+    color: rgb(49 49 49 / 27%) !important;
 }
 /* 왼쪽 탭키 이미지 - 마우스 올린 상태 */
 .menu_icon:hover i {
-    color: #156eb5 !important;
+    color: rgb(57 57 57 / 45%) !important;
 }
 
 /* 왼쪽 탭키 이미지 - 포커스 및 활성화 상태 */
 .menu_icon:focus i, .menu_icon.active i {
-    color: #034578 !important;
+    color: rgb(57 57 57 / 78%) !important;
     background: none !important;
 }
 
@@ -111,7 +111,7 @@ body {
     /*flex-direction: column;*/
     width: 280px;
     overflow-y: hidden;
-    border: 1px solid #f4f4f4;
+    border: 1px solid rgb(189 183 183 / 27%);
 }
 
 /* 조직도/즐겨찾기/채팅방 목록 */
@@ -183,7 +183,7 @@ body {
     display: flex;
     padding: 3px;
     background-color: #fff;
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid rgb(189 183 183 / 27%);
 }
 
 /* 검색 입력창 */
@@ -207,9 +207,6 @@ body {
     height: 100%
 }
 
-.org_dep_list .open {
-}
-
 .org_dep {
     display: flex;
     align-items: center;
@@ -229,7 +226,7 @@ body {
     overflow: hidden;
     padding: 0;
     max-height: 0;
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid rgb(189 183 183 / 27%);
     transition: max-height 0.3s ease;
 }
 
@@ -273,12 +270,12 @@ body {
 }
 
 .chat_room_item:hover, .org_dep:hover, .dep_emps_list li:hover {
-    background-color: #f8f8f8;
+    background-color: #e1e1e1;
     cursor: pointer;
 }
 
 .chat_room_item:active, .org_dep:active, .dep_emps_list li:active {
-    background-color: #d5ecff;
+    background-color: #e1e1e1;
 }
 
 /* 채팅방 알람 */
@@ -315,7 +312,6 @@ body {
 
 .room_img img {
     width: 50px;
-    /*height: 50px;*/
     border-radius: 10px;
     object-fit: cover;
 }
@@ -338,7 +334,7 @@ body {
 
 /* --------채팅방 대화창--------- */
 .chat_room_container {
-    background-color: #d5ecff;
+    background-color: rgb(189 183 183 / 27%);
     flex: 1; /* 남은 공간 모두 차지 */
     overflow-y: hidden;
 }
@@ -351,11 +347,6 @@ body {
     font-size: 16px;
 }
 
-/* 방 선택 전까지 가림 */
-/*.chat_room {*/
-/*    display: none;*/
-/*}*/
-
 .chat_room {
     display: flex;
     flex-direction: column;
@@ -367,7 +358,7 @@ body {
     display: flex;
     align-items: center;
     background-color: #fff;
-    border-bottom: 1px solid #f4f4f4;
+    border-bottom: 1px solid rgb(189 183 183 / 27%);
     height: 42px;
     padding: 5px;
 }
@@ -379,11 +370,6 @@ body {
     text-overflow: ellipsis;
     max-width: 320px;
 }
-
-/*.chat_header span:nth-of-type(2){*/
-/*    color: #656565;*/
-/*    margin-right: auto;*/
-/*}*/
 
 .chat_header .bi-arrow-left-short {
     font-size: 25px;
@@ -402,7 +388,7 @@ body {
 .chat_area {
     display:flex;
     flex-direction:column;
-    background-color: #d5ecff;
+    /*background-color: #d5ecff;*/
     overflow-y: auto;
     flex: 1;
     height: 100%;
@@ -426,7 +412,8 @@ body {
 .chat_sender {
     margin-left: auto; /* 오른쪽 정렬 */
     width: max-content;
-    background-color: #d1ffd1;
+    background-color: #67a2d1;
+    color: #fff;
 }
 
 /* 보내는 사람 */
@@ -452,7 +439,6 @@ body {
     min-width: 0; /* 기본 너비를 지정 */
     resize: none; /* 크기 조절 제거 */
     outline: none; /* 기본 포커스 스타일 제거 */
-    /*height: auto; !* 높이를 자동으로 맞춤 *!*/
     overflow-y: auto; /* 내용이 많을 경우 스크롤 표시 */
 }
 

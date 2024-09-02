@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         unreadMessages = JSON.parse(storedUnreadMessages);
         updateUserNotification(); // 알람 수 UI 업데이트
     }
-    // unreadMessages를 초기화하여 새로운 알람 수가 추가되지 않도록 함
+    // unreadMessages를 초기화: 새로운 알람 수 추가 막음
     unreadMessages = {};
     // 스토리지의 특정 값 초기화
     sessionStorage.removeItem('unreadMessagesTemp');
