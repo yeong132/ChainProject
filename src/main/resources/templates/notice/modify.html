@@ -101,53 +101,8 @@
 
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
-                </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
-                </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
 <aside class="sidebar" id="sidebar">

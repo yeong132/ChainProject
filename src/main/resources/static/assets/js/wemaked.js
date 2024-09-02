@@ -268,56 +268,6 @@ var editor = new FroalaEditor('#froala', {
     imageMaxSize: 5 * 1024 * 1024, // 최대 이미지 파일 크기: 5MB
 });
 
-// 출퇴근 Modal용
-document.addEventListener('DOMContentLoaded', function () {
-    function updateTime(elementId) {
-        const currentTimeElement = document.getElementById(elementId);
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
-    }
-
-    function setupModal(modalId, confirmButtonId, cancelButtonId, message, switchInput, checkedState) {
-        const modalElement = document.getElementById(modalId);
-        const confirmButton = document.getElementById(confirmButtonId);
-        const cancelButton = document.getElementById(cancelButtonId);
-
-        $(modalElement).on('show.bs.modal', function () {
-            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
-        });
-
-        confirmButton.addEventListener('click', function () {
-            switchInput.checked = checkedState;
-            alert(message);
-        });
-
-        cancelButton.addEventListener('click', function () {
-            switchInput.checked = !checkedState;
-        });
-    }
-
-    const switchInput = document.getElementById('flexSwitchCheckDefault');
-    const commuteIcon = document.getElementById('commuteIcon');
-
-    commuteIcon.addEventListener('click', function () {
-        if (switchInput.checked) {
-            $('#attendanceModal').modal('show');
-        } else {
-            $('#leaveworkModal').modal('show');
-        }
-    });
-
-    setupModal('attendanceModal', 'attendanceConfirmButton', 'attendanceCancelButton', '출근되었습니다!', switchInput, true);
-    setupModal('leaveworkModal', 'leaveworkConfirmButton', 'leaveworkCancelButton', '퇴근되었습니다!', switchInput, false);
-
-    setInterval(function () {
-        updateTime('currentTime');
-        updateTime('currentTimes');
-    }, 1000);
-});
-
 // 즐겨찾기
 function toggleStar(element, event) {
     event.stopPropagation(); // 클릭 이벤트가 부모 요소로 전파되지 않도록 함
