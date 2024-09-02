@@ -14,4 +14,7 @@ public interface NotificationService {
     Notification getNotificationById(Long notificationNo);
     void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled);  // 알림 온오프
     void deleteReadNotifications(Long empNo); // 특정 사원의 읽은 알림을 모두 삭제함
+
+    // 전자결재 알림을 생성하는 메서드 추가 (영민)
+    void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus, String withdraw);
 }

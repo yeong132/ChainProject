@@ -80,78 +80,7 @@
       </li>
       <!-- 출퇴근 아이콘 끝 -->
 
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-bell"></i>
-          <span class="badge btn-secondary badge-number">4</span> </a>
-        <!-- 알림창 아이콘 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-          <li class="dropdown-header">
-            4개의 새 알림이 있습니다
-            <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-exclamation-circle text-warning"></i>
-            <div>
-              <h4>Lorem Ipsum</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>30 min. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-x-circle text-danger"></i>
-            <div>
-              <h4>Atque rerum nesciunt</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>1 hr. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-check-circle text-success"></i>
-            <div>
-              <h4>Sit rerum fuga</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>2 hrs. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li class="notification-item">
-            <i class="bi bi-info-circle text-primary"></i>
-            <div>
-              <h4>Dicta reprehenderit</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>4 hrs. ago</p>
-            </div>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-          <li class="dropdown-footer">
-            <a href="/user/alarm">모든 알림 표시</a>
-          </li>
-        </ul>
-        <!-- 알림 드롭다운 목록 끝 -->
-      </li>
+      <th:block th:include="fragments/notifications :: notifications"></th:block>
       <!-- 알림 전체 끝 -->
 
       <li class="nav-item dropdown">
@@ -199,7 +128,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+            <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
               <i class="bi bi-power"></i>
               <span>로그아웃</span>
             </a>
@@ -462,7 +391,7 @@
               </thead>
               <tbody>
               <tr th:each="document : ${draftDocuments}">
-                <td th:text="${document.docNo}"></td>
+                <td th:text="${document.virtualNo}"></td>
                 <td>
                   <a th:href="@{/approval/draftRead/{docNo}(docNo=${document.docNo}, category=${document.category})}"
                      th:text="${document.docTitle}"></a>
@@ -471,84 +400,6 @@
                 <td th:text="${document.reqDate}"></td>
                 <td th:text="${document.category}"></td>
               </tr>
-              <tr>
-                <td>7</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>14</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>16</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>17</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>18</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>19</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>20</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>21</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>22</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              <tr>
-                <td>23</td>
-                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                <td>이나리</td>
-                <td>2024-07-23</td>
-                <td>지출 결의서</td>
-              </tr>
-              </tbody>
             </table>
             <!-- 결재 테이블 부분 종료 -->
           </div><!-- card-body 종료 -->
@@ -581,9 +432,9 @@
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
   <i class="bi bi-chat-dots"></i>
-  <span class="badge btn-danger badge-number">&nbsp;</span>
+  <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
 </a>
 <!-- 채팅창 끝-->
 

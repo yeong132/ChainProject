@@ -193,7 +193,7 @@
             display: flex;
             width: 100%;
             border-top: none; /* 위쪽 테두리 없애기 */
-            border-bottom:1px solid #ddd ;
+            border-bottom: 1px solid #ddd;
         }
 
         #timeStamp > div {
@@ -352,7 +352,7 @@
             cursor: pointer;
         }
 
-        .person-selection input[type="checkbox"],  /*모달창의 체크박스 부분의 오른쪽 공간 늘리기*/
+        .person-selection input[type="checkbox"], /*모달창의 체크박스 부분의 오른쪽 공간 늘리기*/
         .approval-line input[type="checkbox"],
         .reference-line input[type="checkbox"] {
             margin-right: 10px;
@@ -382,382 +382,311 @@
 <body>
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
-  <div class="d-flex align-items-center justify-content-between">
-    <a href="/" class="logo d-flex align-items-center">
-      <img src="/assets/img/logo.png" alt=""/>
-      <span class="d-none d-lg-block">CHAIN</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div>
-  <!-- 로고 끝 -->
-
-  <!-- <div class="search-bar">
-    <form class="search-form d-flex align-items-center" method="POST" action="#">
-      <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-      <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-    </form>
-  </div> -->
-  <!-- 검색바 끝 -->
-
-  <nav class="header-nav ms-auto">
-    <ul class="d-flex align-items-center">
-      <!-- <li class="nav-item d-block d-lg-none">
-        <a class="nav-link nav-icon search-bar-toggle" href="#">
-          <i class="bi bi-search"></i>
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
+            <span class="d-none d-lg-block">CHAIN</span>
         </a>
-      </li> -->
-      <!-- 검색 아이콘 끝 -->
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <!-- 로고 끝 -->
 
-      <li class="nav-item dropdown" id="commuteIcon">
-        <div class="from-check form-switch me-3">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-        </div>
-      </li>
-      <!-- 출퇴근 아이콘 끝 -->
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div> -->
+    <!-- 검색바 끝 -->
 
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-bell"></i>
-          <span class="badge btn-secondary badge-number">4</span> </a>
-        <!-- 알림창 아이콘 끝 -->
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <!-- <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="bi bi-search"></i>
+              </a>
+            </li> -->
+            <!-- 검색 아이콘 끝 -->
 
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-          <li class="dropdown-header">
-            4개의 새 알림이 있습니다
-            <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
 
-          <li class="notification-item">
-            <i class="bi bi-exclamation-circle text-warning"></i>
-            <div>
-              <h4>Lorem Ipsum</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>30 min. ago</p>
-            </div>
-          </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
+            <!-- 알림 전체 끝 -->
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <!-- 환경설정 아이콘 끝 -->
+            </li>
+            <!-- 환경설정 전체 끝 -->
 
-          <li class="notification-item">
-            <i class="bi bi-x-circle text-danger"></i>
-            <div>
-              <h4>Atque rerum nesciunt</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>1 hr. ago</p>
-            </div>
-          </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
+                <!-- 프로필 이미지 항목 끝 -->
 
-          <li class="notification-item">
-            <i class="bi bi-check-circle text-success"></i>
-            <div>
-              <h4>Sit rerum fuga</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>2 hrs. ago</p>
-            </div>
-          </li>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박영민</h6>
+                        <span>사원</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이 페이지</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li class="notification-item">
-            <i class="bi bi-info-circle text-primary"></i>
-            <div>
-              <h4>Dicta reprehenderit</h4>
-              <p>Quae dolorem earum veritatis oditseno</p>
-              <p>4 hrs. ago</p>
-            </div>
-          </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
 
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-          <li class="dropdown-footer">
-            <a href="/user/alarm">모든 알림 표시</a>
-          </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
+                            <i class="bi bi-tools"></i>
+                            <span>회사 관리자</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- 프로필 드롭다운 목록 끝 -->
+            </li>
+            <!-- 프로필 전체 끝 -->
         </ul>
-        <!-- 알림 드롭다운 목록 끝 -->
-      </li>
-      <!-- 알림 전체 끝 -->
-
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="/user/setting">
-          <i class="bi bi-gear"></i>
-        </a>
-        <!-- 환경설정 아이콘 끝 -->
-      </li>
-      <!-- 환경설정 전체 끝 -->
-
-
-      <li class="nav-item dropdown pe-3">
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-        <!-- 프로필 이미지 항목 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-          <li class="dropdown-header">
-            <h6>박영민</h6>
-            <span>사원</span>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-              <i class="bi bi-person"></i>
-              <span>마이 페이지</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-              <i class="bi bi-diagram-2"></i>
-              <span>조직도</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
-              <i class="bi bi-power"></i>
-              <span>로그아웃</span>
-            </a>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-              <i class="bi bi-tools"></i>
-              <span>회사 관리자</span>
-            </a>
-          </li>
-        </ul>
-        <!-- 프로필 드롭다운 목록 끝 -->
-      </li>
-      <!-- 프로필 전체 끝 -->
-    </ul>
-  </nav>
-  <!-- 상단바 끝 -->
+    </nav>
+    <!-- 상단바 끝 -->
 </header>
 <!-- Header 끝 -->
 
 <!-- Header Modal -->
 <!-- 출퇴근 Modal -->
 <div class="modal fade" id="attendanceModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">출근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-      <div class="modal-body">
-        <div id="currentTime">현재 시간:</div>
-        출근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-          아니오
-        </button>
-      </div>
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                    아니오
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <div class="modal fade" id="leaveworkModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">퇴근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="currentTimes">현재 시간:</div>
-        퇴근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-        </button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- 출퇴근 Modal 끝 -->
 <!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
-  <ul class="sidebar-nav" id="sidebar-nav">
-    <li class="nav-item ">
-      <a class="nav-link dash collapsed" href="/">
-        <i class="bi bi-grid"></i>
-        <span>대시보드</span>
-      </a>
-    </li>
-    <!-- 대시보드 사이드바 끝 -->
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item ">
+            <a class="nav-link dash collapsed" href="/">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+        <!-- 대시보드 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i>
-        <span>기본 사항</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-          <ul>
-            <li>
-              <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-            </li>
-          </ul>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>기본 사항</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
+                    <ul>
+                        <li>
+                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </li>
-      </ul>
-    </li>
-    <!-- 기본사항 끝 -->
+        <!-- 기본사항 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-clipboard-data"></i>
-        <span>업무</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i>
+                <span>업무</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                </li>
+                <li>
+                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
+                </li>
+                <li>
+                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
+                </li>
+                <li>
+                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-        </li>
-        <li>
-          <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-        </li>
-        <li>
-          <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 업무 사이드바 끝 -->
+        <!-- 업무 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-archive"></i>
-        <span>전자결재</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="sign-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-          <li>
-              <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
-          </li>
-          <li>
-              <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
-          </li>
-          <li>
-              <a href="/approval/draft" class="active"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-          </li>
-      </ul>
-    </li>
-    <!-- 전자결재 사이드바 끝 -->
+        <li class="nav-item">
+            <a class="nav-link" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-archive"></i>
+                <span>전자결재</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="sign-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/approval/main" class="active"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                </li>
+            </ul>
+        </li>
+        <!-- 전자결재 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-people-fill"></i>
-        <span>게시판</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people-fill"></i>
+                <span>게시판</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
+                </li>
+                <li>
+                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
+                </li>
+                <li>
+                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
+                </li>
+                <li>
+                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-        </li>
-        <li>
-          <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-        </li>
-        <li>
-          <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 게시판 사이드바 끝 -->
+        <!-- 게시판 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-calendar-week"></i>
-        <span>일정</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-week"></i>
+                <span>일정</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
+                </li>
+            </ul>
         </li>
-      </ul>
-    </li>
-    <!-- 일정 사이드바 끝 -->
+        <!-- 일정 사이드바 끝 -->
 
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-envelope"></i>
-        <span>이메일</span>
-        <i class="bi bi-chevron-down ms-menu"></i>
-      </a>
-      <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-envelope"></i>
+                <span>이메일</span>
+                <i class="bi bi-chevron-down ms-menu"></i>
+            </a>
+            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
+                </li>
+                <li>
+                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
+                </li>
+            </ul>
         </li>
-        <li>
-          <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-        </li>
-        <li>
-          <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-        </li>
-        <li>
-          <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-        </li>
-      </ul>
-    </li>
-    <!-- 이메일 사이드바 끝 -->
+        <!-- 이메일 사이드바 끝 -->
 
-    <li class="nav-item qna">
-      <a class="nav-link qna collapsed" href="/user/Q&A">
-        <i class="bi bi-question-circle"></i>
-        <span>고객센터</span>
-      </a>
-    </li>
-    <!-- 고객센터 사이드바 끝 -->
+        <li class="nav-item qna">
+            <a class="nav-link qna collapsed" href="/user/Q&A">
+                <i class="bi bi-question-circle"></i>
+                <span>고객센터</span>
+            </a>
+        </li>
+        <!-- 고객센터 사이드바 끝 -->
 
-  </ul>
+    </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
 
@@ -816,7 +745,8 @@
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end"><!-- 버튼의 오른쪽 정렬 -->
                             <button id="listBtn" class="btn btn-secondary">목록으로</button>
                             <button id="draftBtn" class="btn btn-primary">임시저장</button>
-                            <button type="submit" form="approvalForm" id="submitBtn" class="btn btn-success">결재요청</button>
+                            <button type="submit" form="approvalForm" id="submitBtn" class="btn btn-success">결재요청
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -844,7 +774,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">결재선 설정</h5>
+                <h5 class="modal-title">결재선 설정 (위에서 아래로 결재순서가 지정되니 참고바랍니다!)</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -909,9 +839,25 @@
     </div>
 </div>
 
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
+</a>
+<!-- 채팅창 끝-->
+
 <script><!-- 추가한 스크립트입니다! -->
-document.addEventListener("DOMContentLoaded", function (e) {
-    e.stopPropagation();
+// 전역 변수로 선언
+let approvers = [];
+let references = [];
+
+document.addEventListener("DOMContentLoaded", function () {
     // 결재선 모달창 설정 부분
     const personSelection = document.getElementById('personSelection');
     const departmentList = document.getElementById('departmentList'); // departmentList의 올바른 참조 확인
@@ -981,9 +927,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
         const fileInput = document.querySelector('input[name="file"]');
         const file = fileInput ? fileInput.files[0] : null;
 
-        // 결재자 정보 수집
-        const approvers = getSelectedApprovers('approverContainerNumbers');
-        console.log('Selected Approvers:', approvers);
+        // 결재선이 비어있는지 확인
+        if (!approvalLineHtml || approvalLineHtml.trim() === '') {
+            alert('결재선을 설정해주십시오.');
+            return; // 서버로 요청 중단
+        }
 
         const formData = new FormData();
         formData.append('docTitle', docTitle);
@@ -996,9 +944,10 @@ document.addEventListener("DOMContentLoaded", function (e) {
         if (file) {
             formData.append('file', file);  // 파일이 있을 경우에만 추가
         }
-
-        // 결재자 정보를 formData에 추가
-        formData.append('approvers', JSON.stringify(approvers));
+        // 결재 테이블에 저장될 결재자 정보를 formData에 추가
+        formData.append('approversJson', JSON.stringify(approvers));
+        // 참조자 정보를 formData에 JSON 형식으로 추가
+        formData.append('referencesJson', JSON.stringify(references));
 
         // 서버에 결재 요청 (문서 생성 및 저장)
         fetch('/approval/create-document', {
@@ -1018,9 +967,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
     // 여기서부터 임시저장 버튼 눌렀을 때의 코드입니다!
     // 1분 후에 자동으로 임시저장 버튼 클릭(click)
-    setTimeout(function () {
+    /*setTimeout(function () {
         document.getElementById('draftBtn').click();
-    }, 60000); // 60,000ms = 1분
+    }, 120000);*/ // 60,000ms = 1분
 
     document.getElementById('draftBtn').addEventListener('click', function (e) {
         e.preventDefault(); // 기본 동작 막기
@@ -1060,6 +1009,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
         if (file) {
             formData.append('file', file);
         }
+
+        // 결재 테이블에 저장될 결재자 정보를 formData에 추가
+        formData.append('approversJson', JSON.stringify(approvers));
+        // 참조자 정보를 formData에 JSON 형식으로 추가
+        formData.append('referencesJson', JSON.stringify(references));
 
         fetch('/approval/create-document', {
             method: 'POST',
@@ -1136,27 +1090,41 @@ document.addEventListener("DOMContentLoaded", function (e) {
             target.removeChild(checkbox.parentElement);
         });
     }
-
-    // 결재선 모달창에서 targetId에 해당하는 리스트에서 순서대로 체크박스가 있는 항목들을 읽어와서
-    // 결재시 필요한 empNo이랑 order값 얻어오는 함수
-    function getSelectedApprovers(targetId) {
-        const approvers = [];
-        const listItems = document.querySelectorAll(`#${targetId} ul li`);
-
-        listItems.forEach((item, index) => {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            if (checkbox) {
-                approvers.push({
-                    empNo: checkbox.value,  // empNo 값
-                    order: index + 1         // 순번 (index는 0부터 시작하므로 +1)
-                });
-            }
-        });
-
-        return approvers;
-    }
 });
 
+// 결재선 모달창에서 targetId에 해당하는 리스트에서 순서대로 체크박스가 있는 항목들을 읽어와서
+// 결재시 필요한 empNo이랑 order값 얻어오는 함수
+function getSelectedApprovers(targetId) {
+    const listItems = document.querySelectorAll(`#${targetId} ul li`);
+
+    listItems.forEach((item, index) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            approvers.push({
+                empNo: checkbox.value,  // empNo 값
+                approvalOrder: index + 1  // 순번 (index는 0부터 시작하므로 +1)
+            });
+        }
+    });
+    return approvers;
+}
+
+// 결재시 필요한 empNo<< 참조자 번호로 쓸것을 얻어오는 함수
+function getSelectedReference(targetId) {
+    const listItems = document.querySelectorAll(`#${targetId} ul li`);
+
+    listItems.forEach((item) => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            references.push({
+                refEmpNo: checkbox.value,  // empNo 값
+            });
+        }
+    });
+    return references;
+}
+
+// 모달창에 결재선 등록 함수
 function setupApprovalProcess() {
     const approverContainer = document.getElementById('approverContainer');
     const approverContainerNumbers = document.getElementById('approverContainerNumbers');
@@ -1171,6 +1139,15 @@ function setupApprovalProcess() {
     registerBtn.addEventListener('click', function () {
         // 결재선 항목 처리
         const approvalItems = approvalLineModalUl.querySelectorAll('li');
+        // 전역 변수 approvers 배열을 초기화하여 결재선 설정을 누를때 마다 이전 데이터를 삭제
+        approvers = [];
+        references = [];
+
+        // 전역 변수 approvers에 empNo이랑 approvalOrder 값 받아서 객체로 집어넣기 {empNo: '1', approvalOrder: 1}
+        approvers = getSelectedApprovers('approvalLineModal');
+        references = getSelectedReference('referenceLineModal');
+        console.log('Selected Approvers:', approvers);
+        console.log('Selected References:', references);
 
         // 기존 approverContainer 내용 제거
         approverContainer.innerHTML = '';

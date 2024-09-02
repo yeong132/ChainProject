@@ -44,22 +44,7 @@
 
     <title>전자결재 대기 문서</title>
 
-
     <style>/*추가한 스타일 입니다*/
-
-    /* 테이블 가운데 정렬 */
-    #formContainer {
-        display: flex;
-        justify-content: center;
-    }
-
-    body {
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        color: #333;
-        margin: 20px;
-    }
-
     /* 테이블 스타일 */
     #formContainer table {
         width: 100%;
@@ -170,7 +155,29 @@
         border-left: none;
     }
 
-    /* 두 번째 행의 스타일 */
+    /* 타임스탬프 행 스타일 */
+    #timeStamp {
+        display: flex;
+        width: 100%;
+        border-top: none; /* 위쪽 테두리 없애기 */
+        border-bottom:1px solid #ddd ;
+    }
+
+    #timeStamp > div {
+        flex: 1;
+        padding: 10px;
+        border-left: 1px solid #ddd;
+        background-color: #ffffff; /* 타임스탬프 행은 흰색 배경 */
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* 첫 번째 셀의 왼쪽 테두리 없애기 */
+    #timeStamp > div:first-child {
+        border-left: none;
+    }
+
+    /* 세 번째 행의 스타일 */
     #approverContainerNumbers {
         display: flex;
         width: 100%;
@@ -181,7 +188,7 @@
         flex: 1;
         padding: 10px;
         border-left: 1px solid #ddd;
-        background-color: #ffffff; /* 두 번째 행은 흰색 배경 */
+        background-color: #ffffff; /* 세 번째 행은 흰색 배경 */
         text-align: center;
         box-sizing: border-box;
     }
@@ -276,78 +283,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -395,7 +331,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -534,10 +470,10 @@
                     <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
                 </li>
                 <li>
-                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
+                    <a href="/approval/receive" class="active"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
                 </li>
                 <li>
-                    <a href="/approval/draft" class="active"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
+                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
                 </li>
             </ul>
         </li>
@@ -642,76 +578,16 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">
-                            <h3>결재 대기 문서</h3>
+                            <h3 th:text="'문서번호  '+${document.docNo}"></h3>
                         </div>
 
-                        <div id="formContainer">
-                            <table>
-                                <tr>
-                                    <!-- 첫 번째 셀: 연장근무신청서 -->
-                                    <td style="text-align: left; background-color: #FFFFFF;">연장근무신청서</td>
-
-                                    <!-- 두 번째 셀: 빈 공간 -->
-                                    <td colspan="2" style="background-color: #ffffff;"></td> <!-- 빈 흰색 공간 -->
-                                    <!-- 세 번째 셀: 결재자 정보 -->
-                                    <td colspan="3" style="text-align: right; padding: 0;">
-                                        <div id="approverContainer" style="display: flex; width: 100%;">
-                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">카리나
-                                                사원
-                                            </div>
-                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">이사용
-                                                사원
-                                            </div>
-                                            <div style="flex: 1; background-color: #f2f2f2; text-align: center;">박라면
-                                                부사장
-                                            </div>
-                                        </div>
-                                        <div id="approverContainerNumbers" style="display: flex; width: 100%;">
-                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">1</div>
-                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">2</div>
-                                            <div style="flex: 1; background-color: #ffffff; text-align: center;">3</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="background-color: #f2f2f2; width: 16.67%;">부서</td>
-                                    <td style="background-color: #ffffff; width: 16.67%;">업무지원</td>
-                                    <td style="background-color: #f2f2f2; width: 16.67%; font-weight: bold;">기안자</td>
-                                    <td style="background-color: #ffffff; width: 16.67%;">김희재</td>
-                                    <td style="background-color: #f2f2f2; width: 16.67%; font-weight: bold;">직급</td>
-                                    <td style="background-color: #ffffff; width: 16.67%;">부장</td>
-                                </tr>
-                                <tr>
-                                    <td>작성일</td>
-                                    <td colspan="5">2023-08-22</td>
-                                </tr>
-                                <tr>
-                                    <td>근무일시</td>
-                                    <td colspan="5">
-                                        <input type="date" placeholder="연도-월-일" readonly disabled>
-                                        <input type="time" readonly disabled>
-                                        ~
-                                        <input type="time" readonly disabled>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>제목</td>
-                                    <td colspan="5"><input type="text" readonly disabled></td>
-                                </tr>
-                                <tr>
-                                    <td>내용</td>
-                                    <td colspan="5"><textarea readonly disabled></textarea></td>
-                                </tr>
-                                <tr>
-                                    <td>첨부파일</td>
-                                    <td colspan="5"><input type="file" disabled></td>
-                                </tr>
-                            </table>
+                        <div id="container">
+                            <!-- 기안자가 요청한 문서가 동적으로 로드될 부분입니다!! -->
                         </div>
 
                         <!-- 버튼 추가 -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3"><!-- 버튼의 오른쪽 정렬 -->
-                            <button id="backBtn" class="btn btn-secondary">돌아가기</button>
+                            <button id="listBtn" class="btn btn-secondary">목록으로</button>
                             <button id="rejectBtn" class="btn btn-danger">결재 반려</button>
                             <button id="approveBtn" class="btn btn-primary">결재 승인</button>
                         </div>
@@ -747,9 +623,9 @@
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
     <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
 </a>
 <!-- 채팅창 끝-->
 
@@ -766,12 +642,254 @@
 </div>
 
 <script><!-- 추가한 스크립트입니다! -->
-document.addEventListener("DOMContentLoaded", function () {
+// URL에서 파라미터를 추출하는 함수
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
+document.addEventListener("DOMContentLoaded", function () {
+    const approveBtn = document.getElementById('approveBtn');
     const rejectBtn = document.getElementById('rejectBtn');
     const rejectModal = document.getElementById('rejectModal');
     const modalCancelBtn = document.getElementById('modalCancelBtn');
     const modalRejectBtn = document.getElementById('modalRejectBtn');
+    const listBtn = document.getElementById('listBtn');
+    const modalTextarea = document.getElementById('rejectMessage'); // 모달 안의 반려 메시지 입력 필드 선택
+
+    // URL에서 'category' 파라미터의 값을 가져옴
+    const category = getQueryParam('category');
+    // URL 경로에서 docNo 경로변수를 가져옴
+    const docNo = window.location.pathname.split('/').pop();
+
+    fetch(`/approval/getForm/${category}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Form not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.formHtml) {
+                // 선택한 양식의 HTML을 container에 삽입
+                const container = document.getElementById('container');
+                container.innerHTML = data.formHtml;
+
+                // 서버에서 문서 데이터를 가져옴
+                return fetch(`/approval/getDocumentData/${docNo}`);
+            } else {
+                console.error('Form HTML is missing');
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                const documentData = data.document;
+                console.log('documentData:', documentData);
+                const isCurrentApprover = data.isCurrentApprover;
+                // 로그로 확인
+                console.log('isCurrentApprover:', isCurrentApprover);
+
+                // 데이터를 HTML 폼에 삽입
+                document.querySelector('input[name="docTitle"]').value = documentData.docTitle;
+                document.querySelector('textarea[name="docBody"]').value = documentData.docBody;
+
+                // 문서 상태와 작성일을 설정
+                document.getElementById('docStatus').textContent = documentData.docStatus || '';
+                document.getElementById('reqDate').textContent = documentData.reqDate || '';
+
+                // 결재선 결재자 이름 추가
+                const approvalContainer = document.getElementById('approverContainer');
+                approvalContainer.innerHTML = documentData.approvalLine;
+                // 결재선 timeStamp를 추가
+                const timeStamp = document.getElementById('timeStamp');
+                timeStamp.innerHTML = documentData.timeStampHtml;
+                // 결재선 순번 추가
+                const approverNo = document.getElementById('approverContainerNumbers');
+                approverNo.innerHTML = documentData.approverNoHtml;
+
+                // 문서 작성자 정보를 폼에 삽입
+                document.getElementById('dmpName').textContent = documentData.senderDmpName || '';
+                document.getElementById('senderName').textContent = documentData.senderName || '';
+                document.getElementById('rankName').textContent = documentData.senderRankName || '';
+
+                // 파일 경로가 있을 경우, 파일 링크를 추가
+                if (documentData.filePath) {
+                    const fileInput = document.getElementById('file');
+                    console.log("filePath: " + documentData.filePath);
+
+                    // 파일 경로에서 \를 /로 변경
+                    let originalPath = documentData.filePath;
+
+                    // URL 인코딩
+                    let encodedPath = encodeURIComponent(originalPath);
+                    // 다운로드 URL 생성
+                    const downloadUrl = `/download?filePath=${encodedPath}`;
+
+                    // 파일 이름 추출 - 파일 경로에서 원본 파일 이름을 가져옴
+                    const fileName = originalPath.split("|")[0];
+                    console.log("fileName: " + fileName);
+
+                    // 다운로드 링크 생성
+                    const fileLink = document.createElement('a');
+                    fileLink.textContent = fileName;
+                    fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
+                    fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
+                    fileLink.download = fileName; // 다운로드시 파일 이름 설정
+
+                    // 파일 선택 필드의 부모 요소에 파일 링크를 추가
+                    fileInput.parentNode.appendChild(fileLink);
+
+                    // 파일 선택 필드를 숨김 (disabled만으로는 충분하지 않을 수 있음)
+                    fileInput.style.display = 'none';
+                }
+
+                // 모든 입력 필드를 읽기 전용으로 설정
+                const inputs = document.querySelectorAll('input, textarea, select');
+                inputs.forEach(input => {
+                    // 반려 메시지를 입력하는 textarea는 제외
+                    if (input.id !== 'rejectMessage') {
+                        input.setAttribute('disabled', true);
+                    }
+                });
+
+                // 현재 결재자만 승인 및 반려 버튼을 볼 수 있도록 함
+                if (!isCurrentApprover) {
+                    document.getElementById('approveBtn').style.display = 'none';
+                    document.getElementById('rejectBtn').style.display = 'none';
+                } else {
+                    console.log('Current approver detected, showing buttons.');
+                }
+
+                // docStatus가 '완료'인 경우 페이지와 카드 제목 변경
+                if (documentData.docStatus === '완료') {
+                    const pageTitle = document.querySelector('.pagetitle h1');
+
+                    if (pageTitle && pageTitle.textContent.includes('대기')) {
+                        pageTitle.textContent = pageTitle.textContent.replace('대기', '완료');
+                    }
+                }
+
+                approveBtn.addEventListener('click', function () {
+                    const timeStampContainer = document.getElementById('timeStamp');
+
+                    // 서버에서 전달된 approvalOrder 값을 가져옴
+                    const approvalOrder = documentData.approvalOrder;
+                    // 콘솔에 approvalOrder 값을 출력하여 확인
+                    console.log('approvalOrder:', approvalOrder);
+
+                    // 해당 결재 순서에 맞는 div를 선택
+                    const existingTimeStampDiv = timeStampContainer.querySelectorAll('div')[approvalOrder - 1];
+                    // 타임스탬프 div가 존재하는지 확인
+                    if (existingTimeStampDiv) {
+                        console.log('Selected div for approvalOrder:', existingTimeStampDiv);
+                    } else {
+                        console.error('No div found for approvalOrder:', approvalOrder);
+                    }
+
+                    const currentTime = new Date();
+
+                    // 날짜와 시간을 "DD.MM.YY HH:MM:SS" 형식으로 포맷팅
+                    const formattedDate = currentTime.toLocaleDateString('ko-KR', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }).replace(/\s*\.\s*/g, '.').replace(/.$/, ''); // 공백과 마지막 마침표 제거
+
+                    const formattedTime = currentTime.toLocaleTimeString('ko-KR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    const formattedDateTime = `${formattedDate} ${formattedTime}`;
+
+                    // 기존 타임스탬프 div에 날짜와 시간 텍스트를 설정
+                    if (existingTimeStampDiv) {
+                        existingTimeStampDiv.textContent = formattedDateTime;
+                    }
+
+                    // timeStampContainer의 HTML을 가져옴
+                    const timeStampHtml = timeStampContainer.innerHTML;
+
+                    // 서버로 타임스탬프 정보 전송
+                    fetch(`/approval/approve/${docNo}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'timeStampHtml': timeStampHtml
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // 승인 후 받은 문서함 페이지로 리다이렉트
+                                window.location.href = '/approval/receive';
+                            } else {
+                                console.error('Failed to approve document.');
+                            }
+                        })
+                        .catch(error => console.error('Error approving document:', error));
+                });
+
+                modalRejectBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    const rejectMessage = document.getElementById('rejectMessage').value.trim();
+
+                    // 반려 메시지가 비어 있는지 확인
+                    if (rejectMessage === '') {
+                        alert('반려 메시지를 적어주세요.');
+                        modalTextarea.focus(); // 반려 메시지 입력 필드에 포커스 맞추기
+                        return; // 반려 처리 중단
+                    }
+
+                    // empNo를 서버에서 가져옴
+                    fetch('/approval/getEmployees')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch employee data');
+                            }
+                            return response.json();
+                        })
+                        .then(loggedInUser => {
+                            const empNo = loggedInUser.empNo; // empNo 추출
+
+                            // 반려 요청을 서버로 전송
+                            return fetch('/approval/rejectDocument', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({
+                                    'docNo': docNo,
+                                    'loggedInEmpNo': empNo,
+                                    'rejectMessage': rejectMessage
+                                })
+                            });
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert(`반려 메시지: ${rejectMessage}`);
+                                rejectModal.style.display = 'none';
+                                window.location.href = '/approval/receive'; // 나중에 반려만 나오는 테이블로 가게 수정
+                            } else {
+                                return response.text().then(text => {
+                                    throw new Error(text);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error rejecting document:', error);
+                            alert('문서 반려 중 오류가 발생했습니다.');
+                        });
+                });
+            } else {
+                console.error('Document or User data is missing');
+            }
+        })
+        .catch(error => console.error('Error fetching form or document data:', error));
 
     rejectBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -783,30 +901,17 @@ document.addEventListener("DOMContentLoaded", function () {
         rejectModal.style.display = 'none';
     });
 
+    listBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.location.href = '/approval/receive';
+    });
+
     window.addEventListener('click', (e) => {
         e.stopPropagation();
         if (e.target == rejectModal) {
             rejectModal.style.display = 'none';
         }
     });
-
-    modalRejectBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const rejectMessage = document.getElementById('rejectMessage').value;
-        alert(`반려 메시지: ${rejectMessage}`);
-        rejectModal.style.display = 'none';
-        window.location.href = '../approval/main' //나중에 반려만 나오는 테이블로 가게 고치기
-    });
-});
-
-backBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.location.href = '../approval/main';
-});
-
-approveBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.location.href = '../approval/main'; // 나중에 완료만 나오는 테이블로 가게 고치기
 });
 </script>
 
@@ -827,5 +932,4 @@ approveBtn.addEventListener('click', (e) => {
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
-
 </html>
