@@ -101,9 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 채팅방 나가기: 모달 창 열기
     exitButton.addEventListener('click', function() {
         openModal(exitChatRoomModal);
-
-        // 기존에 있던 이벤트 리스너를 제거하고 새로운 리스너를 등록합니다.
-        confirmExitRoomButton.onclick = null;
         confirmExitRoomButton.onclick = function() {
             exitChatRoom(empNo, selectedEmpNo);
             closeModal(exitChatRoomModal);
@@ -115,11 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
         closeModal(exitChatRoomModal);
     });
 
-    // 채팅방 나가기: 모달 창 확인 버튼
-    confirmExitRoomButton.addEventListener('click', function() {
-        exitChatRoom(empNo, selectedEmpNo);
-        closeModal(exitChatRoomModal); // 모달 창 닫기
-    });
+    // // 채팅방 나가기: 모달 창 확인 버튼
+    // confirmExitRoomButton.addEventListener('click', function() {
+    //     exitChatRoom(empNo, selectedEmpNo);
+    //     closeModal(exitChatRoomModal); // 모달 창 닫기
+    // });
 
     // 모달창 외부 클릭 시 닫기 (채팅방 생성 모달창)
     window.onclick = function(e) {

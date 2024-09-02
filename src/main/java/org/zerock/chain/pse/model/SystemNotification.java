@@ -21,6 +21,9 @@ public class SystemNotification {
     @Column(name = "system_no")
     private Long systemNo;
 
+    @Column(name = "emp_no")
+    private Long empNo;
+
     @Column(name = "system_category")
     private String systemCategory;
 
@@ -33,5 +36,7 @@ public class SystemNotification {
     @Column(name = "system_upload_date")
     private LocalDateTime systemUploadDate;
 
+    @Column(name = "is_read")
+    private boolean isRead = false;
 
 }

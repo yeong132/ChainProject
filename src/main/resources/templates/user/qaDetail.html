@@ -82,6 +82,7 @@
 
             <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
+
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon" href="/user/setting">
                     <i class="bi bi-gear"></i>
@@ -97,6 +98,7 @@
     </nav>
     <!-- 상단바 끝 -->
 </header>
+
 <!-- Header 끝 -->
 
 <!-- Header Modal -->
@@ -209,7 +211,10 @@
             </a>
             <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
                 </li>
                 <li>
                     <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>

@@ -91,13 +91,14 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-            <!-- profile 프래그먼트 테스트 -->
-            <div th:insert="fragments/profile :: profile"></div>
 
+            <th:block th:include="fragments/profile :: profile"></th:block>
+            <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
     <!-- 상단바 끝 -->
 </header>
+
 <!-- Header 끝 -->
 
 <!-- Header Modal -->
@@ -210,7 +211,10 @@
             </a>
             <ul class="nav-content collapse" data-bs-parent="#sidebar-nav" id="sign-nav">
                 <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
+                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
+                </li>
+                <li>
+                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
                 </li>
                 <li>
                     <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>

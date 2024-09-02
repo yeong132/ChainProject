@@ -104,6 +104,17 @@
         #fileList li.selected {
             background-color: #d3d3d3; /* 선택된 항목의 배경색 */
         }
+
+        .clickable-card {
+            cursor: pointer; /* 마우스를 올리면 클릭 가능한 손 모양으로 변경 */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .clickable-card:hover {
+            background-color: #f0f0f0; /* 배경색 변경 */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+        }
+
     </style>
 </head>
 <body>
@@ -142,78 +153,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -261,7 +201,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -505,6 +445,82 @@
     <!-- 페이지 제목 부분 종료 -->
 
     <section class=" dashboard section electronic-approval">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <!-- 결재 요청 카드 -->
+                    <div class="col-xxl-3 col-md-6">
+                        <div class="card info-card sales-card clickable-card" data-status="요청">
+                            <div class="card-body">
+                                <h5 class="card-title">결재 요청</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-fill-up"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h4 id="requestsCount"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 결재 요청 카드 끝 -->
+                    <!-- 결재 진행 중 카드 -->
+                    <div class="col-xxl-3 col-md-6" >
+                        <div class="card info-card sales-card clickable-card" data-status="진행 중">
+                            <div class="card-body">
+                                <h5 class="card-title">결재 진행 중</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-walking"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h4 id="inProgressCount"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 결재 진행 중 카드 끝 -->
+                    <!-- 결재 반려 카드 시작 -->
+                    <div class="col-xxl-3 col-xl-12" >
+                        <div class="card info-card customers-card clickable-card" data-status="반려">
+                            <div class="card-body">
+                                <h5 class="card-title">결재 반려</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-fill-exclamation"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h4 id="rejectedCount"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 결재 반려 카드 끝 -->
+                    <!-- 결재 완료 카드 시작 -->
+                    <div class="col-xxl-3 col-md-6">
+                        <div class="card info-card revenue-card clickable-card" data-status="완료">
+                            <div class="card-body">
+                                <h5 class="card-title">결재 완료</h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-fill-check"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h4 id="completedCount"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- 결재 완료 카드 끝 -->
+                </div><!-- 12 부분 안에 row 끝 -->
+            </div><!-- 12로 나누는 부분 끝 -->
+        </div><!-- row 끝 -->
 
         <div class="row"><!-- 여기서 부터 테이블 추가 부분입니다! -->
             <div class="col-lg-12">
@@ -514,7 +530,7 @@
 
                             <h5 class="card-title">보낸 문서함</h5>
 
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
                                     data-bs-target="#ExtralargeModal">
                                 + 새 결재 요청
                             </button>
@@ -533,10 +549,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:if="${document.docStatus != '임시저장'}" th:each="document : ${sentDocuments}">
-                                <td th:text="${document.docNo}"></td>
+                            <tr th:each="document : ${sentDocuments}">
+                                <td th:text="${document.virtualNo}"></td>
                                 <td>
-                                    <a th:href="@{/approval/read/{docNo}(docNo=${document.docNo}, category=${document.category})}"
+                                    <!-- 문서 상태에 따라 링크를 다르게 설정 -->
+                                    <a th:if="${document.docStatus == '반려'}"
+                                       th:href="@{/approval/rejectionRead/{docNo}(docNo=${document.docNo}, source='main', category=${document.category})}"
+                                       th:text="${document.docTitle}"></a>
+                                    <a th:if="${document.docStatus != '반려'}"
+                                       th:href="@{/approval/read/{docNo}(docNo=${document.docNo}, category=${document.category})}"
                                        th:text="${document.docTitle}"></a>
                                 </td>
                                 <td th:text="${document.senderName}"></td>
@@ -545,187 +566,12 @@
                                 <td th:text="${document.category}"></td>
                             </tr>
                             <tr>
-                                <td>2</td>
-                                <td><a href="../approval/rejectionRead">안타깝게도 반려된 결재입니다 다시
-                                    올려주세요</a></td>
+                                <td>999</td>
+                                <td>모든 결재 관련자는 결재문서에서 결재 진행 상태를 알 수 있습니다.</td>
                                 <td>이나리</td>
-                                <td>요청</td>
+                                <td>요청 or 진행 중 or 반려 or 완료</td>
                                 <td>2024-07-23</td>
-                                <td>일반기안</td>
-
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td><a href="../approval/completedRead">축하합니다
-                                    결재완료됐습니다!</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>보고/시행문</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td><a href="../approval/adminRequest">관리자가 결재할 결재
-                                    문서입니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>출장</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>회계/총무</td>
-
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>안녕하세요 결재 문서 올립니다</td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>휴가</td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td><a href="../approval/read">안녕하세요 결재 문서 올립니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안</td>
-                            </tr>
-                            <tr>
-                                <td>14</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>15</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>16</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>17</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>18</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>19</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>20</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>21</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>22</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
-                            </tr>
-                            <tr>
-                                <td>23</td>
-                                <td><a href="../approval/draftRead">급해서 임시저장합니다</a></td>
-                                <td>이나리</td>
-                                <td>요청</td>
-                                <td>2024-07-23</td>
-                                <td>지출 결의서</td>
+                                <td>일반기안서</td>
                             </tr>
                             </tbody>
                         </table>
@@ -760,9 +606,9 @@
 </a>
 <!-- 맨위로 가기 끝-->
 <!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
     <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
 </a>
 <!-- 채팅창 끝-->
 
@@ -776,13 +622,6 @@
             </div>
             <div class="modal-body"><!-- modal-body안에 추가한 스타일 있습니다!-->
                 <style>
-                    /*body {
-                        font-family: Arial, sans-serif;
-                        font-size: 14px;
-                        color: #333;
-                        margin: 20px;
-                    }*/
-
                     /* 테이블 스타일 */
                     #formContainer table {
                         width: 100%;
@@ -970,6 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fileListItems = document.querySelectorAll("#fileList li");
     const previewContainer = document.getElementById("preview");
+    const cards = document.querySelectorAll('.clickable-card'); // 결재 진행상태 카드 전체 지정
 
     fileListItems.forEach(item => {
         item.addEventListener("click", function () {
@@ -991,6 +831,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error fetching form HTML:', error));
         });
     });
+
+    // 1. 상태별 문서 건수를 가져와서 카드에 표시
+    fetch('/approval/statusCounts')
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                console.log("Received data:", data); // 여기서 데이터 확인
+
+                // 결재 진행 상태 카드에 각 상태별 문서의 건수를 표시
+                document.getElementById('requestsCount').innerText = `${data.requestsCount}건`;
+                document.getElementById('inProgressCount').innerText = `${data.inProgressCount}건`;
+                document.getElementById('rejectedCount').innerText = `${data.rejectedCount}건`;
+                document.getElementById('completedCount').innerText = `${data.completedCount}건`;
+            } else {
+                console.error("No data found in the response");
+            }
+        })
+        .catch(error => console.error('Error fetching document status counts:', error));
+
+    // 각 카드 클릭시 해당 상태의 문서만 조회
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            const docStatus = this.getAttribute('data-status');
+            fetchDocumentsByStatus(docStatus);
+        });
+    });
+
+    function fetchDocumentsByStatus(docStatus) {
+        fetch(`/approval/documentsByStatusPage?docStatus=${encodeURIComponent(docStatus)}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received documents:", data);  // 데이터 확인을 위한 로그
+                updateDocumentsTable(data);
+            })
+            .catch(error => console.error('Error fetching documents:', error));
+    }
+
+    function updateDocumentsTable(documents) {
+        const tableBody = document.querySelector('#approvalTable tbody');
+        tableBody.innerHTML = ''; // 기존 테이블 내용 삭제
+
+        documents.forEach(doc => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${doc.docNo}</td>
+                <td>
+                    ${doc.docStatus === '반려' ?
+                `<a href="/approval/rejectionRead/${doc.docNo}?source=main&category=${doc.category}">${doc.docTitle}</a>` :
+                `<a href="/approval/read/${doc.docNo}?category=${doc.category}">${doc.docTitle}</a>`}
+                </td>
+                <td>${doc.senderName}</td>
+                <td>${doc.docStatus}</td>
+                <td>${doc.reqDate}</td>
+                <td>${doc.category}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
 
     // "작성" 버튼 클릭 시 결재 진행 페이지로 이동
     document.getElementById('submitSelectionBtn').addEventListener('click', function () {

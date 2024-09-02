@@ -3,15 +3,13 @@ package org.zerock.chain.parkyeongmin.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "approvals")
 public class Approval {
 
@@ -28,12 +26,19 @@ public class Approval {
     @JoinColumn(name = "emp_no", referencedColumnName = "emp_no")
     private Employee employee;      // 결재자 사원 번호
 
+    @ManyToOne
+    @JoinColumn(name = "ref_emp_no", referencedColumnName = "emp_no")
+    private Employee refEmployee;      // 참조자 사원 번호
+
     @Column(name = "approval_date", nullable = true)
-    private LocalDate approvalDate;  // 결재일 (최종 결재일)
+    private LocalDateTime approvalDate;  // 결재일 (최종 결재일)
 
     @Column(name = "rejection_reason")
     private String rejectionReason;  // 결재 반려 사유
 
     @Column(name = "approval_order")
     private Integer approvalOrder;  // 결재 순서
+
+    @Column(name = "approval_status")
+    private String approvalStatus;  // 결재 상태
 }

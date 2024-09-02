@@ -1,10 +1,14 @@
 package org.zerock.chain.pse.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BoardDTO {
 
     private Long boardNo;
@@ -14,7 +18,7 @@ public class BoardDTO {
     private String boardLocation;
     private String boardFiles;
     private String boardAuthor;
-    private LocalDate boardUploadDate;
+    private LocalDate boardUploadDate = LocalDate.now();
 
 
 }

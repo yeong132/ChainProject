@@ -1,25 +1,38 @@
 <!-- src/main/resources/templates/fragments/notifications.html -->
-<!--고정 헤더 : 알림창 -->
+<!-- 고정 헤더 : 알림창 -->
 <div th:fragment="notifications">
     <li class="nav-item dropdown">
         <a class="nav-link nav-icon" data-bs-toggle="dropdown" href="#">
             <i class="bi bi-bell"></i>
             <!-- 수정된 부분: 읽지 않은 알림의 개수 표시 -->
             <span class="badge btn-secondary badge-number"
-                  th:text="${#lists.size(allNotifications.?[isRead == false])}">0</span>
+                  th:text="${#lists.size(allNotifications.?[isRead == false and enabled == true]) + #lists.size(systemNotifications.?[isRead == false])}">0</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
             <li class="dropdown-header">
                 <!-- 수정된 부분: 읽지 않은 알림의 개수 표시 -->
-                <span th:text="${#lists.size(allNotifications.?[isRead == false])} + '개의 새 알림이 있습니다'">0개의 새 알림이 있습니다</span>
+                <span th:text="${#lists.size(allNotifications.?[isRead == false and enabled == true]) + #lists.size(systemNotifications.?[isRead == false])} + '개의 새 알림이 있습니다'">0개의 새 알림이 있습니다</span>
                 <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
             </li>
             <li>
                 <hr class="dropdown-divider"/>
             </li>
-            <!-- 수정된 부분: 읽지 않은 알림만 표시 -->
+            <!-- 읽지 않은 시스템 알림 표시 -->
             <div class="overflow-y-auto" style="max-height: 350px;">
-                <li th:each="notification : ${allNotifications.?[isRead == false]}">
+                <li th:each="systemNotification : ${systemNotifications.?[isRead == false]}">
+                    <a th:href="@{/user/alarm/read/system/{systemNo}(systemNo=${systemNotification.systemNo})}">
+                        <div class="notification-item">
+                            <i class="bi bi-exclamation-circle text-danger"></i>
+                            <div>
+                                <h4 th:text="${systemNotification.systemCategory}">시스템 알림</h4>
+                                <p th:text="${systemNotification.systemTitle}">시스템 제목</p>
+                                <span class="notification-time" th:data-timestamp="${systemNotification.systemUploadDate}">시스템 알림 시간</span>
+                            </div>
+                        </div>
+                        <hr class="dropdown-divider"/>
+                </li>
+                <!-- 읽지 않은 일반 알림 표시 -->
+                <li th:each="notification : ${allNotifications.?[isRead == false and enabled == true]}">
                     <a th:href="@{/user/alarm/read/{notificationNo}(notificationNo=${notification.notificationNo})}">
                         <div class="notification-item">
                             <i class="bi bi-exclamation-circle text-warning"></i>

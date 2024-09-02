@@ -5,7 +5,10 @@
 .unread {
     font-weight: bold; /* 안 읽은 알림은 굵게 표시 */
 }
-
+/* 메신저 알람 숨김 */
+.hidden {
+    display: none !important;
+}
 /*테이블 내에 임시보관 괄호 표시 */
 .temporary-text {
     color: #bebdbd; /* 텍스트 색상을 빨간색으로 */

@@ -11,11 +11,11 @@ public interface BoardService {
     List<BoardDTO> getAllBoards();
     // 개별 상세 조회
     BoardDTO getBoardById(Long boardNo);
-    // 생성
+    // 게시글 생성
     BoardDTO createBoard(BoardRequestDTO boardRequestDTO);
-    // 수정
+    // 게시글 수정
     BoardDTO updateBoard(Long boardNo, BoardRequestDTO boardRequestDTO);
-    // 삭제
+    // 게시글 삭제
     void deleteBoard(Long boardNo);
 
 }

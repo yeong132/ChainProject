@@ -70,14 +70,21 @@ public class SignupController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             Long empNo = userDetails.getEmpNo();
 
-            // 세션에 empNo를 저장
+            // 세션에 로그인 정보를 저장
             session.setAttribute("empNo", empNo);
+            session.setAttribute("firstName", userDetails.getFirstName());
+            session.setAttribute("lastName", userDetails.getLastName());
+            session.setAttribute("rankName", userDetails.getRankName());
 
             // 모델에 추가하여 뷰로 전달
             model.addAttribute("empNo", empNo);
+            model.addAttribute("firstName", userDetails.getFirstName());
+            model.addAttribute("lastName", userDetails.getLastName());
+            model.addAttribute("rankName", userDetails.getRankName());
         }
         return "index"; // index.html 템플릿으로 이동
     }
+
 
 
 }

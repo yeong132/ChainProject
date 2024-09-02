@@ -43,12 +43,12 @@
     ======================================================== -->
     <title>요청된 결재 문서</title>
     <style>
-        body {
+        /*body {
             font-family: Arial, sans-serif;
             font-size: 14px;
             color: #333;
             margin: 20px;
-        }
+        }*/
 
         /* 테이블 스타일 */
         #formContainer table {
@@ -245,78 +245,7 @@
             </li>
             <!-- 출퇴근 아이콘 끝 -->
 
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
             <!-- 알림 전체 끝 -->
 
             <li class="nav-item dropdown">
@@ -364,7 +293,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -614,7 +543,6 @@
                         </div>
 
                         <div id="container">
-
                             <!-- process.html에서 작성한 문서가 동적으로 추가될 부분입니다-->
                         </div>
 
@@ -647,12 +575,28 @@
 </footer>
 <!-- Footer 끝 -->
 
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
+</a>
+<!-- 채팅창 끝-->
+
 <script><!-- 추가한 스크립트 입니다 -->
 document.addEventListener("DOMContentLoaded", function () {
     // URL에서 'category' 파라미터의 값을 가져옴
     const category = getQueryParam('category');
     // URL 경로에서 docNo 경로변수를 가져옴
     const docNo = window.location.pathname.split('/').pop();
+    // 결재자, 참조자 Json 선언
+    let approversJson = [];
+    let referencesJson = [];
 
     fetch(`/approval/getForm/${category}`)
         .then(response => {
@@ -677,7 +621,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data) {
                 const documentData = data.document;
-                const loggedInUser = data.loggedInUser;
+                const isFirstApprovalApproved = data.isFirstApprovalApproved; // 수정된 부분
 
                 // 데이터를 HTML 폼에 삽입
                 document.querySelector('input[name="docTitle"]').value = documentData.docTitle;
@@ -697,22 +641,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 const approverNo = document.getElementById('approverContainerNumbers');
                 approverNo.innerHTML = documentData.approverNoHtml;
 
-                // 로그인된 사용자의 정보를 폼에 삽입
-                document.getElementById('dmpName').textContent = loggedInUser.dmpName || '';
-                document.getElementById('senderName').textContent = `${loggedInUser.lastName}${loggedInUser.firstName}` || '';
-                document.getElementById('rankName').textContent = loggedInUser.rankName || '';
+                // 문서 작성자 정보를 폼에 삽입
+                document.getElementById('dmpName').textContent = documentData.senderDmpName || '';
+                document.getElementById('senderName').textContent = documentData.senderName || '';
+                document.getElementById('rankName').textContent = documentData.senderRankName || '';
 
                 // 파일 경로가 있을 경우, 파일 링크를 추가
                 if (documentData.filePath) {
                     const fileInput = document.getElementById('file');
-                    const fullPath = documentData.filePath;
+                    console.log("filePath: " + documentData.filePath);
 
-                    // 경로에서 파일 이름만 추출
-                    const fileName = fullPath.split('_').pop(); // 파일명 추출 (고유 ID 뒤에 있는 부분)
+                    // 파일 경로에서 \를 /로 변경
+                    let originalPath = documentData.filePath;
 
-                    const fileLink = document.createElement('span');
+                    // URL 인코딩
+                    let encodedPath = encodeURIComponent(originalPath);
+                    // 다운로드 URL 생성
+                    const downloadUrl = `/download?filePath=${encodedPath}`;
+
+                    // 파일 이름 추출 - 파일 경로에서 원본 파일 이름을 가져옴
+                    const fileName = originalPath.split("|")[0];
+                    console.log("fileName: " + fileName);
+
+                    // 다운로드 링크 생성
+                    const fileLink = document.createElement('a');
                     fileLink.textContent = fileName;
                     fileLink.style.marginLeft = '10px'; // 링크와 기존 input 간의 간격 추가
+                    fileLink.href = downloadUrl; // 파일 다운로드 URL을 href로 설정
+                    fileLink.download = fileName; // 다운로드시 파일 이름 설정
 
                     // 파일 선택 필드의 부모 요소에 파일 링크를 추가
                     fileInput.parentNode.appendChild(fileLink);
@@ -726,22 +682,45 @@ document.addEventListener("DOMContentLoaded", function () {
                 inputs.forEach(input => {
                     input.setAttribute('disabled', true);  // select 등의 필드를 위한 처리
                 });
+
+                console.log('Document Data:', documentData); // 전체 데이터 확인
+                console.log('isFirstApprovalApproved:', isFirstApprovalApproved); // 로그 추가
+
+                if (isFirstApprovalApproved) {
+                    document.getElementById('cancelBtn').style.display = 'none';
+                }
             } else {
                 console.error('Document or User data is missing');
             }
         })
         .catch(error => console.error('Error fetching form or document data:', error));
 
+    // 서버에서 approversJson을 가져와서 처리
+    fetch(`/approval/get-approvers-and-references-json/${docNo}`, {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            approversJson = data.approversJson || [];  // 기본값으로 빈 배열 설정
+            referencesJson = data.referencesJson || [];  // 기본값으로 빈 배열 설정
+        })
+        .catch(error => console.error('Error fetching approversJson:', error));
 
     // 철회 버튼 누를시 기존 요청 문서가 임시문서함으로 이동
     // 철회 버튼 이벤트리스너
     document.getElementById('cancelBtn').addEventListener('click', (e) => {
         e.stopPropagation();
-        saveDocumentAsDraft();
+        // fetch가 완료된 후에 철회 작업이 실행되도록 보장
+        if (!approversJson.length && !referencesJson.length) {
+            console.warn('ApproversJson or ReferencesJson is empty or not loaded yet.');
+            return;
+        }
+
+        saveDocumentAsDraft(true, approversJson, referencesJson);
     })
 
     // 임시저장을 위한 함수
-    function saveDocumentAsDraft() {
+    function saveDocumentAsDraft(isWithdraw = false, approversJson = [], referencesJson = []) {
         const docNo = window.location.pathname.split('/').pop();  // URL에서 문서 번호를 가져옴
         const docTitle = document.querySelector('input[name="docTitle"]').value;
         const docBody = document.querySelector('textarea[name="docBody"]').value;
@@ -761,8 +740,15 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append('approverNoHtml', approverContainerNumbersHtml);
         formData.append('category', category);
         formData.append('docStatus', '임시저장');  // 임시저장 상태로 설정
+        formData.append('approversJson', approversJson);  // JSON으로 변환하여 추가
+        formData.append('referencesJson', referencesJson);  // JSON으로 변환하여 추가
         if (file) {
             formData.append('file', file);
+        }
+
+        // 철회 작업이면 withdraw 플래그를 true로 추가
+        if (isWithdraw) {
+            formData.append('withdraw', 'true');
         }
 
         // 서버에 임시저장한 문서 업데이트
