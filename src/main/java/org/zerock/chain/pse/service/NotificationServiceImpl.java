@@ -11,6 +11,7 @@ import org.zerock.chain.parkyeongmin.repository.DocumentsRepository;
 import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.repository.NotificationRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -162,4 +163,48 @@ public class NotificationServiceImpl extends BaseService<Notification> implement
         }
         return false;
     }
+
+    @Override
+    @Transactional
+    public void createDepartmentAndRankChangeNotification(Long empNo, String oldDepartment, String newDepartment, String oldRank, String newRank) {
+        String departmentChangeMessage = null;
+        String rankChangeMessage = null;
+
+        // 부서 변경 메시지 생성
+        if (oldDepartment != null && !oldDepartment.equals(newDepartment)) {
+            departmentChangeMessage = String.format("부서가 %s에서 %s로 변경되었습니다.", oldDepartment, newDepartment);
+        }
+
+        // 직급 변경 메시지 생성
+        if (oldRank != null && !oldRank.equals(newRank)) {
+            rankChangeMessage = String.format("직급이 %s에서 %s로 변경되었습니다.", oldRank, newRank);
+        }
+
+        // 부서 변경 알림 생성
+        if (departmentChangeMessage != null) {
+            Notification departmentNotification = new Notification();
+            departmentNotification.setEmpNo(empNo);
+            departmentNotification.setNotificationType("계정");
+            departmentNotification.setNotificationMessage(departmentChangeMessage);
+            departmentNotification.setNotificationDate(LocalDateTime.now());
+            departmentNotification.setRead(false);
+            departmentNotification.setEnabled(true);
+            notificationRepository.save(departmentNotification);
+        }
+
+        // 직급 변경 알림 생성
+        if (rankChangeMessage != null) {
+            Notification rankNotification = new Notification();
+            rankNotification.setEmpNo(empNo);
+            rankNotification.setNotificationType("계정");
+            rankNotification.setNotificationMessage(rankChangeMessage);
+            rankNotification.setNotificationDate(LocalDateTime.now());
+            rankNotification.setRead(false);
+            rankNotification.setEnabled(true);
+            notificationRepository.save(rankNotification);
+        }
+    }
+
+
+
 }

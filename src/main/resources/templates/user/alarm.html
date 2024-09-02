@@ -516,15 +516,34 @@
                                     </form>
                                 </div>
                             </div>
-                        <!--------------- 계정 알림 목록 --------------------->
-                        <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
-                            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                                A simple secondary alert—check it out!
-                                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
-                                        type="button"></button>
+                            <!--------------- 계정 알림 목록 --------------------->
+                            <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert"
+                                     th:each="notification : ${accountNotifications}"
+                                     th:classappend="${notification.isRead ? 'read' : 'unread'}">
+
+                                    <!-- 알림 클릭 시 해당 페이지로 이동 -->
+                                    <a th:href="@{'/user/alarm/read/' + ${notification.notificationNo}}"
+                                       style="text-decoration:none; color:inherit;">
+                                        <div>
+                                            <strong th:text="${notification.notificationType}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
+                                            <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                            <hr>
+                                            <p th:text="${notification.notificationMessage}"></p> <!-- 알림 메시지 표시 -->
+                                        </div>
+                                    </a>
+
+                                    <!-- 개별 알림 삭제 버튼 -->
+                                    <form method="post" style="display:inline;"
+                                          th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
+                                        <button aria-label="Close" class="btn-close" type="submit"></button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <!--------------- 시스템알림  목록 ------------------------>
+
+
+                            <!--------------- 시스템알림  목록 ------------------------>
                         <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
                             <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:classappend="${systemNotification.isRead ? 'read' : 'unread'}" th:each="systemNotification : ${systemNotifications}">
                                 <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>

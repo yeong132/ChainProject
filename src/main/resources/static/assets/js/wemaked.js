@@ -269,59 +269,15 @@ var editor = new FroalaEditor('#froala', {
 });
 
 /// 출퇴근 Modal용
-
 document.addEventListener('DOMContentLoaded', function () {
-    function updateTime(elementId) {
-        const currentTimeElement = document.getElementById(elementId);
-        if (!currentTimeElement) return;
-
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
-    }
-
-    function setupModal(modalId, confirmButtonId, cancelButtonId, switchInput, checkedState, apiUrl) {
-        const modalElement = document.getElementById(modalId);
-        const confirmButton = document.getElementById(confirmButtonId);
-        const cancelButton = document.getElementById(cancelButtonId);
-
-        $(modalElement).on('show.bs.modal', function () {
-            updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
-        });
-
-        confirmButton.addEventListener('click', function () {
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('네트워크 응답이 올바르지 않습니다.');
-                    }
-                    return response.text();
-                })
-                .then(result => {
-                    alert(result);
-                    switchInput.checked = checkedState;
-                    $(modalElement).modal('hide');
-                })
-                .catch(error => {
-                    alert('오류가 발생했습니다.');
-                    console.error('Error:', error);
-                });
-        });
-
-        cancelButton.addEventListener('click', function () {
-            switchInput.checked = !checkedState;
-        });
-    }
-
     const switchInput = document.getElementById('flexSwitchCheckDefault');
     const commuteIcon = document.getElementById('commuteIcon');
+
+    // 로컬 스토리지에서 저장된 스위치 상태 불러오기
+    const savedState = localStorage.getItem('switchCheckedState');
+    if (savedState !== null) {
+        switchInput.checked = savedState === 'true';
+    }
 
     if (commuteIcon && switchInput) {
         commuteIcon.addEventListener('click', function () {
@@ -331,6 +287,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#leaveworkModal').modal('show');
             }
         });
+
+        function setupModal(modalId, confirmButtonId, cancelButtonId, switchInput, checkedState, apiUrl) {
+            const modalElement = document.getElementById(modalId);
+            const confirmButton = document.getElementById(confirmButtonId);
+            const cancelButton = document.getElementById(cancelButtonId);
+
+            $(modalElement).on('show.bs.modal', function () {
+                updateTime(modalId === 'attendanceModal' ? 'currentTime' : 'currentTimes');
+            });
+
+            confirmButton.addEventListener('click', function () {
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('네트워크 응답이 올바르지 않습니다.');
+                        }
+                        return response.text();
+                    })
+                    .then(result => {
+                        alert(result);
+                        switchInput.checked = checkedState;
+
+                        // 스위치 상태를 로컬 스토리지에 저장
+                        localStorage.setItem('switchCheckedState', checkedState ? 'true' : 'false');
+
+                        $(modalElement).modal('hide');
+                    })
+                    .catch(error => {
+                        alert('오류가 발생했습니다.');
+                        console.error('Error:', error);
+                    });
+            });
+
+            cancelButton.addEventListener('click', function () {
+                switchInput.checked = !checkedState;
+            });
+        }
 
         setupModal(
             'attendanceModal',
@@ -356,6 +354,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     } else {
         console.error('commuteIcon 또는 switchInput 요소를 찾을 수 없습니다.');
+    }
+
+    function updateTime(elementId) {
+        const currentTimeElement = document.getElementById(elementId);
+        if (!currentTimeElement) return;
+
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
     }
 });
 

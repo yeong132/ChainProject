@@ -216,7 +216,7 @@ public class ApprovalController {
     }
 
     @GetMapping("/getForm/{category}")
-    public ResponseEntity<FormDTO> getFormByCategory(@PathVariable String category) {
+    public ResponseEntity<FormDTO> getFormByCategory(@PathVariable("category") String category) {
         log.info("Fetching form HTML for category: {}", category);
 
         FormDTO formDTO = formService.getFormByCategory(category);
@@ -228,6 +228,7 @@ public class ApprovalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping("/getDocumentData/{docNo}")
     public ResponseEntity<Map<String, Object>> getDocumentData(@PathVariable("docNo") int docNo) {

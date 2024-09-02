@@ -1,10 +1,12 @@
 package org.zerock.chain.imjongha.service;
 
+import jakarta.persistence.EntityManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.imjongha.dto.PermissionDTO;
 import org.zerock.chain.imjongha.exception.EmployeeNotFoundException;
+import org.zerock.chain.imjongha.exception.PermissionNotFoundException;
 import org.zerock.chain.imjongha.model.Employee;
 import org.zerock.chain.imjongha.model.EmployeePermission;
 import org.zerock.chain.imjongha.model.Permission;
@@ -20,17 +22,20 @@ public class PermissionServiceImpl implements PermissionService {
 
     private final EmployeeRepository employeeRepository;
     private final PermissionRepository permissionRepository;
-    private final EmployeePermissionRepository employeePermissionRepository;
     private final ModelMapper modelMapper;
+    private final EntityManager entityManager;
+    private final EmployeePermissionRepository employeePermissionRepository;
+
 
     public PermissionServiceImpl(EmployeeRepository employeeRepository,
                                  PermissionRepository permissionRepository,
-                                 EmployeePermissionRepository employeePermissionRepository,
-                                 ModelMapper modelMapper) {
+                                 ModelMapper modelMapper,
+                                 EntityManager entityManager, EmployeePermissionRepository employeePermissionRepository) {
         this.employeeRepository = employeeRepository;
         this.permissionRepository = permissionRepository;
-        this.employeePermissionRepository = employeePermissionRepository;
         this.modelMapper = modelMapper;
+        this.entityManager = entityManager;
+        this.employeePermissionRepository = employeePermissionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -51,12 +56,11 @@ public class PermissionServiceImpl implements PermissionService {
                 .map(ep -> modelMapper.map(ep.getPermission(), PermissionDTO.class))
                 .collect(Collectors.toList());
     }
-
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void updateEmployeePermissions(Long empNo, List<Long> permissionIds) {
         Employee employee = employeeRepository.findById(empNo)
-                .orElseThrow(() -> new EmployeeNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo));
+                .orElseThrow(() -> new EmployeeNotFoundException("사원을 찾을 수 없습니다."));
 
         // 현재 권한 목록을 가져옴
         List<Long> existingPermissionIds = employee.getEmployeePermissions().stream()
@@ -74,15 +78,25 @@ public class PermissionServiceImpl implements PermissionService {
                 .collect(Collectors.toList());
 
         // 기존 권한 삭제
-        employeePermissionRepository.deleteAll(permissionsToRemove);
+        if (!permissionsToRemove.isEmpty()) {
+            employeePermissionRepository.deleteAll(permissionsToRemove);
+            entityManager.flush();  // 변경 사항을 즉시 데이터베이스에 반영
+            employee.getEmployeePermissions().removeAll(permissionsToRemove);  // 메모리에서 제거
+        }
 
         // 새로운 권한 추가
         List<Permission> permissions = permissionRepository.findAllById(permissionsToAdd);
         permissions.forEach(permission -> {
             EmployeePermission employeePermission = new EmployeePermission(employee, permission);
-            employeePermissionRepository.save(employeePermission);
+            employee.getEmployeePermissions().add(employeePermission);  // 메모리에 추가
+            employeePermissionRepository.save(employeePermission);  // 데이터베이스에 저장
         });
+
+        // 최종적으로 employee 엔티티 저장
+        employeeRepository.save(employee);
     }
+
+
 
     @Transactional(readOnly = true)
     @Override

@@ -109,8 +109,14 @@ public class UserController {
 
             // 오늘 날짜의 출퇴근 기록 가져오기
             AttendanceRecordDTO attendance = attendanceRecordService.getAttendanceRecordByDateAndEmpNo(currentDate, Long.parseLong(empNo));
-            model.addAttribute("dailyAttendance", attendance);
 
+            if (attendance == null) {
+                // 출퇴근 기록이 없을 경우, 기본 메시지 또는 초기 상태 설정
+                model.addAttribute("dailyAttendanceMessage", "오늘의 출퇴근 기록이 없습니다.");
+            } else {
+                // 출퇴근 기록이 있는 경우, 해당 기록을 모델에 추가
+                model.addAttribute("dailyAttendance", attendance);
+            }
         } catch (Exception e) {
             model.addAttribute("employeeError", "사원 정보를 찾을 수 없습니다.");
             log.error("사원 정보 조회 실패: {}", e.getMessage());
@@ -278,6 +284,7 @@ public class UserController {
         List<Notification> noticeNotifications = notificationService.getNotificationsByType(empNo, "공지사항");  // 공지사항 알림 조회
         List<Notification> reportNotifications = notificationService.getNotificationsByType(empNo, "업무보고서");  // 업무보고서 알림 조회
         List<Notification> chartNotifications = notificationService.getNotificationsByType(empNo, "차트");  // 차트 알림 조회
+        List<Notification> accountNotifications = notificationService.getNotificationsByType(empNo, "계정"); // 계정 변경 알림 추가
         List<SystemNotification> systemNotifications = systemNotificationService.getAllSystemNotifications(empNo);  // 시스템 알림 조회
 
         allNotifications.sort(Comparator.comparing(Notification::getNotificationDate).reversed());  // 최신순으로 정렬
@@ -288,20 +295,23 @@ public class UserController {
         model.addAttribute("noticeNotifications", noticeNotifications != null ? noticeNotifications : List.of());  // 공지사항 알림을 모델에 추가
         model.addAttribute("reportNotifications", reportNotifications != null ? reportNotifications : List.of());  // 업무보고서 알림을 모델에 추가
         model.addAttribute("chartNotifications", chartNotifications != null ? chartNotifications : List.of());  // 차트 알림을 모델에 추가
+        model.addAttribute("accountNotifications", accountNotifications != null ? accountNotifications : List.of()); // 모델에 추가
         model.addAttribute("systemNotifications", systemNotifications != null ? systemNotifications : List.of());  // 시스템 알림을 모델에 추가
 
         return "user/alarm";  // 알림 페이지로 이동
     }
 
+
     // 알림 클릭 시 읽음 상태로 변경하고, 해당 페이지로 리다이렉트
     @GetMapping("/alarm/read/notification/{notificationNo}")
-    public String readNotificationAndRedirect(@PathVariable Long notificationNo) {
-        Notification notification = notificationService.getNotificationById(notificationNo);  // 특정 알림 번호로 알림 조회
-        notificationService.markAsRead(notificationNo);  // 알림 읽음 상태로 업데이트
-
-        String redirectUrl = notification.getRedirectUrl();  // 리다이렉트 URL 가져오기
-        return "redirect:" + redirectUrl;  // 해당 URL로 리다이렉트
+    public String readNotificationAndRedirect(@PathVariable("notificationNo") Long notificationNo) {
+        // 메소드 구현
+        Notification notification = notificationService.getNotificationById(notificationNo);// 특정 알림 번호로 알림 조회
+        notificationService.markAsRead(notificationNo);// 알림 읽음 상태로 업데이트
+        String redirectUrl = notification.getRedirectUrl();// 리다이렉트 URL 가져오기
+        return "redirect:" + redirectUrl;// 해당 URL로 리다이렉트
     }
+
 
     // 시스템 알림 클릭 시 읽음 상태로 변경
     @GetMapping("/alarm/read/system/{systemNo}")

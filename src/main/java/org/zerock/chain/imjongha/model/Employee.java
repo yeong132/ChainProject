@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -69,5 +70,18 @@ public class Employee {
         EmployeePermission employeePermission = new EmployeePermission(this, permission);
         permission.getEmployeePermissions().remove(employeePermission);
         employeePermissions.remove(employeePermission);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(empNo, employee.empNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(empNo);
     }
 }

@@ -12,6 +12,7 @@ import org.zerock.chain.imjongha.model.Department;
 import org.zerock.chain.imjongha.model.Employee;
 import org.zerock.chain.imjongha.model.Rank;
 import org.zerock.chain.imjongha.repository.*;
+import org.zerock.chain.pse.service.NotificationService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,19 +27,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PermissionRepository permissionRepository;
     private final EmployeePermissionRepository employeePermissionRepository;
     private final ModelMapper modelMapper;
+    private final NotificationService notificationService;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
                                DepartmentRepository departmentRepository,
                                RankRepository rankRepository,
                                PermissionRepository permissionRepository,
                                EmployeePermissionRepository employeePermissionRepository,
-                               ModelMapper modelMapper) {
+                               ModelMapper modelMapper, NotificationService notificationService) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.rankRepository = rankRepository;
         this.permissionRepository = permissionRepository;
         this.employeePermissionRepository = employeePermissionRepository;
         this.modelMapper = modelMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -68,10 +71,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee existingEmployee = employeeRepository.findById(empNo)
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo));
 
+        // 기존 부서와 직급 정보를 저장합니다.
+        String oldDepartmentName = existingEmployee.getDepartment() != null ? existingEmployee.getDepartment().getDmpName() : null;
+        String oldRankName = existingEmployee.getRank() != null ? existingEmployee.getRank().getRankName() : null;
+
+        // 사원 정보를 업데이트합니다.
         updateEmployeeFromDTO(existingEmployee, employeeDTO);
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
+
+        // 부서 및 직급 변경 알림을 생성합니다.
+        String newDepartmentName = updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDmpName() : null;
+        String newRankName = updatedEmployee.getRank() != null ? updatedEmployee.getRank().getRankName() : null;
+
+        notificationService.createDepartmentAndRankChangeNotification(
+                empNo,
+                oldDepartmentName,
+                newDepartmentName,
+                oldRankName,
+                newRankName
+        );
+
         return convertToDTO(updatedEmployee);
     }
+
+
 
     @Override
     public void deleteEmployee(Long empNo) {

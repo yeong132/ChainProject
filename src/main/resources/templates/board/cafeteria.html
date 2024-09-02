@@ -316,7 +316,9 @@
       <button class="btn btn-primary"
               th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
               type="button">구내식당 업로드</button>
-      <button type="submit" class="btn btn-primary submitBtn">저장</button>
+      <button type="submit"
+              th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
+              class="btn btn-primary submitBtn">저장</button>
     </div>
   </div>
   <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->

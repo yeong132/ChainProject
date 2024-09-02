@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -31,4 +33,19 @@ public class EmployeePermission {
         this.employee = employee;
         this.permission = permission;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeePermission that = (EmployeePermission) o;
+        return Objects.equals(employee, that.employee) &&
+                Objects.equals(permission, that.permission);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employee, permission);
+    }
+
 }

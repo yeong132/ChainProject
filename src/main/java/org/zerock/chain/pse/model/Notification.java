@@ -48,8 +48,12 @@ public class Notification {
                 return "/notice/detail/" + this.referenceId; // 공지사항 관련 페이지로 이동
             case "업무보고서":
                 return "/report/detail/" + this.referenceId; // 업무 보고서 관련 페이지로 이동
+            case "부서":
+            case "직급":
+                return "/user/mypage"; // 부서나 직급 변경 시 마이페이지로 이동
             default:
                 return "/user/alarm"; // 기본적으로 알림 페이지로 이동
         }
     }
+
 }
