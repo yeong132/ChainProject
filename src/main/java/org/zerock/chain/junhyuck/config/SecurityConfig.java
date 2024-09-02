@@ -42,6 +42,9 @@ public class SecurityConfig {
 //                        .requestMatchers("/notice/delete/**").hasAuthority("공지사항 삭제")
                                 .requestMatchers("/board/modify/**").hasAuthority("경조사 수정")
                                 .requestMatchers("/board/cafeteria/upload").hasAuthority("구내식당 사진 업로드")
+                                .requestMatchers("/user/showMakeNotificationModal").hasAuthority("관리자")
+                                .requestMatchers("/user/commentModal").hasAuthority("관리자")
+                                .requestMatchers("/user/qna/detail/showEditCommentModal").hasAuthority("관리자")
                                 .requestMatchers("/admin/**").hasAuthority("관리자") // 관리자 접근 권한이 있는 사용자만 접근 가능
                                 .anyRequest().authenticated()
                 )

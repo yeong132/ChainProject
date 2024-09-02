@@ -380,6 +380,7 @@
 
                                     <div class="d-flex justify-content-end mt-3">
                                         <button class="btn btn-primary me-2" data-bs-target="#registerModal"
+                                                th:if="${#authorization.expression('hasAuthority(''관리자'')')}"
                                                 data-bs-toggle="modal" type="button">등록
                                         </button>
                                     </div>

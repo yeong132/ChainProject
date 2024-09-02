@@ -27,7 +27,7 @@ public class CommentController {
 
     // 특정 문의글 번호에 해당하는 모든 댓글을 가져오는 메서드
     @GetMapping("/qna/{qnaNo}")
-    public String getComments(@PathVariable Long qnaNo, Model model) {
+    public String getComments(@PathVariable("qnaNo") Long qnaNo, Model model) {
         List<CommentDTO> comments = commentService.getCommentsByQnaNo(qnaNo);  // 특정 QnA 번호에 대한 모든 댓글 조회
         model.addAttribute("comments", comments);  // 댓글 리스트를 모델에 추가
         model.addAttribute("qnaNo", qnaNo);  // QnA 번호를 모델에 추가
@@ -36,7 +36,7 @@ public class CommentController {
 
     // 특정 문의글에 새로운 댓글을 추가하는 메서드
     @PostMapping("/qna/{qnaNo}/add")
-    public String addComment(@PathVariable Long qnaNo, @ModelAttribute CommentRequestDTO commentRequestDTO) {
+    public String addComment(@PathVariable("qnaNo") Long qnaNo, @ModelAttribute CommentRequestDTO commentRequestDTO) {
         commentRequestDTO.setQnaNo(qnaNo);  // QnA 번호를 댓글 요청 DTO에 설정
         try {
             commentService.addComment(commentRequestDTO);  // 새로운 댓글 추가
@@ -54,7 +54,7 @@ public class CommentController {
 
     // 댓글 수정 메서드
     @PostMapping("/edit/{commentNo}")
-    public String editComment(@PathVariable Long commentNo, @ModelAttribute CommentRequestDTO commentRequestDTO, @RequestParam Long qnaNo) {
+    public String editComment(@PathVariable("commentNo") Long commentNo, @ModelAttribute CommentRequestDTO commentRequestDTO, @RequestParam("qnaNo") Long qnaNo) {
         try {
             commentService.updateComment(commentNo, commentRequestDTO);  // 댓글 수정
             log.info("Comment updated successfully: {}", commentNo);
@@ -67,7 +67,7 @@ public class CommentController {
 
     // 특정 댓글을 삭제하는 메서드
     @PostMapping("/delete/{commentNo}")
-    public String deleteComment(@PathVariable("commentNo") Long commentNo, @RequestParam Long qnaNo) {
+    public String deleteComment(@PathVariable("commentNo") Long commentNo, @RequestParam("qnaNo") Long qnaNo) {
         commentService.deleteComment(commentNo);  // 댓글 삭제
 
         // QnA에 남아있는 댓글이 있는지 확인
