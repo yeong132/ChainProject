@@ -420,7 +420,6 @@
         <div class="offset-sm-0">
             <div class="col-sm-3">
                 <button class="btn btn-primary" onclick="location.href='/mail/compose'" type="button">메일 쓰기</button>
-                <button class="btn btn-primary" onclick="location.href='/mail/composetome'" type="button">내게 쓰기</button>
             </div>
         </div>
     </div>
@@ -479,6 +478,9 @@
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
                                     </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(messages)}">
+                                    <td colspan="4">임시보관함이 비워져있습니다.</td>
                                 </tr>
                                 </tbody>
                             </table>

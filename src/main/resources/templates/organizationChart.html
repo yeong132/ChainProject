@@ -302,6 +302,7 @@
                                                 <th>직급</th>
                                                 <th>이름</th>
                                                 <th>전화번호</th>
+                                                <th>이메일</th>
                                                 <th>수정</th>
                                             </tr>
                                             </thead>
@@ -451,6 +452,7 @@
                 <td>${employee.rankName || 'N/A'}</td>
                 <td>${employee.lastName}${employee.firstName}</td>
                 <td>${employee.phoneNum}</td>
+                 <td>${employee.email || 'N/A'}</td>
                 <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
             </tr>
         `;
@@ -562,6 +564,7 @@
                                     <th>직급</th>
                                     <th>이름</th>
                                     <th>전화번호</th>
+                                     <th>이메일</th>
                                     <th>수정</th>
                                 </tr>
                             </thead>

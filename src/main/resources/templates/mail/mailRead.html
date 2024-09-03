@@ -15,7 +15,8 @@
 
     <!-- 폰트 설정  -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"/>
 
     <!-- Vendor CSS Files -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -33,6 +34,49 @@
     <script src="/assets/js/theme.js"></script>
 
     <style>
+        /* 공통 버튼 스타일 */
+        .btn-custom {
+            background-color: #007bff; /* 기본 배경색 설정 (파란색) */
+            color: white; /* 텍스트 색상 설정 */
+            border: none; /* 기본 테두리 제거 */
+            padding: 10px 20px; /* 버튼 안쪽 여백 */
+            border-radius: 5px; /* 버튼 모서리 둥글게 */
+            font-size: 16px; /* 폰트 크기 */
+            cursor: pointer; /* 마우스 포인터를 손 모양으로 */
+            transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+        }
+
+        /* 버튼 마우스 오버 효과 */
+        .btn-custom:hover {
+            background-color: #0056b3; /* 마우스 오버 시 배경색을 더 진하게 */
+        }
+
+        /* 삭제 버튼은 빨간색으로 설정 */
+        .btn-custom-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-custom-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* 읽지 않음으로 표시 버튼은 다른 색상으로 설정할 경우 */
+        .btn-custom-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-custom-warning:hover {
+            background-color: #e0a800;
+        }
+
+        /* 정렬을 위한 버튼 그룹 */
+        .btn-group-custom {
+            display: flex;
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            gap: 10px; /* 버튼 사이 간격 */
+        }
+
         /* Custom styles */
         .card-title {
             display: flex;
@@ -390,7 +434,7 @@
     </ul>
 </aside>
 <!-- Sidebar 전체 끝 -->
-<!-- main  시작 -->
+<!-- 메인 몸통 -->
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>메일 읽기</h1>
@@ -410,19 +454,35 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
-                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2"
-                                        th:data-message-id="${message.id}"
-                                        th:data-return-url="${returnUrl}"
-                                        onclick="showMoveToTrashModal(this)">삭제</button>
-                                <button id="markUnread" class="btn btn-primary btn-custom me-2 mt-2"
-                                        th:data-message-id="${message.id}"
-                                        th:data-return-url="${returnUrl}">읽지않음으로 표시</button>
+                                <div th:if="${!isInTrash}">
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
+                                            onclick="handleReplyForward('forward')">전달
+                                    </button>
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
+                                            onclick="handleReplyForward('reply')">답장
+                                    </button>
+                                    <button class="btn btn-primary me-2 mt-2"
+                                            th:data-message-id="${message.id}"
+                                            th:data-return-url="${returnUrl}"
+                                            onclick="showMoveToTrashModal(this)">삭제
+                                    </button>
+                                    <button id="markUnread" class="btn btn-primary me-2 mt-2"
+                                            th:data-message-id="${message.id}"
+                                            th:data-return-url="${returnUrl}">읽지않음으로 표시
+                                    </button>
+                                    <button id="backToList" class="btn btn-primary mt-2"
+                                            th:data-return-url="${returnUrl}" onclick="location.href='${returnUrl}'">목록
+                                    </button>
 
+                                </div>
+                                <div th:if="${isInTrash}">
+                                    <button class="btn btn-primary mt-2"
+                                            onclick="location.href='/mail/trash'">휴지통으로 돌아가기
+                                    </button>
+                                </div>
                             </div>
-                            <a href="#" id="backToList" class="btn btn-primary btn-custom mt-2" th:href="${returnUrl}">목록</a>
                         </div>
+
 
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
@@ -483,7 +543,6 @@
 <!-- 휴지통 이동 경고 모달 끝 -->
 
 
-
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
@@ -513,9 +572,16 @@
 <!-- 채팅창 끝-->
 
 <script th:inline="javascript">
-    const messageId = /*[[${message.id}]]*/ 'default_value'; // message.id 값을 가져옵니다.
+    // URL에서 messageId 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    let messageId = urlParams.get('messageId');
 
-    document.getElementById('markUnread').addEventListener('click', function() {
+    // messageId가 URL에서 가져오지 못한 경우, 템플릿 엔진에서 가져오기
+    if (!messageId || messageId === 'default_value') {
+        messageId = /*[[${message.id}]]*/ 'default_value';
+    }
+
+    document.getElementById('markUnread').addEventListener('click', function () {
         const messageId = this.getAttribute('data-message-id');
         const returnUrl = this.getAttribute('data-return-url');
 
@@ -529,34 +595,31 @@
         $.ajax({
             url: '/mail/toggleReadStatus',
             type: 'POST',
-            data: JSON.stringify({ messageId: messageId, markAsRead: false }),
+            data: JSON.stringify({messageId: messageId, markAsRead: false}),
             contentType: 'application/json',
-            success: function(response) {
+            success: function (response) {
                 if (returnUrl) {
                     window.location.href = returnUrl;
                 } else {
                     window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Failed to mark as unread:', error);
                 alert('Error: ' + error);
             }
         });
     });
 
-    document.getElementById('backToList').addEventListener('click', function(event) {
+    document.getElementById('backToList').addEventListener('click', function (event) {
         event.preventDefault();
-        const returnUrl = this.getAttribute('href');
-
+        const returnUrl = this.getAttribute('data-return-url');
         if (returnUrl && returnUrl !== 'null') {
             window.location.href = returnUrl;
         } else {
-            window.location.href = "/mail/inbox";  // 기본적으로 수신메일함으로 리다이렉트
+            window.location.href = "/mail/inbox";
         }
     });
-
-
 
 
     function showMoveToTrashModal(buttonElement) {
@@ -568,9 +631,9 @@
 
         if (messageId) {
             $('#moveToTrashModal').modal('show');
-            document.getElementById('confirmMoveToTrash').addEventListener('click', function() {
+            document.getElementById('confirmMoveToTrash').addEventListener('click', function () {
                 moveToTrash(messageId, returnUrl);
-            }, { once: true }); // 한 번만 실행되도록 설정
+            }, {once: true}); // 한 번만 실행되도록 설정
         } else {
             console.error("Failed to retrieve message ID.");
         }
@@ -580,7 +643,7 @@
         $.ajax({
             url: '/mail/trash/' + encodeURIComponent(messageId),
             type: 'POST',
-            success: function(response) {
+            success: function (response) {
                 $('#moveToTrashModal').modal('hide');
                 if (returnUrl && returnUrl !== 'null') {
                     window.location.href = returnUrl;
@@ -588,13 +651,12 @@
                     window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Failed to move email to trash:', error);
                 alert('Failed to move email to trash: ' + error);
             }
         });
     }
-
 
     function toggleStar(element) {
         const messageId = element.getAttribute('data-message-id');
@@ -624,6 +686,64 @@
         });
     }
 
+    // 답장, 전달 처리하는 함수
+    function handleReplyForward(action) {
+        const emailData = {
+            sender: /*[[${message.from}]]*/,
+            recipient: /*[[${message.to}]]*/,
+            cc: '',
+            subject: /*[[${message.subject}]]*/,
+            messageContent: /*[[${messageContent}]]*/,
+            sentDate: /*[[${message.date}]]*/,
+        };
+
+        let newSubject = action === 'reply' ? `RE: ${emailData.subject}` : `FW: ${emailData.subject}`;
+        let newMessageContent = `
+            <br><br>
+            -----Original Message-----<br>
+            From: ${emailData.sender}<br>
+            To: ${emailData.recipient}<br>
+            Cc: ${emailData.cc}<br>
+            Sent: ${emailData.sentDate}<br>
+            Subject: ${emailData.subject}<br>
+            <br>
+            ${emailData.messageContent}
+        `;
+
+        let recipientEmail = action === 'reply' ? emailData.sender : '';
+
+        // POST 방식으로 데이터 전송
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/mail/compose';
+
+        const subjectInput = document.createElement('input');
+        subjectInput.type = 'hidden';
+        subjectInput.name = 'subject';
+        subjectInput.value = newSubject;
+        form.appendChild(subjectInput);
+
+        const messageContentInput = document.createElement('input');
+        messageContentInput.type = 'hidden';
+        messageContentInput.name = 'messageContent';
+        messageContentInput.value = newMessageContent;
+        form.appendChild(messageContentInput);
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+
+        const recipientEmailInput = document.createElement('input');
+        recipientEmailInput.type = 'hidden';
+        recipientEmailInput.name = 'recipientEmail';
+        recipientEmailInput.value = recipientEmail;
+        form.appendChild(recipientEmailInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
 </script>
 
 

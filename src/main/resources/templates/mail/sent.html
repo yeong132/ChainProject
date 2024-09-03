@@ -36,42 +36,48 @@
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
     <script src="/assets/js/theme.js"></script>
 
+
     <style>
+    /* 드롭다운 메뉴 스타일 */
+    .dropdown-menu {
+    min-width: 8rem; /* 최소 너비 설정 */
+    }
 
-        /* 드롭다운 메뉴 스타일 */
-        .dropdown-menu {
-            min-width: 8rem; /* 최소 너비 설정 */
-        }
+    /* 체크박스와 드롭다운 버튼을 하나로 묶는 스타일 */
+    .custom-checkbox-dropdown {
+    display: flex;
+    align-items: center;
+    }
 
-        /* 체크박스와 드롭다운 버튼을 하나로 묶는 스타일 */
-        .custom-checkbox-dropdown {
-            display: flex;
-            align-items: center;
-        }
+    .custom-checkbox-dropdown input[type="checkbox"] {
+    margin-right: 5px;
+    }
 
-        .custom-checkbox-dropdown input[type="checkbox"] {
-            margin-right: 5px;
-        }
+    /* 별표 아이콘 스타일 */
+    .star-icon {
+    cursor: pointer;
+    }
 
-        /* 별표 아이콘 스타일 */
-        .star-icon {
-            cursor: pointer;
-        }
+    /* 체크박스, 별표 아이콘, 이메일 아이콘 간격 조정 */
+    .checkbox-star-container {
+    display: flex;
+    align-items: center;
+    }
 
-        /* 체크박스와 별표 아이콘을 가깝게 배치하기 위한 스타일 */
-        .checkbox-star-container {
-            display: flex; /* flexbox를 사용하여 요소를 가로로 배치 */
-            align-items: center; /* 요소를 세로축 중앙에 정렬 */
-        }
+    .checkbox-star-container input[type="checkbox"] {
+    margin-right: 10px; /* 체크박스와 별표 아이콘 사이의 간격 */
+    }
 
-        .checkbox-star-container input[type="checkbox"] {
-            margin-right: 15px; /* 체크박스와 별표 사이의 간격을 설정 */
-        }
+    /* 별표 아이콘 색상 설정 */
+    .bi-star-fill {
+    color: #ffd700 /* 별표 아이콘을 노란색으로 설정 */
+    }
 
-        /* 별표 아이콘 색상 설정 */
-        .bi-star-fill {
-            color: 	#ffd700 /* 별표 아이콘을 노란색으로 설정 */
-        }
+    /* 마우스커서 표시 */
+    .listTb {
+    cursor: pointer;
+    }
+
     </style>
 </head>
 
@@ -427,7 +433,6 @@
         <div class="offset-sm-0">
             <div class="col-sm-3">
                 <button class="btn btn-primary" onclick="location.href='/mail/compose'" type="button">메일 쓰기</button>
-                <button class="btn btn-primary" onclick="location.href='/mail/composetome'" type="button">내게 쓰기</button>
             </div>
         </div>
     </div>
@@ -470,21 +475,28 @@
                             <tbody>
                             <!-- 메시지가 있을 경우 목록 출력 -->
                             <tr th:each="message : ${messages}" th:data-message-id="${message.id}">
-                                <td>
+                                <th>
                                     <div class="checkbox-star-container">
-                                        <input type="checkbox"/>
-                                        <i th:class="${message.starred} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"
-                                           onclick="toggleStar(this)"></i>
+                                        <input type="checkbox">
+                                        <!-- 별표 아이콘 -->
+                                        <i th:class="${message.starred} ? 'bi-star-fill star-icon' : 'bi-star star-icon'" onclick="toggleStar(this)"></i>
                                     </div>
+                                </th>
+
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.from}">보낸사람</a>
                                 </td>
-                                <td th:text="${message.to}">[Recipient]</td>
-                                <td th:text="${message.subject}">[Subject]</td>
-                                <td th:text="${message.date}">[Date]</td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.subject}">제목</a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/mail/view(messageId=${message.id})}" th:text="${message.date}">날짜</a>
+                                </td>
                             </tr>
 
                             <!-- 메시지가 없을 경우 -->
                             <tr th:if="${#lists.isEmpty(messages)}">
-                                <td colspan="4">No sent emails found.</td>
+                                <td colspan="4">발송한 이메일이 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>

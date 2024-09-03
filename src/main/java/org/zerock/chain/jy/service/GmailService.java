@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import javax.mail.internet.MimeUtility;
 
 @Service
 @Log4j2
@@ -45,6 +46,8 @@ public class GmailService {
     private static Credential cachedCredential;
     private static long credentialExpiryTime;
     private static final long CACHE_DURATION_MS = 3600 * 1000; // 1시간 (3600초)
+
+    private static final String UPLOAD_DIR = "C:/upload/";
 
     // Singleton 패턴 적용: 외부에서 객체 생성을 하지 못하도록 기본 생성자를 private으로 설정
     private GmailService() {
@@ -106,6 +109,8 @@ public class GmailService {
 
 
     // Gmail 서비스 객체를 사용하는 메서드들
+
+
     public void sendMail(String recipientEmail, String subject, String messageText, List<String> filePaths) throws Exception {
         Gmail service = getInstance();
 
@@ -113,46 +118,51 @@ public class GmailService {
         try {
             Properties props = new Properties();
             Session session = Session.getDefaultInstance(props, null);
-            MimeMessage email = new MimeMessage(session);
 
-            // 이메일의 발신자, 수신자, 제목, 내용을 설정.
-            email.setFrom(new InternetAddress("your-email@gmail.com"));
-            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipientEmail));
-            email.setSubject(subject);
+            // 수신자 이메일을 콤마로 구분된 리스트로 분리
+            String[] recipients = recipientEmail.split(",");
 
-            // 본문과 파일을 담을 Multipart 객체 생성
-            Multipart multipart = new MimeMultipart();
+            for (String recipient : recipients) {
+                MimeMessage email = new MimeMessage(session);
 
-            // 본문 설정
-            MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(messageText, "UTF-8", "html"); // 본문을 HTML로 처리
-            multipart.addBodyPart(textPart);
+                email.setFrom(new InternetAddress("your-email@gmail.com"));
+                email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(recipient.trim())); // 각 수신자에게 메일 전송
+                email.setSubject(subject);
 
-            // 첨부파일 추가
-            if (filePaths != null && !filePaths.isEmpty()) {
-                for (String filePath : filePaths) {
-                    MimeBodyPart attachmentPart = new MimeBodyPart();
-                    DataSource source = new FileDataSource(filePath);
-                    attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName(Paths.get(filePath).getFileName().toString());
-                    multipart.addBodyPart(attachmentPart);
+                // 본문 설정 및 첨부파일 처리
+                Multipart multipart = new MimeMultipart();
+
+                // 본문 설정 (HTML 포맷)
+                MimeBodyPart textPart = new MimeBodyPart();
+                textPart.setContent(messageText, "text/html; charset=UTF-8");
+                multipart.addBodyPart(textPart);
+
+                // 첨부파일 처리 로직 (이중으로 추가되지 않도록 수정)
+                if (filePaths != null && !filePaths.isEmpty()) {
+                    Set<String> uniqueFilePaths = new HashSet<>(filePaths); // 중복 제거
+                    for (String filePath : uniqueFilePaths) {
+                        MimeBodyPart attachmentPart = new MimeBodyPart();
+                        DataSource source = new FileDataSource(filePath);
+                        attachmentPart.setDataHandler(new DataHandler(source));
+                        attachmentPart.setFileName(Paths.get(filePath).getFileName().toString());
+                        multipart.addBodyPart(attachmentPart);
+                    }
                 }
+
+                email.setContent(multipart);
+
+                // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                email.writeTo(buffer);
+                String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
+
+                // Gmail API를 사용하여 이메일 전송
+                Message message = new Message();
+                message.setRaw(encodedEmail);
+                service.users().messages().send("me", message).execute();
+
+                log.info("Email sent successfully to: {}", recipient.trim());
             }
-
-            // 이메일의 본문을 multipart로 설정
-            email.setContent(multipart);
-
-            // 이메일을 바이트 배열로 변환한 후 Base64로 인코딩.
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            email.writeTo(buffer);
-            String encodedEmail = Base64.encodeBase64URLSafeString(buffer.toByteArray());
-
-            // Gmail API를 사용하여 이메일을 전송.
-            Message message = new Message();
-            message.setRaw(encodedEmail);
-
-            service.users().messages().send("me", message).execute();  // "me"는 인증된 사용자를 나타냄.
-            log.info("Email sent successfully to: {}", recipientEmail);
         } catch (MessagingException e) {
             log.error("Failed to create email message: {}", e.getMessage());
             throw new Exception("Failed to create email message", e);
@@ -161,6 +171,8 @@ public class GmailService {
             throw new Exception("Failed to send email", e);
         }
     }
+
+
 
     public Optional<String> getHeader(List<MessagePartHeader> headers, String name) {
         return headers.stream()
@@ -204,122 +216,137 @@ public class GmailService {
     }
 
 
+    // 주어진 사용자 ID와 메시지 ID를 사용해 Gmail API에서 이메일 메시지를 가져옵니다.
     public Message getMessage(String userId, String messageId) throws IOException {
-        Gmail service = getInstance();
         return service.users().messages().get(userId, messageId).execute();
     }
 
+    // 이메일 메시지의 본문 내용을 가져오는 메서드
+// 이메일 메시지를 가져와서 그 안의 HTML 본문을 추출한 후, 이미지 CID를 실제 이미지 경로로 변환합니다.
     public String getMessageContent(String userId, String messageId) throws IOException {
-        Gmail service = getInstance();
-        Message message = getMessage(userId, messageId);
-        MessagePart payload = message.getPayload();
-        StringBuilder body = new StringBuilder();
+        Message message = getMessage(userId, messageId); // 메시지를 가져옴
+        MessagePart payload = message.getPayload(); // 메시지의 페이로드를 가져옴
+        StringBuilder body = new StringBuilder(); // 본문을 저장할 StringBuilder 초기화
 
         if (payload != null) {
-            String htmlContent = getHtmlContent(payload);
+            String htmlContent = getHtmlContent(payload); // HTML 콘텐츠를 추출
             if (htmlContent != null) {
-                body.append(htmlContent);
+                body.append(htmlContent); // HTML 내용을 본문에 추가
             } else {
-                log.warn("이메일 메시지에서 HTML 내용을 찾을 수 없습니다.");
+                log.warn("이메일 메시지에서 HTML 내용을 찾을 수 없습니다."); // HTML 본문이 없을 경우 경고 로그
             }
         }
 
-        String finalContent = body.toString();
-        Map<String, String> cidMap = extractCidMap(payload);
-        finalContent = parseEmailContent(finalContent, cidMap);
+        // 이미지 CID 변환 작업 수행
+        String finalContent = body.toString(); // 본문을 문자열로 변환
+        Map<String, String> cidMap = extractCidMap(payload); // CID와 이미지 경로의 매핑 추출
+        finalContent = parseEmailContent(finalContent, cidMap); // CID를 실제 경로로 변환
 
-        return finalContent;
+        return finalContent; // 변환된 최종 본문 반환
     }
 
+    // MIME 파트를 재귀적으로 처리하여 HTML 콘텐츠를 추출하는 메서드
+// 주어진 메시지 파트를 검사하여, HTML 콘텐츠를 추출합니다.
     private String getHtmlContent(MessagePart part) throws IOException {
-        String mimeType = part.getMimeType();
-        MessagePartBody partBody = part.getBody();
+        String mimeType = part.getMimeType(); // MIME 타입을 가져옴
+        MessagePartBody partBody = part.getBody(); // MIME 파트의 본문을 가져옴
 
+        // MIME 타입이 text/html인 경우, 그 데이터를 디코딩하여 반환
         if (mimeType.equals("text/html")) {
             if (partBody != null && partBody.getData() != null) {
                 return new String(Base64.decodeBase64(partBody.getData()), StandardCharsets.UTF_8);
             } else {
-                log.warn("HTML 파트에 데이터가 없습니다.");
+                log.warn("HTML 파트에 데이터가 없습니다."); // 데이터가 없을 경우 경고 로그
             }
         } else if (mimeType.startsWith("multipart/")) {
-            return extractHtmlFromMultipart(part);
+            return extractHtmlFromMultipart(part); // multipart/ 관련 MIME 타입의 경우, 재귀적으로 HTML 콘텐츠를 추출
         }
-        return null;
+        return null; // HTML 콘텐츠를 찾지 못한 경우 null 반환
     }
 
+    // Multipart 내에서 HTML 콘텐츠를 추출하는 메서드
+// 주어진 multipart 파트를 재귀적으로 처리하여 HTML 콘텐츠를 추출합니다.
     private String extractHtmlFromMultipart(MessagePart part) throws IOException {
         if (part.getParts() != null) {
             for (MessagePart subPart : part.getParts()) {
-                String result = getHtmlContent(subPart);
+                String result = getHtmlContent(subPart); // 각 서브 파트를 검사하여 HTML 콘텐츠를 추출
                 if (result != null) {
-                    return result;
+                    return result; // HTML 콘텐츠를 찾으면 반환
                 }
             }
         } else {
-            log.warn("Multipart 파트에 서브 파트가 없습니다.");
+            log.warn("Multipart 파트에 서브 파트가 없습니다."); // 서브 파트가 없을 경우 경고 로그
         }
-        return null;
+        return null; // HTML 콘텐츠를 찾지 못한 경우 null 반환
     }
 
+    // CID와 이미지 경로의 매핑을 추출하는 메서드
+// 메시지 페이로드를 검사하여, 이미지 CID와 그에 대응하는 경로를 매핑한 맵을 생성합니다.
     private Map<String, String> extractCidMap(MessagePart payload) throws IOException {
         Map<String, String> cidMap = new HashMap<>();
 
         if (payload != null) {
             log.info("CID 추출을 위한 Payload 처리 중...");
-            processCidMap(payload, cidMap);
-            log.info("CID 추출 완료: {}", cidMap);
+            processCidMap(payload, cidMap); // 페이로드를 처리하여 CID와 이미지 경로를 매핑
+            log.info("CID 추출 완료: {}", cidMap); // 완료된 CID 맵을 로그로 출력
         } else {
-            log.warn("Payload가 null이므로 CID 추출을 건너뜀.");
+            log.warn("Payload가 null이므로 CID 추출을 건너뜀."); // 페이로드가 null일 경우 경고 로그
         }
 
-        return cidMap;
+        return cidMap; // CID 맵 반환
     }
 
+    // CID와 이미지 경로의 매핑을 처리하는 메서드
+// 주어진 메시지 파트를 검사하여, CID와 이미지 경로를 매핑합니다.
     private void processCidMap(MessagePart part, Map<String, String> cidMap) throws IOException {
-        String mimeType = part.getMimeType();
-        MessagePartBody partBody = part.getBody();
+        String mimeType = part.getMimeType(); // MIME 타입을 가져옴
+        MessagePartBody partBody = part.getBody(); // MIME 파트의 본문을 가져옴
 
         log.info("MIME 타입 처리 중: {}", mimeType);
 
         if (mimeType.startsWith("image/")) {
-            processImagePartForCidMap(part, cidMap, mimeType, partBody);
+            processImagePartForCidMap(part, cidMap, mimeType, partBody); // 이미지 파트의 경우 CID와 경로를 처리
         } else if (mimeType.startsWith("multipart/")) {
-            processMultipartForCidMap(part, cidMap);
+            processMultipartForCidMap(part, cidMap); // multipart 파트의 경우 서브 파트를 재귀적으로 처리
         } else {
-            log.warn("처리되지 않은 MIME 타입: {}. 파트 스킵.", mimeType);
+            log.warn("처리되지 않은 MIME 타입: {}. 파트 스킵.", mimeType); // 처리되지 않는 MIME 타입의 경우 경고 로그
         }
     }
 
+    // CID와 이미지 경로의 매핑을 처리하는 메서드
+// 이미지 MIME 타입의 메시지 파트를 처리하여 CID와 이미지 경로를 매핑합니다.
     private void processImagePartForCidMap(MessagePart part, Map<String, String> cidMap, String mimeType, MessagePartBody partBody) throws IOException {
         if (partBody != null) {
             log.info("이미지 파트 Body가 null이 아님. 데이터 확인 중...");
             if (partBody.getData() != null) {
                 log.info("이미지 데이터 존재. CID 처리 중...");
-                String cid = extractCid(part);
-                String imageUrl = saveImageToFileSystem(partBody.getData(), mimeType, cid);
-                cidMap.put(cid, imageUrl);
+                String cid = extractCid(part); // CID를 추출
+                String imageUrl = saveImageToFileSystem(partBody.getData(), mimeType, cid); // 이미지를 파일 시스템에 저장하고 URL을 반환
+                cidMap.put(cid, imageUrl); // CID와 이미지 경로를 매핑
                 log.info("CID: {}가 이미지 경로로 매핑됨: {}", cid, imageUrl);
             } else {
                 log.warn("이미지 파트에 데이터가 없음. Attachment ID: {}", partBody.getAttachmentId());
-                handleImageAttachmentForCidMap(part, cidMap, mimeType, partBody);
+                handleImageAttachmentForCidMap(part, cidMap, mimeType, partBody); // 이미지 첨부파일 처리
             }
         } else {
-            log.warn("이미지 파트 Body가 null입니다.");
+            log.warn("이미지 파트 Body가 null입니다."); // Body가 null일 경우 경고 로그
         }
     }
 
+    // 이미지 첨부파일을 처리하여 CID와 경로를 매핑하는 메서드
+// 이미지 첨부파일을 가져와서 CID와 경로를 매핑합니다.
     private void handleImageAttachmentForCidMap(MessagePart part, Map<String, String> cidMap, String mimeType, MessagePartBody partBody) throws IOException {
-        Gmail service = getInstance();
         if (partBody.getAttachmentId() != null) {
             log.info("Attachment ID: {}에 대한 첨부파일 데이터 가져오는 중...", partBody.getAttachmentId());
+            // 첨부파일 데이터 가져오기 시도
             MessagePartBody attachPart = service.users().messages().attachments()
                     .get("me", part.getPartId(), partBody.getAttachmentId()).execute();
 
             if (attachPart.getData() != null) {
                 log.info("첨부파일 데이터 가져오기 성공. CID 처리 중...");
-                String cid = extractCid(part);
-                String imageUrl = saveImageToFileSystem(attachPart.getData(), mimeType, cid);
-                cidMap.put(cid, imageUrl);
+                String cid = extractCid(part); // CID를 추출
+                String imageUrl = saveImageToFileSystem(attachPart.getData(), mimeType, cid); // 이미지를 파일 시스템에 저장하고 URL을 반환
+                cidMap.put(cid, imageUrl); // CID와 이미지 경로를 매핑
                 log.info("CID: {}가 이미지 경로로 매핑됨: {}", cid, imageUrl);
             } else {
                 log.warn("Attachment ID: {}에 대한 첨부파일 데이터를 가져오지 못했습니다.", partBody.getAttachmentId());
@@ -327,30 +354,37 @@ public class GmailService {
         }
     }
 
+    // Multipart 파트를 처리하여 CID와 이미지 경로를 추출하는 메서드
+// multipart 파트를 재귀적으로 처리하여 CID와 이미지 경로를 추출합니다.
     private void processMultipartForCidMap(MessagePart part, Map<String, String> cidMap) throws IOException {
         if (part.getParts() != null) {
             log.info("Multipart 콘텐츠 {}개 처리 중", part.getParts().size());
             for (MessagePart subPart : part.getParts()) {
-                processCidMap(subPart, cidMap);
+                processCidMap(subPart, cidMap); // 각 서브 파트를 처리하여 CID와 경로를 매핑
             }
         } else {
-            log.warn("Multipart 파트에 서브 파트가 없습니다.");
+            log.warn("Multipart 파트에 서브 파트가 없습니다."); // 서브 파트가 없을 경우 경고 로그
         }
     }
 
+    // CID(Content-ID)를 추출하는 메서드
+// 메시지 파트의 헤더에서 CID(Content-ID)를 추출합니다.
     private String extractCid(MessagePart part) {
         String cid = "";
         if (part.getHeaders() != null) {
             for (MessagePartHeader header : part.getHeaders()) {
                 if ("Content-ID".equalsIgnoreCase(header.getName())) {
-                    cid = header.getValue();
+                    cid = header.getValue(); // Content-ID 헤더의 값을 CID로 설정
                     break;
                 }
             }
         }
+        // CID에서 불필요한 문자 제거
         return cid.replace("<", "").replace(">", "").replaceAll("[^a-zA-Z0-9]", "_");
     }
 
+    // 이미지 데이터를 파일 시스템에 저장하고 경로를 반환하는 메서드
+// CID를 기반으로 파일 이름을 생성하여 이미지 데이터를 파일 시스템에 저장합니다.
     private String saveImageToFileSystem(String imageData, String mimeType, String cid) throws IOException {
         byte[] imageBytes = Base64.decodeBase64(imageData);
         String extension = mimeType.split("/")[1];
@@ -358,6 +392,7 @@ public class GmailService {
         String cleanCid = cid.replaceAll("_cweb[0-9]+_nm", "");
         String imageName = "image_" + cleanCid + "." + extension;
 
+        // 실제 파일 시스템 경로 설정 - C:/upload/로 변경
         Path imagePath = Paths.get("C:/upload/", imageName);
 
         log.info("CID: {}에 대한 이미지를 경로: {}에 저장합니다.", cid, imagePath.toAbsolutePath());
@@ -377,9 +412,13 @@ public class GmailService {
             throw e;
         }
 
+        // 이메일 본문에서 참조할 웹 경로 반환
         return "/upload/" + imageName;
     }
 
+
+    // 이메일 본문 내의 CID를 실제 이미지 경로로 대체하는 메서드
+// 이메일 본문에서 CID를 찾아서, 실제 이미지 경로로 변환합니다.
     private String parseEmailContent(String emailHtml, Map<String, String> cidMap) {
         log.info("CID 대체 작업 시작...");
 
@@ -388,6 +427,7 @@ public class GmailService {
             String imagePath = entry.getValue();
             log.info("CID: {}를 이미지 경로: {}로 대체 시도 중...", cid, imagePath);
 
+            // CID를 실제 경로로 변환
             emailHtml = emailHtml.replace("cid:" + cid, imagePath);
         }
 
@@ -395,36 +435,54 @@ public class GmailService {
         return emailHtml;
     }
 
+
+
+
     public List<MessageDTO> listSentMessages(String userId) throws IOException {
         Gmail service = getInstance();
         log.info("Fetching sent emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("SENT"))
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("SENT"))
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch sent messages for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
-                MessagePart payload = fullMessage.getPayload();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId()).execute();
+                    MessagePart payload = fullMessage.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
+                    if (payload != null) {
+                        List<MessagePartHeader> headers = payload.getHeaders();
 
-                    MessageDTO messageDTO = new MessageDTO();
-                    messageDTO.setId(message.getId());
-                    messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
-                    messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
-                    messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
-                    messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+                        MessageDTO messageDTO = new MessageDTO();
+                        messageDTO.setId(message.getId());
+                        messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                        messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
+                        messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                        messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
 
-                    boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
-                    messageDTO.setStarred(isStarred);
+                        boolean isStarred = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("STARRED");
+                        messageDTO.setStarred(isStarred);
 
-                    messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Payload is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
                 }
             }
         } else {
@@ -434,21 +492,49 @@ public class GmailService {
         return messageDTOList;
     }
 
+
+    //휴지통 라벨로 이동시키는 메서드
     public void moveToTrash(String userId, String messageId) throws IOException {
         Gmail service = getInstance();
         ModifyMessageRequest mods = new ModifyMessageRequest().setRemoveLabelIds(List.of("INBOX")).setAddLabelIds(List.of("TRASH"));
         service.users().messages().modify(userId, messageId, mods).execute();
     }
 
+    //휴지통 라벨에서 기본(inbox)라벨로 복구 시키는 메서드
+    public void restoreMessages(String userId, List<String> messageIds) throws IOException {
+        Gmail service = getInstance();
+        ModifyMessageRequest mods = new ModifyMessageRequest()
+                .setRemoveLabelIds(List.of("TRASH"))
+                .setAddLabelIds(List.of("INBOX")); // 필요한 기본 라벨을 추가
+
+        for (String messageId : messageIds) {
+            service.users().messages().modify(userId, messageId, mods).execute();
+        }
+    }
+
+    //휴지통 라벨의 리스트를 보여주는 메서드
     public List<MessageDTO> listTrashMessages(String userId) throws IOException {
         Gmail service = getInstance();
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("TRASH"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute().getMessages();
+
+        List<Message> messages = null;
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("TRASH"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch trash messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
+
+        if (messages == null) {
+            log.warn("No messages found in trash.");
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
-
         for (Message message : messages) {
             Message fullMessage = service.users().messages().get(userId, message.getId())
                     .setFields("id,labelIds,payload(headers)")
@@ -456,7 +542,6 @@ public class GmailService {
 
             MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-            // 읽음/안읽음 상태 설정
             boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
             messageDTO.setRead(!isUnread);
 
@@ -466,10 +551,14 @@ public class GmailService {
     }
 
 
+
+
     public void deleteMessagePermanently(String userId, String messageId) throws IOException {
         Gmail service = getInstance();
         log.info("Permanently deleting message with ID: {}", messageId);
+
         try {
+            // 메시지 ID가 올바르게 전달되도록 수정
             service.users().messages().delete(userId, messageId).execute();
             log.info("Message permanently deleted successfully with ID: {}", messageId);
         } catch (IOException e) {
@@ -477,6 +566,7 @@ public class GmailService {
             throw e;
         }
     }
+
 
     public String saveDraft(String recipientEmail, String subject, String messageText, List<String> filePaths) throws Exception {
         Gmail service = getInstance();
@@ -535,8 +625,17 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching drafts for user: {}", userId);
 
-        ListDraftsResponse response = service.users().drafts().list(userId).execute();
-        List<Draft> drafts = response.getDrafts();
+        ListDraftsResponse response = null;
+        List<Draft> drafts = null;
+
+        try {
+            response = service.users().drafts().list(userId).execute();
+            drafts = response.getDrafts();
+        } catch (Exception e) {
+            log.error("Failed to fetch drafts for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
@@ -546,31 +645,39 @@ public class GmailService {
             log.info("Number of drafts found: {}", drafts.size());
 
             for (Draft draft : drafts) {
-                String messageId = draft.getMessage().getId();
-                Message message = service.users().messages().get(userId, messageId).execute();
-                MessagePart payload = message.getPayload();
+                try {
+                    String messageId = draft.getMessage().getId();
+                    Message message = service.users().messages().get(userId, messageId).execute();
+                    MessagePart payload = message.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
+                    if (payload != null) {
+                        List<MessagePartHeader> headers = payload.getHeaders();
 
-                    MessageDTO messageDTO = new MessageDTO();
-                    messageDTO.setId(message.getId());
-                    messageDTO.setDraftId(draft.getId());
-                    messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
-                    messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
-                    messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
-                    messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
+                        MessageDTO messageDTO = new MessageDTO();
+                        messageDTO.setId(message.getId());
+                        messageDTO.setDraftId(draft.getId());
+                        messageDTO.setFrom(getHeader(headers, "From").orElse("Unknown"));
+                        messageDTO.setTo(getHeader(headers, "To").orElse("Unknown"));
+                        messageDTO.setSubject(getHeader(headers, "Subject").orElse("No Subject"));
+                        messageDTO.setDate(getHeader(headers, "Date").orElse("Unknown Date"));
 
-                    boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
-                    messageDTO.setStarred(isStarred);
+                        boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
+                        messageDTO.setStarred(isStarred);
 
-                    messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Payload is null for message ID: {}", messageId);
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process draft with ID: {}: {}", draft.getId(), e.getMessage());
+                    // 특정 드래프트를 처리하지 못했을 경우, 해당 드래프트를 건너뜀
                 }
             }
         }
 
         return messageDTOList;
     }
+
 
     public void deleteDraft(String userId, String draftId) throws IOException {
         Gmail service = getInstance();
@@ -663,27 +770,44 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching starred emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("STARRED"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("STARRED"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch starred messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                    if (fullMessage != null) {
+                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                // 읽음/안읽음 상태 설정
-                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                messageDTO.setRead(!isUnread);
+                        // 읽음/안읽음 상태 설정
+                        boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+                        messageDTO.setRead(!isUnread);
 
-                messageDTOList.add(messageDTO);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to fetch full message for message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 가져오지 못했을 경우, 해당 메시지를 건너뜀
+                }
             }
         } else {
             log.info("No starred emails found for user: {}", userId);
@@ -693,34 +817,48 @@ public class GmailService {
     }
 
 
+
     public List<MessageDTO> listImportantMessages(String userId) throws IOException {
         Gmail service = getInstance();
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("IMPORTANT"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("IMPORTANT"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch important messages: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
+
+        if (messages == null || messages.isEmpty()) {
+            log.info("No important messages found for user: {}", userId);
+            // 빈 리스트 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
-        if (messages != null && !messages.isEmpty()) {
-            for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+        for (Message message : messages) {
+            Message fullMessage = service.users().messages().get(userId, message.getId())
+                    .setFields("id,labelIds,payload(headers)")
+                    .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+            MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                // 읽음/안읽음 상태 설정
-                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                messageDTO.setRead(!isUnread);
+            // 읽음/안읽음 상태 설정
+            boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+            messageDTO.setRead(!isUnread);
 
-                messageDTOList.add(messageDTO);
-            }
+            messageDTOList.add(messageDTO);
         }
 
         return messageDTOList;
     }
+
 
 
     public void addStar(String userId, String messageId) throws IOException {
@@ -820,23 +958,40 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching inbox emails for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("INBOX"))
-                .setFields("messages(id,labelIds,payload(headers))") // 필요한 필드만 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("INBOX"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 필요한 필드만 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch inbox messages for user: {}: {}", userId, e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                // fullMessage를 가져와서 필요한 필드를 사용
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    // fullMessage를 가져와서 필요한 필드를 사용
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
-                messageDTOList.add(messageDTO);
+                    if (fullMessage != null) {
+                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                        messageDTOList.add(messageDTO);
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
+                }
             }
         } else {
             log.info("No inbox emails found for user: {}", userId);
@@ -844,6 +999,7 @@ public class GmailService {
 
         return messageDTOList;
     }
+
 
 
     public String createMyselfLabel(String userId) throws IOException {
@@ -864,42 +1020,61 @@ public class GmailService {
         Gmail service = getInstance();
         log.info("Fetching emails sent to myself for user: {}", userId);
 
-        List<Message> messages = service.users().messages().list(userId)
-                .setLabelIds(Collections.singletonList("SENT"))
-                .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
-                .execute()
-                .getMessages();
+        List<Message> messages = null;
+
+        try {
+            messages = service.users().messages().list(userId)
+                    .setLabelIds(Collections.singletonList("SENT"))
+                    .setFields("messages(id,labelIds,payload(headers))") // 라벨 정보도 함께 가져옴
+                    .execute()
+                    .getMessages();
+        } catch (Exception e) {
+            log.error("Failed to fetch messages sent to myself: {}", e.getMessage());
+            // 오류가 발생하면 로그를 남기고 빈 리스트를 반환
+            return new ArrayList<>();
+        }
 
         List<MessageDTO> messageDTOList = new ArrayList<>();
 
         if (messages != null && !messages.isEmpty()) {
             for (Message message : messages) {
-                Message fullMessage = service.users().messages().get(userId, message.getId())
-                        .setFields("id,labelIds,payload(headers)")
-                        .execute();
+                try {
+                    Message fullMessage = service.users().messages().get(userId, message.getId())
+                            .setFields("id,labelIds,payload(headers)")
+                            .execute();
 
-                MessagePart payload = fullMessage.getPayload();
+                    if (fullMessage != null) {
+                        MessagePart payload = fullMessage.getPayload();
 
-                if (payload != null) {
-                    List<MessagePartHeader> headers = payload.getHeaders();
-                    String from = getHeader(headers, "From").orElse("");
-                    String to = getHeader(headers, "To").orElse("");
+                        if (payload != null) {
+                            List<MessagePartHeader> headers = payload.getHeaders();
+                            String from = getHeader(headers, "From").orElse("");
+                            String to = getHeader(headers, "To").orElse("");
 
-                    if (from.equalsIgnoreCase(to)) {
-                        String labelId = getOrCreateLabelId(userId, "내게 쓴 메일함");
+                            if (from.equalsIgnoreCase(to)) {
+                                String labelId = getOrCreateLabelId(userId, "내게 쓴 메일함");
 
-                        MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
+                                MessageDTO messageDTO = MessageDTO.fromMessage(fullMessage);
 
-                        // 읽음/안읽음 상태 설정
-                        boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
-                        messageDTO.setRead(!isUnread);
+                                // 읽음/안읽음 상태 설정
+                                boolean isUnread = fullMessage.getLabelIds() != null && fullMessage.getLabelIds().contains("UNREAD");
+                                messageDTO.setRead(!isUnread);
 
-                        messageDTOList.add(messageDTO);
+                                messageDTOList.add(messageDTO);
 
-                        if (fullMessage.getLabelIds() == null || !fullMessage.getLabelIds().contains(labelId)) {
-                            addLabelToMessage(userId, message.getId(), "내게 쓴 메일함");
+                                if (fullMessage.getLabelIds() == null || !fullMessage.getLabelIds().contains(labelId)) {
+                                    addLabelToMessage(userId, message.getId(), "내게 쓴 메일함");
+                                }
+                            }
+                        } else {
+                            log.warn("Payload is null for message ID: {}", message.getId());
                         }
+                    } else {
+                        log.warn("Full message is null for message ID: {}", message.getId());
                     }
+                } catch (Exception e) {
+                    log.error("Failed to process message ID: {}: {}", message.getId(), e.getMessage());
+                    // 특정 메시지를 처리하지 못했을 경우, 해당 메시지를 건너뜀
                 }
             }
         } else {
@@ -909,5 +1084,6 @@ public class GmailService {
         log.info("Number of messages processed: {}", messageDTOList.size());
         return messageDTOList;
     }
+
 
 }

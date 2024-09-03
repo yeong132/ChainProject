@@ -37,19 +37,21 @@ public class FileUploadController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            // 파일 이름 충돌 방지를 위한 고유한 파일 이름 생성
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-            String fileName = System.currentTimeMillis() + "_" + originalFileName; // 타임스탬프 추가
+            String fileName = System.currentTimeMillis() + "_" + originalFileName;
 
-            Path path = Paths.get(UPLOAD_DIR + fileName);
+            // 경로 조합 시 절대 경로 중복 방지
+            Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
             Files.write(path, file.getBytes());
 
-            log.info("File uploaded successfully: {}", path.toString()); // 업로드된 파일 경로를 로그에 기록
-            return ResponseEntity.ok("/upload/" + fileName);  // 이미지가 저장된 경로를 클라이언트에 반환
+            log.info("File uploaded successfully: {}", path.toString());
+            return ResponseEntity.ok("/upload/" + fileName);
+
         } catch (IOException e) {
-            log.error("File upload failed", e); // 오류 로그 기록
+            log.error("File upload failed", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패");
         }
     }
+
 
 }
