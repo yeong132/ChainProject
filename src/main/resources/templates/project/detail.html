@@ -38,6 +38,7 @@
     <!-- Template Main CSS File -->
     <link rel="stylesheet" th:href="@{/assets/css/style.css}"/>
     <link rel="stylesheet" th:href="@{/assets/css/wemaked.css}"/>
+    <script src="/assets/js/theme.js"></script>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -105,53 +106,8 @@
 
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="attendanceConfirmButton" type="button">네
-                </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="attendanceCancelButton" type="button">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-dismiss="modal" id="leaveworkConfirmButton" type="button">네
-                </button>
-                <button class="btn btn-secondary" data-bs-dismiss="modal" id="leaveworkCancelButton" type="button">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
 <aside class="sidebar" id="sidebar">
@@ -342,7 +298,7 @@
                             <!-- 참여자 목록 -->
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">참여자</label>
-                                <div class="col-sm-10" id="participantList">
+                                <div class="col-sm-10" id="participantList" style="display: flex; align-items: center;">
                                     <!-- 선택된 사람 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
@@ -358,15 +314,14 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">기간</label>
                                 <div class="col-sm-10">
-                                    <p th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></p>
+                                    <div class="form-control" th:text="${project.projectStartDate} + ' ~ ' + ${project.projectEndDate}"></div>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="froala">내용</label>
+                                <label class="col-sm-2 col-form-label" for="projectText">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea id="froala" name="projectContent" readonly
-                                              th:text="${project.projectContent}"></textarea>
+                                    <div class="form-control" readonly id="projectText" th:text="${project.projectContent}" type="text"></div>
                                 </div>
                             </div>
                         </form>

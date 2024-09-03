@@ -34,6 +34,7 @@
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <script src="/assets/js/theme.js"></script>
 
     <style>
         /* 드롭다운 메뉴 스타일 */
@@ -168,6 +169,9 @@
     <!-- 상단바 끝 -->
 </header>
 <!-- Header 끝 -->
+
+<th:block th:include="fragments/commute :: commute"></th:block>
+<!-- 출퇴근 Modal 끝 -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
