@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
     <title>경조사 게시판 리스트</title>
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
@@ -43,17 +43,17 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
     ======================================================== -->
-  </head>
+</head>
 
-  <body>
-  <!-- ======= Header ======= -->
-  <header class="header fixed-top d-flex align-items-center" id="header">
+<body>
+<!-- ======= Header ======= -->
+<header class="header fixed-top d-flex align-items-center" id="header">
     <div class="d-flex align-items-center justify-content-between">
-      <a class="logo d-flex align-items-center" href="/">
-        <img alt="" src="/assets/img/logo.png"/>
-        <span class="d-none d-lg-block">CHAIN</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
+        <a class="logo d-flex align-items-center" href="/">
+            <img alt="" src="/assets/img/logo.png"/>
+            <span class="d-none d-lg-block">CHAIN</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <!-- 로고 끝 -->
 
@@ -66,350 +66,195 @@
     <!-- 검색바 끝 -->
 
     <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
-        <!-- <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle" href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li> -->
-        <!-- 검색 아이콘 끝 -->
+        <ul class="d-flex align-items-center">
+            <!-- <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="bi bi-search"></i>
+              </a>
+            </li> -->
+            <!-- 검색 아이콘 끝 -->
 
-        <li class="nav-item dropdown" id="commuteIcon">
-          <div class="from-check form-switch me-3">
-            <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
-          </div>
-        </li>
-        <!-- 출퇴근 아이콘 끝 -->
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox">
+                </div>
+            </li>
+            <!-- 출퇴근 아이콘 끝 -->
 
-        <th:block th:include="fragments/notifications :: notifications"></th:block>
-        <!-- 알림 전체 끝 -->
+            <th:block th:include="fragments/notifications :: notifications"></th:block>
+            <!-- 알림 전체 끝 -->
 
-        <li class="nav-item dropdown">
-          <a class="nav-link nav-icon" href="/user/setting">
-            <i class="bi bi-gear"></i>
-          </a>
-          <!-- 환경설정 아이콘 끝 -->
-        </li>
-        <!-- 환경설정 전체 끝 -->
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+                <!-- 환경설정 아이콘 끝 -->
+            </li>
+            <!-- 환경설정 전체 끝 -->
 
 
-        <th:block th:include="fragments/profile :: profile"></th:block>
-        <!-- 프로필 전체 끝 -->
-      </ul>
+            <th:block th:include="fragments/profile :: profile"></th:block>
+            <!-- 프로필 전체 끝 -->
+        </ul>
     </nav>
     <!-- 상단바 끝 -->
-  </header>
+</header>
+<!-- Header 끝 -->
 
-  <!-- Header 끝 -->
+<th:block th:include="fragments/commute :: commute"></th:block>
+<!-- 출퇴근 Modal 끝 -->
 
-  <th:block th:include="fragments/commute :: commute"></th:block>
-  <!-- 출퇴근 Modal 끝 -->
-
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item ">
-        <a class="nav-link dash collapsed" href="/">
-          <i class="bi bi-grid"></i>
-          <span>대시보드</span>
-        </a>
-      </li>
-      <!-- 대시보드 사이드바 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i>
-          <span>기본 사항</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-            <ul>
-              <li>
-                <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-              </li>
-            </ul>
-            </div>
-          </li>
-        </ul>
-      </li>
-      <!-- 기본사항 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-clipboard-data"></i>
-          <span>업무</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
-          </li>
-          <li>
-            <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-          </li>
-          <li>
-            <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-          </li>
-          <li>
-            <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
-          </li>
-        </ul>
-      </li>
-      <!-- 업무 사이드바 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-archive"></i>
-          <span>전자결재</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
-          </li>
-          <li>
-            <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
-          </li>
-          <li>
-            <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-          </li>
-        </ul>
-      </li>
-      <!-- 전자결재 사이드바 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-people-fill"></i>
-          <span>게시판</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="board-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
-          </li>
-          <li>
-            <a href="/board/list" class="active"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-          </li>
-          <li>
-            <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-          </li>
-          <li>
-            <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-          </li>
-        </ul>
-      </li>
-      <!-- 게시판 사이드바 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-calendar-week"></i>
-          <span>일정</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
-          </li>
-        </ul>
-      </li>
-      <!-- 일정 사이드바 끝 -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-envelope"></i>
-          <span>이메일</span>
-          <i class="bi bi-chevron-down ms-menu"></i>
-        </a>
-        <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
-          </li>
-          <li>
-            <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-          </li>
-          <li>
-            <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-          </li>
-          <li>
-            <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-          </li>
-          <li>
-            <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-          </li>
-          <li>
-            <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-          </li>
-          <li>
-            <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-          </li>
-        </ul>
-      </li>
-      <!-- 이메일 사이드바 끝 -->
-
-      <li class="nav-item qna">
-        <a class="nav-link qna collapsed" href="/user/Q&A">
-          <i class="bi bi-question-circle"></i>
-          <span>고객센터</span>
-        </a>
-      </li>
-      <!-- 고객센터 사이드바 끝 -->
-
-    </ul>
-  </aside>
-  <!-- Sidebar 전체 끝 -->
-    <!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
-    <main id="main" class="main">
-      <div class="pagetitle">
+<!-- ======= Sidebar ======= -->
+<th:block th:include="fragments/sidebar :: sidebar"></th:block>
+<!-- Sidebar 전체 끝 -->
+<!----------------------------------------------------------------------고정 사이드바 ------------------------------------------------------------------------>
+<main id="main" class="main">
+    <div class="pagetitle">
         <h1>경조사 게시판 목록</h1>
         <nav>
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active">Board</li>
-          </ol>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Board</li>
+            </ol>
         </nav>
-      </div>
-      <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+    </div>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
 
-      <div class="row gy-4 mb-3">
+    <div class="row gy-4 mb-3">
         <div class="col-xl-6">
-          <button class="btn btn-primary" onclick="location.href='/board/register'">게시글 작성</button>
+            <button class="btn btn-primary" onclick="location.href='/board/register'">게시글 작성</button>
         </div>
-      </div>
-      <!------------------------------------------------------------------검색  --------------------------------------------------------------------->
+    </div>
+    <!------------------------------------------------------------------검색  --------------------------------------------------------------------->
 
 
-      <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
+    <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
 
-      <section class="section ">
+    <section class="section ">
         <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title"></h5>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
 
-                <!-- Table with stripped rows -->
-                <table class="table datatable table-hover">
-                  <thead>
-                  <tr>
-                    <th>번호</th>
-                    <th>카테고리</th>
-                    <th>문서 명</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr th:each="board : ${boards}" th:onclick="|location.href='@{/board/detail/{boardNo}(boardNo=${board.boardNo})}'|">
-                  <td th:text="${board.boardNo}"></td>
-                    <td th:text="${board.boardCategory}"></td>
-                    <td th:text="${board.boardName}"></td>
-                    <td class="boardAuthor" th:text="${board.boardAuthor}"></td>
-                    <td th:text="${board.boardUploadDate}"></td>
-                  </tr>
-                  </tbody>
-                </table>
-                <!-- End Table with stripped rows -->
+                        <!-- Table with stripped rows -->
+                        <table class="table datatable table-hover">
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>카테고리</th>
+                                <th>문서 명</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="board : ${boards}"
+                                th:onclick="|location.href='@{/board/detail/{boardNo}(boardNo=${board.boardNo})}'|">
+                                <td th:text="${board.boardNo}"></td>
+                                <td th:text="${board.boardCategory}"></td>
+                                <td th:text="${board.boardName}"></td>
+                                <td class="boardAuthor" th:text="${board.boardAuthor}"></td>
+                                <td th:text="${board.boardUploadDate}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
 
-              </div>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-      </section>
-    </main>
-    <!-- End #main -->
+    </section>
+</main>
+<!-- End #main -->
 
 
-
-
-
-
-    <!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
+<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>CHAIN</span></strong
+        &copy; Copyright <strong><span>CHAIN</span></strong
     >. All Rights Reserved
     </div>
     <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
-  </footer>
-  <!-- Footer 끝 -->
+</footer>
+<!-- Footer 끝 -->
 
-  <!-- 채팅창 및 맨위로 가기 -->
-  <!-- 맨위로 가기-->
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
-  </a>
-  <!-- 맨위로 가기 끝-->
-  <!-- 채팅창 -->
-  <a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
     <i class="bi bi-chat-dots"></i>
     <span class="badge btn-danger badge-number">&nbsp;</span>
-  </a>
-  <!-- 채팅창 끝-->
+</a>
+<!-- 채팅창 끝-->
 
-  <!-- Vendor JS Files -->
-  <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="/assets/vendor/echarts/echarts.min.js"></script>
-  <script src="/assets/vendor/quill/quill.js"></script>
-  <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="/assets/vendor/php-email-form/validate.js"></script>
-  <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-  <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="/assets/js/main.js"></script>
-  <script src="/assets/js/wemaked.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-  <!--  사원번호로 작성자 이름 출력 -->
-  <script>
+<!--  사원번호로 작성자 이름 출력 -->
+<script>
     $(document).ready(function () {
-      // 업무의 작성자 정보를 처리하는 함수
-      function processBoardAuthors() {
-        const boardAuthorElements = $('.boardAuthor'); // 모든 작성자 요소를 선택
+        // 업무의 작성자 정보를 처리하는 함수
+        function processBoardAuthors() {
+            const boardAuthorElements = $('.boardAuthor'); // 모든 작성자 요소를 선택
 
-        // 서버에서 모든 직원 데이터를 가져옴
-        $.getJSON('/api/employees/all', function (employees) {
-          const employeeMap = {};
+            // 서버에서 모든 직원 데이터를 가져옴
+            $.getJSON('/api/employees/all', function (employees) {
+                const employeeMap = {};
 
-          // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
-          employees.forEach(employee => {
-            employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
-          });
+                // 사원 번호를 키, 성+이름을 값으로 하는 객체를 만듦
+                employees.forEach(employee => {
+                    employeeMap[employee.empNo] = `${employee.lastName}${employee.firstName}`;
+                });
 
-          boardAuthorElements.each(function () {
-            const empNo = $(this).text(); // 작성자 사원번호를 가져옴
-            const authorContainer = $(this);
+                boardAuthorElements.each(function () {
+                    const empNo = $(this).text(); // 작성자 사원번호를 가져옴
+                    const authorContainer = $(this);
 
-            // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
-            if (employeeMap[empNo]) {
-              authorContainer.text(employeeMap[empNo]); // 사원이름으로 텍스트 변경
-            } else {
-              authorContainer.text("정보 없음");
-            }
-          });
-        }).fail(function () {
-          console.error("Failed to fetch employee data.");
-        });
-      }
+                    // 사원번호에 해당하는 이름이 있으면 표시, 없으면 '정보 없음' 표시
+                    if (employeeMap[empNo]) {
+                        authorContainer.text(employeeMap[empNo]); // 사원이름으로 텍스트 변경
+                    } else {
+                        authorContainer.text("정보 없음");
+                    }
+                });
+            }).fail(function () {
+                console.error("Failed to fetch employee data.");
+            });
+        }
 
-      // 페이지 로드 시 모든 작성자 정보를 처리
-      processBoardAuthors();
+        // 페이지 로드 시 모든 작성자 정보를 처리
+        processBoardAuthors();
     });
-  </script>
+</script>
 
-  </body>
+</body>
 </html>
 
