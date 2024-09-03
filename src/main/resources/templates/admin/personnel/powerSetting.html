@@ -106,12 +106,20 @@
         <li><a href="/admin/personnel/powerSetting"><i class="bi bi-circle"></i><span>권한설정</span></a></li>
       </ul>
     </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#charts-nav" href="/admin/attendance/company">
-        <i class="bi bi-bar-chart"></i>
-        <span>근태관리</span>
+
+    <li class="nav-item"><!-- 근태관리 사이드바 -->
+      <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-    </li>
+      <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
+        </li>
+        <li>
+          <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
+        </li>
+      </ul>
+    </li><!-- 근태관리 사이드바 끝 -->
   </ul>
 </aside>
 
