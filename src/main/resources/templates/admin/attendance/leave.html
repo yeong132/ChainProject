@@ -42,6 +42,13 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
     ======================================================== -->
+    <style>
+        /* '상세 보기 / 수정하기' 열의 너비 조정 */
+        th.scope-col-action, td.scope-col-action {
+            width: 15%; /* 필요에 따라 %를 조절 */
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -199,7 +206,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -348,13 +355,13 @@
                             </thead>
                             <tbody>
                             <tr th:each="document : ${receivedDocuments}"
-                                th:if="${document.category == '연차신청서' && document.docStatus == '완료'}">
+                                th:if="${document.category == '연차신청서' && document.docStatus == '완료'}"
+                                th:onclick="|window.location.href='@{/approval/adminRequest/{docNo}(docNo=${document.docNo}, category=${document.category})}'|"
+                                style="cursor: pointer;">
                                 <td th:text="${document.virtualNo}"></td>
                                 <td th:text="${document.senderName}"></td>
                                 <td>
-                                    <!-- 완료된 연차신청서 제목 링크 -->
-                                    <a th:href="@{/approval/adminRequest/{docNo}(docNo=${document.docNo}, category=${document.category})}"
-                                       th:text="${document.docTitle}"></a>
+                                    <a th:text="${document.docTitle}"></a>
                                 </td>
                                 <td th:text="${document.reqDate}"></td>
                                 <td th:text="${document.docStatus}"></td>
@@ -379,21 +386,27 @@
                                 <th scope="col">총 연차</th>
                                 <th scope="col">사용 연차</th>
                                 <th scope="col">미사용 연차</th>
-                                <th scope="col">상세 보기</th>
+                                <th scope="col" class="scope-col-action">상세 보기 / 수정하기</th>
                             </tr>
                             </thead>
                             <!-- 서버에서 가져온 데이터를 바인딩 -->
                             <tbody>
-                            <tr th:each="employeeLeave : ${employeeLeaveList}">
+                            <tr th:each="employeeLeave : ${employeeLeaveList}" th:attr="data-empno=${employeeLeave.empNo}">
                                 <td th:text="${employeeLeave.empNo}"></td>
                                 <td th:text="${employeeLeave.department.dmpName}"></td>
                                 <td th:text="${employeeLeave.rank.rankName}"></td>
                                 <td th:text="${employeeLeave.fullName}"></td>
-                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"
+                                    class="totalLeaveDays"></td>
                                 <td th:text="${employeeLeave.employeeLeave.usedLeaveDays != null ? employeeLeave.employeeLeave.usedLeaveDays + '일' : '0일'}"></td>
-                                <td th:text="${employeeLeave.employeeLeave.unusedLeaveDays != null ? employeeLeave.employeeLeave.unusedLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.unusedLeaveDays != null ? employeeLeave.employeeLeave.unusedLeaveDays + '일' : '0일'}"
+                                    class="unusedLeaveDays"></td>
                                 <td>
                                     <a th:href="@{/admin/attendance/emp_leave/{empNo}(empNo=${employeeLeave.empNo})}" class="btn btn-secondary">상세 보기</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#leaveModal"
+                                            th:attr="data-empno=${employeeLeave.empNo}">
+                                        수정하기
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -411,9 +424,106 @@
     </div>
 </footer><!-- End Footer -->
 
+<!-- 사용 연차 변경 모달 -->
+<div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveModalLabel" >사용 연차 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 사용 연차 변경 폼 -->
+                <form id="leaveForm">
+                    <div class="mb-3">
+                        <label for="usedLeaveDays" class="form-label">사용 연차 일수</label>
+                        <input type="number" class="form-control" id="usedLeaveDays" name="usedLeaveDays" min="0">
+                    </div>
+                    <!-- 다른 입력 필드들 추가 가능 -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">저장하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
     <i class="bi bi-arrow-up-short"></i>
 </a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const leaveModal = document.getElementById('leaveModal');
+        const usedLeaveDaysInput = document.getElementById('usedLeaveDays');
+        const leaveModalLabel = document.getElementById('leaveModalLabel'); // 모달 제목 요소
+        let currentEmpNo;
+        let totalLeaveDays;
+
+        leaveModal.addEventListener('show.bs.modal', function (e) {
+            const button = e.relatedTarget;
+            currentEmpNo = button.getAttribute('data-empno');
+
+            // 서버에서 현재 직원의 연차 정보를 가져오는 AJAX 요청
+            fetch(`/admin/attendance/emp_leave/${currentEmpNo}/leaveInfo`)
+                .then(response => response.json())
+                .then(data => {
+                    totalLeaveDays = data.totalLeaveDays;
+                    usedLeaveDaysInput.value = data.usedLeaveDays;
+
+                    // 사용 연차 일수를 총 연차 일수까지로 제한
+                    usedLeaveDaysInput.max = totalLeaveDays;
+
+                    // 모달 제목에 사용자 이름 추가
+                    leaveModalLabel.textContent = `${data.fullName} - 사용 연차 변경`;
+                })
+                .catch(error => console.error('Error fetching leave data:', error));
+        });
+
+        // 사용 연차 일수가 총 연차 일수를 넘지 않도록 하는 로직
+        usedLeaveDaysInput.addEventListener('input', function () {
+            if (parseInt(usedLeaveDaysInput.value) > totalLeaveDays) {
+                usedLeaveDaysInput.value = totalLeaveDays;
+            }
+        });
+
+        // "저장하기" 버튼 클릭 시 서버에 변경된 데이터 전송
+        document.getElementById('saveChanges').addEventListener('click', function () {
+            const usedLeaveDays = usedLeaveDaysInput.value;
+
+            fetch(`/admin/attendance/emp_leave/${currentEmpNo}/update`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ usedLeaveDays: usedLeaveDays })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // 총 연차와 미사용 연차를 업데이트
+                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .totalLeaveDays`)
+                            .textContent = data.totalLeaveDays + '일';
+                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .unusedLeaveDays`)
+                            .textContent = data.unusedLeaveDays + '일';
+
+                        alert('변경 사항이 저장되었습니다.');
+                    } else {
+                        alert('변경 사항 저장에 실패했습니다.');
+                    }
+                })
+                .catch(error => console.error('Error saving leave data:', error));
+
+            // 모달 닫기
+            const modal = bootstrap.Modal.getInstance(leaveModal);
+            modal.hide();
+        });
+    });
+</script>
+
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

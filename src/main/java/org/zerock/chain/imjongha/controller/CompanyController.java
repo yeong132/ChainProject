@@ -1,51 +1,75 @@
 package org.zerock.chain.imjongha.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.imjongha.model.Employee;
+import org.zerock.chain.imjongha.model.EmployeeLeave;
 import org.zerock.chain.imjongha.repository.EmployeeRepository;
+import org.zerock.chain.imjongha.service.EmployeeLeaveService;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.model.Approval;
 import org.zerock.chain.parkyeongmin.model.Documents;
 import org.zerock.chain.parkyeongmin.repository.ApprovalRepository;
+import org.zerock.chain.parkyeongmin.repository.EmployeesRepository;
+import org.zerock.chain.parkyeongmin.service.DocumentsService;
 import org.zerock.chain.parkyeongmin.service.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/attendance")
 @Log4j2
 public class CompanyController {
-//
-//    // 근태 상세 페이지
-//    @GetMapping("/employee")
-//    public String atDepartment() {
-//        return "admin/attendance/employee";
-//    }
-//
-//    // 근태 전체 페이지
-//    @GetMapping("/company")
-//    public String atEmployee() {
-//        return "/admin/attendance/company";
-//    }
+
     // 영민이 추가
     private final UserService userService;
+    private final EmployeeLeaveService employeeLeaveService;
+    private final DocumentsService documentsService;
     private final ApprovalRepository approvalRepository;
     private final EmployeeRepository employeeRepository;
+    private final EmployeesRepository employeesRepository;
 
-    public CompanyController(UserService userService, ApprovalRepository approvalRepository, EmployeeRepository employeeRepository) {
+    public CompanyController(UserService userService, EmployeeLeaveService employeeLeaveService, DocumentsService documentsService, ApprovalRepository approvalRepository, EmployeeRepository employeeRepository, EmployeesRepository employeesRepository) {
         this.userService = userService;
+        this.employeeLeaveService = employeeLeaveService;
+        this.documentsService = documentsService;
         this.approvalRepository = approvalRepository;
         this.employeeRepository = employeeRepository;
+        this.employeesRepository = employeesRepository;
     }
 
-    // 사원 휴가 페이지
-    @GetMapping("/emp_leave")
-    public String empLeave() {
+    // 각 사용자의 연차 신청서 내역(영민 추가)
+    @GetMapping("/emp_leave/{empNo}")
+    public String empLeave(@PathVariable("empNo") Long empNo, Model model) {
+        // URL에 있는 empNo로 해당 사용자의 보낸 문서 가져오기
+        List<DocumentsDTO> sentDocuments = documentsService.getSentDocuments(empNo);
+
+        // 보낸 문서 중 연차신청서만 필터링
+        List<DocumentsDTO> leaveDocuments = sentDocuments.stream()
+                .filter(document -> "연차신청서".equals(document.getCategory()))
+                .collect(Collectors.toList());
+
+        // 가상 번호 부여 (최신순)
+        int virtualNo = leaveDocuments.size();
+        for (DocumentsDTO document : leaveDocuments) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("leaveDocument: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
+        // empNo를 사용하여 사원의 전체 이름을 가져옴
+        String fullName = employeesRepository.findFullNameByEmpNo(empNo);
+
+        // fullName도 뷰로 전달
+        model.addAttribute("fullName", fullName);
+        // 필터링된 문서 리스트를 모델에 추가하여 뷰로 전달
+        model.addAttribute("leaveDocuments", leaveDocuments);
         return "/admin/attendance/emp_leave";
     }
 
@@ -92,5 +116,36 @@ public class CompanyController {
         // 추가적인 필드가 있으면 여기에 추가
 
         return documentsDTO;
+    }
+
+    // 사용자 연차 정보 프론트로 주는 메서드(영민 추가)
+    @GetMapping("/emp_leave/{empNo}/leaveInfo")
+    @ResponseBody
+    public Map<String, Object> getEmployeeLeaveInfo(@PathVariable("empNo") Long empNo) {
+        EmployeeLeave employeeLeave = employeeLeaveService.getEmployeeLeaveByEmpNo(empNo);
+        String fullName = employeesRepository.findFullNameByEmpNo(empNo);
+
+        Map<String, Object> leaveInfo = new HashMap<>();
+        leaveInfo.put("totalLeaveDays", employeeLeave.getTotalLeaveDays());  // 총 연자 일수
+        leaveInfo.put("usedLeaveDays", employeeLeave.getUsedLeaveDays());  // 사용 연차 일수
+        leaveInfo.put("fullName", fullName); // 사용자 이름 추가
+
+        return leaveInfo;
+    }
+
+    // 모달창에서 업데이트 된 사용 연차 일수 변경에 따른 연차 정보 반환하는 메서드(영민 추가)
+    @PostMapping("/emp_leave/{empNo}/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Integer>> updateEmployeeLeave(@PathVariable("empNo") Long empNo, @RequestBody Map<String, Integer> requestData) {
+        int usedLeaveDays = requestData.get("usedLeaveDays");
+
+        // 서비스 레이어에서 데이터 업데이트 처리 및 결과 반환ㄱ
+        Map<String, Integer> updatedLeaveData = employeeLeaveService.updateUsedLeaveDays(empNo, usedLeaveDays);
+
+        if (updatedLeaveData != null) {
+            return ResponseEntity.ok(updatedLeaveData);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

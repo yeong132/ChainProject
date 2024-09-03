@@ -8,9 +8,22 @@
     <meta content="" name="keywords"/>
 
     <!-- CSS 링크 -->
+<!--    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>-->
+<!--    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>-->
+<!--    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>-->
+    <!-- Vendor CSS Files(영민이 추가) -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
     <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- Template Main CSS File(영민이 추가) -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -96,7 +109,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">홍길동 - 연차 상세 내역</h5>
+                        <h5 class="card-title" th:text="${fullName} + ' - 연차 상세 내역'"></h5>
                         <!-- 연차신청서 데이터 테이블 -->
                         <table class="table table-hover table-borderless datatable">
                             <thead>
@@ -108,7 +121,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="document : ${sentDocuments}" th:if="${document.category == '연차신청서'}">
+                            <tr th:each="document : ${leaveDocuments}">
                                 <td th:text="${document.virtualNo}"></td>
                                 <td>
                                     <!-- 문서 상태에 따라 링크를 다르게 설정 -->
