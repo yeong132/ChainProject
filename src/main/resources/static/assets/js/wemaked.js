@@ -72,11 +72,18 @@ function connectSocket() {
 // 소켓 연결(로그인) 성공
 function onConnected() {
     reconnectAttempts = 0; // 연결 성공 시, 재연결 시도 횟수 초기화
+    // 메신저 송수신
     stompClient.subscribe(`/user/${empNo}/queue/messages`, onMessageReceived);
     stompClient.subscribe(`/user/public`, onMessageReceived);
-
-    // 접속한 사용자 등록: 사용자 컨트롤러로 사용자 정보 전달
+    // 접속한 사용자 정보 전달
     stompClient.send("/app/user.addUser", {}, JSON.stringify(empNo));
+
+    // 메인 알림 전송
+    // stompClient.subscribe(`/user/${empNo}/queue/notifications`, function(notification) {
+    //     console.log("접속 산번호: "+empNo);
+    //     const notificationData = JSON.parse(notification.body);
+    //     displayNotification(notificationData); // 수신된 알림을 UI에 업데이트
+    // });
     console.log("소켓 연결 성공");
 
     displayUnreadMessages(); // 로그인 시 읽지 않은 메시지 불러오기
@@ -94,6 +101,30 @@ function onError() {
         console.error('WebSocket 서버가 종료되었습니다. 재연결하려면 새로고침하세요.');
     }
 }
+// 상단바 알림 실시간 ui
+// function displayNotification(notification) {
+//     // 알림 개수 업데이트
+//     const badgeElement = document.querySelector('.badge-number');
+//     badgeElement.textContent = parseInt(badgeElement.textContent) + 1;
+//
+//     // 알림 목록 업데이트
+//     const notificationsList = document.querySelector('.notifications .overflow-y-auto');
+//     const newNotification = `
+//               <li>
+//                 <a href="${notification.redirectUrl}">
+//                     <div class="notification-item">
+//                         <i class="bi bi-exclamation-circle text-warning"></i>
+//                         <div>
+//                             <h4>${notification.notificationType}</h4>
+//                             <p>${notification.notificationMessage}</p>
+//                             <span class="notification-time">${notification.notificationDate}</span>
+//                         </div>
+//                     </div>
+//                 </a>
+//                 <hr class="dropdown-divider"/>
+//             </li>`;
+//     notificationsList.insertAdjacentHTML('afterbegin', newNotification);
+// }
 
 // 수신 메시지 처리
 async function onMessageReceived(payload) {

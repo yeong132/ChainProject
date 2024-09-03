@@ -137,11 +137,11 @@ body {
 /* 모달 창 컨텐츠 */
 .modal_content {
     background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
+    margin: 23% auto;
+    padding: 5px 20px 20px 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 500px;
+    max-width: 400px;
     text-align: center;
 }
 
@@ -149,8 +149,11 @@ body {
 .chat_modal span {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 25px;
     font-weight: bold;
+}
+.chat_modal p{
+    margin: 40px 30px;
 }
 
 .chat_modal span:hover,
