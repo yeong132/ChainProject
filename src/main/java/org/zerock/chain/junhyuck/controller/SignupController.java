@@ -40,6 +40,10 @@ public class SignupController {
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         signup.setPassword(encodedPassword);
 
+        // dmp_no와 rank_no는 기본값으로 이미 1이 설정됨
+        signup.setDmpNo(1L);
+        signup.setRankNo(1L);
+
         // 현재 날짜를 고용일자로 설정
         signup.setHireDate(LocalDate.now());
 

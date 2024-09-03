@@ -41,9 +41,14 @@ public class Signup {
     @Column(name = "hire_date")
     private LocalDate hireDate;
 
-    // 박성은 추가 코드
+/*    // 박성은 추가 코드
     @Column(name = "rank_no")
-    private Long rankNo;
+    private Long rankNo;*/
+    @Column(name = "dmp_no")
+    private Long dmpNo = 1L; // 기본값 1 설정
+
+    @Column(name = "rank_no")
+    private Long rankNo = 1L; // 기본값 1 설정
 
     // 기타 필요한 필드들...
 }
