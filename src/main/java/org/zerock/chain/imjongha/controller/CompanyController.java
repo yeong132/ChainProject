@@ -126,8 +126,8 @@ public class CompanyController {
         String fullName = employeesRepository.findFullNameByEmpNo(empNo);
 
         Map<String, Object> leaveInfo = new HashMap<>();
-        leaveInfo.put("totalLeaveDays", employeeLeave.getTotalLeaveDays());  // 총 연자 일수
-        leaveInfo.put("usedLeaveDays", employeeLeave.getUsedLeaveDays());  // 사용 연차 일수
+        leaveInfo.put("usedLeaveDays", employeeLeave.getUsedLeaveDays());  // 사용 연차
+        leaveInfo.put("unusedLeaveDays", employeeLeave.getUnusedLeaveDays());  // 미사용 연차
         leaveInfo.put("fullName", fullName); // 사용자 이름 추가
 
         return leaveInfo;
@@ -139,7 +139,7 @@ public class CompanyController {
     public ResponseEntity<Map<String, Integer>> updateEmployeeLeave(@PathVariable("empNo") Long empNo, @RequestBody Map<String, Integer> requestData) {
         int usedLeaveDays = requestData.get("usedLeaveDays");
 
-        // 서비스 레이어에서 데이터 업데이트 처리 및 결과 반환ㄱ
+        // 서비스 레이어에서 데이터 업데이트 처리 및 결과 반환
         Map<String, Integer> updatedLeaveData = employeeLeaveService.updateUsedLeaveDays(empNo, usedLeaveDays);
 
         if (updatedLeaveData != null) {

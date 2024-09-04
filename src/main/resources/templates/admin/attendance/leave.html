@@ -337,9 +337,9 @@
                                 <td th:text="${employeeLeave.department.dmpName}"></td>
                                 <td th:text="${employeeLeave.rank.rankName}"></td>
                                 <td th:text="${employeeLeave.fullName}"></td>
-                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"
-                                    class="totalLeaveDays"></td>
-                                <td th:text="${employeeLeave.employeeLeave.usedLeaveDays != null ? employeeLeave.employeeLeave.usedLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.usedLeaveDays != null ? employeeLeave.employeeLeave.usedLeaveDays + '일' : '0일'}"
+                                    class="usedLeaveDays"></td>
                                 <td th:text="${employeeLeave.employeeLeave.unusedLeaveDays != null ? employeeLeave.employeeLeave.unusedLeaveDays + '일' : '0일'}"
                                     class="unusedLeaveDays"></td>
                                 <td>
@@ -443,8 +443,8 @@
                 .then(data => {
                     if (data) {
                         // 총 연차와 미사용 연차를 업데이트
-                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .totalLeaveDays`)
-                            .textContent = data.totalLeaveDays + '일';
+                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .usedLeaveDays`)
+                            .textContent = data.usedLeaveDays + '일';
                         document.querySelector(`tr[data-empno="${currentEmpNo}"] .unusedLeaveDays`)
                             .textContent = data.unusedLeaveDays + '일';
 
