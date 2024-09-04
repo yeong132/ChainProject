@@ -7,27 +7,40 @@
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
+    <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
-    <link rel="icon" th:href="@{/assets/img/favicon.png}"/>
-    <link rel="apple-touch-icon" th:href="@{/assets/img/apple-touch-icon.png}"/>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
-    <!-- 폰트 설정 -->
-    <link rel="preconnect" href="https://fonts.gstatic.com"/>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet"/>
+    <!-- 폰트 설정  -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
 
     <!-- Vendor CSS Files -->
-    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.css"/>
-    <link rel="stylesheet" href="/assets/vendor/boxicons/css/boxicons.min.css"/>
-    <link rel="stylesheet" href="/assets/vendor/quill/quill.snow.css"/>
-    <link rel="stylesheet" href="/assets/vendor/quill/quill.bubble.css"/>
-    <link rel="stylesheet" href="/assets/vendor/remixicon/remixicon.css"/>
-    <link rel="stylesheet" href="/assets/vendor/simple-datatables/style.css"/>
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
     <!-- Template Main CSS File -->
-    <link rel="stylesheet" href="/assets/css/style.css"/>
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
     <script src="/assets/js/theme.js"></script>
+
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
 </head>
 
 <body>
@@ -39,39 +52,8 @@
 <!-- 출퇴근 Modal 끝 -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="/admin/main">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>인사관리</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li><a href="/admin/personnel/management"><i class="bi bi-circle"></i><span>사원관리</span></a></li>
-                <li><a href="/admin/personnel/powerSetting"><i class="bi bi-circle"></i><span>권한설정</span></a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item"><!-- 근태관리 사이드바 -->
-            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
-                </li>
-                <li>
-                    <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
-                </li>
-            </ul>
-        </li><!-- 근태관리 사이드바 끝 -->
-    </ul>
-</aside>
+<th:block th:include="fragments/adminSidebar :: adminSidebar"></th:block>
+<!-- Sidebar 전체 끝 -->
 
 <!-- ======= Main Content ======= -->
 <main id="main" class="main">
@@ -265,9 +247,9 @@
                 });
         }
 
-    // 개별 사원 행을 생성하는 함수
-    function createEmployeeRow(employee) {
-      return `
+        // 개별 사원 행을 생성하는 함수
+        function createEmployeeRow(employee) {
+            return `
       <tr>
           <td>${employee.empNo}</td>
           <td>${employee.departmentName || 'N/A'}</td>
@@ -277,7 +259,7 @@
           <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
       </tr>
     `;
-    }
+        }
 
         // 전체 사원 목록 아코디언이 열릴 때 데이터 로드
         $('#flush-collapseAll').on('show.bs.collapse', loadAllEmployees);
@@ -287,12 +269,12 @@
             const empNo = $(this).data('id');
             $('#editEmpId').val(empNo);
 
-      $.when(
-              $.getJSON(`/api/permissions/employees/${empNo}/permissions`),
-              $.getJSON('/api/permissions')
-      ).done(function (employeePermissions, permissions) {
-        const permissionsDiv = $('#permissionsDiv');
-        permissionsDiv.empty();
+            $.when(
+                $.getJSON(`/api/permissions/employees/${empNo}/permissions`),
+                $.getJSON('/api/permissions')
+            ).done(function (employeePermissions, permissions) {
+                const permissionsDiv = $('#permissionsDiv');
+                permissionsDiv.empty();
 
                 permissions[0].forEach(permission => {
                     const isChecked = employeePermissions[0].some(ep => ep.perNo === permission.perNo);
@@ -306,48 +288,47 @@
         });
 
         $('#editEmployeeModal').modal('show');
-      }).fail(function () {
+    }).fail(function () {
         alert('권한 데이터를 불러오는 데 실패했습니다.');
-      });
     });
 
     // 개별 권한 체크박스 생성 함수
     function createPermissionCheckbox(permission, isChecked) {
-      console.log(permission); // permission 객체 출력
-      return `
-      <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="${permission.perNo}" id="permission${permission.perNo}" ${isChecked ? 'checked' : ''}>
-          <label class="form-check-label" for="permission${permission.perNo}">
-              ${permission.perName}
-          </label>
-      </div>
+        console.log(permission); // permission 객체 출력
+        return `
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="${permission.perNo}" id="permission${permission.perNo}" ${isChecked ? 'checked' : ''}>
+            <label class="form-check-label" for="permission${permission.perNo}">
+                ${permission.perName}
+            </label>
+        </div>
     `;
     }
 
     // 권한 수정 저장 버튼 클릭 시
     $('#savePermissionBtn').on('click', function () {
-      const empNo = $('#editEmpId').val();
-      const selectedPermissions = [];
+        const empNo = $('#editEmpId').val();
+        const selectedPermissions = [];
 
-      $('#permissionsDiv .form-check-input:checked').each(function () {
-        selectedPermissions.push($(this).val());
-      });
+        $('#permissionsDiv .form-check-input:checked').each(function () {
+            selectedPermissions.push($(this).val());
+        });
 
-      $.ajax({
-        url: `/api/permissions/employees/${empNo}/permissions`,  // 컨트롤러 경로에 맞춤
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(selectedPermissions),
-        success: function () {
-          alert('권한이 성공적으로 수정되었습니다.');
-          $('#editEmployeeModal').modal('hide');
-        },
-        error: function () {
-          alert('권한 수정에 실패했습니다.');
-        }
+        $.ajax({
+            url: `/api/permissions/employees/${empNo}/permissions`,  // 컨트롤러 경로에 맞춤
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(selectedPermissions),
+            success: function () {
+                alert('권한이 성공적으로 수정되었습니다.');
+                $('#editEmployeeModal').modal('hide');
+            },
+            error: function () {
+                alert('권한 수정에 실패했습니다.');
+            }
 
-        // 권한 수정 저장 버튼 클릭 시
-        $('#savePermissionBtn').on('click', function () {
+            // 권한 수정 저장 버튼 클릭 시
+            $('#savePermissionBtn').on('click', function () {
             const empNo = $('#editEmpId').val();
             const selectedPermissions = [];
 
@@ -388,36 +369,36 @@
                 });
         }
 
-    // 부서별 아코디언 항목을 생성하는 함수
-    function createDepartmentAccordionItem(departmentId, departmentName) {
-      return `
-      <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-heading${departmentId}">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${departmentId}" aria-expanded="false" aria-controls="flush-collapse${departmentId}">
-                  ${departmentName}
-              </button>
-          </h2>
-          <div id="flush-collapse${departmentId}" class="accordion-collapse collapse" aria-labelledby="flush-heading${departmentId}" data-bs-parent="#accordionFlushExample" data-department-id="${departmentId}">
-              <div class="accordion-body">
-                  <table class="table datatable-selector">
-                      <thead>
-                          <tr>
-                              <th>사원번호</th>
-                              <th>부서</th>
-                              <th>직급</th>
-                              <th>이름</th>
-                              <th>전화번호</th>
-                              <th>수정</th>
-                          </tr>
-                      </thead>
-                      <tbody id="employeeTableBody${departmentId}">
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
+        // 부서별 아코디언 항목을 생성하는 함수
+        function createDepartmentAccordionItem(departmentId, departmentName) {
+            return `
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-heading${departmentId}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${departmentId}" aria-expanded="false" aria-controls="flush-collapse${departmentId}">
+                    ${departmentName}
+                </button>
+            </h2>
+        <div id="flush-collapse${departmentId}" class="accordion-collapse collapse" aria-labelledby="flush-heading${departmentId}" data-bs-parent="#accordionFlushExample" data-department-id="${departmentId}">
+            <div class="accordion-body">
+                <table class="table datatable-selector">
+                    <thead>
+                        <tr>
+                            <th>사원번호</th>
+                            <th>부서</th>
+                            <th>직급</th>
+                            <th>이름</th>
+                            <th>전화번호</th>
+                            <th>수정</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody${departmentId}">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     `;
-    }
+        }
 
         // 모든 부서를 불러오고 아코디언을 초기화하는 함수
         function loadDepartments() {
@@ -440,81 +421,83 @@
             $('#deleteDepartmentModal').modal('show');
         });
 
-    // 부서 목록을 불러와 삭제 모달에 표시
-    function loadDepartmentsForDeletion() {
-      $.getJSON('/api/departments')
-              .done(function (departments) {
-                const departmentList = $('#deleteDepartmentList');
-                departmentList.empty();
-                departments.forEach(department => {
-                  departmentList.append(`
-              <li class="list-group-item">
-                  <input type="checkbox" class="form-check-input delete-department-checkbox" value="${department.dmpNo}">
-                  ${department.dmpName}
-              </li>
-          `);
+        // 부서 목록을 불러와 삭제 모달에 표시
+        function loadDepartmentsForDeletion() {
+            $.getJSON('/api/departments')
+                .done(function (departments) {
+                    const departmentList = $('#deleteDepartmentList');
+                    departmentList.empty();
+                    departments.forEach(department => {
+                        departmentList.append(`
+            <li class="list-group-item">
+                <input type="checkbox" class="form-check-input delete-department-checkbox" value="${department.dmpNo}">
+                ${department.dmpName}
+            </li>
+        `);
+                    });
                 });
-        }
 
-        // 부서 삭제 확인 버튼 클릭 이벤트 핸들러
-        $('#confirmDeleteDepartmentBtn').on('click', function () {
-            const selectedDepartments = [];
-            $('.delete-department-checkbox:checked').each(function () {
-                selectedDepartments.push($(this).val());
+            // 부서 삭제 확인 버튼 클릭 이벤트 핸들러
+            $('#confirmDeleteDepartmentBtn').on('click', function () {
+                const selectedDepartments = [];
+                $('.delete-department-checkbox:checked').each(function () {
+                    selectedDepartments.push($(this).val());
+                });
+
+                if (selectedDepartments.length > 0) {
+                    if (confirm('선택한 부서를 삭제하시겠습니까?')) {
+                        deleteDepartments(selectedDepartments);
+                    }
+                } else {
+                    alert('삭제할 부서를 선택하세요.');
+                }
             });
 
-            if (selectedDepartments.length > 0) {
-                if (confirm('선택한 부서를 삭제하시겠습니까?')) {
-                    deleteDepartments(selectedDepartments);
-                }
-            } else {
-                alert('삭제할 부서를 선택하세요.');
+            // 부서 삭제 함수
+            function deleteDepartments(departmentIds) {
+                $.ajax({
+                    url: '/api/departments/bulk-delete',
+                    method: 'DELETE',
+                    contentType: 'application/json',
+                    data: JSON.stringify({departmentIds: departmentIds}),
+                    success: function () {
+                        alert('선택한 부서가 성공적으로 삭제되었습니다.');
+                        $('#deleteDepartmentModal').modal('hide');
+                        loadDepartments(); // 부서 목록 새로 고침
+                    },
+                    error: function () {
+                        alert('부서 삭제에 실패했습니다.');
+                    }
+                });
             }
-        });
 
-        // 부서 삭제 함수
-        function deleteDepartments(departmentIds) {
-            $.ajax({
-                url: '/api/departments/bulk-delete',
-                method: 'DELETE',
-                contentType: 'application/json',
-                data: JSON.stringify({departmentIds: departmentIds}),
-                success: function () {
-                    alert('선택한 부서가 성공적으로 삭제되었습니다.');
-                    $('#deleteDepartmentModal').modal('hide');
-                    loadDepartments(); // 부서 목록 새로 고침
-                },
-                error: function () {
-                    alert('부서 삭제에 실패했습니다.');
-                }
+            // 부서 등록 버튼 클릭 이벤트 핸들러
+            $('#saveDepartmentBtn').on('click', function () {
+                const departmentName = $('#departmentNameInput').val();
+                const departmentData = {dmpName: departmentName};
+
+                $.ajax({
+                    url: '/api/departments',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(departmentData),
+                    success: function (newDepartment) {
+                        createDepartmentAccordionItem(newDepartment.dmpNo, newDepartment.dmpName);
+                        $('#departmentFormModal').modal('hide');
+                        alert('부서가 성공적으로 등록되었습니다!');
+                        loadDepartments(); // 부서 목록 새로 고침
+                    },
+                    error: function () {
+                        alert('부서 등록에 실패했습니다.');
+                    }
+                });
             });
+
+            // 페이지 로드 시 부서 목록을 불러오는 함수 호출
+            loadDepartments();
         }
+    }
 
-        // 부서 등록 버튼 클릭 이벤트 핸들러
-        $('#saveDepartmentBtn').on('click', function () {
-            const departmentName = $('#departmentNameInput').val();
-            const departmentData = {dmpName: departmentName};
-
-            $.ajax({
-                url: '/api/departments',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(departmentData),
-                success: function (newDepartment) {
-                    createDepartmentAccordionItem(newDepartment.dmpNo, newDepartment.dmpName);
-                    $('#departmentFormModal').modal('hide');
-                    alert('부서가 성공적으로 등록되었습니다!');
-                    loadDepartments(); // 부서 목록 새로 고침
-                },
-                error: function () {
-                    alert('부서 등록에 실패했습니다.');
-                }
-            });
-        });
-
-        // 페이지 로드 시 부서 목록을 불러오는 함수 호출
-        loadDepartments();
-    });
 </script>
 </body>
 </html>
