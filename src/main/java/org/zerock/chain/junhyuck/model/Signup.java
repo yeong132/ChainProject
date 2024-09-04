@@ -48,7 +48,7 @@ public class Signup {
     @Column(name = "rank_no")
     private Long rankNo;*/
     @Column(name = "dmp_no")
-    private Long dmpNo = 1L; // 기본값 1 설정
+    private Long dmpNo = 0L; // 기본값 0 설정
 
     @Column(name = "rank_no")
     private Long rankNo = 1L; // 기본값 1 설정
