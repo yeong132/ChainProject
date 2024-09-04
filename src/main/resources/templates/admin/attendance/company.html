@@ -30,10 +30,10 @@
     <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
     <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
-  <!-- Template Main CSS File -->
-  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
-  <script src="/assets/js/theme.js"></script>
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <script src="/assets/js/theme.js"></script>
 
     <!-- =======================================================
   * Template Name: NiceAdmin
@@ -44,271 +44,67 @@
     ======================================================== -->
 </head>
 <body>
+<!-- ======= Header ======= -->
+<th:block th:include="fragments/header :: header"></th:block>
+<!-- Header 끝 -->
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt=""/>
-            <span class="d-none d-lg-block">CHAIN</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-    <!-- 로고 끝 -->
-
-    <!-- <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- 검색바 끝 -->
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <!-- <li class="nav-item d-block d-lg-none">
-              <a class="nav-link nav-icon search-bar-toggle" href="#">
-                <i class="bi bi-search"></i>
-              </a>
-            </li> -->
-            <!-- 검색 아이콘 끝 -->
-
-            <li class="nav-item dropdown" id="commuteIcon">
-                <div class="from-check form-switch me-3">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                </div>
-            </li>
-            <!-- 출퇴근 아이콘 끝 -->
-
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge btn-secondary badge-number">4</span> </a>
-                <!-- 알림창 아이콘 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        4개의 새 알림이 있습니다
-                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Lorem Ipsum</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>30 min. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Atque rerum nesciunt</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>1 hr. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Sit rerum fuga</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>2 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-info-circle text-primary"></i>
-                        <div>
-                            <h4>Dicta reprehenderit</h4>
-                            <p>Quae dolorem earum veritatis oditseno</p>
-                            <p>4 hrs. ago</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="/user/alarm">모든 알림 표시</a>
-                    </li>
-                </ul>
-                <!-- 알림 드롭다운 목록 끝 -->
-            </li>
-            <!-- 알림 전체 끝 -->
-
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="/user/setting">
-                    <i class="bi bi-gear"></i>
-                </a>
-                <!-- 환경설정 아이콘 끝 -->
-            </li>
-            <!-- 환경설정 전체 끝 -->
-
-
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/">
-                            <i class="bx bx-walk"></i>
-                            <span>사용자 페이지</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
-            <!-- 프로필 전체 끝 -->
-        </ul>
-    </nav>
-    <!-- 상단바 끝 -->
-</header>
 <th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
 
-<aside id="sidebar" class="sidebar">
-  <ul class="sidebar-nav" id="sidebar-nav">
-    <li class="nav-item">
-      <a th:href="@{/admin/main}" class="nav-link collapsed">
-        <i class="bi bi-grid"></i>
-        <span>대시보드</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a th:href="@{/admin/personnel/management}"><i class="bi bi-circle"></i><span>사원 관리</span></a>
-        </li>
-        <li>
-          <a th:href="@{/admin/personnel/powerSetting}"><i class="bi bi-circle"></i><span>권한 설정</span></a>
-        </li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="attendance-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-        <li>
-          <a th:href="@{/admin/attendance/company}"><i class="bi bi-circle"></i><span>근태 관리</span></a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</aside>
+<!-- ======= Sidebar ======= -->
+<th:block th:include="fragments/adminSidebar :: adminSidebar"></th:block>
+<!-- Sidebar 전체 끝 -->
 
 <main id="main" class="main">
-  <div class="pagetitle">
-    <h1>월별 사원 근태 요약</h1>
-  </div>
-  <section class="section dashboard">
-    <div class="row">
-      <div class="col-12">
-        <div class="card recent-sales overflow-auto">
-          <div class="card-body">
-            <h5 class="card-title"><b>월별 근태 요약</b></h5>
+    <div class="pagetitle">
+        <h1>월별 사원 근태 요약</h1>
+    </div>
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>월별 근태 요약</b></h5>
 
-            <!-- 월별로 데이터를 구분 -->
-            <div th:each="monthAttendance : ${summariesGroupedByMonth}">
-              <h6 th:text="${monthAttendance.key} + '월'"></h6>
-              <table class="table table-hover table-bordered">
-                <thead>
-                <tr>
-                  <th scope="col">사원번호</th>
-                  <th scope="col">부서</th>
-                  <th scope="col">직급</th>
-                  <th scope="col">이름</th>
-                  <th scope="col">총 근무 일수</th>
-                  <th scope="col">지각 일수</th>
-                  <th scope="col">결근 일수</th>
-                  <th scope="col">연장 근무 시간</th>
-                  <th scope="col">휴가 일수</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="summary : ${monthAttendance.value}">
-                  <td th:text="${summary.empNo}"></td>
-                  <td th:text="${summary.departmentName}"></td>
-                  <td th:text="${summary.rankName}"></td>
-                  <td>
-                    <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
-                       th:text="${summary.firstName + ' ' + summary.lastName}"></a>
-                  </td>
-                  <td th:text="${summary.totalWorkingDays} + '일'"></td>
-                  <td th:text="${summary.lateDays} + '일'"></td>
-                  <td th:text="${summary.absentDays} + '일'"></td>
-                  <td th:text="${summary.overtimeHours} + '시간'"></td>
-                  <td th:text="${summary.leaveDays} + '일'"></td>
-                </tr>
+                        <!-- 월별로 데이터를 구분 -->
+                        <div th:each="monthAttendance : ${summariesGroupedByMonth}">
+                            <h6 th:text="${monthAttendance.key} + '월'"></h6>
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col">사원번호</th>
+                                    <th scope="col">부서</th>
+                                    <th scope="col">직급</th>
+                                    <th scope="col">이름</th>
+                                    <th scope="col">총 근무 일수</th>
+                                    <th scope="col">지각 일수</th>
+                                    <th scope="col">결근 일수</th>
+                                    <th scope="col">연장 근무 시간</th>
+                                    <th scope="col">휴가 일수</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="summary : ${monthAttendance.value}">
+                                    <td th:text="${summary.empNo}"></td>
+                                    <td th:text="${summary.departmentName}"></td>
+                                    <td th:text="${summary.rankName}"></td>
+                                    <td>
+                                        <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
+                                           th:text="${summary.firstName + ' ' + summary.lastName}"></a>
+                                    </td>
+                                    <td th:text="${summary.totalWorkingDays} + '일'"></td>
+                                    <td th:text="${summary.lateDays} + '일'"></td>
+                                    <td th:text="${summary.absentDays} + '일'"></td>
+                                    <td th:text="${summary.overtimeHours} + '시간'"></td>
+                                    <td th:text="${summary.leaveDays} + '일'"></td>
+                                </tr>
 
-                </tbody>
-              </table>
-            </div>
+                                </tbody>
+                            </table>
+                        </div>
 
-          </div>
-        </div>
+                    </div>
+                </div>
     </section>
 
 </main><!-- End #main -->

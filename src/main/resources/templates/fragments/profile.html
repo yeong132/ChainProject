@@ -49,9 +49,15 @@
             <li>
                 <hr class="dropdown-divider"/>
             </li>
-            <li>
+            <li th:if="${currentUri != null and !currentUri.startsWith('/admin')}">
                 <!-- 관리자 페이지로 이동하는 버튼 -->
-                <a th:if="${#authorization.expression('hasAuthority(''관리자'')')}" href="/admin/main" class="dropdown-item d-flex align-items-center"><i class="bi bi-power"></i><span>관리자 페이지</span></a>
+                <a th:if="${#authorization.expression('hasAuthority(''관리자'')')}" href="/admin/main" class="dropdown-item d-flex align-items-center"><i class="bi bi-tools"></i><span>관리자 페이지</span></a>
+            </li>
+            <li th:if="${currentUri.startsWith('/admin')}">
+                <a class="dropdown-item d-flex align-items-center" href="/">
+                    <i class="bx bx-walk"></i>
+                    <span>사용자 페이지</span>
+                </a>
             </li>
         </ul>
         <!-- 프로필 드롭다운 목록 끝 -->

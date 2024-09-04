@@ -11,6 +11,8 @@ import org.zerock.chain.pse.model.Notification;
 import org.zerock.chain.pse.model.SystemNotification;
 import org.zerock.chain.pse.service.NotificationService;
 import org.zerock.chain.pse.service.SystemNotificationService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,5 +73,10 @@ public class GlobalControllerAdvice {
     @ModelAttribute("rankName")
     public String populateRankName(HttpSession session) {
         return (String) session.getAttribute("rankName");  // 세션에서 rankName 가져와서 반환
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model, HttpServletRequest request) {
+        model.addAttribute("currentUri", request.getRequestURI());
     }
 }

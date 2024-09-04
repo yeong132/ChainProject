@@ -1,0 +1,72 @@
+<!-- src/main/resources/templates/fragments/adminSidebar.html -->
+<!-- 고정 사이드바 : adminSidebar -->
+<div th:fragment="adminSidebar">
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link dash collapsed" href="/admin/main">
+                    <i class="bi bi-grid"></i>
+                    <span>대시보드</span>
+                </a>
+            </li>
+            <!-- End Dashboard Nav -->
+
+            <li class="nav-item"><!-- 근태관리 사이드바 -->
+            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
+            </li>
+                <li>
+                <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
+            </li>
+            </ul>
+            </li>
+            <!-- 근태관리 사이드바 끝 -->
+
+            <li class="nav-item"><!-- 인사관리 사이드 바 -->
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="/admin/personnel/management"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
+                    </li>
+                    <li>
+                        <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
+                    </li>
+
+                </ul>
+            </li>
+            <!-- 인사관리 사이드바 끝 -->
+        </ul>
+    </aside>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const path = window.location.pathname;  // 현재 페이지의 경로를 가져옴
+            const sidebarNavItems = document.querySelectorAll(".sidebar-nav a");  // 사이드바 내의 모든 링크를 선택
+
+            sidebarNavItems.forEach(function (navItem) {
+                if (navItem.getAttribute("href") === path) {
+                    // 현재 경로와 일치하는 링크가 발견되면
+                    navItem.classList.add("active");  // a 태그에 'active' 클래스 추가
+
+                    const parentNavItem = navItem.closest(".nav-item");
+                    const parentNavContent = navItem.closest(".nav-content");
+
+                    if (parentNavContent) {
+                        parentNavContent.classList.add("show");  // ul 태그에 'show' 클래스 추가
+                        parentNavContent.previousElementSibling.classList.remove("collapsed");  // a 태그에서 'collapsed' 클래스 제거
+                    } else {
+                        // ul이 없는 경우 단순히 'collapsed' 클래스만 제거
+                        if (parentNavItem) {
+                            parentNavItem.querySelector(".nav-link").classList.remove("collapsed");
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</div>
