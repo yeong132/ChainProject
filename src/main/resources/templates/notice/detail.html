@@ -182,8 +182,23 @@
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">내용</label>
                                 <div class="col-sm-11">
-                                    <textarea id="froala" class="form-control" readonly
-                                              th:text="${notice.noticeContent}"></textarea>
+                                    <textarea id="froala" class="form-control" readonly th:text="${notice.noticeContent}"></textarea>
+                            </div>
+
+
+                            <div class="offset-sm-0">
+                                <div class="col-sm-5">
+                                    <button class="btn btn-primary"
+                                            th:if="${session.empNo == notice.empNo} or ${#authorization.expression('hasAuthority(''공지사항 수정'')')}"
+                                            th:onclick="|location.href='/notice/modify/' + ${notice.noticeNo}|"
+                                            type="button">
+                                        수정
+                                    </button>
+
+                                    <button class="btn btn-primary" onclick="location.href='/notice/list'"
+                                            type="button">목록
+                                    </button>
+
                                 </div>
 
                                 <div class="offset-sm-0">

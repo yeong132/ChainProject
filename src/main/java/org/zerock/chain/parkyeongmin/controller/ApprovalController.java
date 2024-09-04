@@ -188,6 +188,40 @@ public class ApprovalController {
         // 문서 정보 조회
         DocumentsDTO document = documentsService.getDocumentById(docNo);
 
+        // 모델에 문서 데이터를 추가
+        model.addAttribute("document", document);
+
+        // 'adminRequest.html' 뷰를 반환
+        return "/approval/adminRequest";
+    }
+
+    @GetMapping("/rejectionRead/{docNo}")
+    public String approvalRejectionDocument(@PathVariable("docNo") int docNo,
+                                            @RequestParam("source") String source,
+                                            Model model) {
+        log.info("Source: {}", source);
+
+        // 문서 정보 조회
+        DocumentsDTO document = documentsService.getDocumentById(docNo);
+
+        // 모델에 문서 데이터를 추가
+        model.addAttribute("document", document);
+        // 출처 페이지 정보 추가
+        model.addAttribute("source", source);
+
+        // 'rejectionRead.html' 뷰를 반환
+        return "/approval/rejectionRead";
+    }
+
+    @GetMapping("/adminRequest/{docNo}")
+    public String adminRequestDocument(@PathVariable("docNo") int docNo,
+                                       Model model) {
+        // 로그인한 사용자의 정보를 가져옵니다.
+        EmployeeDTO loggedInUser = userService.getLoggedInUserDetails();
+
+        // 문서 정보 조회
+        DocumentsDTO document = documentsService.getDocumentById(docNo);
+
         // 모델에 사용자 정보를 추가
         model.addAttribute("loggedInUser", loggedInUser);
         // 모델에 문서 데이터를 추가
@@ -216,7 +250,7 @@ public class ApprovalController {
     }
 
     @GetMapping("/getForm/{category}")
-    public ResponseEntity<FormDTO> getFormByCategory(@PathVariable String category) {
+    public ResponseEntity<FormDTO> getFormByCategory(@PathVariable("category") String category) {
         log.info("Fetching form HTML for category: {}", category);
 
         FormDTO formDTO = formService.getFormByCategory(category);
@@ -228,6 +262,7 @@ public class ApprovalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping("/getDocumentData/{docNo}")
     public ResponseEntity<Map<String, Object>> getDocumentData(@PathVariable("docNo") int docNo) {

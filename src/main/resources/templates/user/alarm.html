@@ -129,10 +129,8 @@
                 <div class="mb-3">
                     <!--  showConfirmationModal :  전체삭제 모달 창 연결  -->
                     <button class="btn btn-danger" onclick="showConfirmationModal()">전체 삭제</button>
-                    <button class="btn btn-warning" onclick="document.getElementById('deleteReadForm').submit();">읽은 알림
-                        삭제
-                    </button>
-                    <button class="btn btn-danger" onclick="showMakeNotificationModal()">시스템 알림 작성(관리자)</button>
+                    <button class="btn btn-warning" onclick="document.getElementById('deleteReadForm').submit();">읽은 알림 삭제</button>
+                    <button class="btn btn-danger" th:if="${#authorization.expression('hasAuthority(''관리자'')')}" onclick="showMakeNotificationModal()"  >시스템 알림 작성(관리자)</button>
                 </div>
 
                 <!--------------------------card 시작 ---------------------------------->
@@ -381,29 +379,44 @@
                             </div>
                             <!--------------- 계정 알림 목록 --------------------->
                             <div aria-labelledby="user-tab" class="tab-pane fade" id="user" role="tabpanel">
-                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-                                    A simple secondary alert—check it out!
-                                    <button aria-label="Close" class="btn-close" data-bs-dismiss="alert"
-                                            type="button"></button>
-                                </div>
-                            </div>
-                            <!--------------- 시스템알림  목록 ------------------------>
-                            <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
-                                <div class="alert alert-dismissible fade show" role="alert"
-                                     th:data-category="${systemNotification.systemCategory}"
-                                     th:classappend="${systemNotification.isRead ? 'read' : 'unread'}"
-                                     th:each="systemNotification : ${systemNotifications}">
-                                    <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
-                                    <p th:text="${systemNotification.systemTitle}"></p>
-                                    <hr>
-                                    <p th:text="${systemNotification.systemContent}"></p>
-                                    <p class="notification-time"
-                                       th:data-timestamp="${systemNotification.systemUploadDate}"></p>
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert"
+                                     th:each="notification : ${accountNotifications}"
+                                     th:classappend="${notification.isRead ? 'read' : 'unread'}">
+
+                                    <!-- 알림 클릭 시 해당 페이지로 이동 -->
+                                    <a th:href="@{'/user/alarm/read/' + ${notification.notificationNo}}"
+                                       style="text-decoration:none; color:inherit;">
+                                        <div>
+                                            <strong th:text="${notification.notificationType}"></strong>
+                                            <span th:text="${notification.isRead ? '읽음' : '안읽음'}"></span>
+                                            <span class="notification-time" th:data-timestamp="${notification.notificationDate}"></span>
+                                            <hr>
+                                            <p th:text="${notification.notificationMessage}"></p> <!-- 알림 메시지 표시 -->
+                                        </div>
+                                    </a>
+
+                                    <!-- 개별 알림 삭제 버튼 -->
                                     <form method="post" style="display:inline;"
-                                          th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
+                                          th:action="@{'/user/alarm/delete/' + ${notification.notificationNo}}">
                                         <button aria-label="Close" class="btn-close" type="submit"></button>
                                     </form>
                                 </div>
+                            </div>
+
+
+                            <!--------------- 시스템알림  목록 ------------------------>
+                        <div aria-labelledby="system-tab" class="tab-pane fade" id="system" role="tabpanel">
+                            <div class="alert alert-dismissible fade show" role="alert" th:data-category="${systemNotification.systemCategory}" th:classappend="${systemNotification.isRead ? 'read' : 'unread'}" th:each="systemNotification : ${systemNotifications}">
+                                <h4 class="alert-heading" th:text="${systemNotification.systemCategory}"></h4>
+                                <p th:text="${systemNotification.systemTitle}"></p>
+                                <hr>
+                                <p th:text="${systemNotification.systemContent}"></p>
+                                <p class="notification-time"
+                                   th:data-timestamp="${systemNotification.systemUploadDate}"></p>
+                                <form method="post" style="display:inline;"
+                                      th:action="@{'/user/systemNotification/delete/' + ${systemNotification.systemNo}}">
+                                    <button aria-label="Close" class="btn-close" type="submit"></button>
+                                </form>
                             </div>
 
                         </div>
@@ -449,7 +462,7 @@
             <form action="/user/systemNotification" method="post" onsubmit="return validateForm()">
                 <div class="modal-header">
                     <h5 class="modal-title" id="systemNotificationModalLabel">시스템 알림 작성</h5>
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    <button aria-label="Close" class="btn-close"  data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">

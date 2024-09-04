@@ -1,22 +1,23 @@
 package org.zerock.chain.imjongha.service;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
-import org.zerock.chain.imjongha.dto.PermissionDTO;
 import org.zerock.chain.imjongha.exception.EmployeeNotFoundException;
-import org.zerock.chain.imjongha.model.*;
+import org.zerock.chain.imjongha.model.Department;
+import org.zerock.chain.imjongha.model.Employee;
+import org.zerock.chain.imjongha.model.Rank;
 import org.zerock.chain.imjongha.repository.*;
+import org.zerock.chain.pse.service.NotificationService;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -26,25 +27,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PermissionRepository permissionRepository;
     private final EmployeePermissionRepository employeePermissionRepository;
     private final ModelMapper modelMapper;
+    private final NotificationService notificationService;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
                                DepartmentRepository departmentRepository,
                                RankRepository rankRepository,
                                PermissionRepository permissionRepository,
                                EmployeePermissionRepository employeePermissionRepository,
-                               ModelMapper modelMapper) {
+                               ModelMapper modelMapper, NotificationService notificationService) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.rankRepository = rankRepository;
         this.permissionRepository = permissionRepository;
         this.employeePermissionRepository = employeePermissionRepository;
         this.modelMapper = modelMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employees.stream()
+        return employeeRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -52,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeeById(Long empNo) {
         Employee employee = employeeRepository.findById(empNo)
-                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo));
         return convertToDTO(employee);
     }
 
@@ -67,23 +69,44 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO updateEmployee(Long empNo, EmployeeDTO employeeDTO) {
         Employee existingEmployee = employeeRepository.findById(empNo)
-                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo));
 
+        // 기존 부서와 직급 정보를 저장합니다.
+        String oldDepartmentName = existingEmployee.getDepartment() != null ? existingEmployee.getDepartment().getDmpName() : null;
+        String oldRankName = existingEmployee.getRank() != null ? existingEmployee.getRank().getRankName() : null;
+
+        // 사원 정보를 업데이트합니다.
         updateEmployeeFromDTO(existingEmployee, employeeDTO);
-
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
+
+        // 부서 및 직급 변경 알림을 생성합니다.
+        String newDepartmentName = updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDmpName() : null;
+        String newRankName = updatedEmployee.getRank() != null ? updatedEmployee.getRank().getRankName() : null;
+
+        notificationService.createDepartmentAndRankChangeNotification(
+                empNo,
+                oldDepartmentName,
+                newDepartmentName,
+                oldRankName,
+                newRankName
+        );
+
         return convertToDTO(updatedEmployee);
     }
 
+
+
     @Override
     public void deleteEmployee(Long empNo) {
+        if (!employeeRepository.existsById(empNo)) {
+            throw new EmployeeNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo);
+        }
         employeeRepository.deleteById(empNo);
     }
 
     @Override
     public List<EmployeeDTO> searchEmployees(String name, String departmentName, String rankName) {
-        List<Employee> employees = employeeRepository.findEmployeesByCriteria(name, departmentName, rankName);
-        return employees.stream()
+        return employeeRepository.findEmployeesByCriteria(name, departmentName, rankName).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -91,58 +114,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Page<EmployeeDTO> getEmployeesPaged(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Employee> employeePage = employeeRepository.findAll(pageable);
-        return employeePage.map(this::convertToDTO);
+        return employeeRepository.findAll(pageable).map(this::convertToDTO);
     }
 
     @Override
     public List<EmployeeDTO> getEmployeesByDepartmentId(Long departmentId) {
-        List<Employee> employees = employeeRepository.findByDepartmentDmpNo(departmentId);
-        return employees.stream()
+        return employeeRepository.findByDepartmentDmpNo(departmentId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    @Override
-    public void updateEmployeePermissions(Long empNo, List<Long> permissionIds) {
-        Employee employee = employeeRepository.findById(empNo)
-                .orElseThrow(() -> new EmployeeNotFoundException("사원을 찾을 수 없습니다."));
 
-        // 현재 권한 목록을 가져옴
-        List<Long> existingPermissionIds = employee.getEmployeePermissions().stream()
-                .map(ep -> ep.getPermission().getPerNo())
-                .collect(Collectors.toList());
 
-        // 추가할 권한 결정
-        List<Long> permissionsToAdd = permissionIds.stream()
-                .filter(permissionId -> !existingPermissionIds.contains(permissionId))
-                .collect(Collectors.toList());
-
-        // 제거할 권한 결정
-        List<EmployeePermission> permissionsToRemove = employee.getEmployeePermissions().stream()
-                .filter(ep -> !permissionIds.contains(ep.getPermission().getPerNo()))
-                .collect(Collectors.toList());
-
-        // 기존 권한 삭제
-        employeePermissionRepository.deleteAll(permissionsToRemove);
-
-        // 새로운 권한 추가
-        List<Permission> permissions = permissionRepository.findAllById(permissionsToAdd);
-        permissions.forEach(permission -> {
-            EmployeePermission employeePermission = new EmployeePermission(employee, permission);
-            employeePermissionRepository.save(employeePermission);
-        });
-    }
-
-    @Override
-    public List<PermissionDTO> getEmployeePermissions(Long empNo) {
-        Employee employee = employeeRepository.findById(empNo)
-                .orElseThrow(() -> new EmployeeNotFoundException("사원을 찾을 수 없습니다."));
-        return employee.getEmployeePermissions().stream()
-                .map(ep -> modelMapper.map(ep.getPermission(), PermissionDTO.class))
-                .collect(Collectors.toList());
-    }
 
     private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO dto = modelMapper.map(employee, EmployeeDTO.class);
@@ -165,13 +148,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (dto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(dto.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다. ID: " + dto.getDepartmentId()));
             employee.setDepartment(department);
         }
 
         if (dto.getRankId() != null) {
             Rank rank = rankRepository.findById(dto.getRankId())
-                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다. ID: " + dto.getRankId()));
             employee.setRank(rank);
         }
 
@@ -179,26 +162,41 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void updateEmployeeFromDTO(Employee employee, EmployeeDTO employeeDTO) {
-        employee.setFirstName(employeeDTO.getFirstName());
-        employee.setLastName(employeeDTO.getLastName());
-        employee.setPhoneNum(employeeDTO.getPhoneNum());
-        employee.setBirthDate(employeeDTO.getBirthDate());
-        employee.setAddr(employeeDTO.getAddr());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setLastDate(employeeDTO.getLastDate());
+        if (employeeDTO.getFirstName() != null) {
+            employee.setFirstName(employeeDTO.getFirstName());
+        }
+        if (employeeDTO.getLastName() != null) {
+            employee.setLastName(employeeDTO.getLastName());
+        }
+        if (employeeDTO.getPhoneNum() != null) {
+            employee.setPhoneNum(employeeDTO.getPhoneNum());
+        }
+        if (employeeDTO.getBirthDate() != null) {
+            employee.setBirthDate(employeeDTO.getBirthDate());
+        }
+        if (employeeDTO.getAddr() != null) {
+            employee.setAddr(employeeDTO.getAddr());
+        }
+        if (employeeDTO.getEmail() != null) {
+            employee.setEmail(employeeDTO.getEmail());
+        }
+        if (employeeDTO.getLastDate() != null) {
+            employee.setLastDate(employeeDTO.getLastDate());
+        }
 
         if (employeeDTO.getDepartmentId() != null) {
             Department department = departmentRepository.findById(employeeDTO.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다. ID: " + employeeDTO.getDepartmentId()));
             employee.setDepartment(department);
         }
 
         if (employeeDTO.getRankId() != null) {
             Rank rank = rankRepository.findById(employeeDTO.getRankId())
-                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException("직급을 찾을 수 없습니다. ID: " + employeeDTO.getRankId()));
             employee.setRank(rank);
         }
     }
+
 
     // 박성은 추가 코드
     // 로그인한 사원번호를 제외한 전체 사원 목록 조회

@@ -1,5 +1,6 @@
 package org.zerock.chain.parkyeongmin.service;
 
+import org.zerock.chain.parkyeongmin.dto.DocumentStatusCountDTO;
 import org.zerock.chain.parkyeongmin.dto.DocumentsDTO;
 import org.zerock.chain.parkyeongmin.dto.DocumentStatusCountDTO;
 

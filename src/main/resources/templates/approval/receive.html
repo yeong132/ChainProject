@@ -321,6 +321,7 @@
 <th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
 
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         fetch('/approval/approvalStatusCounts')
@@ -366,6 +367,7 @@
                 .catch(error => console.error('Error fetching documents:', error));
         }
 
+
         function updateDocumentsTable(documents) {
             const tableBody = document.querySelector('#approvalTable tbody');
             tableBody.innerHTML = ''; // 기존 테이블 내용 삭제
@@ -389,6 +391,7 @@
         }
 
     });
+
 </script>
 
 <!-- Vendor JS Files -->

@@ -1,5 +1,8 @@
 package org.zerock.chain.junhyuck.service;
 
+import org.springframework.transaction.annotation.Transactional;
+import org.zerock.chain.imjongha.model.EmployeePermission;
+import org.zerock.chain.imjongha.model.Permission;
 import org.zerock.chain.imjongha.model.Rank;
 import org.zerock.chain.junhyuck.model.Signup;
 import org.zerock.chain.junhyuck.repository.SignupRepository;
@@ -13,10 +16,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.pse.model.CustomUserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -37,7 +41,17 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .orElseThrow(() -> new UsernameNotFoundException("Rank not found with rankNo: " + user.getRankNo()));
             String rankName = rank.getRankName();
 
-            Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+            // 권한 목록을 가져옴
+            List<GrantedAuthority> authorities = user.getEmployeePermissions().stream()
+                    .map(EmployeePermission::getPermission)
+                    .map(Permission::getPerName)
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            // 기본 권한 ROLE_USER 추가
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//
+//            Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
             // 사원이름과 직급을 CustomUserDetails에 전달
             return new CustomUserDetails(

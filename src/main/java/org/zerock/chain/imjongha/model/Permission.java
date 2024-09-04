@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -24,8 +25,20 @@ public class Permission {
     private Long perNo;
 
     @Column(name = "per_name")
-    private String pername;
+    private String perName;
 
     @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EmployeePermission> employeePermissions = new ArrayList<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Permission)) return false;
+        Permission that = (Permission) o;
+        return Objects.equals(perNo, that.perNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(perNo);
+    }
 }

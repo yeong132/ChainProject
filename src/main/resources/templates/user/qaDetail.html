@@ -201,11 +201,13 @@
                             <!-- 댓글 작성 버튼 영역 -->
                             <div class="col-sm-12 text-end">
                                 <!-- qnaStatus가 true인 경우 댓글 작성 버튼만 보이도록 설정 -->
-                                <button class="btn btn-success mt-3" data-bs-target="#commentModal"
+                                <button class="btn btn-success mt-3"
+                                        data-bs-target="#commentModal"
                                         data-bs-toggle="modal"
-                                        th:if="${!qna.qnaStatus}">
+                                        th:if="${#authorization.expression('hasAuthority(''관리자'')') and !qna.qnaStatus}">
                                     댓글 작성
                                 </button>
+
                             </div>
 
                             <!-- 댓글 리스트 & 댓글 수정, 삭제 버튼 영역 -->
@@ -245,12 +247,14 @@
                                         <div class="col-sm-12 text-end">
                                             <button class="btn btn-primary mt-3"
                                                     type="button"
+                                                    th:if="${#authorization.expression('hasAuthority(''관리자'')')}"
                                                     onclick="showEditCommentModal('[[${comment.commentNo}]]', '[[${comment.commentName}]]', '[[${comment.commentContent}]]')">
                                                 댓글 수정
                                             </button>
 
                                             <!-- 삭제 버튼을 사용하여 폼 제출 -->
-                                            <button class="btn btn-danger mt-3" type="submit">
+                                            <button class="btn btn-danger mt-3" type="submit"
+                                                    th:if="${#authorization.expression('hasAuthority(''관리자'')')}">
                                                 삭제
                                             </button>
                                         </div>

@@ -1,5 +1,6 @@
 package org.zerock.chain.pse.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.pse.model.Notification;
 
 import java.util.List;
@@ -15,6 +16,13 @@ public interface NotificationService {
     void updateNotificationSettingByType(Long empNo, String notificationType, Boolean enabled);  // 알림 온오프
     void deleteReadNotifications(Long empNo); // 특정 사원의 읽은 알림을 모두 삭제함
 
+
     // 전자결재 알림을 생성하는 메서드 추가 (영민)
     void createApprovalNotification(int docNo, String docTitle, String senderName, String docStatus, String withdraw);
+
+    // 부서 및 직급 변경 알림을 생성하는 메서드
+    void createDepartmentAndRankChangeNotification(Long empNo, String oldDepartment, String newDepartment, String oldRank, String newRank);
+
+
+
 }

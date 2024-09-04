@@ -3,8 +3,11 @@ package org.zerock.chain.junhyuck.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.zerock.chain.imjongha.model.EmployeePermission;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -49,6 +52,9 @@ public class Signup {
 
     @Column(name = "rank_no")
     private Long rankNo = 1L; // 기본값 1 설정
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<EmployeePermission> employeePermissions = new ArrayList<>();
 
     // 기타 필요한 필드들...
 }

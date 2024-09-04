@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -44,9 +43,8 @@
   * License: https://bootstrapmade.com/license/
     ======================================================== -->
 </head>
-
 <body>
-<!-- ======= Header ======= -->
+
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="/" class="logo d-flex align-items-center">
@@ -224,148 +222,92 @@
     </nav>
     <!-- 상단바 끝 -->
 </header>
-<!-- Header 끝 -->
-
 <th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
 
-<!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link dash collapsed" href="/admin/main">
-                <i class="bi bi-grid"></i>
-                <span>대시보드</span>
-            </a>
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a th:href="@{/admin/main}" class="nav-link collapsed">
+        <i class="bi bi-grid"></i>
+        <span>대시보드</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a th:href="@{/admin/personnel/management}"><i class="bi bi-circle"></i><span>사원 관리</span></a>
         </li>
-        <!-- End Dashboard Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/admin/personnel/management"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
-                </li>
-                <li>
-                    <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
-                </li>
-
-            </ul>
+        <li>
+          <a th:href="@{/admin/personnel/powerSetting}"><i class="bi bi-circle"></i><span>권한 설정</span></a>
         </li>
-        <!-- End Components Nav -->
-
-        <li class="nav-item"><!-- 근태관리 사이드바 -->
-            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
-                </li>
-                <li>
-                    <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
-                </li>
-            </ul>
-        </li><!-- 근태관리 사이드바 끝 -->
-    </ul>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="attendance-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a th:href="@{/admin/attendance/company}"><i class="bi bi-circle"></i><span>근태 관리</span></a>
+        </li>
+      </ul>
+    </li>
+  </ul>
 </aside>
-<!-- End Sidebar-->
+
 <main id="main" class="main">
+  <div class="pagetitle">
+    <h1>월별 사원 근태 요약</h1>
+  </div>
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+          <div class="card-body">
+            <h5 class="card-title"><b>월별 근태 요약</b></h5>
 
-    <div class="pagetitle">
-        <h1>근태 관리</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>
-                <li class="breadcrumb-item active">Attendance</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+            <!-- 월별로 데이터를 구분 -->
+            <div th:each="monthAttendance : ${summariesGroupedByMonth}">
+              <h6 th:text="${monthAttendance.key} + '월'"></h6>
+              <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                  <th scope="col">사원번호</th>
+                  <th scope="col">부서</th>
+                  <th scope="col">직급</th>
+                  <th scope="col">이름</th>
+                  <th scope="col">총 근무 일수</th>
+                  <th scope="col">지각 일수</th>
+                  <th scope="col">결근 일수</th>
+                  <th scope="col">연장 근무 시간</th>
+                  <th scope="col">휴가 일수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="summary : ${monthAttendance.value}">
+                  <td th:text="${summary.empNo}"></td>
+                  <td th:text="${summary.departmentName}"></td>
+                  <td th:text="${summary.rankName}"></td>
+                  <td>
+                    <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
+                       th:text="${summary.firstName + ' ' + summary.lastName}"></a>
+                  </td>
+                  <td th:text="${summary.totalWorkingDays} + '일'"></td>
+                  <td th:text="${summary.lateDays} + '일'"></td>
+                  <td th:text="${summary.absentDays} + '일'"></td>
+                  <td th:text="${summary.overtimeHours} + '시간'"></td>
+                  <td th:text="${summary.leaveDays} + '일'"></td>
+                </tr>
 
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-15">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                        <table class="table table-hover table-borderless datatable">
-                            <thead>
-                            <tr>
-                                <th>
-                                    사원번호
-                                </th>
-                                <th scope="col">이름</th>
-                                <th scope="col">부서</th>
-                                <th scope="col">직급</th>
-                                <th scope="col">총 연차</th>
-                                <th scope="col">사용연차</th>
-                                <th scope="col">잔여연차</th>
-                                <th scope="col">출근일수</th>
-                                <th>오늘근무</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr>
-                                <td>123123</td>
-                                <td>
-                                    <a href="/admin/attendance/employee">종하</a>
-                                </td>
-                                <td>행정</td>
-                                <td>부장</td>
-                                <td>30</td>
-                                <td>1</td>
-                                <td>29</td>
-                                <td>97</td>
-                                <td><span class="badge bg-success">출근</span></td>
-                            </tr>
-                            <tr>
-                                <td>123123</td>
-                                <td>
-                                    <a href="/admin/attendance/employee">종하</a>
-                                </td>
-                                <td>행정</td>
-                                <td>부장</td>
-                                <td>30</td>
-                                <td>1</td>
-                                <td>29</td>
-                                <td>97</td>
-                                <td><span class="badge bg-warning">휴가</span></td>
-                            </tr>
-                            <tr>
-                                <td>123123</td>
-                                <td>
-                                    <a href="/admin/attendance/employee">종하</a>
-                                </td>
-                                <td>행정</td>
-                                <td>부장</td>
-                                <td>30</td>
-                                <td>1</td>
-                                <td>29</td>
-                                <td>97</td>
-                                <td><span class="badge bg-danger">결근</span></td>
-                            </tr>
-                            <tr>
-                                <td>123123</td>
-                                <td>
-                                    <a href="/admin/attendance/employee">종하</a>
-                                </td>
-                                <td>행정</td>
-                                <td>부장</td>
-                                <td>30</td>
-                                <td>1</td>
-                                <td>29</td>
-                                <td>97</td>
-                                <td><span class="badge bg-success">출근</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                </tbody>
+              </table>
             </div>
+
+          </div>
         </div>
     </section>
 
@@ -394,5 +336,6 @@
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
 </html>

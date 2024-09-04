@@ -125,64 +125,77 @@
     <section class="section ">
         <div class="row">
             <!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
+            <!-- 프로필 위젯 -->
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                            <img alt="Profile" class="rounded-circle" src="/assets/img/profile-img1.jpg">
+                        <img th:src="@{/assets/img/profile-img1.jpg}" alt="Profile" class="rounded-circle">
                     </div>
                     <div class="card-body profile-card pt-4 d-flex flex-column">
-                            <p>이름 (사원번호)</p>
-                            <p>부서 및 직급</p>
-                            <p>출근시간</p>
-                            <p>퇴근시간</p>
-                            <p>연장근무시간</p>
-                            <p>근무시간</p>
+                        <p th:if="${employee != null}" th:text="'이름: ' + ${employee.lastName} +  ${employee.firstName} + ' (' + ${employee.empNo} + ')'">이름 (사원번호)</p>
+
+                        <p th:if="${employee != null and employee.departmentName != null and employee.rankName != null}"
+                           th:text="'부서 및 직급: ' + ${employee.departmentName} + ' / ' + ${employee.rankName}">부서 및 직급</p>
+
+                        <!-- 일일 근태 정보 -->
+                        <p th:if="${dailyAttendance != null and dailyAttendance.startTime != null}"
+                           th:text="'출근시간: ' + ${dailyAttendance.startTime}">출근시간</p>
+
+                        <p th:if="${dailyAttendance != null and dailyAttendance.endTime != null}"
+                           th:text="'퇴근시간: ' + ${dailyAttendance.endTime}">퇴근시간</p>
+
+                        <p th:if="${dailyAttendance != null and dailyAttendance.overtimeHours != null}"
+                           th:text="'연장근무시간: ' + ${dailyAttendance.overtimeHours} + '시간'">연장근무시간</p>
+
+                        <p th:if="${dailyAttendance != null and dailyAttendance.totalWorkingHours != null}"
+                           th:text="'근무시간: ' + ${dailyAttendance.totalWorkingHours} + '시간'">근무시간</p>
                     </div>
                 </div>
             </div>
 
-            <!------------------------------------------------------------------오른쪽 위젯 -------------------------------------------------------------------->
+            <!-- 오른쪽 위젯 -->
             <div class="col-xl-8">
-
                 <div class="card">
                     <div class="card-body pt-3">
-                        <!------------------------------------------------------- Bordered Tabs--------------------------------------------------------------- -->
                         <ul class="nav nav-tabs nav-tabs-bordered">
                             <li class="nav-item">
                                 <button class="nav-link active" data-bs-target="#profile-overview" data-bs-toggle="tab">
                                     근태 관리
                                 </button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-target="#profile-settings" data-bs-toggle="tab">급여
-                                    명세서
-                                </button>
-                            </li>
-
+<!--                            <li class="nav-item">-->
+<!--                                <button class="nav-link" data-bs-target="#profile-settings" data-bs-toggle="tab">-->
+<!--                                    급여 명세서-->
+<!--                                </button>-->
+<!--                            </li>-->
                         </ul>
                         <div class="tab-content pt-2">
-                            <!-- -----------------------------------------------------------------------------------tap 1  --------------------------------------------------------------------- -->
+                            <!-- 탭 1: 근태 관리 -->
                             <div class="tab-pane fade show active profile-overview" id="profile-overview">
                                 <form>
                                     <div class="row mb-3">
                                         <div class="col-lg-12">
-                                            <h5 class="card-title">근태 현황<span> | Month</span></h5>
-                                            <div id="barChart"></div>
-                                            <script>
+                                            <h5 class="card-title">근태 현황<span> | 월별</span></h5>
+                                            <div id="barChart"></div> <!-- 차트가 렌더링될 영역 -->
+
+                                            <script th:inline="javascript">
                                                 document.addEventListener("DOMContentLoaded", () => {
+                                                    // Thymeleaf 변수를 JavaScript에서 사용할 수 있도록 전달
+                                                    const summary = /*[[${monthlyAttendanceSummary}]]*/ {};
+
                                                     var options = {
                                                         series: [{
                                                             name: '근무일수',
-                                                            data: [70]
+                                                            data: [summary.totalWorkingDays || 0]
                                                         }, {
                                                             name: '연차일수',
-                                                            data: [10]
+                                                            data: [0] // 연차일수 0으로 설정
                                                         }, {
-                                                            name: '지각일수',
-                                                            data: [5]
+                                                            name: '잔여 연차일수',
+                                                            data: [0] // 잔여 연차일수 0으로 설정
                                                         }, {
                                                             name: '연장근무일수',
-                                                            data: [15]
+                                                            data: [summary.overtimeHours || 0]
                                                         }],
                                                         chart: {
                                                             type: 'bar',
@@ -213,7 +226,7 @@
                                                         tooltip: {
                                                             y: {
                                                                 formatter: function (val) {
-                                                                    return val + "%";
+                                                                    return val + "일";
                                                                 }
                                                             }
                                                         },
@@ -237,33 +250,31 @@
                                     <div class="row mb-3">
                                         <div class="col-lg-8">
                                             <div>
-                                                <p>근무일수(총시간)</p>
-                                                <p>연차일수(전체/사용/잔여)</p>
-                                                <p>지각일수(총 시간)</p>
-                                                <p>연장근무일수(총시간)</p>
+                                                <p th:text="'근무일수: ' + (${monthlyAttendanceSummary.totalWorkingDays} ?: 0) + '일'">근무일수</p>
+                                                <p th:text="'연차일수: 전체 ' + 0 + '일'">연차일수(전체)</p> <!-- 연차일수 0으로 설정 -->
+                                                <p th:text="'잔여 연차일수: ' + 0 + '일'">잔여 연차일수</p> <!-- 잔여 연차일수 0으로 설정 -->
+                                                <p th:text="'연장 근무 시간: ' + (${monthlyAttendanceSummary.overtimeHours} ?: 0) + '시간'">연장 근무 시간</p>
                                             </div>
                                         </div>
                                     </div>
-
-                                </form><!-- End settings Form -->
+                                </form>
                             </div>
 
 
-                            <!-- ----------------------------------------------------------------------------------- tab 2 --------------------------------------------------------------------- -->
-                            <div class="tab-pane fade profile-settings" id="profile-settings">
-                                <form>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-8 "><h5 class="card-title">급여명세표<span> | Month</span></h5>
-                                            <p>명세표</p>
-                                        </div>
-                                    </div>
 
-                                </form><!-- End settings Form -->
-                            </div>
+                            <!-- 탭 2: 급여 명세서 -->
+<!--                            <div class="tab-pane fade profile-settings" id="profile-settings">-->
+<!--                                <form>-->
+<!--                                    <div class="row mb-3">-->
+<!--                                        <div class="col-lg-8">-->
+<!--                                            <h5 class="card-title">급여명세표<span> | 월별</span></h5>-->
+<!--                                            <p>급여 명세서 내용</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </form>-->
+<!--                            </div>-->
                         </div>
-
-
-                    </div><!-- End Bordered Tabs -->
+                    </div>
                 </div>
             </div>
         </div>

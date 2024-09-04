@@ -1,6 +1,5 @@
 package org.zerock.chain.imjongha.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,7 @@ public class DepartmentController {
 
     // 부서별 사원 목록 조회 추가
     @GetMapping("/{departmentId}/employees")
-    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable Long departmentId) {
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable("departmentId") Long departmentId) {
         List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -81,9 +80,10 @@ public class DepartmentController {
         return new ResponseEntity<>(savedDepartmentDTO, HttpStatus.CREATED);
     }
 
+    // 부서 삭제 처리
     @DeleteMapping("/bulk-delete")
-    public ResponseEntity<Void> deleteDepartments(@RequestBody Map<String, List<Long>> request) {
-        List<Long> departmentIds = request.get("departmentIds");
+    public ResponseEntity<Void> deleteDepartments(@RequestBody Map<String, List<Long>> departmentIdsMap) {
+        List<Long> departmentIds = departmentIdsMap.get("departmentIds");
 
         // 사원들의 부서를 null로 설정
         for (Long departmentId : departmentIds) {
