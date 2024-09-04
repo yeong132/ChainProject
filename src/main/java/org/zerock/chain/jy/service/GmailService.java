@@ -1,5 +1,6 @@
 package org.zerock.chain.jy.service;
 
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -12,6 +13,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
+import com.google.api.services.gmail.model.Label;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
@@ -27,15 +29,17 @@ import javax.mail.internet.MimeMultipart;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.mail.internet.MimeUtility;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -46,12 +50,10 @@ public class GmailService {
     private static Credential cachedCredential;
     private static long credentialExpiryTime;
     private static final long CACHE_DURATION_MS = 3600 * 1000; // 1시간 (3600초)
-
     private static final String UPLOAD_DIR = "C:/upload/";
 
     // Singleton 패턴 적용: 외부에서 객체 생성을 하지 못하도록 기본 생성자를 private으로 설정
-    private GmailService() {
-    }
+    private GmailService() {}
 
     // Singleton 인스턴스를 가져오는 메서드
     public static synchronized Gmail getInstance() {
@@ -95,7 +97,14 @@ public class GmailService {
                 .setAccessType("offline")
                 .build();
 
-        cachedCredential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(8888).build()).authorize("user");
+        // LocalServerReceiver로 인증 완료 처리
+        cachedCredential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver.Builder().setPort(8888).build()) {
+            @Override
+            protected void onAuthorization(AuthorizationCodeRequestUrl authorizationUrl) {
+                openAuthUrlInBrowser(authorizationUrl.build());
+            }
+        }.authorize("user");
+
         credentialExpiryTime = System.currentTimeMillis() + CACHE_DURATION_MS;
         return cachedCredential;
     }
@@ -107,7 +116,51 @@ public class GmailService {
                 credentialExpiryTime > System.currentTimeMillis();
     }
 
+    // 브라우저에서 OAuth2 인증 URL을 여는 메서드
+    private static void openAuthUrlInBrowser(String authUrl) {
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(authUrl));  // 브라우저에 URL 열기
+                System.out.println("브라우저에서 URL을 열었습니다: " + authUrl);
+            } else {
+                // 브라우저가 지원되지 않는 경우 수동으로 실행
+                openUrlByCommand(authUrl);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("브라우저에서 URL을 여는 도중 오류 발생: " + e.getMessage());
+        }
+    }
 
+    // 운영체제에 따른 브라우저 실행 방법
+    private static void openUrlByCommand(String authUrl) throws IOException {
+        String os = System.getProperty("os.name").toLowerCase();
+        Runtime rt = Runtime.getRuntime();
+
+        if (os.contains("win")) {
+            // Windows
+            rt.exec("rundll32 url.dll,FileProtocolHandler " + authUrl);
+        } else if (os.contains("mac")) {
+            // macOS
+            rt.exec("open " + authUrl);
+        } else if (os.contains("nix") || os.contains("nux")) {
+            // Linux/Unix
+            String[] browsers = { "xdg-open", "google-chrome", "firefox" };
+            boolean browserOpened = false;
+            for (String browser : browsers) {
+                try {
+                    rt.exec(new String[] { browser, authUrl });
+                    browserOpened = true;
+                    break;
+                } catch (IOException e) {
+                    // 브라우저 실행에 실패하면 다음 브라우저로 시도
+                }
+            }
+            if (!browserOpened) {
+                System.out.println("지원하는 브라우저를 찾을 수 없습니다. 수동으로 URL을 열어주세요: " + authUrl);
+            }
+        }
+    }
     // Gmail 서비스 객체를 사용하는 메서드들
 
 
