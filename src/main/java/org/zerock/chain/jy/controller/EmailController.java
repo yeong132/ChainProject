@@ -72,14 +72,29 @@ public class EmailController {
     @Autowired  // GmailService를 자동으로 주입받음.
     private GmailService gmailService;
 
+    private static final String UPLOAD_DIR = "C:/upload/";
 
+    // 메일 작성 페이지를 반환하는 메서드
     @GetMapping("/compose")
     public String mailCompose() {
         return "mail/compose";
     }
 
-    private static final String UPLOAD_DIR = "C:/upload/";
+    @PostMapping("/compose")
+    public String composeEmail(@RequestParam("subject") String subject,
+                               @RequestParam("messageContent") String messageContent,
+                               @RequestParam("recipientEmail") String recipientEmail,
+                               Model model) {
+        model.addAttribute("subject", subject);
+        model.addAttribute("message", messageContent);
+        model.addAttribute("recipientEmail", recipientEmail);
 
+        // 필요한 다른 로직을 여기에 추가하세요 (예: 첨부 파일 처리 등)
+
+        return "mail/compose";  // compose.html 페이지로 이동
+    }
+
+    // 메일을 전송하는 메서드
     @PostMapping("/send")
     public String sendEmail(
             @RequestParam("recipientEmail") String recipientEmail,
@@ -92,62 +107,68 @@ public class EmailController {
             Model model) {
         log.info("sendEmail called with recipient: {}, subject: {}", recipientEmail, subject);
         try {
-            // 기존 첨부파일 삭제 처리
-            if (deleteAttachments != null && !deleteAttachments.isEmpty()) {
-                for (String fileName : deleteAttachments) {
-                    Path filePath = Paths.get(UPLOAD_DIR + fileName);
-                    Files.deleteIfExists(filePath);
-                    log.info("Deleted attachment: {}", fileName);
-                }
-            }
-
             // 첨부파일 저장 경로 리스트 생성
             List<String> filePaths = new ArrayList<>();
 
-            // 기존 첨부파일 추가
-            if (existingAttachments != null && !existingAttachments.isEmpty()) {
-                filePaths.addAll(existingAttachments);
-            }
-
-            // 새로운 첨부파일 추가
+            // 새로운 첨부파일 처리
             if (attachments != null && !attachments.isEmpty()) {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
-                        Path path = Paths.get(UPLOAD_DIR + fileName);
+                        Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
+
+                        // 파일을 저장하고 경로를 filePaths 리스트에 추가
                         Files.write(path, attachment.getBytes());
-                        filePaths.add(path.toString());
+                        filePaths.add(path.toString());  // 절대 경로로 저장
+                        log.info("Attachment saved: name = {}, path = {}, size = {} bytes",
+                                fileName, path.toString(), attachment.getSize());
                     }
                 }
             }
 
+            // 이메일 주소를 콤마로 분리하여 리스트로 변환
+            String[] recipients = recipientEmail.split(",");
+
             // 이메일 전송
-            gmailService.sendMail(recipientEmail, subject, message, filePaths);
-
-            log.info("Email sent successfully to: {}", recipientEmail);
-
-            // 이메일 전송 후 초안 삭제
-            if (draftId != null && !draftId.isEmpty()) {
-                gmailService.deleteDraft("me", draftId);
-                log.info("Draft deleted successfully: {}", draftId);
+            for (String recipient : recipients) {
+                gmailService.sendMail(recipient.trim(), subject, message, filePaths);
             }
 
-            model.addAttribute("success", "Email sent successfully!");
+            model.addAttribute("success", "Email sent successfully to all recipients!");
         } catch (Exception e) {
             log.error("Error sending email", e);
             model.addAttribute("error", "Error sending email: " + e.getMessage());
+            return "mail/compose";
         }
         return "mail/complete";
     }
 
 
 
+    // 메일 전송 완료 페이지를 반환하는 메서드
+    @GetMapping("/complete")
+    public String mailComplete() {
+        return "mail/complete";
+    }
+
+
+
+    // 경로를 처리하는 메서드
+    private Path resolveFilePath(String fileName) {
+        Path path = Paths.get(fileName).normalize();
+        if (!path.isAbsolute()) {
+            path = Paths.get(UPLOAD_DIR, fileName).normalize();
+        }
+        return path;
+    }
+
+    // 이미지를 업로드하는 메서드
     @PostMapping("/uploadImage")
     public ResponseEntity<?> uploadImage(@RequestParam("image") String imageData) {
         try {
             String base64Image = imageData.split(",")[1];
-            byte[] imageBytes = Base64.decodeBase64(base64Image); // Apache Commons Codec 사용
-            String fileName = UUID.randomUUID().toString() + ".png"; // 고유한 파일명 생성
+            byte[] imageBytes = Base64.decodeBase64(base64Image);
+            String fileName = UUID.randomUUID().toString() + ".png";
             Path path = Paths.get(UPLOAD_DIR + fileName);
             Files.write(path, imageBytes);
             log.info("Image uploaded successfully: {}", path.toString());
@@ -158,29 +179,26 @@ public class EmailController {
         }
     }
 
+    // 임시저장된 데이터를 반환하는 메서드
     @GetMapping("/drafts/edit/{draftId}")
     public String editDraft(@PathVariable("draftId") String draftId, Model model) {
         log.info("editDraft called with draftId: {}", draftId);
         try {
-            // 초안 메세지 불러오기
             MessageDTO draftMessage = gmailService.getDraftById("me", draftId);
             log.info("Draft message fetched: {}", draftMessage);
 
-            // 모델에 초안 메세지의 속성 추가
             model.addAttribute("draftId", draftId);
             model.addAttribute("recipientEmail", draftMessage.getTo());
             model.addAttribute("subject", draftMessage.getSubject());
             model.addAttribute("message", draftMessage.getBody());
 
-            // 첨부파일 리스트 가져오기
             List<String> attachments = draftMessage.getAttachments();
-
             if (attachments != null && !attachments.isEmpty()) {
-                log.info("Attachments found: {}", attachments); // 첨부파일이 있을 경우
+                log.info("Attachments found: {}", attachments);
                 model.addAttribute("attachments", attachments);
             } else {
-                log.info("No attachments found or attachments list is empty."); // 첨부파일이 없을 경우
-                model.addAttribute("attachments", Collections.emptyList()); // 빈 리스트 전달
+                log.info("No attachments found or attachments list is empty.");
+                model.addAttribute("attachments", List.of());
             }
 
             return "mail/compose";
@@ -191,6 +209,46 @@ public class EmailController {
         }
     }
 
+    @PostMapping("/forward")
+    public String forwardEmail(@RequestParam("subject") String subject,
+                               @RequestParam("messageContent") String messageContent,
+                               @RequestParam("recipientEmail") String recipientEmail,
+                               @RequestParam(value = "attachments", required = false) List<String> attachments,
+                               Model model) {
+        model.addAttribute("subject", subject);
+
+        // 본문이 HTML 형식임을 보장
+        model.addAttribute("message", "<html>" + messageContent + "</html>");
+        model.addAttribute("recipientEmail", recipientEmail);
+
+        // 첨부파일 정보 추가
+        if (attachments != null && !attachments.isEmpty()) {
+            model.addAttribute("attachments", attachments);
+        }
+
+        return "mail/compose"; // compose.html 페이지로 이동
+    }
+
+
+    @PostMapping("/reply")
+    public String replyEmail(@RequestParam("subject") String subject,
+                             @RequestParam("messageContent") String messageContent,
+                             @RequestParam("recipientEmail") String recipientEmail,
+                             @RequestParam(value = "attachments", required = false) List<String> attachments,
+                             Model model) {
+        model.addAttribute("subject", subject);
+
+        // 본문이 HTML 형식임을 보장
+        model.addAttribute("message", "<html>" + messageContent + "</html>");
+        model.addAttribute("recipientEmail", recipientEmail);
+
+        // 첨부파일 정보 추가
+        if (attachments != null && !attachments.isEmpty()) {
+            model.addAttribute("attachments", attachments);
+        }
+
+        return "mail/compose"; // compose.html 페이지로 이동
+    }
 
 
 
@@ -213,9 +271,11 @@ public class EmailController {
     }
 
 
-    // viewEmail 메서드 수정
+    // 이메일을 읽고 본문(상세 내용)을 표시하는 메서드
     @GetMapping("/view")
-    public String viewEmail(@RequestParam("messageId") String messageId, Model model, HttpServletRequest request) {
+    public String viewEmail(@RequestParam("messageId") String messageId,
+                            @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                            Model model, HttpServletRequest request) {
         log.info("viewEmail called with messageId: {}", messageId);
         try {
             // 이메일을 가져옴
@@ -236,21 +296,52 @@ public class EmailController {
 
             String messageContent = gmailService.getMessageContent("me", messageId);
 
+            // CID 기반 이미지를 실제 경로로 변경
+            Pattern pattern = Pattern.compile("cid:([\\w\\-\\.]+)@\\w+\\.\\w+");
+            Matcher matcher = pattern.matcher(messageContent);
+
+            StringBuffer sb = new StringBuffer();
+            while (matcher.find()) {
+                String cid = matcher.group(1).replaceAll("[^a-zA-Z0-9]", "_");
+                String imagePath = "/assets/img/mailimg/image_" + cid + ".jpeg";
+                matcher.appendReplacement(sb, imagePath);
+            }
+            matcher.appendTail(sb);
+
+            messageContent = sb.toString();
+
+            // 이메일이 별표 표시되었는지 확인
             boolean isStarred = message.getLabelIds() != null && message.getLabelIds().contains("STARRED");
             messageDTO.setStarred(isStarred);
+
+            // 이메일이 휴지통(TRASH) 라벨이 있는지 확인
+            boolean isInTrash = message.getLabelIds() != null && message.getLabelIds().contains("TRASH");
+
+            // 이메일이 발신함(SENT) 라벨에 있는지 확인
+            boolean isInSent = message.getLabelIds() != null && message.getLabelIds().contains("SENT");
 
             log.info("Final message content: {}", messageContent);
 
             model.addAttribute("message", messageDTO);
             model.addAttribute("messageContent", messageContent);
             model.addAttribute("messageId", messageId);
+            model.addAttribute("isInTrash", isInTrash); // 휴지통 여부를 모델에 추가
+            model.addAttribute("isInSent", isInSent); // 발신함 여부를 모델에 추가
 
-            // Referer 헤더에서 returnUrl을 설정
-            String referer = request.getHeader("Referer");
-            if (referer != null && !referer.isEmpty()) {
-                model.addAttribute("returnUrl", referer);
+            // returnUrl 처리
+            if (returnUrl != null && !returnUrl.isEmpty()) {
+                log.info("returnUrl provided: {}", returnUrl);
+                model.addAttribute("returnUrl", returnUrl);
             } else {
-                model.addAttribute("returnUrl", "/mail/inbox"); // 기본적으로 수신 메일함으로 설정
+                // Referer 헤더를 사용하거나 기본적으로 수신 메일함으로 설정
+                String referer = request.getHeader("Referer");
+                if (referer != null && !referer.isEmpty()) {
+                    log.info("Referer found: {}", referer);
+                    model.addAttribute("returnUrl", referer);
+                } else {
+                    log.info("Referer not found, setting default returnUrl to /mail/inbox");
+                    model.addAttribute("returnUrl", "/mail/inbox");
+                }
             }
 
         } catch (IOException e) {
@@ -260,6 +351,9 @@ public class EmailController {
         }
         return "mail/mailRead";
     }
+
+
+
 
 
     // 이메일 읽음 상태를 토글하거나 특정 상태로 설정하는 메서드
@@ -304,8 +398,6 @@ public class EmailController {
     }
 
 
-
-
     // 보낸 메일함을 표시하는 메서드 추가
     @GetMapping("/sent")
     public String listSentEmails(Model model) {
@@ -321,7 +413,6 @@ public class EmailController {
         }
         return "mail/sent";  // 보낸 메일함 뷰로 반환
     }
-
 
 
     // 메시지를 휴지통으로 이동시키는 메서드 추가
@@ -352,6 +443,19 @@ public class EmailController {
         }
     }
 
+    // 휴지통에서 메일 복구 요청 처리 메서드
+    @PostMapping("/trash/restoreSelected")
+    public ResponseEntity<String> restoreSelectedMessages(@RequestBody List<String> messageIds) {
+        try {
+            gmailService.restoreMessages("me", messageIds);
+            return ResponseEntity.ok("Messages restored successfully");
+        } catch (IOException e) {
+            log.error("Error restoring messages", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to restore messages");
+        }
+    }
+
+
     // 휴지통에 있는 메시지 목록을 보여주는 메서드
     @GetMapping("/trash")
     public String listTrashEmails(Model model) {
@@ -364,20 +468,33 @@ public class EmailController {
         return "mail/trash";
     }
 
-
     // 개별 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/delete/{messageId}")
     public String deleteMessagePermanently(@PathVariable String messageId, RedirectAttributes redirectAttributes) {
-        log.info("deleteMessagePermanently called with messageId: {}", messageId);
+        log.debug("deleteMessagePermanently invoked with messageId: {}", messageId);
+
+        if (messageId == null || messageId.isEmpty()) {
+            log.error("Invalid messageId: {}", messageId);
+            redirectAttributes.addFlashAttribute("error", "Invalid message ID.");
+            return "redirect:/mail/trash";
+        }
+
         try {
+            log.info("Attempting to delete message with ID: {}", messageId);
             gmailService.deleteMessagePermanently("me", messageId);
             redirectAttributes.addFlashAttribute("success", "Message permanently deleted successfully!");
+            log.info("Message with ID: {} deleted successfully", messageId);
         } catch (IOException e) {
-            log.error("Error permanently deleting message", e);
+            log.error("IOException while deleting message with ID: {}. Error: {}", messageId, e.getMessage());
             redirectAttributes.addFlashAttribute("error", "Error permanently deleting message: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while deleting message with ID: {}. Error: {}", messageId, e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Unexpected error occurred: " + e.getMessage());
         }
-        return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
+
+        return "redirect:/mail/trash";  // Redirect to the trash page
     }
+
 
     // 선택된 메시지를 영구 삭제하는 메서드 추가
     @PostMapping("/trash/deleteSelected")
@@ -395,6 +512,32 @@ public class EmailController {
         return "redirect:/mail/trash";  // 휴지통 페이지로 리다이렉트
     }
 
+    // 휴지통에 있는 모든 이메일을 영구 삭제하는 메서드 추가
+    @PostMapping("/trash/deleteAll")
+    public String deleteAllMessagesInTrash(RedirectAttributes redirectAttributes) {
+        log.info("deleteAllMessagesInTrash called");
+
+        try {
+            List<MessageDTO> trashMessages = gmailService.listTrashMessages("me");
+            if (trashMessages.isEmpty()) {
+                redirectAttributes.addFlashAttribute("warning", "휴지통이 이미 비어 있습니다.");
+                return "redirect:/mail/trash";
+            }
+
+            for (MessageDTO message : trashMessages) {
+                gmailService.deleteMessagePermanently("me", message.getId());
+            }
+            redirectAttributes.addFlashAttribute("success", "모든 메시지가 영구 삭제되었습니다.");
+        } catch (IOException e) {
+            log.error("모든 메시지 영구 삭제 실패", e);
+            redirectAttributes.addFlashAttribute("error", "모든 메시지 영구 삭제 실패: " + e.getMessage());
+        }
+        return "redirect:/mail/trash"; // 휴지통 페이지로 리다이렉트
+    }
+
+
+
+    // 작성 데이터를 임시저장(Draft) 시키는 메서드
     @PostMapping("/saveDraft")
     public String saveDraft(
             @RequestParam("recipientEmail") String recipientEmail,
@@ -410,9 +553,15 @@ public class EmailController {
                 for (MultipartFile attachment : attachments) {
                     if (!attachment.isEmpty()) {
                         String fileName = StringUtils.cleanPath(attachment.getOriginalFilename());
-                        Path path = Paths.get(UPLOAD_DIR + fileName);
-                        Files.write(path, attachment.getBytes());
-                        filePaths.add(path.toString());  // 절대 경로로 저장
+                        Path path = Paths.get(UPLOAD_DIR, fileName).normalize();
+
+                        // 이미 파일 경로가 리스트에 존재하지 않는 경우에만 추가
+                        if (!filePaths.contains(path.toString())) {
+                            Files.write(path, attachment.getBytes());
+                            filePaths.add(path.toString());  // 절대 경로로 저장
+                            log.info("Attachment saved: name = {}, path = {}, size = {} bytes",
+                                    fileName, path.toString(), attachment.getSize());
+                        }
                     }
                 }
             }
@@ -426,9 +575,6 @@ public class EmailController {
         }
         return "mail/compose";  // 임시저장 후에도 compose 페이지로 리다이렉트
     }
-
-
-
 
 
     // Draft 목록을 가져와 표시하는 메서드 추가
@@ -453,7 +599,7 @@ public class EmailController {
         return "mail/draftsList";
     }
 
-    // 임시보관함에서 초안을 삭제하는 메서드 추가
+    // 임시보관함(Draft)에서 초안을 개별 삭제하는 메서드 추가
     @PostMapping("/drafts/delete/{draftId}")
     public String deleteDraft(@PathVariable String draftId, RedirectAttributes redirectAttributes) {
         log.info("deleteDraft called with draftId: {}", draftId);
@@ -467,7 +613,7 @@ public class EmailController {
         return "redirect:/mail/draftsList";  // 초안 목록 페이지로 리다이렉트
     }
 
-    //임시보관함에서 일괄 삭제를 위한 메서드
+    //임시보관함(Draft)에서 선택 삭제를 위한 메서드
     @PostMapping("/drafts/deleteSelected")
     public String deleteSelectedDrafts(@RequestParam("draftIds") List<String> draftIds, RedirectAttributes redirectAttributes) {
         log.info("deleteSelectedDrafts called with draftIds: {}", draftIds);
@@ -483,7 +629,7 @@ public class EmailController {
         return "redirect:/mail/draftsList";  // 초안 목록 페이지로 리다이렉트
     }
 
-    //별표 메일함을 표시하는 메서드 추가
+    //별표 메일함(starred)을 표시하는 메서드 추가
     @GetMapping("/starred")
     public String listStarredEmails(Model model) {
         log.info("listStarredEmails called");
@@ -499,7 +645,7 @@ public class EmailController {
         return "mail/starred";
     }
 
-    //별표를 위한 메서드 추가
+    //별표(starred) 서버와 연동 토글 위한 메서드 추가
     @PostMapping("/toggleStar")
     public ResponseEntity<String> toggleStar(@RequestBody Map<String, Object> payload) {
         String messageId = (String) payload.get("messageId");
@@ -523,7 +669,7 @@ public class EmailController {
     }
 
 
-    // 중요 메일함을 표시하는 메서드 추가
+    // 중요 메일함(IMPORTANT)을 표시하는 메서드 추가
     @GetMapping("/important")
     public String listImportantEmails(Model model) {
         log.info("listImportantEmails called");

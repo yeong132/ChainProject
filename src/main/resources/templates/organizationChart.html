@@ -42,6 +42,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
     ======================================================== -->
+    <script src="/assets/js/theme.js"></script>
 </head>
 
 <body>
@@ -101,204 +102,11 @@
 
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item ">
-            <a class="nav-link dash collapsed" href="/">
-                <i class="bi bi-grid"></i>
-                <span>대시보드</span>
-            </a>
-        </li>
-        <!-- 대시보드 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>기본 사항</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-                    <ul>
-                        <li>
-                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-                        </li>
-                    </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
-        <!-- 기본사항 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-clipboard-data"></i>
-                <span>업무</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
-                </li>
-                <li>
-                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-                </li>
-                <li>
-                    <a href="/report/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-                </li>
-                <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 업무 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-archive"></i>
-                <span>전자결재</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>전체 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 전자결재 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-people-fill"></i>
-                <span>게시판</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
-                </li>
-                <li>
-                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-                </li>
-                <li>
-                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-                </li>
-                <li>
-                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 게시판 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-week"></i>
-                <span>일정</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 일정 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-envelope"></i>
-                <span>이메일</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="email-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/mail/receive"> <i class="bi bi-circle"></i><span>전체메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/highlight"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/receivetome"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/temporaryStorage"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/send"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 이메일 사이드바 끝 -->
-
-        <li class="nav-item qna">
-            <a class="nav-link qna collapsed" href="/user/Q&A">
-                <i class="bi bi-question-circle"></i>
-                <span>고객센터</span>
-            </a>
-        </li>
-        <!-- 고객센터 사이드바 끝 -->
-
-    </ul>
-</aside>
+<th:block th:include="fragments/sidebar :: sidebar"></th:block>
 <!-- Sidebar 전체 끝 -->
 
 
@@ -347,6 +155,7 @@
                                                 <th>직급</th>
                                                 <th>이름</th>
                                                 <th>전화번호</th>
+                                                <th>이메일</th>
                                                 <th>수정</th>
                                             </tr>
                                             </thead>
@@ -452,23 +261,8 @@
 <!-- End Main -->
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-<!-- Vendor JS Files -->
-<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/js/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.1.52/go.js"></script>
+<th:block th:include="fragments/footer :: footer"></th:block>
+<!-- Footer 끝 -->
 
 <script>
     $(document).ready(function () {
@@ -496,6 +290,7 @@
                 <td>${employee.rankName || 'N/A'}</td>
                 <td>${employee.lastName}${employee.firstName}</td>
                 <td>${employee.phoneNum}</td>
+                 <td>${employee.email || 'N/A'}</td>
                 <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
             </tr>
         `;
@@ -607,6 +402,7 @@
                                     <th>직급</th>
                                     <th>이름</th>
                                     <th>전화번호</th>
+                                     <th>이메일</th>
                                     <th>수정</th>
                                 </tr>
                             </thead>
@@ -721,5 +517,25 @@
     });
 
 </script>
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

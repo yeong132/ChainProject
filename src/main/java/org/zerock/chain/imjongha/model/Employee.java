@@ -58,6 +58,10 @@ public class Employee {
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EmployeePermission> employeePermissions = new ArrayList<>();
 
+    // 연차관리를 위한 table 연결(영민이 추가)
+    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY)
+    private EmployeeLeave employeeLeave;
+
     // 편의 메서드
     public void addPermission(Permission permission) {
         EmployeePermission employeePermission = new EmployeePermission(this, permission);
@@ -69,5 +73,11 @@ public class Employee {
         EmployeePermission employeePermission = new EmployeePermission(this, permission);
         permission.getEmployeePermissions().remove(employeePermission);
         employeePermissions.remove(employeePermission);
+    }
+
+    // fullName 필드를 생성하기 위해 @Transient 사용(영민 추가)
+    @Transient
+    public String getFullName() {
+        return lastName + firstName;
     }
 }

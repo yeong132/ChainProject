@@ -2443,23 +2443,57 @@
                                 } else this.multiSearch(i)
                             })), this.wrapperDOM.addEventListener("click", (t => {
                                 const e = t.target.closest("a, button");
-                                if (e) if (e.hasAttribute("data-page")) this.page(parseInt(e.getAttribute("data-page"), 10)), t.preventDefault(); else if (d(e, this.options.classes.sorter)) {
-                                    const s = Array.from(e.parentElement.parentElement.children).indexOf(e.parentElement),
-                                        i = o(s, this.columns.settings);
-                                    this.columns.sort(i), t.preventDefault()
-                                } else if (d(e, this.options.classes.filter)) {
-                                    const s = Array.from(e.parentElement.parentElement.children).indexOf(e.parentElement),
-                                        i = o(s, this.columns.settings);
-                                    this.columns.filter(i), t.preventDefault()
+
+                                if (e) {
+                                    if (e.hasAttribute("data-page")) {
+                                        // 페이지 번호를 가져옴
+                                        const page = parseInt(e.getAttribute("data-page"), 10);
+
+                                        // 테이블 페이지를 설정
+                                        this.page(page);
+
+                                        // URL 쿼리 스트링을 업데이트
+                                        const url = new URL(window.location);
+                                        url.searchParams.set('currentPage', page);
+                                        history.replaceState(null, '', url);
+
+                                        t.preventDefault();
+                                    } else if (d(e, this.options.classes.sorter)) {
+                                        const s = Array.from(e.parentElement.parentElement.children).indexOf(e.parentElement),
+                                            i = o(s, this.columns.settings);
+
+                                        this.columns.sort(i);
+                                        t.preventDefault();
+                                    } else if (d(e, this.options.classes.filter)) {
+                                        const s = Array.from(e.parentElement.parentElement.children).indexOf(e.parentElement),
+                                            i = o(s, this.columns.settings);
+
+                                        this.columns.filter(i);
+                                        t.preventDefault();
+                                    }
                                 }
                             }), !1), this.options.rowNavigation ? (this.dom.addEventListener("keydown", (t => {
                                 if ("ArrowUp" === t.key) {
                                     let e;
-                                    t.preventDefault(), t.stopPropagation(), this.pages[this._currentPage - 1].find((t => t.index === this.rows.cursor || (e = t, !1))), e ? this.rows.setCursor(e.index) : this.onFirstPage || this.page(this._currentPage - 1, !0)
+                                    t.preventDefault();
+                                    t.stopPropagation();
+
+                                    const currentPageData = this.pages[this._currentPage - 1];
+                                    if (currentPageData && currentPageData.length > 0) {
+                                        currentPageData.find(t => t.index === this.rows.cursor || (e = t, false));
+                                    }
+
+                                    e ? this.rows.setCursor(e.index) : this.onFirstPage || this.page(this._currentPage - 1, true);
+
                                 } else if ("ArrowDown" === t.key) {
                                     let e;
                                     t.preventDefault(), t.stopPropagation();
-                                    const s = this.pages[this._currentPage - 1].find((t => !!e || (t.index === this.rows.cursor && (e = !0), !1)));
+                                    const currentPageData = this.pages[this._currentPage - 1];
+                                    let s;
+                                    if (currentPageData && currentPageData.length > 0) {
+                                        s = currentPageData.find(t => !!e || (t.index === this.rows.cursor && (e = true), false));
+                                    }
+
                                     s ? this.rows.setCursor(s.index) : this.onLastPage || this.page(this._currentPage + 1)
                                 } else ["Enter", " "].includes(t.key) && this.emit("datatable.selectrow", this.rows.cursor, t)
                             })), this.dom.addEventListener("mousedown", (t => {
@@ -2540,14 +2574,25 @@
                                     const i = this.columns.settings[e];
                                     if (s.length) {
                                         const t = i.sensitivity || this.options.sensitivity;
-                                        ["base", "accent"].includes(t) && (s = s.toLowerCase()), ["base", "case"].includes(t) && (s = s.normalize("NFD").replace(/\p{Diacritic}/gu, ""));
-                                        (i.ignorePunctuation ?? this.options.ignorePunctuation) && (s = s.replace(/[.,/#!$%^&*;:{}=-_`~()]/g, ""))
+                                        ["base", "accent"].includes(t) && (s = s.toLowerCase());
+                                        ["base", "case"].includes(t) && (s = s.normalize("NFD").replace(/\p{Diacritic}/gu, ""));
+                                        if (i.ignorePunctuation ?? this.options.ignorePunctuation) {
+                                            s = s.replace(/[.,/#!$%^&*;:{}=-_`~()]/g, "");
+                                        }
                                     }
                                     const a = i.searchItemSeparator || this.options.searchItemSeparator;
-                                    return a ? s.split(a) : [s]
+                                    return a ? s.split(a) : [s];
                                 }));
-                                s.every((t => t.find(((t, e) => !!t && t.find((t => i[e].find((e => e.includes(t))))))))) && this._searchData.push(e)
-                            })), this.wrapperDOM.classList.add("search-results"), this._searchData.length ? this.update() : (this.wrapperDOM.classList.remove("search-results"), this.setMessage(this.options.labels.noResults)), this.emit("datatable.multisearch", e, this._searchData)
+
+                                // find 메서드를 호출하기 전에 배열이나 객체가 제대로 정의되어 있는지 확인
+                                const searchResult = s.every(t => t && t.find((t, e) => !!t && t.find(t => i[e] && i[e].find(e => e.includes(t)))));
+
+                                // 검색 결과가 존재하는 경우에만 _searchData에 추가
+                                if (searchResult) {
+                                    this._searchData.push(e);
+                                }
+                            }))
+                        , this.wrapperDOM.classList.add("search-results"), this._searchData.length ? this.update() : (this.wrapperDOM.classList.remove("search-results"), this.setMessage(this.options.labels.noResults)), this.emit("datatable.multisearch", e, this._searchData)
                         }
 
                         page(t, e = !1) {

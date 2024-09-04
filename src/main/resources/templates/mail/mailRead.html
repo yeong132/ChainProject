@@ -15,7 +15,8 @@
 
     <!-- 폰트 설정  -->
     <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"/>
 
     <!-- Vendor CSS Files -->
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -30,8 +31,52 @@
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <script src="/assets/js/theme.js"></script>
 
     <style>
+        /* 공통 버튼 스타일 */
+        .btn-custom {
+            background-color: #007bff; /* 기본 배경색 설정 (파란색) */
+            color: white; /* 텍스트 색상 설정 */
+            border: none; /* 기본 테두리 제거 */
+            padding: 10px 20px; /* 버튼 안쪽 여백 */
+            border-radius: 5px; /* 버튼 모서리 둥글게 */
+            font-size: 16px; /* 폰트 크기 */
+            cursor: pointer; /* 마우스 포인터를 손 모양으로 */
+            transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+        }
+
+        /* 버튼 마우스 오버 효과 */
+        .btn-custom:hover {
+            background-color: #0056b3; /* 마우스 오버 시 배경색을 더 진하게 */
+        }
+
+        /* 삭제 버튼은 빨간색으로 설정 */
+        .btn-custom-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-custom-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* 읽지 않음으로 표시 버튼은 다른 색상으로 설정할 경우 */
+        .btn-custom-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-custom-warning:hover {
+            background-color: #e0a800;
+        }
+
+        /* 정렬을 위한 버튼 그룹 */
+        .btn-group-custom {
+            display: flex;
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            gap: 10px; /* 버튼 사이 간격 */
+        }
+
         /* Custom styles */
         .card-title {
             display: flex;
@@ -246,195 +291,13 @@
 </header>
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">출근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-
-            <div class="modal-body">
-                <div id="currentTime">현재 시간:</div>
-                출근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-                    아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">퇴근</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="currentTimes">현재 시간:</div>
-                퇴근하시겠습니까?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-                </button>
-                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
 
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item ">
-            <a class="nav-link dash collapsed" href="/">
-                <i class="bi bi-grid"></i>
-                <span>대시보드</span>
-            </a>
-        </li>
-        <!-- 대시보드 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>기본 사항</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-                    <ul>
-                        <li>
-                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-                        </li>
-                    </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
-        <!-- 기본사항 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-clipboard-data"></i>
-                <span>업무</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
-                </li>
-                <li>
-                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-                </li>
-                <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-                </li>
-                <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 업무 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-archive"></i>
-                <span>전자결재</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 전자결재 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-people-fill"></i>
-                <span>게시판</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
-                </li>
-                <li>
-                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-                </li>
-                <li>
-                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-                </li>
-                <li>
-                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 게시판 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-envelope"></i>
-                <span>이메일</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/mail/inbox"> <i class="bi bi-circle"></i><span>받은메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/starred"> <i class="bi bi-circle"></i><span>별표메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/myself"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/sent"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 이메일 사이드바 끝 -->
-
-        <li class="nav-item qna">
-            <a class="nav-link qna collapsed" href="/user/Q&A">
-                <i class="bi bi-question-circle"></i>
-                <span>고객센터</span>
-            </a>
-        </li>
-        <!-- 고객센터 사이드바 끝 -->
-
-    </ul>
-</aside>
+<th:block th:include="fragments/sidebar :: sidebar"></th:block>
 <!-- Sidebar 전체 끝 -->
-<!-- main  시작 -->
+<!-- 메인 몸통 -->
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>메일 읽기</h1>
@@ -454,19 +317,35 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="btn-group">
-                                <button class="btn btn-primary btn-custom me-2 mt-2">답장</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2">전달</button>
-                                <button class="btn btn-primary btn-custom me-2 mt-2"
-                                        th:data-message-id="${message.id}"
-                                        th:data-return-url="${returnUrl}"
-                                        onclick="showMoveToTrashModal(this)">삭제</button>
-                                <button id="markUnread" class="btn btn-primary btn-custom me-2 mt-2"
-                                        th:data-message-id="${message.id}"
-                                        th:data-return-url="${returnUrl}">읽지않음으로 표시</button>
+                                <div th:if="${!isInTrash}">
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
+                                            onclick="handleReplyForward('forward')">전달
+                                    </button>
+                                    <button type="button" class="btn btn-primary me-2 mt-2"
+                                            onclick="handleReplyForward('reply')">답장
+                                    </button>
+                                    <button class="btn btn-primary me-2 mt-2"
+                                            th:data-message-id="${message.id}"
+                                            th:data-return-url="${returnUrl}"
+                                            onclick="showMoveToTrashModal(this)">삭제
+                                    </button>
+                                    <button id="markUnread" class="btn btn-primary me-2 mt-2"
+                                            th:data-message-id="${message.id}"
+                                            th:data-return-url="${returnUrl}">읽지않음으로 표시
+                                    </button>
+                                    <button id="backToList" class="btn btn-primary mt-2"
+                                            th:data-return-url="${returnUrl}" onclick="location.href='${returnUrl}'">목록
+                                    </button>
 
+                                </div>
+                                <div th:if="${isInTrash}">
+                                    <button class="btn btn-primary mt-2"
+                                            onclick="location.href='/mail/trash'">휴지통으로 돌아가기
+                                    </button>
+                                </div>
                             </div>
-                            <a href="#" id="backToList" class="btn btn-primary btn-custom mt-2" th:href="${returnUrl}">목록</a>
                         </div>
+
 
                         <!-- 메일 보낸이 정보 -->
                         <div class="mail-details">
@@ -526,40 +405,21 @@
 </div>
 <!-- 휴지통 이동 경고 모달 끝 -->
 
-
-
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer>
+<th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
 
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
-
 <script th:inline="javascript">
-    const messageId = /*[[${message.id}]]*/ 'default_value'; // message.id 값을 가져옵니다.
+    // URL에서 messageId 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    let messageId = urlParams.get('messageId');
 
-    document.getElementById('markUnread').addEventListener('click', function() {
+    // messageId가 URL에서 가져오지 못한 경우, 템플릿 엔진에서 가져오기
+    if (!messageId || messageId === 'default_value') {
+        messageId = /*[[${message.id}]]*/ 'default_value';
+    }
+
+    document.getElementById('markUnread').addEventListener('click', function () {
         const messageId = this.getAttribute('data-message-id');
         const returnUrl = this.getAttribute('data-return-url');
 
@@ -573,34 +433,31 @@
         $.ajax({
             url: '/mail/toggleReadStatus',
             type: 'POST',
-            data: JSON.stringify({ messageId: messageId, markAsRead: false }),
+            data: JSON.stringify({messageId: messageId, markAsRead: false}),
             contentType: 'application/json',
-            success: function(response) {
+            success: function (response) {
                 if (returnUrl) {
                     window.location.href = returnUrl;
                 } else {
                     window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Failed to mark as unread:', error);
                 alert('Error: ' + error);
             }
         });
     });
 
-    document.getElementById('backToList').addEventListener('click', function(event) {
+    document.getElementById('backToList').addEventListener('click', function (event) {
         event.preventDefault();
-        const returnUrl = this.getAttribute('href');
-
+        const returnUrl = this.getAttribute('data-return-url');
         if (returnUrl && returnUrl !== 'null') {
             window.location.href = returnUrl;
         } else {
-            window.location.href = "/mail/inbox";  // 기본적으로 수신메일함으로 리다이렉트
+            window.location.href = "/mail/inbox";
         }
     });
-
-
 
 
     function showMoveToTrashModal(buttonElement) {
@@ -612,9 +469,9 @@
 
         if (messageId) {
             $('#moveToTrashModal').modal('show');
-            document.getElementById('confirmMoveToTrash').addEventListener('click', function() {
+            document.getElementById('confirmMoveToTrash').addEventListener('click', function () {
                 moveToTrash(messageId, returnUrl);
-            }, { once: true }); // 한 번만 실행되도록 설정
+            }, {once: true}); // 한 번만 실행되도록 설정
         } else {
             console.error("Failed to retrieve message ID.");
         }
@@ -624,7 +481,7 @@
         $.ajax({
             url: '/mail/trash/' + encodeURIComponent(messageId),
             type: 'POST',
-            success: function(response) {
+            success: function (response) {
                 $('#moveToTrashModal').modal('hide');
                 if (returnUrl && returnUrl !== 'null') {
                     window.location.href = returnUrl;
@@ -632,13 +489,12 @@
                     window.location.href = "/mail/inbox"; // 기본적으로 수신메일함으로 리다이렉트
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Failed to move email to trash:', error);
                 alert('Failed to move email to trash: ' + error);
             }
         });
     }
-
 
     function toggleStar(element) {
         const messageId = element.getAttribute('data-message-id');
@@ -668,8 +524,65 @@
         });
     }
 
-</script>
+    // 답장, 전달 처리하는 함수
+    function handleReplyForward(action) {
+        const emailData = {
+            sender: /*[[${message.from}]]*/,
+            recipient: /*[[${message.to}]]*/,
+            cc: '',
+            subject: /*[[${message.subject}]]*/,
+            messageContent: /*[[${messageContent}]]*/,
+            sentDate: /*[[${message.date}]]*/,
+        };
 
+        let newSubject = action === 'reply' ? `RE: ${emailData.subject}` : `FW: ${emailData.subject}`;
+        let newMessageContent = `
+            <br><br>
+            -----Original Message-----<br>
+            From: ${emailData.sender}<br>
+            To: ${emailData.recipient}<br>
+            Cc: ${emailData.cc}<br>
+            Sent: ${emailData.sentDate}<br>
+            Subject: ${emailData.subject}<br>
+            <br>
+            ${emailData.messageContent}
+        `;
+
+        let recipientEmail = action === 'reply' ? emailData.sender : '';
+
+        // POST 방식으로 데이터 전송
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/mail/compose';
+
+        const subjectInput = document.createElement('input');
+        subjectInput.type = 'hidden';
+        subjectInput.name = 'subject';
+        subjectInput.value = newSubject;
+        form.appendChild(subjectInput);
+
+        const messageContentInput = document.createElement('input');
+        messageContentInput.type = 'hidden';
+        messageContentInput.name = 'messageContent';
+        messageContentInput.value = newMessageContent;
+        form.appendChild(messageContentInput);
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+
+        const recipientEmailInput = document.createElement('input');
+        recipientEmailInput.type = 'hidden';
+        recipientEmailInput.name = 'recipientEmail';
+        recipientEmailInput.value = recipientEmail;
+        form.appendChild(recipientEmailInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -683,11 +596,12 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <!--<script src="/assets/js/wemaked.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 </body>
 </html>

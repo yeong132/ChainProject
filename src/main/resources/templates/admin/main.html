@@ -34,6 +34,7 @@
   <!-- Template Main CSS File -->
   <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
   <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+  <script src="/assets/js/theme.js"></script>
 
   <!-- =======================================================
 * Template Name: NiceAdmin
@@ -199,7 +200,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+            <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
               <i class="bi bi-power"></i>
               <span>로그아웃</span>
             </a>
@@ -225,53 +226,8 @@
 </header>
 <!-- Header 끝 -->
 
-<!-- Header Modal -->
-<!-- 출퇴근 Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">출근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-
-      <div class="modal-body">
-        <div id="currentTime">현재 시간:</div>
-        출근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-          아니오
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="leaveworkModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">퇴근</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="currentTimes">현재 시간:</div>
-        퇴근하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-        </button>
-        <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<th:block th:include="fragments/commute :: commute"></th:block>
 <!-- 출퇴근 Modal 끝 -->
-<!-- Header Modal -->
 
     <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
@@ -284,7 +240,7 @@
         </li>
         <!-- End Dashboard Nav -->
 
-        <li class="nav-item">
+        <li class="nav-item"><!-- 인사관리 사이드 바 -->
           <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
             <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
@@ -297,15 +253,21 @@
             </li>
 
           </ul>
-        </li>
-        <!-- End Components Nav -->
+        </li><!-- 인사관리 사이드바 끝 -->
 
-        <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#charts-nav"  href="/admin/attendance/company">
-            <i class="bi bi-bar-chart"></i>
-            <span>근태 관리</span>
+        <li class="nav-item"><!-- 근태관리 사이드바 -->
+          <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
-        </li>
+          <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
+            </li>
+            <li>
+              <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
+            </li>
+          </ul>
+        </li><!-- 근태관리 사이드바 끝 -->
       </ul>
     </aside>
     <!-- End Sidebar-->
@@ -809,34 +771,8 @@
     <!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-  <div class="copyright">
-    &copy; Copyright <strong><span>CHAIN</span></strong
-  >. All Rights Reserved
-  </div>
-  <div class="credits">
-    <!-- All the links in the footer should remain intact. -->
-    <!-- You can delete the links only if you purchased the pro version. -->
-    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-  </div>
-</footer>
+<th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
-
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-  <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-  <i class="bi bi-chat-dots"></i>
-  <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
-
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -850,6 +786,9 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>

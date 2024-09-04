@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>관리자 대시보드</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+
+    <!-- Favicons -->
+    <script type="text/javascript" nonce="be1b73389cc54c2ab2453788d7a"
+            src="//local.adguard.org?ts=1725409194523&amp;type=content-script&amp;dmn=cdn.discordapp.com&amp;url=https%3A%2F%2Fcdn.discordapp.com%2Fattachments%2F1234726926846001316%2F1280684579522613349%2FmonthlySummary.html%3Fex%3D66d8f9f5%26is%3D66d7a875%26hm%3Dacc88a622fcf150da25c50bc0434ddb525b864307edc92cf4f283393355ecfc5%26&amp;app=com.google.Chrome&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-push&amp;st-loc&amp;st-java&amp;st-dnt"></script>
+    <script type="text/javascript" nonce="be1b73389cc54c2ab2453788d7a"
+            src="//local.adguard.org?ts=1725409194523&amp;name=AdGuard%20Extra&amp;type=user-script"></script>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+
+    <!-- 폰트 설정 -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet"/>
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo.png" alt=""/>
+            <span class="d-none d-lg-block">CHAIN</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <li class="nav-item dropdown" id="commuteIcon">
+                <div class="from-check form-switch me-3">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge btn-secondary badge-number">4</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                    <li class="dropdown-header">
+                        4개의 새 알림이 있습니다
+                        <a href="/user/alarm"><span class="badge btn-info p-2 ms-2">전체 보기</span></a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="notification-item">
+                        <i class="bi bi-exclamation-circle text-warning"></i>
+                        <div>
+                            <h4>Lorem Ipsum</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>30 min. ago</p>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="notification-item">
+                        <i class="bi bi-x-circle text-danger"></i>
+                        <div>
+                            <h4>Atque rerum nesciunt</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>1 hr. ago</p>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="notification-item">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <div>
+                            <h4>Sit rerum fuga</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>2 hrs. ago</p>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="notification-item">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        <div>
+                            <h4>Dicta reprehenderit</h4>
+                            <p>Quae dolorem earum veritatis oditseno</p>
+                            <p>4 hrs. ago</p>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li class="dropdown-footer">
+                        <a href="/user/alarm">모든 알림 표시</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="/user/setting">
+                    <i class="bi bi-gear"></i>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
+                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>박영민</h6>
+                        <span>사원</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
+                            <i class="bi bi-person"></i>
+                            <span>마이 페이지</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
+                            <i class="bi bi-diagram-2"></i>
+                            <span>조직도</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                            <i class="bi bi-power"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/">
+                            <i class="bx bx-walk"></i>
+                            <span>사용자 페이지</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 출퇴근 Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">출근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTime">현재 시간:</div>
+                출근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
+                    아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="leaveworkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">퇴근</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="currentTimes">현재 시간:</div>
+                퇴근하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
+                </button>
+                <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link dash" href="/admin/main">
+                <i class="bi bi-grid"></i>
+                <span>대시보드</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li><a href="/admin/personnel/management"><i class="bi bi-circle"></i><span>사원 관리</span></a></li>
+                <li><a href="/admin/personnel/powerSetting"><i class="bi bi-circle"></i><span>권한 설정</span></a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/admin/attendance/company">
+                <i class="bi bi-bar-chart"></i>
+                <span>근태 관리</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>사원 월별 근태 관리</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/admin/attendance/company}">Attendance</a></li>
+                <li class="breadcrumb-item active">Monthly Summary</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>월별 근태</b></h5>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                            <span th:text="${errorMessage}"></span>
+                        </div>
+
+                        <div class="accordion" id="attendanceAccordion">
+                            <div class="accordion-item" th:each="monthAttendance : ${summaries}">
+                                <h2 class="accordion-header" th:id="'heading' + ${monthAttendance.month}">
+                                    <button class="accordion-button" type="button"
+                                            data-bs-toggle="collapse"
+                                            th:attr="data-bs-target='#collapse' + ${monthAttendance.month}"
+                                            aria-controls="collapse[[${monthAttendance.month}]]">
+                                        <span th:text="${monthAttendance.month} + '월'">월 근태</span>
+                                    </button>
+                                </h2>
+                                <div th:id="'collapse' + ${monthAttendance.month}"
+                                     th:attr="aria-labelledby='heading' + ${monthAttendance.month}"
+                                     class="accordion-collapse collapse [[${#lists.isEmpty(monthAttendance.attendances) ? '' : 'show'}]]"
+                                     data-bs-parent="#attendanceAccordion">
+                                    <div class="accordion-body">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>출근 시간</th>
+                                                <th>퇴근 시간</th>
+                                                <th>총 근무 시간</th>
+                                                <th>초과 근무 시간</th>
+                                                <th>근태 상태</th>
+                                                <th>관리</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody th:if="${!#lists.isEmpty(monthAttendance.attendances)}"
+                                                   th:each="attendance : ${monthAttendance.attendances}">
+                                            <tr>
+                                                <td th:text="${attendance.attendanceDate != null ? attendance.attendanceDate : '날짜 없음'}"></td>
+                                                <td th:text="${attendance.startTime != null ? attendance.startTime : '시간 없음'}"></td>
+                                                <td th:text="${attendance.endTime != null ? attendance.endTime : '시간 없음'}"></td>
+                                                <td th:text="${attendance.totalWorkingHours != null ? attendance.totalWorkingHours + ' 시간' : '시간 없음'}"></td>
+                                                <td th:text="${attendance.overtimeHours != null ? attendance.overtimeHours + ' 시간' : '시간 없음'}"></td>
+                                                <td th:text="${attendance.status != null ? attendance.status : '상태 없음'}"></td>
+                                                <td>
+                                                    <button href="#" type="button" data-bs-toggle="modal"
+                                                            class="btn btn-primary btn-sm edit-btn"
+                                                            data-bs-target="#editAttendanceModal"
+                                                            th:data-id="${attendance.id}"
+                                                            th:data-start-time="${attendance.startTime}"
+                                                            th:data-end-time="${attendance.endTime}"
+                                                            th:data-status="${attendance.status}">수정
+                                                    </button>
+                                                    <button href="#" type="button" data-bs-toggle="modal"
+                                                            class="btn btn-danger btn-sm delete-btn"
+                                                            data-bs-target="#deleteAttendanceModal"
+                                                            th:data-id="${attendance.id}">삭제
+                                                    </button>
+                                                </td>
+
+
+                                            </tr>
+                                            </tbody>
+                                            <div th:if="${#lists.isEmpty(monthAttendance.attendances)}">
+                                                <p class="text-muted">이번 달에 등록된 근태 정보가 없습니다.</p>
+                                            </div>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${summaries == null or #lists.isEmpty(summaries)}" class="alert alert-info"
+                             role="alert">
+                            <p>근태 요약 정보가 없습니다.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="editAttendanceModal" tabindex="-1" aria-labelledby="editAttendanceModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAttendanceModalLabel">근태 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editAttendanceForm" method="post" th:action="@{/admin/attendance/edit}">
+                        <input type="hidden" id="attendanceId" name="attendanceId"/>
+
+                        <div class="mb-3">
+                            <label for="startTime" class="form-label">출근 시간</label>
+                            <input type="time" class="form-control" id="startTime" name="startTime" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="endTime" class="form-label">퇴근 시간</label>
+                            <input type="time" class="form-control" id="endTime" name="endTime" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">근태 상태</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="출근">출근</option>
+                                <option value="지각">지각</option>
+                                <option value="결근">결근</option>
+                                <option value="휴가">휴가</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">저장</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Attendance Modal -->
+    <div class="modal fade" id="deleteAttendanceModal" tabindex="-1" aria-labelledby="deleteAttendanceModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAttendanceModalLabel">근태 기록 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>이 근태 기록을 삭제하시겠습니까?</p>
+                    <form id="deleteAttendanceForm" method="post" th:action="@{/admin/attendance/delete}">
+                        <input type="hidden" id="deleteAttendanceId" name="attendanceId"/>
+                        <button type="submit" class="btn btn-danger">삭제</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ======= Footer ======= -->
+<th:block th:include="fragments/footer :: footer"></th:block>
+<!-- Footer 끝 -->
+
+<!-- Vendor JS Files -->
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+<script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
+
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- Template Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/wemaked.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // 수정 모달 처리
+        $('#editAttendanceModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // 버튼을 누를 때의 버튼 요소
+            var attendanceId = button.data('id');
+            var startTime = button.data('start-time');
+            var endTime = button.data('end-time');
+            var status = button.data('status');
+
+            var modal = $(this);
+            modal.find('#attendanceId').val(attendanceId);
+            modal.find('#startTime').val(startTime);
+            modal.find('#endTime').val(endTime);
+            modal.find('#status').val(status);
+        });
+
+        // 수정 요청 처리
+        $('#editAttendanceForm').on('submit', function (event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/attendance/edit",
+                data: formData,
+                success: function (response) {
+                    alert("출근 기록이 수정되었습니다.");
+                    $('#editAttendanceModal').modal('hide');
+                    // 필요시 페이지 일부를 새로 고침하거나 UI 업데이트
+                    location.reload(); // 전체 페이지를 새로 고침하려면 이 줄을 사용
+                },
+                error: function (error) {
+                    alert("출근 기록 수정에 실패했습니다.");
+                }
+            });
+        });
+
+        // 삭제 모달 처리
+        $('#deleteAttendanceModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var attendanceId = button.data('id');
+
+            var modal = $(this);
+            modal.find('#deleteAttendanceId').val(attendanceId);
+        });
+
+        // 삭제 요청 처리
+        $('#deleteAttendanceForm').on('submit', function (event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/attendance/delete",
+                data: formData,
+                success: function (response) {
+                    alert("출근 기록이 삭제되었습니다.");
+                    $('#deleteAttendanceModal').modal('hide');
+                    // 필요시 페이지 일부를 새로 고침하거나 UI 업데이트
+                    location.reload(); // 전체 페이지를 새로 고침하려면 이 줄을 사용
+                },
+                error: function (error) {
+                    alert("출근 기록 삭제에 실패했습니다.");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

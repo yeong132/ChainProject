@@ -11,15 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Log4j2
 public class AttendanceController {
 
-    //근퇴 상세 페이지
+    // 근태 상세 페이지
     @GetMapping("/employee")
     public String atDepartment() {return "admin/attendance/employee";}
 
     // 근태 전체 페이지
     @GetMapping("/company")
     public String atEmployee(){ return "admin/attendance/company";}
-
-
 
 
 }

@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-    <title>내게 쓰기</title>
+    <title>근태 관리</title>
     <meta content="" name="description"/>
     <meta content="" name="keywords"/>
 
@@ -42,6 +42,13 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
     ======================================================== -->
+    <style>
+        /* '상세 보기 / 수정하기' 열의 너비 조정 */
+        th.scope-col-action, td.scope-col-action {
+            width: 15%; /* 필요에 따라 %를 조절 */
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -199,7 +206,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
                             <i class="bi bi-power"></i>
                             <span>로그아웃</span>
                         </a>
@@ -210,9 +217,9 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
+                        <a class="dropdown-item d-flex align-items-center" href="/">
+                            <i class="bx bx-walk"></i>
+                            <span>사용자 페이지</span>
                         </a>
                     </li>
                 </ul>
@@ -273,306 +280,241 @@
 <!-- 출퇴근 Modal 끝 -->
 <!-- Header Modal -->
 
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item ">
-            <a class="nav-link dash collapsed" href="/">
+        <li class="nav-item">
+            <a class="nav-link dash collapsed" href="/admin/main">
                 <i class="bi bi-grid"></i>
                 <span>대시보드</span>
             </a>
         </li>
-        <!-- 대시보드 사이드바 끝 -->
+        <!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#menu-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>기본 사항</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
+            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="menu-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>통일 사항</span> </a>
-                    <ul>
-                        <li>
-                            <a href="/example"> <i class="bi bi-circle"></i><span>홈페이지 예시</span> </a>
-                        </li>
-                    </ul>
-                    </div>
+                    <a href="/admin/personnel/management"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>
                 </li>
+                <li>
+                    <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>
+                </li>
+
             </ul>
         </li>
-        <!-- 기본사항 끝 -->
+        <!-- End Components Nav -->
 
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#work-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-clipboard-data"></i>
-                <span>업무</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
+        <li class="nav-item"><!-- 근태관리 사이드바 -->
+            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-bar-chart"></i><span>근태 관리</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="work-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/todo/list"> <i class="bi bi-circle"></i><span>TODO</span> </a>
+                    <a href="/admin/attendance/company"> <i class="bi bi-circle"></i><span>근태 관리</span> </a>
                 </li>
                 <li>
-                    <a href="/project/list"> <i class="bi bi-circle"></i><span>프로젝트</span> </a>
-                </li>
-                <li>
-                    <a href="/work/list"> <i class="bi bi-circle"></i><span>업무</span> </a>
-                </li>
-                <li>
-                    <a href="/chart/main"> <i class="bi bi-circle"></i><span>차트</span> </a>
+                    <a href="/admin/attendance/leave"> <i class="bi bi-circle"></i><span>연차 관리</span> </a>
                 </li>
             </ul>
-        </li>
-        <!-- 업무 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#sign-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-archive"></i>
-                <span>전자결재</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="sign-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/approval/main"> <i class="bi bi-circle"></i><span>보낸 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/receive"> <i class="bi bi-circle"></i><span>받은 문서함</span> </a>
-                </li>
-                <li>
-                    <a href="/approval/draft"> <i class="bi bi-circle"></i><span>임시 문서함</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 전자결재 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#board-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-people-fill"></i>
-                <span>게시판</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="board-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/notice/list"> <i class="bi bi-circle"></i><span>공지사항</span> </a>
-                </li>
-                <li>
-                    <a href="/board/list"> <i class="bi bi-circle"></i><span>경조사</span> </a>
-                </li>
-                <li>
-                    <a href="/board/cafeteria"> <i class="bi bi-circle"></i><span>구내식당</span> </a>
-                </li>
-                <li>
-                    <a href="/conference/main"> <i class="bi bi-circle"></i><span>회의실 예약</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 게시판 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#calendar-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-week"></i>
-                <span>일정</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="calendar-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="#"> <i class="bi bi-circle"></i><span>목록</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 일정 사이드바 끝 -->
-
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#email-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-envelope"></i>
-                <span>이메일</span>
-                <i class="bi bi-chevron-down ms-menu"></i>
-            </a>
-            <ul id="email-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="/mail/inbox"> <i class="bi bi-circle"></i><span>받은메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/starred"> <i class="bi bi-circle"></i><span>즐겨찾기</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/important"> <i class="bi bi-circle"></i><span>중요메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/myself"> <i class="bi bi-circle"></i><span>내게쓴메일함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/draftsList"> <i class="bi bi-circle"></i><span>임시보관함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/sent"> <i class="bi bi-circle"></i><span>발신함</span> </a>
-                </li>
-                <li>
-                    <a href="/mail/trash"> <i class="bi bi-circle"></i><span>휴지통</span> </a>
-                </li>
-            </ul>
-        </li>
-        <!-- 이메일 사이드바 끝 -->
-
-        <li class="nav-item qna">
-            <a class="nav-link qna collapsed" href="/user/Q&A">
-                <i class="bi bi-question-circle"></i>
-                <span>고객센터</span>
-            </a>
-        </li>
-        <!-- 고객센터 사이드바 끝 -->
-
+        </li><!-- 근태관리 사이드바 끝 -->
     </ul>
 </aside>
-<!-- Sidebar 전체 끝 -->
-
+<!-- End Sidebar-->
 
 <main id="main" class="main">
-
     <div class="pagetitle">
-        <h1>내게 쓰기</h1>
+        <h1>연차 관리</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/mail/inbox">Email</a></li>
-                <li class="breadcrumb-item active">Write to me</li>
+                <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>
+                <li class="breadcrumb-item active">Leave</li>
             </ol>
         </nav>
-
     </div><!-- End Page Title -->
 
-    <section class="section">
+    <section class="section dashboard"><!-- 영민이 수정 -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <!-- General Form Elements -->
-                        <form>
-                            <div class="offset-sm-0 mt-3">
-                                <div class="col-sm-5">
-                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal"
-                                            data-bs-target="#sendModal">보내기
-                                    </button>
-                                    <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal"
-                                            data-bs-target="#saveModal">임시저장
-                                    </button>
-                                </div>
-                            </div>
+                        <h5 class="card-title">연차 신청서</h5>
+                        <!-- 연차신청서 데이터 테이블 -->
+                        <table class="table table-hover table-borderless datatable">
+                            <thead>
+                            <tr>
+                                <th>사원번호</th>
+                                <th>신청자</th>
+                                <th>제목</th>
+                                <th>신청일</th>
+                                <th>상태</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="document : ${receivedDocuments}"
+                                th:if="${document.category == '연차신청서' && document.docStatus == '완료'}"
+                                th:onclick="|window.location.href='@{/approval/adminRequest/{docNo}(docNo=${document.docNo}, category=${document.category})}'|"
+                                style="cursor: pointer;">
+                                <td th:text="${document.virtualNo}"></td>
+                                <td th:text="${document.senderName}"></td>
+                                <td>
+                                    <a th:text="${document.docTitle}"></a>
+                                </td>
+                                <td th:text="${document.reqDate}"></td>
+                                <td th:text="${document.docStatus}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- 연차신청서 테이블 부분 종료 -->
+                    </div>
+                </div>
 
-                            <div class="row mb-3">
-                                <label for="inputEmail" class="col-sm-1 col-form-label">받는사람</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="inputEmail">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputTitle" class="col-sm-1 col-form-label">제목</label>
-                                <div class="col-sm-11">
-                                    <input type="text" class="form-control" id="inputTitle">
-                                </div>
-                            </div>
-
-                            <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <!-- Froala 에디터 -->
-                                <div id="froala"></div>
-                                <!-- Froala 에디터 끝 -->
-                            </div>
-                            <!-- 웹에디터 내용 끝 -->
-                        </form><!-- End General Form Elements -->
+                <!-- 사원 연차 관리 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">사원 연차 현황</h5>
+                        <table class="table table-hover table-borderless datatable">
+                            <thead>
+                            <tr>
+                                <th scope="col">사원 번호</th>
+                                <th scope="col">부서</th>
+                                <th scope="col">직급</th>
+                                <th scope="col">이름</th>
+                                <th scope="col">총 연차</th>
+                                <th scope="col">사용 연차</th>
+                                <th scope="col">미사용 연차</th>
+                                <th scope="col" class="scope-col-action">상세 보기 / 수정하기</th>
+                            </tr>
+                            </thead>
+                            <!-- 서버에서 가져온 데이터를 바인딩 -->
+                            <tbody>
+                            <tr th:each="employeeLeave : ${employeeLeaveList}" th:attr="data-empno=${employeeLeave.empNo}">
+                                <td th:text="${employeeLeave.empNo}"></td>
+                                <td th:text="${employeeLeave.department.dmpName}"></td>
+                                <td th:text="${employeeLeave.rank.rankName}"></td>
+                                <td th:text="${employeeLeave.fullName}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.totalLeaveDays != null ? employeeLeave.employeeLeave.totalLeaveDays + '일' : '0일'}"
+                                    class="totalLeaveDays"></td>
+                                <td th:text="${employeeLeave.employeeLeave.usedLeaveDays != null ? employeeLeave.employeeLeave.usedLeaveDays + '일' : '0일'}"></td>
+                                <td th:text="${employeeLeave.employeeLeave.unusedLeaveDays != null ? employeeLeave.employeeLeave.unusedLeaveDays + '일' : '0일'}"
+                                    class="unusedLeaveDays"></td>
+                                <td>
+                                    <a th:href="@{/admin/attendance/emp_leave/{empNo}(empNo=${employeeLeave.empNo})}" class="btn btn-secondary">상세 보기</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#leaveModal"
+                                            th:attr="data-empno=${employeeLeave.empNo}">
+                                        수정하기
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
-
-    <!-- 보내기 모달 시작 -->
-    <div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sendModalLabel">메일 보내기</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    메일을 보내겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="confirmSend()">네</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 보내기 모달 끝 -->
-
-    <!-- 임시저장 모달 시작 -->
-    <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="saveModalLabel">메일 임시저장</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    메일을 임시저장함에 보내겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="confirmSave()">네</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 임시저장 모달 끝 -->
-
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer>
+<th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
 
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
-<!-- Footer 끝 -->
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
+<!-- 사용 연차 변경 모달 -->
+<div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveModalLabel" >사용 연차 변경</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 사용 연차 변경 폼 -->
+                <form id="leaveForm">
+                    <div class="mb-3">
+                        <label for="usedLeaveDays" class="form-label">사용 연차 일수</label>
+                        <input type="number" class="form-control" id="usedLeaveDays" name="usedLeaveDays" min="0">
+                    </div>
+                    <!-- 다른 입력 필드들 추가 가능 -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">저장하기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    function confirmSend() {
-        window.location.href = '/mail/complete';
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const leaveModal = document.getElementById('leaveModal');
+        const usedLeaveDaysInput = document.getElementById('usedLeaveDays');
+        const leaveModalLabel = document.getElementById('leaveModalLabel'); // 모달 제목 요소
+        let currentEmpNo;
+        let totalLeaveDays;
 
-    function confirmSave() {
-        window.location.href = '/mail/temporaryStorage';
-    }
+        leaveModal.addEventListener('show.bs.modal', function (e) {
+            const button = e.relatedTarget;
+            currentEmpNo = button.getAttribute('data-empno');
+
+            // 서버에서 현재 직원의 연차 정보를 가져오는 AJAX 요청
+            fetch(`/admin/attendance/emp_leave/${currentEmpNo}/leaveInfo`)
+                .then(response => response.json())
+                .then(data => {
+                    totalLeaveDays = data.totalLeaveDays;
+                    usedLeaveDaysInput.value = data.usedLeaveDays;
+
+                    // 사용 연차 일수를 총 연차 일수까지로 제한
+                    usedLeaveDaysInput.max = totalLeaveDays;
+
+                    // 모달 제목에 사용자 이름 추가
+                    leaveModalLabel.textContent = `${data.fullName} - 사용 연차 변경`;
+                })
+                .catch(error => console.error('Error fetching leave data:', error));
+        });
+
+        // 사용 연차 일수가 총 연차 일수를 넘지 않도록 하는 로직
+        usedLeaveDaysInput.addEventListener('input', function () {
+            if (parseInt(usedLeaveDaysInput.value) > totalLeaveDays) {
+                usedLeaveDaysInput.value = totalLeaveDays;
+            }
+        });
+
+        // "저장하기" 버튼 클릭 시 서버에 변경된 데이터 전송
+        document.getElementById('saveChanges').addEventListener('click', function () {
+            const usedLeaveDays = usedLeaveDaysInput.value;
+
+            fetch(`/admin/attendance/emp_leave/${currentEmpNo}/update`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ usedLeaveDays: usedLeaveDays })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // 총 연차와 미사용 연차를 업데이트
+                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .totalLeaveDays`)
+                            .textContent = data.totalLeaveDays + '일';
+                        document.querySelector(`tr[data-empno="${currentEmpNo}"] .unusedLeaveDays`)
+                            .textContent = data.unusedLeaveDays + '일';
+
+                        alert('변경 사항이 저장되었습니다.');
+                    } else {
+                        alert('변경 사항 저장에 실패했습니다.');
+                    }
+                })
+                .catch(error => console.error('Error saving leave data:', error));
+
+            // 모달 닫기
+            const modal = bootstrap.Modal.getInstance(leaveModal);
+            modal.hide();
+        });
+    });
 </script>
 
 <!-- Vendor JS Files -->
@@ -587,6 +529,9 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>

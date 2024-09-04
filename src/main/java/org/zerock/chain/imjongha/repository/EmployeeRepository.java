@@ -18,4 +18,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Emplo
 
     // 박성은 추가 코드
     List<Employee> findAllByEmpNoNot(Long empNo);
+
+    // 부서,직급,연차 정보 들고오는 메서드(영민 추가)
+    @EntityGraph(attributePaths = {"department", "rank", "employeeLeave"})
+    List<Employee> findAll();
 }
