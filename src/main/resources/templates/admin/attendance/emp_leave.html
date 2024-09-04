@@ -121,17 +121,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="document : ${leaveDocuments}">
+                            <tr th:each="document : ${leaveDocuments}"
+                                th:if="${document.docStatus == '완료'}"
+                                th:onclick="|window.location.href='@{/approval/read/{docNo}(docNo=${document.docNo}, category=${document.category})}'|"
+                                style="cursor: pointer;">
                                 <td th:text="${document.virtualNo}"></td>
-                                <td>
-                                    <!-- 문서 상태에 따라 링크를 다르게 설정 -->
-                                    <a th:if="${document.docStatus == '반려'}"
-                                       th:href="@{/approval/rejectionRead/{docNo}(docNo=${document.docNo}, source='main', category=${document.category})}"
-                                       th:text="${document.docTitle}"></a>
-                                    <a th:if="${document.docStatus != '반려'}"
-                                       th:href="@{/approval/read/{docNo}(docNo=${document.docNo}, category=${document.category})}"
-                                       th:text="${document.docTitle}"></a>
-                                </td>
+                                <td th:text="${document.docTitle}"></td>
                                 <td th:text="${document.reqDate}"></td>
                                 <td th:text="${document.docStatus}"></td>
                             </tr>

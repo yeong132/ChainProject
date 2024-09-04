@@ -104,62 +104,7 @@
             </li>
             <!-- 환경설정 전체 끝 -->
 
-
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-                <!-- 프로필 이미지 항목 끝 -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6>박영민</h6>
-                        <span>사원</span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-                            <i class="bi bi-person"></i>
-                            <span>마이 페이지</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-                            <i class="bi bi-diagram-2"></i>
-                            <span>조직도</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
-                            <i class="bi bi-power"></i>
-                            <span>로그아웃</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider"/>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-                            <i class="bi bi-tools"></i>
-                            <span>회사 관리자</span>
-                        </a>
-                    </li>
-                </ul>
-                <!-- 프로필 드롭다운 목록 끝 -->
-            </li>
+            <th:block th:include="fragments/profile :: profile"></th:block>
             <!-- 프로필 전체 끝 -->
         </ul>
     </nav>
@@ -209,7 +154,7 @@
                     </div>
                     <!-- 결재 대기 카드 끝 -->
                     <!-- 결재 승인 카드 시작 -->
-                    <div class="col-xxl-3 col-xl-6">
+                    <div class="col-xxl-3 col-md-6">
                         <div id="approvedDocumentsCard" class="card info-card revenue-card clickable-card">
                             <div class="card-body">
                                 <h5 class="card-title">승인한 결재문서</h5>
@@ -300,14 +245,6 @@
                                 <td th:text="${document.reqDate}"></td>
                                 <td th:text="${document.category}"></td>
                             </tr>
-                            <tr>
-                                <td>999</td>
-                                <td>모든 결재 관련자는 결재문서에서 결재 진행 상태를 알 수 있습니다.</td>
-                                <td>이나리</td>
-                                <td>요청 or 진행 중 or 반려 or 완료</td>
-                                <td>2024-07-23</td>
-                                <td>일반기안서</td>
-                            </tr>
                             </tbody>
                         </table><!-- 결재 테이블 부분 종료 -->
                     </div><!-- card-body 부분 끝 -->
@@ -321,6 +258,18 @@
 <th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
 
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
+    <i class="bi bi-chat-dots"></i>
+    <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
+</a>
+<!-- 채팅창 끝-->
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

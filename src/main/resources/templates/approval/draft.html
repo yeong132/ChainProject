@@ -33,7 +33,6 @@
   <!-- Template Main CSS File -->
   <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
   <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
-  <script src="/assets/js/theme.js"></script>
 
   <!-- =======================================================
 * Template Name: NiceAdmin
@@ -92,62 +91,7 @@
       </li>
       <!-- 환경설정 전체 끝 -->
 
-
-      <li class="nav-item dropdown pe-3">
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-          <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>
-          <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span> </a>
-        <!-- 프로필 이미지 항목 끝 -->
-
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-          <li class="dropdown-header">
-            <h6>박영민</h6>
-            <span>사원</span>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
-              <i class="bi bi-person"></i>
-              <span>마이 페이지</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/organizationChart">
-              <i class="bi bi-diagram-2"></i>
-              <span>조직도</span>
-            </a>
-          </li>
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/logout" id="logout">
-              <i class="bi bi-power"></i>
-              <span>로그아웃</span>
-            </a>
-          </li>
-
-          <li>
-            <hr class="dropdown-divider"/>
-          </li>
-
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/admin/main">
-              <i class="bi bi-tools"></i>
-              <span>회사 관리자</span>
-            </a>
-          </li>
-        </ul>
-        <!-- 프로필 드롭다운 목록 끝 -->
-      </li>
+      <th:block th:include="fragments/profile :: profile"></th:block>
       <!-- 프로필 전체 끝 -->
     </ul>
   </nav>
@@ -217,6 +161,19 @@
 <!-- ======= Footer ======= -->
 <th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
+
+<!-- 채팅창 및 맨위로 가기 -->
+<!-- 맨위로 가기-->
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+  <i class="bi bi-arrow-up-short"></i>
+</a>
+<!-- 맨위로 가기 끝-->
+<!-- 채팅창 -->
+<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success chat_open_popup">
+  <i class="bi bi-chat-dots"></i>
+  <span class="badge btn-danger badge-number chat_alarm hidden" id="chatAlarm">0</span>
+</a>
+<!-- 채팅창 끝-->
 
 <script><!-- 추가한 스크립트 코드 입니다-->
   document.addEventListener("DOMContentLoaded", function() {
