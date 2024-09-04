@@ -43,7 +43,7 @@ public class ChatUserController {
 
     // 대화 중인 사용자만 반환(채팅방 호출)
     @GetMapping("/chat/activeUsers")
-    public ResponseEntity<List<EmployeeDTO>> findActiveChatUsers(@RequestParam Long empNo) {
+    public ResponseEntity<List<EmployeeDTO>> findActiveChatUsers(@RequestParam("empNo") Long empNo) {
         List<EmployeeDTO> activeUsers = chatUserService.findActiveChatUsers(empNo);
         return ResponseEntity.ok(activeUsers);
     }

@@ -2,6 +2,7 @@ package org.zerock.chain.ksh.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.zerock.chain.ksh.model.ChatMessage;
 import org.zerock.chain.ksh.model.ChatNotification;
@@ -20,6 +21,7 @@ public class ChatMessageService {
     private final ChatNotificationRepository notificationRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomService chatRoomService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public ChatMessage save(ChatMessage chatMessage) {
         var chatRoom = chatRoomService
@@ -73,9 +75,18 @@ public class ChatMessageService {
         var chatRoom = chatRoomService.getChatRoom(senderEmpNo, recipientEmpNo, false);
 
         chatRoom.ifPresent(room -> {
-            messageRepository.markMessagesAsRead(room.getChatNo());  // chatNo로 읽음 처리
+            // 메시지 읽음 처리 (DB)
+            messageRepository.markMessagesAsRead(room.getChatNo(), senderEmpNo, recipientEmpNo);
             room.setUnreadCount(0);  // unread_count 초기화
             chatRoomRepository.save(room);  // DB에 저장
+
+            // A 사원에게 읽음 처리 완료 메시지 전송
+            messagingTemplate.convertAndSendToUser(
+                    String.valueOf(senderEmpNo), "/queue/read", true);
+
+            // B 사원에게도 읽음 처리 완료 메시지 전송
+            messagingTemplate.convertAndSendToUser(
+                    String.valueOf(recipientEmpNo), "/queue/read", true);
         });
     }
 }

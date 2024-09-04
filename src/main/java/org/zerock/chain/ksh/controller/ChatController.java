@@ -46,14 +46,14 @@ public class ChatController {
     }
 
     @GetMapping("/messages/{senderEmpNo}/{recipientEmpNo}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable Long senderEmpNo,
-                                                              @PathVariable Long recipientEmpNo) {
+    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable("senderEmpNo") Long senderEmpNo,
+                                                              @PathVariable("recipientEmpNo") Long recipientEmpNo) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderEmpNo, recipientEmpNo));
     }
     // 로그인 시 읽지 않은 메시지 불러오기
     @GetMapping("/messages/unread")
-    public ResponseEntity<List<ChatMessage>> getUnreadMessages(@RequestParam Long recipientEmpNo) {
+    public ResponseEntity<List<ChatMessage>> getUnreadMessages(@RequestParam("recipientEmpNo") Long recipientEmpNo) {
         // unread 메시지 검색 로직 구현
         List<ChatMessage> unreadMessages = chatMessageService.getUnreadMessages(recipientEmpNo);
         return ResponseEntity.ok(unreadMessages);

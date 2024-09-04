@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ChatMessage {
     private String chatContent; // 내용
 
     @Column(name = "chat_sent_time")
-    private Date chatSentTime; // 보낸 시간
+    private LocalDateTime chatSentTime; // 보낸 시간
 
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;  // 메시지 확인 여부

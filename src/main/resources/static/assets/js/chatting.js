@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(selectedEmpNo == null || messageSenders?.[selectedEmpNo] == undefined) {
             return;
        } else if (selectedEmpNo !== messageSenders[selectedEmpNo]) {
-            markMessagesAsRead(selectedEmpNo); // 현재 열려 있는 채팅창에 대한 알림 제거
+            markMessagesAsRead();
             selectChatUser(selectedEmpNo); // 부모 창에 알림 제거 요청
             delete messageSenders[selectedEmpNo]; // 메시지를 보낸 사원 목록에서 해당 사원 제거
         }
@@ -137,11 +137,33 @@ function connectSocket() {
 function onConnected() {
     reconnectAttempts = 0; // 연결 성공 시, 재연결 시도 횟수 초기화
     console.log('WebSocket 연결 성공');
+    // 메시지 수신
+    stompClient.subscribe(`/user/${empNo}/queue/messages`, onMessageReceived);
+    // 읽음 상태 처리
+    stompClient.subscribe(`/user/${empNo}/queue/read`, function (message) {
+        const isRead = JSON.parse(message.body);  // 서버에서 받은 true 값
 
-    stompClient.subscribe(`/user/${empNo}/queue/messages`, onMessageReceived, (headers) => {
-        console.log('메시지 구독 성공:', headers);
-    }, (error) => {
-        console.error('메시지 구독 실패:', error);
+        if (isRead) {
+            // Sender: 내가 보낸 메시지에 대해 unread 제거
+            const senderMessages = document.querySelectorAll('.chat_message_wrapper.sender');
+            senderMessages.forEach((messageElement) => {
+                const unreadSpan = messageElement.querySelector('.unread');
+                if (unreadSpan) {
+                    unreadSpan.textContent = '0';
+                    unreadSpan.classList.add('hidden');  // 읽음 처리
+                }
+            });
+
+            // Receiver: 내가 받은 메시지에 대해 unread 제거
+            const receiverMessages = document.querySelectorAll('.chat_message_wrapper.receiver');
+            receiverMessages.forEach((messageElement) => {
+                const unreadSpan = messageElement.querySelector('.unread');
+                if (unreadSpan) {
+                    unreadSpan.textContent = '0';
+                    unreadSpan.classList.add('hidden');  // 읽음 처리
+                }
+            });
+        }
     });
     requestAlarmStatus(); // 자식창 새로고침 시, 부모 창에 알람 상태 요청
 }
@@ -215,15 +237,15 @@ async function onMessageReceived(payload) {
             // 현재 선택된 사원의 메시지일 경우에만 채팅창에 표시
             if (selectedEmpNo == message.senderEmpNo) { // '=='
                 console.log("선택된 사원이무 알람 x")
-                displayMessage(message.senderEmpNo, message.chatContent);
+
+                displayMessage(message.senderEmpNo, message.chatContent, message.read);
             } else { // 선택된 사원이 아닌 경우 알림만 업데이트
                 console.log("선택된 사원이 아니무 알람 //+1")
-                // updateAlarmUI(unreadMessages);
             }
             updateLatestMessage(message.senderEmpNo); // 방목록에 최신 채팅 업데이트
         }
     } catch (error) {
-        console.error('onMessageReceived 처리 중 오류 발생:', error);
+        console.error('메시지 수신처리 중 오류 발생:', error);
     }
 }
 
@@ -385,7 +407,7 @@ function roomItemClick(event) {
     selectedEmpNo = removeEmpNoPrefix(clickedUser.getAttribute('id'));
     document.getElementById('chatRoomName').textContent = clickedUser.querySelector('.room_name').textContent;
 
-    markMessagesAsRead(selectedEmpNo); // 서버에 알림 초기화를 요청
+     markMessagesAsRead();
 
     chatRoom.classList.remove('hidden'); // 채팅창 활성화
     messageInput.value = ''; // 새로운 채팅방 열었을 때 입력값 비우기
@@ -393,25 +415,48 @@ function roomItemClick(event) {
 }
 
 // 채팅 메시지 읽음 처리
-async function markMessagesAsRead(userId) {
-    let existingChatRoom = document.getElementById(addEmpNoPrefix(userId));
+async function markMessagesAsRead() {
+    let existingChatRoom = document.getElementById(addEmpNoPrefix(selectedEmpNo));
     if (existingChatRoom) { // 방 있으면 알람 0
         const roomAlarm = existingChatRoom.querySelector('.room_alarm');
         roomAlarm.classList.add('hidden');
         roomAlarm.textContent = '0';
     }
+    const messageWrappersSender = document.querySelectorAll('.chat_message_wrapper.sender');
+    const messageWrappersReceiver = document.querySelectorAll('.chat_message_wrapper.receiver');
 
-    await fetch(`/chatrooms/markAsRead`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({senderEmpNo: empNo, recipientEmpNo: userId})
-    });
-    // 부모 창에 읽은 상태 전달
-    if (window.opener) {
-        window.opener.postMessage({ type: 'RESET_ALARM', empNo: userId }, '*');
+    // 접속한 사원이 receiver인지 확인 (상대방이 메시지를 보낸 경우)
+    if (selectedEmpNo !== empNo) {  // empNo가 보낸 경우
+        const response = await fetch(`/chatrooms/markAsRead`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({senderEmpNo: selectedEmpNo, recipientEmpNo: empNo})  // sender 선택된 사원, recipient 접속한 사원
+        });
+        if (response.ok) {
+            // 메시지 보낸 사람의 화면에서 unread 상태 hidden 처리
+            messageWrappersReceiver.forEach(wrapper => {
+                const unreadSpan = wrapper.querySelector('.unread');
+                if (unreadSpan) {
+                    unreadSpan.textContent = '0';
+                    unreadSpan.classList.add('hidden');
+                }
+            });
+        } else {
+            console.error("메시지 읽음 처리 실패:", response.statusText);
+        }
+        if (window.opener) { // 부모 창에 알림 상태를 초기화 요청
+            window.opener.postMessage({type: 'RESET_ALARM', empNo: selectedEmpNo}, '*');
+        }
+    } else { // 접속한 사원이 보낸 메시지인 경우 (본인이 보낸 메시지)
+        messageWrappersSender.forEach(wrapper => {
+            const unreadSpan = wrapper.querySelector('.unread');
+            if (unreadSpan) {
+                unreadSpan.textContent = '0';
+                unreadSpan.classList.add('hidden');
+            }
+        });
     }
 }
-
 // 사용자 채팅창 오픈
 async function fetchAndDisplayUserChat() {
     try {
@@ -430,7 +475,7 @@ async function fetchAndDisplayUserChat() {
             // 채팅 내용 표시
             userChat.forEach(chat => {
                 if (chat.chatContent) { // 채팅 내용이 있는 경우
-                    displayMessage(chat.senderEmpNo, chat.chatContent);
+                    displayMessage(chat.senderEmpNo, chat.chatContent, chat.read);
                 }
             });
             // 선택된 채팅방의 최신 메시지를 room_content에 표시
@@ -444,20 +489,56 @@ async function fetchAndDisplayUserChat() {
 }
 
 // 채팅창 메시지 표시
-function displayMessage(senderEmpNo, chatContent) {
+function displayMessage(senderEmpNo, chatContent, read) {
+    // 메시지 래퍼 생성 (발신자 또는 수신자에 따라 다름)
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('chat_message_wrapper');
+    // 메시지 정보 (시간, 안 읽음 표시)
+    const messageInfo = document.createElement('div');
+    messageInfo.classList.add('message_info');
+    // 안 읽음 표시
+    const unreadSpan = document.createElement('span');
+    unreadSpan.classList.add('unread');
+    // 읽음 상태에 따라 표시
+    if (!read) { // 읽지 않은 상태
+        unreadSpan.textContent = '1';
+        unreadSpan.classList.remove('hidden');
+        if(document.hasFocus()){ // 채팅방 열 때 읽음 처리
+            unreadSpan.classList.add('hidden');
+        }
+    } else { // 읽은 상태
+        unreadSpan.textContent = '0';
+        unreadSpan.classList.add('hidden');  // 읽은 경우 hidden 처리
+    }
+    messageInfo.appendChild(unreadSpan);
+    // 시간 표시
+    const timeSpan = document.createElement('span');
+    timeSpan.classList.add('time');
+    timeSpan.textContent = '오전 00:00';
+    messageInfo.appendChild(timeSpan);
+
+    // 메시지 컨테이너 생성
     const messageContainer = document.createElement('div');
-    messageContainer.classList.add('chat_message'); // 메시지 클래스 지정
+    messageContainer.classList.add('chat_message');
 
     // 보낸 사람과 닉네임이 동일한지 확인
     if (senderEmpNo == empNo) { // '==' 로 사용
+        messageWrapper.classList.add('sender');
         messageContainer.classList.add('chat_sender'); // 발신자
+        messageWrapper.appendChild(messageInfo);
+        messageWrapper.appendChild(messageContainer);
     } else {
+        messageWrapper.classList.add('receiver');
         messageContainer.classList.add('chat_receiver'); // 수신자
+        messageWrapper.appendChild(messageContainer);
+        messageWrapper.appendChild(messageInfo);
     }
+    // 메시지 내용 담을 요소
     const message = document.createElement('p'); // 메시지 내용 담을 요소
     message.textContent = chatContent; // 메시지 내용
     messageContainer.appendChild(message);
-    chatArea.appendChild(messageContainer);
+    // 채팅창에 메시지 추가
+    chatArea.appendChild(messageWrapper);
 
     // 선택된 채팅방의 최신 메시지를 room_content에 표시
     const activeChatRoom = document.getElementById(addEmpNoPrefix(selectedEmpNo));

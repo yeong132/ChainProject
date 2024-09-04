@@ -390,10 +390,34 @@ body {
 .chat_area {
     display:flex;
     flex-direction:column;
-    /*background-color: #d5ecff;*/
     overflow-y: auto;
     flex: 1;
     height: 100%;
+}
+/* 말풍선 전체 */
+.chat_message_wrapper {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+}
+.message_info {
+    display: flex;
+    font-size: 12px;
+    color: gray;
+    flex-direction: column;
+    margin-top: auto;
+    margin-bottom: 5px;
+}
+.sender .message_info {
+    align-items: flex-end;
+    margin-left: auto;
+}
+.receiver .message_info {
+    align-items: flex-start;
+    margin-right: auto;
+}
+.message_info .unread {
+    color: #000000;
 }
 
 /* 채팅 말풍선 */
@@ -412,7 +436,6 @@ body {
 
 /* 받는 사람(로그인한 사용자) */
 .chat_sender {
-    margin-left: auto; /* 오른쪽 정렬 */
     width: max-content;
     background-color: #67a2d1;
     color: #fff;
@@ -420,8 +443,6 @@ body {
 
 /* 보내는 사람 */
 .chat_receiver {
-    margin-right: auto; /* 왼쪽 정렬 */
-    text-align: left; /* 텍스트를 왼쪽 정렬 */
     width: max-content;
 }
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,6 +19,6 @@ public class ChatMessageDTO {
     private Long recipientEmpNo;
     private Long chatRoomNo;
     private String chatContent; // 메시지 내용
-    private Date chatSentTime; // 채팅 보낸 시간
+    private LocalDateTime chatSentTime; // 채팅 보낸 시간
     private boolean isRead;
 }
