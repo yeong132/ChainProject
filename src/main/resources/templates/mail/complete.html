@@ -49,7 +49,6 @@
 
 <main>
     <div class="container">
-
         <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
             <h1>Send Complete!</h1>
             <h2 class="mt-5">메일이 성공적으로 발송되었습니다!</h2>
@@ -63,22 +62,13 @@
                 Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
         </section>
-
     </div>
-</main><!-- End #main -->
+</main>
+<!-- End #main -->
 
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
+<!-- ======= Footer ======= -->
+<th:block th:include="fragments/footer :: footer"></th:block>
+<!-- Footer 끝 -->
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -92,6 +82,9 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>

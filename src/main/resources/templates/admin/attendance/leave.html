@@ -418,11 +418,9 @@
     </section>
 </main><!-- End #main -->
 
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved
-    </div>
-</footer><!-- End Footer -->
+<!-- ======= Footer ======= -->
+<th:block th:include="fragments/footer :: footer"></th:block>
+<!-- Footer 끝 -->
 
 <!-- 사용 연차 변경 모달 -->
 <div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
@@ -449,11 +447,6 @@
         </div>
     </div>
 </div>
-
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -524,7 +517,6 @@
     });
 </script>
 
-
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -537,305 +529,12 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="utf-8"/>-->
-<!--    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>-->
-
-<!--    <title>연차 관리</title>-->
-<!--    <meta content="" name="description"/>-->
-<!--    <meta content="" name="keywords"/>-->
-
-<!--    &lt;!&ndash; Favicons &ndash;&gt;-->
-<!--    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>-->
-<!--    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>-->
-
-<!--    &lt;!&ndash; Google Fonts &ndash;&gt;-->
-<!--    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>-->
-<!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>-->
-
-<!--    &lt;!&ndash; Vendor CSS Files &ndash;&gt;-->
-<!--    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>-->
-
-<!--    &lt;!&ndash; Template Main CSS File &ndash;&gt;-->
-<!--    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>-->
-<!--    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>-->
-
-<!--</head>-->
-
-<!--<body>-->
-<!--&lt;!&ndash; ======= Header ======= &ndash;&gt;-->
-<!--<header id="header" class="header fixed-top d-flex align-items-center">-->
-<!--    <div class="d-flex align-items-center justify-content-between">-->
-<!--        <a href="/" class="logo d-flex align-items-center">-->
-<!--            <img src="/assets/img/logo.png" alt=""/>-->
-<!--            <span class="d-none d-lg-block">CHAIN</span>-->
-<!--        </a>-->
-<!--        <i class="bi bi-list toggle-sidebar-btn"></i>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; 로고 끝 &ndash;&gt;-->
-
-<!--    <nav class="header-nav ms-auto">-->
-<!--        <ul class="d-flex align-items-center">-->
-<!--            <li class="nav-item dropdown pe-3">-->
-<!--                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">-->
-<!--                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"/>-->
-<!--                    <span class="d-none d-md-block dropdown-toggle ps-2">박영민</span>-->
-<!--                </a>-->
-<!--                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">-->
-<!--                    <li class="dropdown-header">-->
-<!--                        <h6>박영민</h6>-->
-<!--                        <span>사원</span>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <hr class="dropdown-divider"/>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item d-flex align-items-center" href="/user/mypage">-->
-<!--                            <i class="bi bi-person"></i>-->
-<!--                            <span>마이 페이지</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <hr class="dropdown-divider"/>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item d-flex align-items-center" href="/organizationChart">-->
-<!--                            <i class="bi bi-diagram-2"></i>-->
-<!--                            <span>조직도</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <hr class="dropdown-divider"/>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item d-flex align-items-center" href="/user/logout">-->
-<!--                            <i class="bi bi-power"></i>-->
-<!--                            <span>로그아웃</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</header>-->
-<!--&lt;!&ndash; Header 끝 &ndash;&gt;-->
-
-<!--&lt;!&ndash; ======= Sidebar ======= &ndash;&gt;-->
-<!--<aside id="sidebar" class="sidebar">-->
-<!--    <ul class="sidebar-nav" id="sidebar-nav">-->
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link dash collapsed" href="/admin/main">-->
-<!--                <i class="bi bi-grid"></i>-->
-<!--                <span>대시보드</span>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--        &lt;!&ndash; End Dashboard Nav &ndash;&gt;-->
-
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">-->
-<!--                <i class="bi bi-menu-button-wide"></i><span>인사 관리</span><i class="bi bi-chevron-down ms-auto"></i>-->
-<!--            </a>-->
-<!--            <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">-->
-<!--                <li>-->
-<!--                    <a href="/admin/personnel/management"> <i class="bi bi-circle"></i><span>사원 관리</span> </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <a href="/admin/personnel/powerSetting"> <i class="bi bi-circle"></i><span>권한 설정</span> </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </li>-->
-<!--        &lt;!&ndash; End Components Nav &ndash;&gt;-->
-
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link" data-bs-target="#charts-nav"  href="/admin/leave">-->
-<!--                <i class="bi bi-bar-chart"></i>-->
-<!--                <span>연차 관리</span>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</aside>-->
-<!--&lt;!&ndash; End Sidebar&ndash;&gt;-->
-
-<!--<main id="main" class="main">-->
-
-<!--    <div class="pagetitle">-->
-<!--        <h1>연차 관리</h1>-->
-<!--        <nav>-->
-<!--            <ol class="breadcrumb">-->
-<!--                <li class="breadcrumb-item"><a href="/admin/main">Home</a></li>-->
-<!--                <li class="breadcrumb-item active">Leave</li>-->
-<!--            </ol>-->
-<!--        </nav>-->
-<!--    </div>&lt;!&ndash; End Page Title &ndash;&gt;-->
-
-<!--    <section class="section">-->
-<!--        <div class="row">-->
-<!--            <div class="col-lg-15">-->
-
-<!--                <div class="card">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title">연차 현황</h5>-->
-
-<!--                        <div class="row">-->
-<!--                            <div class="col-xxl-4 col-xl-4">-->
-<!--                                <div class="card info-card sales-card">-->
-<!--                                    <div class="card-body">-->
-<!--                                        <h5 class="card-title"><b>사용 연차</b> <span>| This Year</span></h5>-->
-<!--                                        <div class="d-flex align-items-center">-->
-<!--                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
-<!--                                                <i class="bi bi-calendar-check"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="ps-3">-->
-<!--                                                <h6>13일</h6>-->
-<!--                                                <span class="text-muted small pt-2 ps-1">총연차</span>-->
-<!--                                                <span class="text-success small pt-1 fw-bold">25일</span>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            <div class="col-xxl-4 col-xl-4">-->
-<!--                                <div class="card info-card sales-card">-->
-<!--                                    <div class="card-body">-->
-<!--                                        <h5 class="card-title"><b>잔여 연차</b> <span>| This Year</span></h5>-->
-<!--                                        <div class="d-flex align-items-center">-->
-<!--                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">-->
-<!--                                                <i class="bi bi-calendar-x"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="ps-3">-->
-<!--                                                <h6>12일</h6>-->
-<!--                                                <span class="text-muted small pt-2 ps-1">총연차</span>-->
-<!--                                                <span class="text-success small pt-1 fw-bold">25일</span>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            <div class="col-xxl-4 col-xl-4">-->
-<!--                                <div class="card info-card sales-card">-->
-<!--                                    <div class="card-body">-->
-<!--                                        <h5 class="card-title"><b>연차 신청</b></h5>-->
-<!--                                        <div class="d-flex align-items-center">-->
-<!--                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#leaveRequestModal">연차 신청하기</button>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-<!--                        &lt;!&ndash; 연차 신청 모달 &ndash;&gt;-->
-<!--                        <div class="modal fade" id="leaveRequestModal" tabindex="-1">-->
-<!--                            <div class="modal-dialog">-->
-<!--                                <div class="modal-content">-->
-<!--                                    <div class="modal-header">-->
-<!--                                        <h5 class="modal-title">연차 신청</h5>-->
-<!--                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                                    </div>-->
-<!--                                    <div class="modal-body">-->
-<!--                                        <form id="leaveRequestForm">-->
-<!--                                            <div class="mb-3">-->
-<!--                                                <label for="startDate" class="form-label">시작 날짜</label>-->
-<!--                                                <input type="date" class="form-control" id="startDate" name="startDate" required>-->
-<!--                                            </div>-->
-<!--                                            <div class="mb-3">-->
-<!--                                                <label for="endDate" class="form-label">종료 날짜</label>-->
-<!--                                                <input type="date" class="form-control" id="endDate" name="endDate" required>-->
-<!--                                            </div>-->
-<!--                                            <div class="mb-3">-->
-<!--                                                <label for="reason" class="form-label">신청 사유</label>-->
-<!--                                                <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>-->
-<!--                                            </div>-->
-<!--                                            <button type="submit" class="btn btn-primary">신청하기</button>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; 연차 신청 모달 끝 &ndash;&gt;-->
-
-<!--                        &lt;!&ndash; 연차 신청 내역 테이블 &ndash;&gt;-->
-<!--                        <h5 class="card-title mt-5">연차 신청 내역</h5>-->
-<!--                        <table class="table table-hover table-borderless datatable">-->
-<!--                            <thead>-->
-<!--                            <tr>-->
-<!--                                <th scope="col">신청일</th>-->
-<!--                                <th scope="col">시작일</th>-->
-<!--                                <th scope="col">종료일</th>-->
-<!--                                <th scope="col">상태</th>-->
-<!--                                <th scope="col">사유</th>-->
-<!--                                <th scope="col">승인/반려</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            &lt;!&ndash; 서버에서 가져온 데이터를 바인딩 &ndash;&gt;-->
-<!--                            <tr>-->
-<!--                                <td>2024-08-01</td>-->
-<!--                                <td>2024-08-10</td>-->
-<!--                                <td>2024-08-15</td>-->
-<!--                                <td><span class="badge bg-success">승인</span></td>-->
-<!--                                <td>가족 여행</td>-->
-<!--                                <td><button class="btn btn-secondary" disabled>승인됨</button></td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>2024-09-01</td>-->
-<!--                                <td>2024-09-10</td>-->
-<!--                                <td>2024-09-12</td>-->
-<!--                                <td><span class="badge bg-danger">반려</span></td>-->
-<!--                                <td>개인 사정</td>-->
-<!--                                <td><button class="btn btn-warning" disabled>반려됨</button></td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
-
-<!--</main>&lt;!&ndash; End #main &ndash;&gt;-->
-
-<!--&lt;!&ndash; ======= Footer ======= &ndash;&gt;-->
-<!--<footer id="footer" class="footer">-->
-<!--    <div class="copyright">-->
-<!--        &copy; Copyright <strong><span>CHAIN</span></strong>. All Rights Reserved-->
-<!--    </div>-->
-<!--    <div class="credits">-->
-<!--        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>-->
-<!--    </div>-->
-<!--</footer>-->
-<!--&lt;!&ndash; Footer 끝 &ndash;&gt;-->
-
-<!--<a href="#" class="back-to-top d-flex align-items-center justify-content-center">-->
-<!--    <i class="bi bi-arrow-up-short"></i>-->
-<!--</a>-->
-
-<!--&lt;!&ndash; Vendor JS Files &ndash;&gt;-->
-<!--<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
-<!--<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>-->
-
-<!--&lt;!&ndash; Template Main JS File &ndash;&gt;-->
-<!--<script src="/assets/js/main.js"></script>-->
-<!--<script src="/assets/js/wemaked.js"></script>-->
-<!--</body>-->
-<!--</html>-->

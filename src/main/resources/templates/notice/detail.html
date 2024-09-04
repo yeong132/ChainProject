@@ -2,12 +2,12 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
     <title>공지사항 조회</title>
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
 
     <!-- link 안에는 th:href 사용! -->
     <!-- Favicons -->
@@ -124,127 +124,93 @@
 
     <section class="section ">
         <div class="row">
-
-
             <div class="col-lg-12">
-
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">공자사항</h5>
-
                         <form>
-
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">고정</label>
                                 <div class="col-sm-10">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" id="noticePinnedNo" name="noticePinned" type="radio" value="false" th:checked="${!notice.noticePinned}">
+                                        <input class="form-check-input" id="noticePinnedNo" name="noticePinned"
+                                               type="radio" value="false" th:checked="${!notice.noticePinned}">
                                         <label class="form-check-label" for="noticePinnedNo">고정 안함</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" id="noticePinnedYes" name="noticePinned" type="radio" value="true" th:checked="${notice.noticePinned}">
+                                        <input class="form-check-input" id="noticePinnedYes" name="noticePinned"
+                                               type="radio" value="true" th:checked="${notice.noticePinned}">
                                         <label class="form-check-label" for="noticePinnedYes">고정</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-control" type="date" placeholder="기간 지정" style="width: auto; display: inline-block;"  th:value="${notice.noticePinnedDate}">
+                                        <input class="form-control" type="date" placeholder="기간 지정"
+                                               style="width: auto; display: inline-block;"
+                                               th:value="${notice.noticePinnedDate}">
                                     </div>
                                 </div>
                             </div>
 
-
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">제목</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" readonly type="text"  th:value="${notice.noticeName}">
+                                    <input class="form-control" readonly type="text" th:value="${notice.noticeName}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-1 col-form-label">작성자</label>
                                 <div class="col-sm-11">
-                                    <input id="noticeAuthorInput" class="form-control" readonly type="text" th:value="${notice.noticeAuthor}">
+                                    <input id="noticeAuthorInput" class="form-control" readonly type="text"
+                                           th:value="${notice.noticeAuthor}">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" >첨부 파일</label>
+                                <label class="col-sm-1 col-form-label">첨부 파일</label>
                                 <div class="col-sm-11">
-                                    <input class="form-control" id="formFile" readonly type="file" th:value="${notice.noticeFiles}">
-
+                                    <input class="form-control" id="formFile" readonly type="file"
+                                           th:value="${notice.noticeFiles}">
                                     <div th:if="${notice.noticeFiles != null}">
                                         <p>첨부된 파일:
-                                            <a th:href="@{${notice.noticeFiles}}" th:text="${notice.noticeFiles}" download></a>
+                                            <a th:href="@{${notice.noticeFiles}}" th:text="${notice.noticeFiles}"
+                                               download></a>
                                         </p>
                                     </div>
-
                                 </div>
                             </div>
-
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label" >내용</label>
+                                <label class="col-sm-1 col-form-label">내용</label>
                                 <div class="col-sm-11">
-                                    <textarea id="froala" class="form-control" readonly th:text="${notice.noticeContent}"></textarea>
-                            </div>
-
-
-                            <div class="offset-sm-0">
-                                <div class="col-sm-5">
-                                    <button class="btn btn-primary"  th:if="${session.empNo == notice.empNo}"  th:onclick="'location.href=\'/notice/modify/' + ${notice.noticeNo} + '\''"  type="button">수정</button>
-                                    <button class="btn btn-primary" onclick="location.href='/notice/list'"
-                                            type="button">목록
-                                    </button>
-
+                                    <textarea id="froala" class="form-control" readonly
+                                              th:text="${notice.noticeContent}"></textarea>
                                 </div>
-                            </div>
 
+                                <div class="offset-sm-0">
+                                    <div class="col-sm-5">
+                                        <button class="btn btn-primary" th:if="${session.empNo == notice.empNo}"
+                                                th:onclick="'location.href=\'/notice/modify/' + ${notice.noticeNo} + '\''"
+                                                type="button">수정
+                                        </button>
+                                        <button class="btn btn-primary" onclick="location.href='/notice/list'"
+                                                type="button">목록
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                         <!-- End General Form Elements -->
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 </main>
 <!-- End #main -->
 
-
-
-
-
-
-<!---------------------------------------------- ======= 고정 Footer ======= ----------------------------------------------------->
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>CHAIN</span></strong
-    >. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer>
+<th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
-
-<!-- 채팅창 및 맨위로 가기 -->
-<!-- 맨위로 가기-->
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
-<!-- 맨위로 가기 끝-->
-<!-- 채팅창 -->
-<a onclick="chatOpenPopup()" class="back-to-top-chat d-flex align-items-center justify-content-center btn btn-success">
-    <i class="bi bi-chat-dots"></i>
-    <span class="badge btn-danger badge-number">&nbsp;</span>
-</a>
-<!-- 채팅창 끝-->
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -258,6 +224,9 @@
 <script type="text/javascript" src="/node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script type="text/javascript" src="/node_modules/froala-editor/js/languages/ko.js"></script>
 
+<!-- 메신저 관련 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script src="/assets/js/wemaked.js"></script>
@@ -300,6 +269,5 @@
         processNoticeAuthor();
     });
 </script>
-
 </body>
 </html>
