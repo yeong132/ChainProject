@@ -162,4 +162,13 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         HttpSession session = attr.getRequest().getSession();
         return (Long) session.getAttribute("empNo");
     }
+
+    @Override
+    public List<ProjectDTO> getProjectsByUser(Long empNo) {
+        // 사용자(empNo)에 따라 프로젝트를 조회하고, DTO로 변환하여 반환
+        return projectRepository.findByEmpNo(empNo).stream()
+                .map(project -> modelMapper.map(project, ProjectDTO.class))  // 엔티티 -> DTO 변환
+                .collect(Collectors.toList());
+    }
+
 }
