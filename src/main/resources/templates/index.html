@@ -371,51 +371,28 @@
                         <div class="card-body">
                             <h5 class="card-title"><a href="/project/list">내 프로젝트</a><span> | Today</span></h5>
 
-                            <table class="table table-borderless datatable">
+                            <table class="table table-hover datatable" id="dataTable">
                                 <thead>
-                                <tr>
-                                    <th scope="col">번호</th>
-                                    <th scope="col">카테고리</th>
-                                    <th scope="col">프로젝트 명</th>
-                                    <th scope="col">참여자</th>
-                                    <th scope="col">최근수정일</th>
+                                <tr id="title-name">
+                                    <th>  </th>
+                                    <th>프로젝트</th>
+                                    <th>진행도</th>
+                                    <th>시작일</th>
+                                    <th>종료일</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th scope="row"><a>#22</a></th>
-                                    <td>카테고리1</td>
-                                    <td><a href="/project/detail" class="text-primary">안녕하세용가리</a></td>
-                                    <td>티라노</td>
-                                    <td><span class="badge bg-success">3000억년전</span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a>#12</a></th>
-                                    <td>카테고리1</td>
-                                    <td><a href="/project/detail" class="text-primary">안녕하세용가리</a></td>
-                                    <td>브라키오</td>
-                                    <td><span class="badge bg-warning">300일전</span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a>#33</a></th>
-                                    <td>카테고리1</td>
-                                    <td><a href="/project/detail" class="text-primary">안녕하세용가리</a></td>
-                                    <td>이지영</td>
-                                    <td><span class="badge bg-success">3일전</span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a>#15</a></th>
-                                    <td>카테고리2</td>
-                                    <td><a href="/project/detail" class="text-primary">안녕하세용가리</a></td>
-                                    <td>박성은</td>
-                                    <td><span class="badge bg-danger">2일전</span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><a>#32</a></th>
-                                    <td>카테고리1</td>
-                                    <td><a href="/project/detail" class="text-primary">안녕하세용가리</a></td>
-                                    <td>김선혜</td>
-                                    <td><span class="badge bg-success">1시간전</span></td>
+                                <tr th:each="project : ${projects}" th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
+                                    <td>
+                                        <i th:class="${project.projectFavorite} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"></i>
+                                    </td>
+                                    <td>
+                                        <span th:text="${project.projectName}"></span>
+                                        <span th:if="${project.isTemporary == true}" class="temporary-text">(임시보관)</span>
+                                    </td>
+                                    <td th:text="${project.projectProgress + '%'}"></td>
+                                    <td th:text="${project.projectStartDate}"></td>
+                                    <td th:text="${project.projectEndDate}"></td>
                                 </tr>
                                 </tbody>
                             </table>

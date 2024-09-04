@@ -13,15 +13,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.model.CustomUserDetails;
+import org.zerock.chain.pse.service.ProjectService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class SignupController {
 
     @Autowired
     private SignupRepository signupRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -85,6 +91,10 @@ public class SignupController {
             model.addAttribute("firstName", userDetails.getFirstName());
             model.addAttribute("lastName", userDetails.getLastName());
             model.addAttribute("rankName", userDetails.getRankName());
+
+            // 프로젝트 데이터 가져오기 (사용자의 프로젝트)
+            List<ProjectDTO> projects = projectService.getProjectsByUser(empNo); // 프로젝트 서비스에서 데이터 호출
+            model.addAttribute("projects", projects);
         }
         return "index"; // index.html 템플릿으로 이동
     }
