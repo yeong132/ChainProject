@@ -137,7 +137,8 @@
                 </div>
             </div>
 
-            <!-- OKR차트 -->
+
+            <!--  위젯2 그래프---->
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
@@ -146,18 +147,69 @@
                     </div>
                 </div>
             </div>
-            <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
-
-
-            <div class="col-lg-12">
+            <!-- OKR차트 -->
+            <div class="col-lg-4" hidden>
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Line Chart</h5>
+                        <h5 class="card-title">카테고리</h5>
+                        <!-- 연도 선택 드롭다운 추가 -->
+                        <div class="form-group">
+                            <label for="year-selector">연도 선택:</label>
+                            <select id="year-selector" class="form-select">
+                                <!-- JavaScript에서 자동으로 옵션 추가 -->
+                            </select>
+                        </div>
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="home" aria-selected="true" class="nav-link active"
+                                        data-bs-target="#bordered-home" data-bs-toggle="tab" id="home-tab" role="tab"
+                                        type="button">부서 목표
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button aria-controls="profile" aria-selected="false" class="nav-link"
+                                        data-bs-target="#bordered-profile" data-bs-toggle="tab" id="profile-tab"
+                                        role="tab" type="button">개인 목표
+                                </button>
+                            </li>
+                        </ul>
 
+                        <div class="tab-content pt-2" id="borderedTabContent">
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="bordered-home" role="tabpanel">
+                                <div class="form-check">
+                                    <!-- 필터 1 -->
+                                    <div class="form-check">
+                                        <input checked class="form-check-input" data-tab="home" id="home-1" name="home" type="radio" value="1">
+                                        <label class="form-check-label" for="home-1">월간 달성 차트</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" data-tab="home" id="home-2" name="home" type="radio" value="2">
+                                        <label class="form-check-label" for="home-2">월별 진행 차트</label>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div aria-labelledby="profile-tab" class="tab-pane fade" id="bordered-profile" role="tabpanel">
+                                <div class="form-check">
+                                    <!-- 필터 2 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" data-tab="profile" id="profile-1" name="profile" type="radio" value="3">
+                                        <label class="form-check-label" for="profile-1">월간 달성 차트</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" data-tab="profile" id="profile-2" name="profile" type="radio" value="4">
+                                        <label class="form-check-label" for="profile-2">월별 진행 차트</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
+
+
 
 
         </div>
@@ -191,7 +243,8 @@
 
 <!--그래프 및 모달 관련 주석 -->
 <script src="/assets/js/OKRchart.js"></script>
-<!--프로젝트 차트 -->
+
+<!-- 프로젝트 용 차트-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // 서버에서 데이터를 가져와서 적용
@@ -345,6 +398,7 @@
         }
 
     });
+
 </script>
 </body>
 </html>
