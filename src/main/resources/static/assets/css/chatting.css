@@ -6,9 +6,6 @@
 }
 
 /* 스크롤바 */
-::-webkit-scrollbar-track {
-    /*background: none;*/
-}
 ::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 10px;
@@ -466,8 +463,8 @@ body {
     flex: 1;
     padding: 5px;
     border: none;
-    width: calc(100% - 80px); /* 버튼의 너비를 고려하여 계산 */
-    min-width: 0; /* 기본 너비를 지정 */
+    width: calc(100% - 80px);
+    min-width: 0;
     resize: none; /* 크기 조절 제거 */
     outline: none; /* 기본 포커스 스타일 제거 */
     overflow-y: auto; /* 내용이 많을 경우 스크롤 표시 */
@@ -477,7 +474,7 @@ body {
 .chat_input_container .send_button {
     background-color: #4b93cd;
     color: white;
-    width: 50px; /* 버튼의 너비를 고정 */
+    width: 50px;
     padding: 5px;
     border: none;
     border-left: 0;
@@ -486,7 +483,7 @@ body {
 
 /* 전송 버튼 비활성화 */
 .send_button.disabled {
-    background-color: #cccccc; /* 회색 */
+    background-color: #cccccc;
     cursor: default;
 }
 

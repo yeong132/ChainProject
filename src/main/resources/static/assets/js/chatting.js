@@ -219,7 +219,7 @@ async function fetchEmployeeInfo(empNo) {
     }
 }
 
-// 수신 메시지 처리 ㅇㅇㅇ
+// 수신 메시지 처리
 async function onMessageReceived(payload) {
     try {
         const message = JSON.parse(payload.body);
@@ -236,11 +236,8 @@ async function onMessageReceived(payload) {
         } else { // 방이 존재하면
             // 현재 선택된 사원의 메시지일 경우에만 채팅창에 표시
             if (selectedEmpNo == message.senderEmpNo) { // '=='
-                console.log("선택된 사원이무 알람 x")
-
                 displayMessage(message.senderEmpNo, message.chatContent, message.read, message.chatSentTime);
             } else { // 선택된 사원이 아닌 경우 알림만 업데이트
-                console.log("선택된 사원이 아니무 알람 //+1")
             }
             updateLatestMessage(message.senderEmpNo); // 방목록에 최신 채팅 업데이트
         }
@@ -336,7 +333,12 @@ function updateLatestMessageContent(userId, messageContent, messageTime) {
             roomContentElement.textContent = messageContent; // 최신 메시지로 업데이트
         }
         if (roomTimeElement) {
-            roomTimeElement.textContent = formatMessageTime(messageTime)
+            // 시간 포맷팅하여 room_time에 표시
+            roomTimeElement.textContent = formatMessageTime(messageTime);
+
+            // 초 단위까지 포함된 시간 데이터를 data-full-time 속성에 저장
+            const fullTime = new Date(messageTime);
+            roomTimeElement.setAttribute('data-full-time', fullTime.getTime());
         }
     }
 }
@@ -390,7 +392,24 @@ async function findAndDisplayConnectedUsers() {
             roomAlarm.textContent = roomAlarm.textContent || '0'; // 현재 값 유지
         }
     });
+    sortChatRoomsByLatestTime(); // 최신순으로 채팅방 정렬
     initializeContextMenu(); // 오른쪽 마우스 클릭: 드롭다운메뉴
+}
+
+// 채팅방 최신순 정렬
+function sortChatRoomsByLatestTime() {
+    const chatRooms = Array.from(document.querySelectorAll('.chat_room_item'));
+
+    // 시간값을 Date 객체로 변환하여 정렬
+    chatRooms.sort((a, b) => {
+        const timeA = a.querySelector('.room_time').getAttribute('data-full-time');
+        const timeB = b.querySelector('.room_time').getAttribute('data-full-time');
+
+        return timeB - timeA; // 최신 시간이 상단에 오도록 정렬
+    });
+
+    // 정렬된 순서대로 chatRoomUsersList에 다시 추가
+    chatRooms.forEach(room => chatRoomUsersList.appendChild(room));
 }
 
 // 방 목록 추가
@@ -539,7 +558,7 @@ async function fetchAndDisplayUserChat() {
     }
 }
 
-// 채팅창 메시지 표시ㅇㅇㅇ
+// 채팅창 메시지 표시
 function displayMessage(senderEmpNo, chatContent, read, chatSentTime){
     // 메시지 래퍼 생성 (발신자 또는 수신자에 따라 다름)
     const messageWrapper = document.createElement('div');

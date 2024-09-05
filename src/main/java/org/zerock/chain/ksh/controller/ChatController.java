@@ -12,18 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.ksh.dto.ChatNotificationDTO;
 import org.zerock.chain.ksh.model.ChatMessage;
-import org.zerock.chain.ksh.model.ChatNotification;
 import org.zerock.chain.ksh.service.ChatMessageService;
-import org.zerock.chain.ksh.service.ChatRoomService;
 import org.zerock.chain.ksh.service.ChatUserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Log4j2
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/api/chat")
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
