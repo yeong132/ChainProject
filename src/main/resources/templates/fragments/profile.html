@@ -14,7 +14,7 @@
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
                 <h6 th:text="${session.lastName + ' ' + session.firstName}">사원이름</h6>
-                <span th:text="${session.rankName}">직급</span> / <span th:text="${session.departmentName}">부서</span> <!-- 부서 이름 추가 -->
+                <span th:text="${session.departmentName}">부서</span> / <span th:text="${session.rankName}">직급</span><!-- 부서 이름 추가 -->
                 <br>
                 <span th:text="${session.empNo}">사원번호</span>
             </li>
