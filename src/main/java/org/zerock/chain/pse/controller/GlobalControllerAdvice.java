@@ -79,4 +79,10 @@ public class GlobalControllerAdvice {
     public void addAttributes(Model model, HttpServletRequest request) {
         model.addAttribute("currentUri", request.getRequestURI());
     }
+
+    @ModelAttribute("departmentName")
+    public String populateDepartmentName(HttpSession session) {
+        return (String) session.getAttribute("departmentName"); // 세션에서 부서 이름 가져오기
+    }
+
 }

@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
         documents.forEach(doc => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${doc.docNo}</td>
+                <td>${doc.virtualNo}</td>
                 <td>
                     ${doc.docStatus === '반려' ?
                 `<a href="/approval/rejectionRead/${doc.docNo}?source=main&category=${doc.category}">${doc.docTitle}</a>` :
