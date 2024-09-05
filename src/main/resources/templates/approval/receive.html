@@ -275,9 +275,9 @@
                 row.innerHTML = `
                 <td>${doc.virtualNo}</td>
                 <td>
-                    ${doc.approvalStatus === '반려' ?
+                    ${doc.docStatus === '반려' ?
                     `<a href="/approval/rejectionRead/${doc.docNo}?source=receive&category=${doc.category}">${doc.docTitle}</a>` :
-                    `<a href="/approval/read/${doc.docNo}?source=receive&category=${doc.category}">${doc.docTitle}</a>`}
+                    `<a href="/approval/adminRequest/${doc.docNo}?source=receive&category=${doc.category}">${doc.docTitle}</a>`}
                 </td>
                 <td>${doc.senderName}</td>
                 <td>${doc.docStatus}</td>
