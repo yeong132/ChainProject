@@ -4,9 +4,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.imjongha.model.EmployeePermission;
 import org.zerock.chain.imjongha.model.Permission;
 import org.zerock.chain.imjongha.model.Rank;
+import org.zerock.chain.imjongha.model.Department;
 import org.zerock.chain.junhyuck.model.Signup;
 import org.zerock.chain.junhyuck.repository.SignupRepository;
 import org.zerock.chain.imjongha.repository.RankRepository;
+import org.zerock.chain.imjongha.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private RankRepository rankRepository;
 
+    @Autowired
+    private DepartmentRepository departmentRepository;  // 부서 리포지토리 추가
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
@@ -41,6 +46,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .orElseThrow(() -> new UsernameNotFoundException("Rank not found with rankNo: " + user.getRankNo()));
             String rankName = rank.getRankName();
 
+            // dmp_no를 통해 부서 조회
+            Department department = departmentRepository.findById(user.getDmpNo())
+                    .orElseThrow(() -> new UsernameNotFoundException("Department not found with dmpNo: " + user.getDmpNo()));
+            String departmentName = department.getDmpName();
+
             // 권한 목록을 가져옴
             List<GrantedAuthority> authorities = user.getEmployeePermissions().stream()
                     .map(EmployeePermission::getPermission)
@@ -50,10 +60,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
             // 기본 권한 ROLE_USER 추가
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-//
-//            Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
-            // 사원이름과 직급을 CustomUserDetails에 전달
+            // 사원이름, 직급, 부서 이름을 CustomUserDetails에 전달
             return new CustomUserDetails(
                     user.getEmpNo().toString(),
                     user.getPassword(),
@@ -61,7 +69,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     user.getEmpNo(),
                     user.getFirstName(),
                     user.getLastName(),
-                    rankName
+                    rankName,
+                    departmentName  // 부서 이름 추가
             );
         } catch (NumberFormatException e) {
             throw new UsernameNotFoundException("Username must be a numeric value representing empNo.");

@@ -36,7 +36,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers("/signup", "/assets/**", "/uploads/**").permitAll()
+                                .requestMatchers("/login", "/api/check-email", "/api/check-phone", "/signup", "/assets/**", "/uploads/**").permitAll()
                                 .requestMatchers("/notice/register").hasAuthority("공지사항 작성")
                                 .requestMatchers("/notice/modify/**").hasAuthority("공지사항 수정")
 //                        .requestMatchers("/notice/delete/**").hasAuthority("공지사항 삭제")
@@ -87,10 +87,15 @@ public class SecurityConfig {
                 CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                 HttpSession session = request.getSession();
                 session.setAttribute("empNo", userDetails.getEmpNo());
+                session.setAttribute("firstName", userDetails.getFirstName());
+                session.setAttribute("lastName", userDetails.getLastName());
+                session.setAttribute("rankName", userDetails.getRankName());
+                session.setAttribute("departmentName", userDetails.getDepartmentName()); // 부서 이름 세션에 추가
                 response.sendRedirect("/");
             }
         };
     }
+
 
     @Bean
     public CustomUserDetailsService customUserDetailsService() {

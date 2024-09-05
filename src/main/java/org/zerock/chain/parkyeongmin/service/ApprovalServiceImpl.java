@@ -285,4 +285,9 @@ public class ApprovalServiceImpl implements ApprovalService {
     public int countReferencesDocumentsForUser(Long empNo) {
         return approvalRepository.countReferencedDocumentsForUser(empNo);
     }
+
+    @Override  // 로그인한 사용자의 총 받은 문서 수 조회
+    public int countTotalDocumentsForApprover(Long empNo) {
+        return approvalRepository.countDocumentsByEmployeeOrRefEmployee(empNo);
+    }
 }

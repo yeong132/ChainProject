@@ -154,43 +154,22 @@
                     <div class="col-md-6 list-group-item" data-id="approval1">
                         <div class="card info-card customers-card">
                             <div class="card-body">
-                                <h5 class="card-title">전자결재 <span>| Today</span></h5>
+                                <h5 class="card-title">전자결재 총 받은 문서</h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-card-text"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>145</h6>
-                                        <span class="text-success small pt-1 fw-bold">12%</span>
-                                        <span class="text-muted small pt-2 ps-1">increase</span>
+                                        <h6 id="receivedCount"></h6>
+                                        <!--<span class="text-success small pt-1 fw-bold">12%</span>
+                                        <span class="text-muted small pt-2 ps-1">increase</span>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- 전자결재 카드 끝 -->
-
-                    <!-- 집에 가고싶음? 카드 -->
-                    <!--<div class="col-xxl-4 col-xl-12 list-group-item" data-id="home1">
-                        <div class="card info-card sales-card">
-                            <div class="card-body">
-                                <h5 class="card-title">집에 가고싶음? <span>| Today</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-house"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>145</h6>
-                                        <span class="text-success small pt-1 fw-bold">12%</span>
-                                        <span class="text-muted small pt-2 ps-1">increase</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-                    <!-- 집에 가고싶음? 카드 끝 -->
                 </div>
 
                 <!-- 주간 일정 카드 -->
@@ -616,6 +595,14 @@
             .catch(error => {
                 console.error('Error fetching weather data:', error);
             });
+
+        fetch('/approval/approvalStatusCounts')
+            .then(response => response.json())
+            .then(data => {
+                // 전자결재 총 받은 문서를 업데이트
+                document.getElementById('receivedCount').innerText = `${data.receivedCount}건`;
+            })
+            .catch(error => console.error('Error fetching approval status counts:', error));
     });
 </script>
 

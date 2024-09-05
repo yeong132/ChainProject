@@ -122,7 +122,6 @@ dependencies {
     // javax.servlet 패키지를 사용하기 위한 의존성 추가
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     // compileOnly: 컴파일 시에는 포함되지만, 런타임에는 서블릿 컨테이너가 제공하는 의존성
-
 }
 
 tasks.named('test') {
