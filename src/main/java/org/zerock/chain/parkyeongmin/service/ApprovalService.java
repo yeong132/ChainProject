@@ -38,4 +38,7 @@ public interface ApprovalService {
 
     // 로그인한 사용자(참조자)의 받은 문서함에 반려상태 문서 수 조회
     int countReferencesDocumentsForUser(Long empNo);
+
+    // 로그인한 사원의 총 받은 문서 수 조회
+    int countTotalDocumentsForApprover(Long empNo);
 }

@@ -51,6 +51,13 @@ public interface ApprovalRepository extends JpaRepository<Approval, Long> {
             "WHERE a.refEmployee.empNo = :empNo AND a.approvalStatus = '참조'")
     int countReferencedDocumentsForUser(@Param("empNo") Long empNo);
 
+    // 로그인한 사원의 총 받은 문서 수를 조회하는 쿼리 메서드
+    @Query("SELECT COUNT(a) FROM Approval a " +
+            "LEFT JOIN a.employee e " +   // 결재자 조인
+            "LEFT JOIN a.refEmployee re " + // 참조자 조인
+            "WHERE e.empNo = :empNo OR re.empNo = :empNo")
+    int countDocumentsByEmployeeOrRefEmployee(@Param("empNo") Long empNo);
+
     // 특정 문서 번호에 해당하는 결재자 정보 삭제
     void deleteByDocumentsDocNo(int docNo);
 

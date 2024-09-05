@@ -412,7 +412,7 @@ public class ApprovalController {
         return counts;
     }
 
-    // 결재자가 받은 문서의 대기,승인,반려 문서 건수 조회 메서드
+    // 결재자가 받은 문서의 대기,승인,반려 문서,전체 받은문서 건수 조회 메서드
     @GetMapping("/approvalStatusCounts")
     @ResponseBody
     public Map<String, Integer> getCountByApprovalStatus() {
@@ -422,12 +422,14 @@ public class ApprovalController {
         int approvedCount = approvalService.countApprovedApprovals(loggedInEmpNo);
         int rejectedCount = approvalService.countRejectedDocumentsForApprover(loggedInEmpNo);
         int referencesCount = approvalService.countReferencesDocumentsForUser(loggedInEmpNo);
+        int receivedCount = approvalService.countTotalDocumentsForApprover(loggedInEmpNo);
 
         Map<String, Integer> counts = new HashMap<>();
         counts.put("pendingCount", pendingCount);
         counts.put("approvedCount", approvedCount);
         counts.put("rejectedCount", rejectedCount);
         counts.put("referencesCount", referencesCount);
+        counts.put("receivedCount", receivedCount);
         log.info("Returning counts: " + counts);
         return counts;
     }
