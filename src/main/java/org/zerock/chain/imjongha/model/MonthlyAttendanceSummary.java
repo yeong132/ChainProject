@@ -42,9 +42,7 @@ public class MonthlyAttendanceSummary {
 
     @Column(name = "overtime_hours")
     private int overtimeHours;
-//
-//    @Column(name = "leave_days")
-//    private int leaveDays;
+
 
     @OneToMany(mappedBy = "monthlySummary", cascade = CascadeType.ALL)
     private List<AttendanceRecord> attendanceRecords = new ArrayList<>();
