@@ -79,8 +79,10 @@
                             </li>
                         </ul>
 
-                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent" style="height: 300px">
-                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home" role="tabpanel">
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent"
+                             style="height: 300px">
+                            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home"
+                                 role="tabpanel">
                                 <div class="accordion accordion-flush" id="star-group-1">
 
                                     <div class="row mb-5 mt-3">
@@ -89,19 +91,27 @@
                                             <div class="form-check mt-2">
                                                 <form method="post" th:action="@{/todo/updateStatus}">
                                                     <input type="hidden" name="todoNo" th:value="${todo.todoNo}">
-                                                    <input type="hidden" name="todoStatus" th:value="${!todo.todoStatus}">
-                                                    <input class="form-check-input" type="checkbox" th:checked="${todo.todoStatus}" onclick="this.closest('form').submit()">
+                                                    <input type="hidden" name="todoStatus"
+                                                           th:value="${!todo.todoStatus}">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           th:checked="${todo.todoStatus}"
+                                                           onclick="this.closest('form').submit()">
                                                 </form>
-                                                <div class="activity-content" th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                <div class="activity-content"
+                                                     th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
                                                     <div>
                                                         <!-- 즐겨찾기 아이콘 -->
-                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <i class="bi star-icon right-align-block"
+                                                           th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                                           th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
                                                         <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${todo.todoCategory}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">]</span>
                                                         <span th:text="${todo.todoContent}"></span>
                                                         <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">)</span>
                                                     </div>
                                                 </div>
@@ -146,27 +156,38 @@
                                 </button>
                             </li>
                         </ul>
-                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="borderedTabContent" style="height: 300px">
-                            <div aria-labelledby="today-tab" class="tab-pane fade show active" id="bordered-today" role="tabpanel">
+                        <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="borderedTabContent"
+                             style="height: 300px">
+                            <div aria-labelledby="today-tab" class="tab-pane fade show active" id="bordered-today"
+                                 role="tabpanel">
                                 <div class="accordion accordion-flush" id="faq-group-4">
-                                    <div class="row mb-5 mt-3"id="today-todos-container">
+                                    <div class="row mb-5 mt-3" id="today-todos-container">
                                         <!-- 오늘 날짜 콘텐츠 -->
                                         <div class="activity-item d-flex" th:each="todo : ${todayTodos}">
                                             <div class="form-check mt-2">
-                                                <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
+                                                <form method="post" th:action="@{/todo/updateStatus}"
+                                                      th:id="'statusForm-' + ${todo.todoNo}">
                                                     <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
-                                                    <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                    <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
+                                                    <input name="todoStatus" th:value="${!todo.todoStatus}"
+                                                           type="hidden">
+                                                    <input class="form-check-input" th:checked="${todo.todoStatus}"
+                                                           th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
+                                                           type="checkbox">
                                                 </form>
-                                                <div class="activity-content" th:class="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                <div class="activity-content"
+                                                     th:class="${todo.todoStatus} ? 'completed-todo' : ''">
                                                     <div>
-                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <i class="bi star-icon right-align-block"
+                                                           th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                                           th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
                                                         <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${todo.todoCategory}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">]</span>
                                                         <span th:text="${todo.todoContent}"></span>
                                                         <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">)</span>
                                                     </div>
                                                 </div>
@@ -183,20 +204,29 @@
                                         <!-- 전체보기 콘텐츠 -->
                                         <div class="activity-item d-flex" th:each="todo : ${todos}">
                                             <div class="form-check mt-2">
-                                                <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
+                                                <form method="post" th:action="@{/todo/updateStatus}"
+                                                      th:id="'statusForm-' + ${todo.todoNo}">
                                                     <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
-                                                    <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                    <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
+                                                    <input name="todoStatus" th:value="${!todo.todoStatus}"
+                                                           type="hidden">
+                                                    <input class="form-check-input" th:checked="${todo.todoStatus}"
+                                                           th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
+                                                           type="checkbox">
                                                 </form>
-                                                <div class="activity-content" th:class="${todo.todoStatus} ? 'completed-todo' : ''">
+                                                <div class="activity-content"
+                                                     th:class="${todo.todoStatus} ? 'completed-todo' : ''">
                                                     <div>
-                                                        <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                        <i class="bi star-icon right-align-block"
+                                                           th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                                           th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
                                                         <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${todo.todoCategory}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">]</span>
                                                         <span th:text="${todo.todoContent}"></span>
                                                         <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                        <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                        <span style="color: rgba(130,130,130,0.68);"
+                                                              th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
                                                         <span style="color:rgba(130,130,130,0.68);">)</span>
                                                     </div>
                                                 </div>
@@ -210,20 +240,27 @@
                                     <!-- 진행 중 콘텐츠 -->
                                     <div class="activity-item d-flex" th:each="todo : ${incompleteTodos}">
                                         <div class="form-check mt-2">
-                                            <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
+                                            <form method="post" th:action="@{/todo/updateStatus}"
+                                                  th:id="'statusForm-' + ${todo.todoNo}">
                                                 <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
                                                 <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
+                                                <input class="form-check-input" th:checked="${todo.todoStatus}"
+                                                       th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
+                                                       type="checkbox">
                                             </form>
                                             <div class="activity-content">
                                                 <div>
-                                                    <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                    <i class="bi star-icon right-align-block"
+                                                       th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                                       th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
                                                     <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);"
+                                                          th:text="${todo.todoCategory}"></span>
                                                     <span style="color:rgba(130,130,130,0.68);">]</span>
                                                     <span th:text="${todo.todoContent}"></span>
                                                     <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);"
+                                                          th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
                                                     <span style="color:rgba(130,130,130,0.68);">)</span>
                                                 </div>
                                             </div>
@@ -236,29 +273,39 @@
                                     <!-- 완료된 콘텐츠 -->
                                     <div class="activity-item d-flex" th:each="todo : ${completedTodos}">
                                         <div class="form-check mt-2">
-                                            <form method="post" th:action="@{/todo/updateStatus}" th:id="'statusForm-' + ${todo.todoNo}">
+                                            <form method="post" th:action="@{/todo/updateStatus}"
+                                                  th:id="'statusForm-' + ${todo.todoNo}">
                                                 <input name="todoNo" th:value="${todo.todoNo}" type="hidden">
                                                 <input name="todoStatus" th:value="${!todo.todoStatus}" type="hidden">
-                                                <input class="form-check-input" th:checked="${todo.todoStatus}" th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'" type="checkbox">
+                                                <input class="form-check-input" th:checked="${todo.todoStatus}"
+                                                       th:onchange="'document.getElementById(\'statusForm-' + ${todo.todoNo} + '\').submit()'"
+                                                       type="checkbox">
                                             </form>
-                                            <div class="activity-content" th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
+                                            <div class="activity-content"
+                                                 th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
                                                 <div>
-                                                    <i class="bi star-icon right-align-block" th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'" th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                                    <i class="bi star-icon right-align-block"
+                                                       th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                                       th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
                                                     <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${todo.todoCategory}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);"
+                                                          th:text="${todo.todoCategory}"></span>
                                                     <span style="color:rgba(130,130,130,0.68);">]</span>
                                                     <span th:text="${todo.todoContent}"></span>
                                                     <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                    <span style="color: rgba(130,130,130,0.68);" th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                                    <span style="color: rgba(130,130,130,0.68);"
+                                                          th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
                                                     <span style="color:rgba(130,130,130,0.68);">)</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-danger" onclick="showDeleteAllConfirmationModal(event)"
-                                            type="button">
-                                        삭제
-                                    </button>
+                                    <div class="text-end">
+                                        <button class="btn btn-danger" onclick="showDeleteAllConfirmationModal(event)"
+                                                type="button">
+                                            삭제
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -351,7 +398,7 @@
 <!-- Footer 끝 -->
 
 <script>
-// 체크박스 완료 값 전달
+    // 체크박스 완료 값 전달
     function updateTodoStatus(checkbox, todoNo) {
         const form = document.getElementById('statusForm-' + todoNo);
         form.todoStatus.value = checkbox.checked ? 1 : 0;
