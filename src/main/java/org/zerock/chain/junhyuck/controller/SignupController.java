@@ -114,6 +114,7 @@ public class SignupController {
             session.setAttribute("firstName", userDetails.getFirstName());
             session.setAttribute("lastName", userDetails.getLastName());
             session.setAttribute("rankName", userDetails.getRankName());
+            session.setAttribute("rankName", userDetails.getRankName());
 
             // 모델에 추가하여 뷰로 전달
             model.addAttribute("empNo", empNo);

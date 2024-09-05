@@ -165,7 +165,6 @@
             </div>
             <div class="modal-body">
                 <p><strong>프로젝트 이름 :</strong> <span id="modalProjectName"></span></p>
-                <p><strong>부서 및 참여자 :</strong> <span id="modalParticipants" class="modalParticipants"></span> / <span id="modalDmpNo"></span></p>
                 <p><strong>내용 :</strong> <span id="modalProjectContent"></span></p>
                 <p><strong>진행도 :</strong> <span id="modalProjectProgress"></span></p>
                 <p><strong>기간 :</strong> <span id="modalProjectStartDate"></span> ~ <span
@@ -467,7 +466,6 @@
             .then(data => {
                 // 데이터 가져오기 성공 시, 모달에 정보 설정
                 document.getElementById('modalProjectName').textContent = data.projectName;
-                document.getElementById('modalDmpNo').textContent = data.dmpNo;
                 document.getElementById('modalProjectProgress').textContent = data.projectProgress + '%';
                 document.getElementById('modalProjectStartDate').textContent = data.projectStartDate;
                 document.getElementById('modalProjectEndDate').textContent = data.projectEndDate;
