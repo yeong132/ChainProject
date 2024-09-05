@@ -31,6 +31,7 @@ public class ChatMessageService {
     private final SimpMessagingTemplate messagingTemplate;
 
     // 메시지 저장 및 최신 시간 업데이트
+    @Transactional
     public ChatNotificationDTO save(ChatMessage chatMessage) {
         var chatRoom = chatRoomService.getChatRoom(chatMessage.getSenderEmpNo(), chatMessage.getRecipientEmpNo(), true)
                 .orElseThrow(() -> new IllegalStateException("채팅방을 생성할 수 없습니다."));
