@@ -273,7 +273,7 @@
             documents.forEach(doc => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                <td>${doc.docNo}</td>
+                <td>${doc.virtualNo}</td>
                 <td>
                     ${doc.approvalStatus === '반려' ?
                     `<a href="/approval/rejectionRead/${doc.docNo}?source=receive&category=${doc.category}">${doc.docTitle}</a>` :

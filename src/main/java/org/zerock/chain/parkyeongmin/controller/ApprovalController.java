@@ -19,10 +19,7 @@ import org.zerock.chain.parkyeongmin.service.FormService;
 import org.zerock.chain.parkyeongmin.service.UserService;
 import org.zerock.chain.pse.service.NotificationService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -444,6 +441,17 @@ public class ApprovalController {
         log.info("Fetching documents for empNo: " + loggedInEmpNo + " with status: " + docStatus);
         List<DocumentsDTO> documents = documentsService.getDocumentsByStatus(loggedInEmpNo, docStatus);
         log.info("Returning documents: " + documents);
+
+        // 최신순으로 정렬 (필요에 따라 정렬 조건을 수정하세요. 예시로 docNo로 정렬)
+        documents.sort(Comparator.comparing(DocumentsDTO::getDocNo).reversed());
+
+        // 가상 번호 부여 (최신순으로 부여)
+        int virtualNo = documents.size();
+        for (DocumentsDTO document : documents) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("document: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+        log.info("Returning documents with virtual numbers: " + documents);
         return documents;
     }
 
@@ -454,37 +462,70 @@ public class ApprovalController {
         // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
-        return documentsService.getPendingDocumentsForUser(loggedInEmpNo);
+        List<DocumentsDTO> pendingDocuments = documentsService.getPendingDocumentsForUser(loggedInEmpNo);
+
+        // 가상 번호 부여 (최신순 정렬에 따라 부여)
+        int virtualNo = pendingDocuments.size();
+        for (DocumentsDTO document : pendingDocuments) {
+            document.setVirtualNo(virtualNo--);  // 가상의 번호를 설정
+            log.info("pendingDocument: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
+        return pendingDocuments;
     }
 
     // 받은 문서함의 승인된 문서 필터링
     @GetMapping("/approvedDocuments")
     @ResponseBody
     public List<DocumentsDTO> getApprovedDocuments() {
-        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
-        return documentsService.getApprovedDocumentsForUser(loggedInEmpNo);
+        List<DocumentsDTO> approvedDocuments = documentsService.getApprovedDocumentsForUser(loggedInEmpNo);
+
+        // 가상 번호 부여
+        int virtualNo = approvedDocuments.size();
+        for (DocumentsDTO document : approvedDocuments) {
+            document.setVirtualNo(virtualNo--);
+            log.info("approvedDocument: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
+        return approvedDocuments;
     }
 
     // 받은 문서함의 반려된 문서 필터링
     @GetMapping("/rejectedDocuments")
     @ResponseBody
     public List<DocumentsDTO> getRejectedDocuments() {
-        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
-        return documentsService.getRejectedDocumentsForUser(loggedInEmpNo);
+        List<DocumentsDTO> rejectedDocuments = documentsService.getRejectedDocumentsForUser(loggedInEmpNo);
+
+        // 가상 번호 부여
+        int virtualNo = rejectedDocuments.size();
+        for (DocumentsDTO document : rejectedDocuments) {
+            document.setVirtualNo(virtualNo--);
+            log.info("rejectedDocument: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
+        return rejectedDocuments;
     }
 
     // 받은 문서함의 참조된 문서 필터링
     @GetMapping("/referencesDocuments")
     @ResponseBody
     public List<DocumentsDTO> getReferencesDocuments() {
-        // 로그인한 사용자의 정보를 userService의 getLoggedInUserEmpNo 메서드로 가져오기
         Long loggedInEmpNo = userService.getLoggedInUserEmpNo();
 
-        return documentsService.getReferencesDocumentsForUser(loggedInEmpNo);
+        List<DocumentsDTO> referencesDocuments = documentsService.getReferencesDocumentsForUser(loggedInEmpNo);
+
+        // 가상 번호 부여
+        int virtualNo = referencesDocuments.size();
+        for (DocumentsDTO document : referencesDocuments) {
+            document.setVirtualNo(virtualNo--);
+            log.info("referencesDocument: {}, virtualNo: {}", document.getDocNo(), document.getVirtualNo());
+        }
+
+        return referencesDocuments;
     }
 
     @GetMapping("/get-approvers-and-references-json/{docNo}")
