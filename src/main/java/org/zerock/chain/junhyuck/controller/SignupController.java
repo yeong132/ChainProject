@@ -19,6 +19,11 @@ import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.model.CustomUserDetails;
 import org.zerock.chain.pse.service.ProjectService;
 import java.util.logging.Logger;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,7 +55,7 @@ public class SignupController {
 
     // 회원가입 처리 POST 요청 핸들러
     @PostMapping("/signup")
-    public String registerSignup(@ModelAttribute Signup signup) {
+    public String registerSignup(@ModelAttribute Signup signup, RedirectAttributes redirectAttributes) {
         // 입력된 비밀번호를 암호화
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         signup.setPassword(encodedPassword);
@@ -65,7 +70,22 @@ public class SignupController {
         // 새로운 회원 정보를 데이터베이스에 저장
         signupRepository.save(signup);
 
-        // 회원가입이 완료되면 로그인 페이지로 리다이렉트
+        // 로그 추가
+        System.out.println("회원가입 완료 후 사원번호 가져오기");
+
+        Long maxEmpNo = signupRepository.findMaxEmpNo();
+        System.out.println("가장 큰 사원번호: " + maxEmpNo);
+
+        if (maxEmpNo != null) {
+            String message = "당신의 사원번호는 " + maxEmpNo + "입니다.";
+            System.out.println(message); // 로그로 출력
+            redirectAttributes.addFlashAttribute("empNoMessage", message);
+        } else {
+            String message = "회원가입은 완료되었으나 사원번호를 찾을 수 없습니다.";
+            System.out.println(message); // 로그로 출력
+            redirectAttributes.addFlashAttribute("empNoMessage", message);
+        }
+
         return "redirect:/login";
     }
 
