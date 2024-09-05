@@ -19,6 +19,6 @@ public class ChatMessageDTO {
     private Long recipientEmpNo;
     private Long chatRoomNo;
     private String chatContent; // 메시지 내용
-    private LocalDateTime chatSentTime; // 채팅 보낸 시간
+    private LocalDateTime chatSentTime = LocalDateTime.now(); // 채팅 보낸 시간
     private boolean isRead;
 }

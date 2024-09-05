@@ -38,4 +38,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     // 사용자와 대화 중인 다른 사용자 목록
     @Query("SELECT u FROM Employee u WHERE u.empNo IN (SELECT cr.recipientEmpNo FROM ChatRoom cr WHERE cr.senderEmpNo = :empNo AND cr.isDeleted = false)")
     List<Employee> findActiveChatUsersByEmpNo(@Param("empNo") Long empNo);
+
+    // 동일한 chatNo에서 isDeleted값이 false 경우만 최신시간 업데이트
+    @Query("SELECT cr FROM ChatRoom cr WHERE cr.chatNo = :chatNo AND cr.isDeleted = false")
+    List<ChatRoom> findByChatNoAndIsDeletedFalse(@Param("chatNo") String chatNo);
 }

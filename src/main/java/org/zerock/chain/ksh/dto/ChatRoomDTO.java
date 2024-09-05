@@ -18,5 +18,5 @@ public class ChatRoomDTO {
     private Long recipientEmpNo;
     private int unreadCount;
     private boolean isDeleted;
-    private LocalDateTime latestTime;
+    private LocalDateTime latestTime = LocalDateTime.now();
 }

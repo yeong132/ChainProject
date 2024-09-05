@@ -50,7 +50,7 @@ public class ChatUserController {
 
     // /employees/{empNo} 경로로 사원 정보를 가져오는 코드가 필요
     @GetMapping("/employees/{empNo}")
-    public ResponseEntity<EmployeeDTO> getEmployeeByEmpNo(@PathVariable Long empNo) {
+    public ResponseEntity<EmployeeDTO> getEmployeeByEmpNo(@PathVariable("empNo") Long empNo) {
         Optional<EmployeeDTO> employeeDTO = chatUserService.findEmployeeByEmpNo(empNo);
         return employeeDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

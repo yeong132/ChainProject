@@ -295,8 +295,16 @@ body {
 .chat_room_item .room_alarm {
     font-size: 13px;
     right: 5px;
-    top: 23px;
+    top: 26px;
     padding: 0 7px;
+}
+
+.chat_room_item .room_time {
+    font-size: 11px;
+    color: gray;
+    position: absolute;
+    right: 5px;
+    /*top: 50px;*/
 }
 
 .menu_alarm {
@@ -323,7 +331,7 @@ body {
 }
 
 .chat_room_item ul li {
-    padding: 0 5px 5px 5px;
+    padding: 0 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

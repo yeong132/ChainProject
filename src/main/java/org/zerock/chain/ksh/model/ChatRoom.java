@@ -1,5 +1,6 @@
 package org.zerock.chain.ksh.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,5 +37,5 @@ public class ChatRoom {
     private boolean isDeleted = false; // 방 삭제 여부
 
     @Column(name = "latest_time")
-    private LocalDateTime latestTime; // 최근 보낸 시간
+    private LocalDateTime latestTime = LocalDateTime.now(); // 최근 보낸 시간
 }

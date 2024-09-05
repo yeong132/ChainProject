@@ -1,5 +1,6 @@
 package org.zerock.chain.ksh.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +39,7 @@ public class ChatMessage {
     private String chatContent; // 내용
 
     @Column(name = "chat_sent_time")
-    private LocalDateTime chatSentTime; // 보낸 시간
+    private LocalDateTime chatSentTime = LocalDateTime.now(); // 보낸 시간
 
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;  // 메시지 확인 여부

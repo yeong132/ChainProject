@@ -2,18 +2,25 @@ package org.zerock.chain.ksh.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.zerock.chain.ksh.dto.ChatNotificationDTO;
 import org.zerock.chain.ksh.model.ChatMessage;
 import org.zerock.chain.ksh.model.ChatNotification;
 import org.zerock.chain.imjongha.model.Employee;
+import org.zerock.chain.ksh.model.ChatRoom;
 import org.zerock.chain.ksh.repository.ChatMessageRepository;
 import org.zerock.chain.ksh.repository.ChatNotificationRepository;
 import org.zerock.chain.ksh.repository.ChatRoomRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
@@ -23,31 +30,55 @@ public class ChatMessageService {
     private final ChatRoomService chatRoomService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ChatMessage save(ChatMessage chatMessage) {
-        var chatRoom = chatRoomService
-                // 채팅방을 가져옴 (createNewRoomIfNotExists를 true로 설정)
-                .getChatRoom(chatMessage.getSenderEmpNo(), chatMessage.getRecipientEmpNo(), true)
-                .orElseThrow(() -> new IllegalStateException("채팅방을 생성할 수 없습니다.")); // 예외 처리
+    // 메시지 저장 및 최신 시간 업데이트
+    public ChatNotificationDTO save(ChatMessage chatMessage) {
+        var chatRoom = chatRoomService.getChatRoom(chatMessage.getSenderEmpNo(), chatMessage.getRecipientEmpNo(), true)
+                .orElseThrow(() -> new IllegalStateException("채팅방을 생성할 수 없습니다."));
 
-        chatMessage.setChatNo(chatRoom.getChatNo()); // chatNo 설정
-        chatMessage.setChatRoom(chatRoom); // chatRoomNo 설정
-        chatMessage.setRead(false);  // 메시지 읽음 여부 설정
-        ChatMessage savedMessage = messageRepository.save(chatMessage);
+        chatMessage.setChatNo(chatRoom.getChatNo());
+        chatMessage.setChatRoom(chatRoom);
+        chatMessage.setRead(false);
+        chatMessage.setChatSentTime(LocalDateTime.now());
 
-        // ChatNotification 생성 및 저장
-        ChatNotification notification = ChatNotification.builder()
-                .chatMessage(savedMessage)
-                .senderEmpNo(savedMessage.getSenderEmpNo())
-                .recipientEmpNo(savedMessage.getRecipientEmpNo())
-                .chatContent(savedMessage.getChatContent())
-                .build();
-        notificationRepository.save(notification);
+        try {
+            ChatMessage savedMessage = messageRepository.save(chatMessage);
 
-        // unread_count 증가
-        chatRoom.setUnreadCount(chatRoom.getUnreadCount() + 1);
-        chatRoomRepository.save(chatRoom);
+            // 동일한 chat_no을 가지고 isDeleted가 false인 방에 대해 최신 시간을 업데이트
+            List<ChatRoom> activeChatRooms = chatRoomRepository.findByChatNoAndIsDeletedFalse(chatRoom.getChatNo());
+            if (!activeChatRooms.isEmpty()) {
+                for (ChatRoom activeChatRoom : activeChatRooms) {
+                    activeChatRoom.setLatestTime(savedMessage.getChatSentTime()); // 최신 시간 설정
+                    chatRoomRepository.save(activeChatRoom); // 저장
+                    log.info("ChatRoom updated with latestTime: {}", activeChatRoom.getLatestTime());
+                }
+            }
 
-        return savedMessage;
+            // ChatNotification 생성 및 저장
+            ChatNotification notification = ChatNotification.builder()
+                    .chatMessage(savedMessage)
+                    .senderEmpNo(savedMessage.getSenderEmpNo())
+                    .recipientEmpNo(savedMessage.getRecipientEmpNo())
+                    .chatContent(savedMessage.getChatContent())
+                    .chatSentTime(savedMessage.getChatSentTime())
+                    .build();
+            notificationRepository.save(notification);
+
+            // unread_count 증가
+            chatRoom.setUnreadCount(chatRoom.getUnreadCount() + 1);
+            chatRoomRepository.save(chatRoom);
+
+            // 메시지와 최신 시간 정보 반환
+            return ChatNotificationDTO.builder()
+                    .senderEmpNo(savedMessage.getSenderEmpNo())
+                    .recipientEmpNo(savedMessage.getRecipientEmpNo())
+                    .chatContent(savedMessage.getChatContent())
+                    .chatSentTime(savedMessage.getChatSentTime())
+                    .build();
+
+        } catch (Exception e) {
+            log.error("Error saving message", e);
+            throw new RuntimeException("메시지 저장 중 오류가 발생했습니다.");
+        }
     }
 
     // 현재 사용자의 대화 중인 사용자 목록 반환
