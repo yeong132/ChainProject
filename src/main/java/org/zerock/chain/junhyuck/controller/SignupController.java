@@ -1,9 +1,11 @@
 package org.zerock.chain.junhyuck.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.chain.junhyuck.model.Signup;
 import org.zerock.chain.junhyuck.repository.SignupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.model.CustomUserDetails;
 import org.zerock.chain.pse.service.ProjectService;
+import java.util.logging.Logger;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,8 +31,14 @@ import java.util.List;
 @Controller
 public class SignupController {
 
-    @Autowired
-    private SignupRepository signupRepository;
+    // java.util.logging.Logger 사용
+    private static final Logger logger = Logger.getLogger(SignupController.class.getName());
+
+    private final SignupRepository signupRepository;
+
+    public SignupController(SignupRepository signupRepository) {
+        this.signupRepository = signupRepository;
+    }
 
     @Autowired
     private ProjectService projectService;
@@ -41,7 +55,7 @@ public class SignupController {
 
     // 회원가입 처리 POST 요청 핸들러
     @PostMapping("/signup")
-    public String registerSignup(@ModelAttribute Signup signup) {
+    public String registerSignup(@ModelAttribute Signup signup, RedirectAttributes redirectAttributes) {
         // 입력된 비밀번호를 암호화
         String encodedPassword = passwordEncoder.encode(signup.getPassword());
         signup.setPassword(encodedPassword);
@@ -56,7 +70,22 @@ public class SignupController {
         // 새로운 회원 정보를 데이터베이스에 저장
         signupRepository.save(signup);
 
-        // 회원가입이 완료되면 로그인 페이지로 리다이렉트
+        // 로그 추가
+        System.out.println("회원가입 완료 후 사원번호 가져오기");
+
+        Long maxEmpNo = signupRepository.findMaxEmpNo();
+        System.out.println("가장 큰 사원번호: " + maxEmpNo);
+
+        if (maxEmpNo != null) {
+            String message = "당신의 사원번호는 " + maxEmpNo + "입니다.";
+            System.out.println(message); // 로그로 출력
+            redirectAttributes.addFlashAttribute("empNoMessage", message);
+        } else {
+            String message = "회원가입은 완료되었으나 사원번호를 찾을 수 없습니다.";
+            System.out.println(message); // 로그로 출력
+            redirectAttributes.addFlashAttribute("empNoMessage", message);
+        }
+
         return "redirect:/login";
     }
 
@@ -99,6 +128,28 @@ public class SignupController {
         return "index"; // index.html 템플릿으로 이동
     }
 
+    // 이메일 중복 체크 API
+    @GetMapping("/api/check-email")
+    public ResponseEntity<Boolean> checkEmailExists(@RequestParam("email") String email) {
+        // 입력된 이메일을 트림 처리하고 대소문자 구분 없이 검색
+        String trimmedEmail = email.trim();
+        logger.info("Checking email: " + trimmedEmail);  // 로그 추가
 
+        boolean exists = signupRepository.findByEmailIgnoreCase(trimmedEmail).isPresent();
+        logger.info("Email exists: " + exists);  // 로그로 결과 확인
+        return ResponseEntity.ok(exists);
+    }
+
+    // 전화번호 중복 체크 API
+    @GetMapping("/api/check-phone")
+    public ResponseEntity<Boolean> checkPhoneExists(@RequestParam("phone") String phone) {
+        // 입력된 전화번호를 트림 처리
+        String trimmedPhone = phone.trim();
+        logger.info("Checking phone: " + trimmedPhone);  // 로그 추가
+
+        boolean exists = signupRepository.findByPhoneNum(trimmedPhone).isPresent();
+        logger.info("Phone exists: " + exists);  // 로그로 결과 확인
+        return ResponseEntity.ok(exists);
+    }
 
 }
