@@ -60,7 +60,7 @@ public class Employee {
     private List<EmployeePermission> employeePermissions = new ArrayList<>();
 
     // 연차관리를 위한 table 연결(영민이 추가)
-    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, orphanRemoval = true)
     private EmployeeLeave employeeLeave;
 
     // 편의 메서드
