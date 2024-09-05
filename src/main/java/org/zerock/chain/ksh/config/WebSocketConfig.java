@@ -1,6 +1,7 @@
 package org.zerock.chain.ksh.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -32,11 +33,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // 메시지 번환기
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
+        // 기본 콘텐츠 타입 설정
         DefaultContentTypeResolver resolver = new DefaultContentTypeResolver();
         resolver.setDefaultMimeType(MimeTypeUtils.APPLICATION_JSON);
+
+        // Jackson 메시지 변환기 생성 및 ObjectMapper 설정
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setObjectMapper(new ObjectMapper());
-        converter.setContentTypeResolver(resolver);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 모듈 등록
+
+        converter.setObjectMapper(objectMapper); // ObjectMapper 설정
+        converter.setContentTypeResolver(resolver); // MIME 타입 설정
+
+        // 변환기 리스트에 추가
         messageConverters.add(converter);
         return false;
     }

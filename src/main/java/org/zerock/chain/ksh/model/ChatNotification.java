@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Builder
@@ -29,4 +31,7 @@ public class ChatNotification {
 
     @Column(name = "chat_content")
     private String chatContent;
+
+    @Column(name = "chat_sent_time")
+    private LocalDateTime chatSentTime = LocalDateTime.now();
 }

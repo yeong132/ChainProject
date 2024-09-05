@@ -6,9 +6,6 @@
 }
 
 /* 스크롤바 */
-::-webkit-scrollbar-track {
-    /*background: none;*/
-}
 ::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 10px;
@@ -295,8 +292,16 @@ body {
 .chat_room_item .room_alarm {
     font-size: 13px;
     right: 5px;
-    top: 23px;
+    top: 26px;
     padding: 0 7px;
+}
+
+.chat_room_item .room_time {
+    font-size: 11px;
+    color: gray;
+    position: absolute;
+    right: 5px;
+    /*top: 50px;*/
 }
 
 .menu_alarm {
@@ -323,7 +328,7 @@ body {
 }
 
 .chat_room_item ul li {
-    padding: 0 5px 5px 5px;
+    padding: 0 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -390,10 +395,34 @@ body {
 .chat_area {
     display:flex;
     flex-direction:column;
-    /*background-color: #d5ecff;*/
     overflow-y: auto;
     flex: 1;
     height: 100%;
+}
+/* 말풍선 전체 */
+.chat_message_wrapper {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+}
+.message_info {
+    display: flex;
+    font-size: 12px;
+    color: gray;
+    flex-direction: column;
+    margin-top: auto;
+    margin-bottom: 5px;
+}
+.sender .message_info {
+    align-items: flex-end;
+    margin-left: auto;
+}
+.receiver .message_info {
+    align-items: flex-start;
+    margin-right: auto;
+}
+.message_info .unread {
+    color: #000000;
 }
 
 /* 채팅 말풍선 */
@@ -412,7 +441,6 @@ body {
 
 /* 받는 사람(로그인한 사용자) */
 .chat_sender {
-    margin-left: auto; /* 오른쪽 정렬 */
     width: max-content;
     background-color: #67a2d1;
     color: #fff;
@@ -420,8 +448,6 @@ body {
 
 /* 보내는 사람 */
 .chat_receiver {
-    margin-right: auto; /* 왼쪽 정렬 */
-    text-align: left; /* 텍스트를 왼쪽 정렬 */
     width: max-content;
 }
 
@@ -437,8 +463,8 @@ body {
     flex: 1;
     padding: 5px;
     border: none;
-    width: calc(100% - 80px); /* 버튼의 너비를 고려하여 계산 */
-    min-width: 0; /* 기본 너비를 지정 */
+    width: calc(100% - 80px);
+    min-width: 0;
     resize: none; /* 크기 조절 제거 */
     outline: none; /* 기본 포커스 스타일 제거 */
     overflow-y: auto; /* 내용이 많을 경우 스크롤 표시 */
@@ -448,7 +474,7 @@ body {
 .chat_input_container .send_button {
     background-color: #4b93cd;
     color: white;
-    width: 50px; /* 버튼의 너비를 고정 */
+    width: 50px;
     padding: 5px;
     border: none;
     border-left: 0;
@@ -457,7 +483,7 @@ body {
 
 /* 전송 버튼 비활성화 */
 .send_button.disabled {
-    background-color: #cccccc; /* 회색 */
+    background-color: #cccccc;
     cursor: default;
 }
 

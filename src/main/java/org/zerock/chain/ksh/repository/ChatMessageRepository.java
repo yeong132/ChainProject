@@ -19,8 +19,12 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, String
 
     // 특정 채팅방의 모든 메시지를 읽음 처리
     @Modifying
-    @Query("UPDATE ChatMessage m SET m.isRead = true WHERE m.chatNo = :chatNo")
-    void markMessagesAsRead(@Param("chatNo") String chatNo);
+    @Query("UPDATE ChatMessage m SET m.isRead = true WHERE m.chatNo = :chatNo AND m.senderEmpNo = :senderEmpNo AND m.recipientEmpNo = :recipientEmpNo")
+    void markMessagesAsRead(
+            @Param("chatNo") String chatNo,
+            @Param("senderEmpNo") Long senderEmpNo,
+            @Param("recipientEmpNo") Long recipientEmpNo
+    );
 
     // 특정 채팅방의 모든 메시지 삭제
     @Modifying

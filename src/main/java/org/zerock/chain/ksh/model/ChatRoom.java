@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Builder
@@ -31,4 +33,7 @@ public class ChatRoom {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false; // 방 삭제 여부
+
+    @Column(name = "latest_time")
+    private LocalDateTime latestTime = LocalDateTime.now(); // 최근 보낸 시간
 }

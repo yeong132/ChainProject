@@ -43,14 +43,14 @@ public class ChatUserController {
 
     // 대화 중인 사용자만 반환(채팅방 호출)
     @GetMapping("/chat/activeUsers")
-    public ResponseEntity<List<EmployeeDTO>> findActiveChatUsers(@RequestParam Long empNo) {
+    public ResponseEntity<List<EmployeeDTO>> findActiveChatUsers(@RequestParam("empNo") Long empNo) {
         List<EmployeeDTO> activeUsers = chatUserService.findActiveChatUsers(empNo);
         return ResponseEntity.ok(activeUsers);
     }
 
     // /employees/{empNo} 경로로 사원 정보를 가져오는 코드가 필요
     @GetMapping("/employees/{empNo}")
-    public ResponseEntity<EmployeeDTO> getEmployeeByEmpNo(@PathVariable Long empNo) {
+    public ResponseEntity<EmployeeDTO> getEmployeeByEmpNo(@PathVariable("empNo") Long empNo) {
         Optional<EmployeeDTO> employeeDTO = chatUserService.findEmployeeByEmpNo(empNo);
         return employeeDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

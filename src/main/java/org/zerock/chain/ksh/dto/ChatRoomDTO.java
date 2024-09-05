@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,4 +18,5 @@ public class ChatRoomDTO {
     private Long recipientEmpNo;
     private int unreadCount;
     private boolean isDeleted;
+    private LocalDateTime latestTime = LocalDateTime.now();
 }
