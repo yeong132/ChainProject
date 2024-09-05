@@ -57,18 +57,25 @@
 
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>월별 사원 근태 요약</h1>
+        <h1>사원 근태 관리</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin/main}">Admin</a></li>
+                <li class="breadcrumb-item">Attendance</li>
+                <li class="breadcrumb-item active">Company</li>
+            </ol>
+        </nav>
     </div>
     <section class="section dashboard">
         <div class="row">
             <div class="col-12">
                 <div class="card recent-sales overflow-auto">
                     <div class="card-body">
-                        <h5 class="card-title"><b>월별 근태 요약</b></h5>
+                        <h5 class="card-title"><b>근태 페이지</b></h5>
 
             <!-- 월별로 데이터를 구분 -->
             <div th:each="monthAttendance : ${summariesGroupedByMonth}">
-              <h6 th:text="${monthAttendance.key} + '월'"></h6>
+              <h6 th:text="${monthAttendance.key} + '월 근태 요약'"></h6>
               <table class="table table-hover table-bordered">
                 <thead>
                 <tr>

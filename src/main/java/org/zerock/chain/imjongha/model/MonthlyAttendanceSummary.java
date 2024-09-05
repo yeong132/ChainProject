@@ -43,7 +43,6 @@ public class MonthlyAttendanceSummary {
     @Column(name = "overtime_hours")
     private int overtimeHours;
 
-
     @OneToMany(mappedBy = "monthlySummary", cascade = CascadeType.ALL)
     private List<AttendanceRecord> attendanceRecords = new ArrayList<>();
 

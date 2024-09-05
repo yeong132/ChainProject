@@ -36,7 +36,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers("/login", "/api/check-email", "/api/check-phone", "/signup", "/assets/**", "/uploads/**").permitAll()
+                                .requestMatchers("/login", "/api/check-email", "/api/check-phone", "/signup", "/assets/**", "/uploads/**","/admin/attendance/check-in","/admin/attendance/check-out").permitAll()
                                 .requestMatchers("/notice/register").hasAuthority("공지사항 작성")
                                 .requestMatchers("/notice/modify/**").hasAuthority("공지사항 수정")
 //                        .requestMatchers("/notice/delete/**").hasAuthority("공지사항 삭제")
