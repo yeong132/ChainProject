@@ -76,40 +76,61 @@ public class UserController {
         return "user/qaDetail";
     }
 
+
     @GetMapping("/mypage")
     public String getMypage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String empNo = authentication.getName();
 
+        // 사원 번호가 null일 때 처리
         if (empNo == null) {
             model.addAttribute("employeeError", "로그인 정보가 없습니다.");
-            return "error";
+            // error 페이지로 이동하지 않고, 마이페이지를 렌더링할 수 있도록 처리
+            return "user/mypage";
         }
 
         try {
+            // 사원 정보 가져오기
             EmployeeDTO employee = employeeService.getEmployeeById(Long.parseLong(empNo));
             model.addAttribute("employee", employee);
 
+            // 현재 날짜 가져오기
             LocalDate currentDate = LocalDate.now();
+
+            // 월별 근태 요약 정보 가져오기
             List<MonthlyAttendanceSummaryDTO> monthlySummaries = monthlyAttendanceSummaryService.getSummariesByYearAndMonth(currentDate.getYear(), currentDate.getMonthValue());
             MonthlyAttendanceSummaryDTO currentMonthSummary = monthlySummaries.stream().findFirst().orElse(null);
             model.addAttribute("monthlyAttendanceSummary", currentMonthSummary);
 
+            // 출퇴근 기록 가져오기
             AttendanceRecordDTO attendance = attendanceRecordService.getAttendanceRecordByDateAndEmpNo(currentDate, Long.parseLong(empNo));
 
+            // 출퇴근 기록이 null인 경우 처리
             if (attendance == null) {
                 model.addAttribute("dailyAttendanceMessage", "오늘의 출퇴근 기록이 없습니다.");
             } else {
                 model.addAttribute("dailyAttendance", attendance);
             }
+
+        } catch (NumberFormatException e) {
+            // 사원 번호가 잘못된 경우
+            model.addAttribute("employeeError", "유효하지 않은 사원 번호입니다.");
+            log.error("유효하지 않은 사원 번호: {}", empNo);
+            // error 페이지로 이동하지 않고 마이페이지를 렌더링
         } catch (Exception e) {
+            // 기타 예외 처리
             model.addAttribute("employeeError", "사원 정보를 찾을 수 없습니다.");
             log.error("사원 정보 조회 실패: {}", e.getMessage());
-            return "error";
+            // error 페이지로 이동하지 않고 마이페이지를 렌더링
         }
 
+        // 정상적으로 마이페이지로 이동
         return "user/mypage";
     }
+
+
+
+
 
     @GetMapping("/setting")
     public String userSetting(HttpSession session, Model model) {

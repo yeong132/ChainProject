@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/fragments/commute.html -->
 <!-- 출퇴근 모달창 -->
 <div th:fragment="commute">
     <div class="modal fade" id="attendanceModal" tabindex="-1">
@@ -13,15 +12,13 @@
                     출근하시겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">
-                        아니오
-                    </button>
+                    <button type="button" class="btn btn-primary" id="attendanceConfirmButton" data-bs-dismiss="modal">네</button>
+                    <button type="button" class="btn btn-secondary" id="attendanceCancelButton" data-bs-dismiss="modal">아니오</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="leaveworkModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -34,18 +31,14 @@
                     퇴근하시겠습니까?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">
-                        아니오
-                    </button>
+                    <button type="button" class="btn btn-primary" id="leaveworkConfirmButton" data-bs-dismiss="modal">네</button>
+                    <button type="button" class="btn btn-secondary" id="leaveworkCancelButton" data-bs-dismiss="modal">아니오</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 출퇴근 Modal용
         document.addEventListener('DOMContentLoaded', function () {
             function updateTime(elementId) {
                 const currentTimeElement = document.getElementById(elementId);
@@ -58,7 +51,7 @@
                 currentTimeElement.textContent = `현재 시간: ${hours}:${minutes}:${seconds}`;
             }
 
-            function setupModal(modalId, confirmButtonId, cancelButtonId, switchInput, checkedState, apiUrl) {
+            function setupModal(modalId, confirmButtonId, cancelButtonId, switchInput, checkedState, apiUrl, action) {
                 const modalElement = document.getElementById(modalId);
                 const confirmButton = document.getElementById(confirmButtonId);
                 const cancelButton = document.getElementById(cancelButtonId);
@@ -83,6 +76,13 @@
                         .then(result => {
                             alert(result);
                             switchInput.checked = checkedState;
+                            if (action === 'check-in') {
+                                // 출근 시 로컬 저장소에 출근 상태 저장
+                                localStorage.setItem('attendanceStatus', '출근');
+                            } else if (action === 'check-out') {
+                                // 퇴근 시 로컬 저장소에서 출근 상태 제거
+                                localStorage.removeItem('attendanceStatus');
+                            }
                             $(modalElement).modal('hide');
                         })
                         .catch(error => {
@@ -99,8 +99,29 @@
             const switchInput = document.getElementById('flexSwitchCheckDefault');
             const commuteIcon = document.getElementById('commuteIcon');
 
+            // 페이지 로드 시 서버로부터 출퇴근 상태를 확인
+            fetch('/admin/attendance/check-status')
+                .then(response => response.text())
+                .then(status => {
+                    if (status === '출근 중') {
+                        switchInput.checked = true;
+                        localStorage.setItem('attendanceStatus', '출근');
+                    } else if (status === '퇴근') {
+                        switchInput.checked = false;
+                        localStorage.removeItem('attendanceStatus');
+                    } else {
+                        switchInput.checked = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching attendance status:', error);
+                    switchInput.checked = false;  // 서버 호출 실패 시 기본값 설정
+                });
+
+            // 출근/퇴근 스위치가 켜져 있는지 확인하고 모달을 띄움
             if (commuteIcon && switchInput) {
                 commuteIcon.addEventListener('click', function () {
+                    // 출근 상태일 때
                     if (switchInput.checked) {
                         $('#attendanceModal').modal('show');
                     } else {
@@ -114,7 +135,8 @@
                     'attendanceCancelButton',
                     switchInput,
                     true,
-                    '/admin/attendance/check-in'
+                    '/admin/attendance/check-in',
+                    'check-in'
                 );
 
                 setupModal(
@@ -123,7 +145,8 @@
                     'leaveworkCancelButton',
                     switchInput,
                     false,
-                    '/admin/attendance/check-out'
+                    '/admin/attendance/check-out',
+                    'check-out'
                 );
 
                 setInterval(function () {

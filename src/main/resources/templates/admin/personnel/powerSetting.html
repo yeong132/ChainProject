@@ -129,6 +129,10 @@
     </ul>
 </aside>
 
+
+
+
+
 <!-- ======= Main Content ======= -->
 <main id="main" class="main">
     <div class="pagetitle">
@@ -321,9 +325,9 @@
                 });
         }
 
-    // 개별 사원 행을 생성하는 함수
-    function createEmployeeRow(employee) {
-      return `
+        // 개별 사원 행을 생성하는 함수
+        function createEmployeeRow(employee) {
+            return `
       <tr>
           <td>${employee.empNo}</td>
           <td>${employee.departmentName || 'N/A'}</td>
@@ -333,7 +337,7 @@
           <td><button class="btn btn-primary edit-btn" data-id="${employee.empNo}">수정</button></td>
       </tr>
     `;
-    }
+        }
 
         // 전체 사원 목록 아코디언이 열릴 때 데이터 로드
         $('#flush-collapseAll').on('show.bs.collapse', loadAllEmployees);
@@ -343,12 +347,12 @@
             const empNo = $(this).data('id');
             $('#editEmpId').val(empNo);
 
-      $.when(
-              $.getJSON(`/api/permissions/employees/${empNo}/permissions`),
-              $.getJSON('/api/permissions')
-      ).done(function (employeePermissions, permissions) {
-        const permissionsDiv = $('#permissionsDiv');
-        permissionsDiv.empty();
+            $.when(
+                $.getJSON(`/api/permissions/employees/${empNo}/permissions`),
+                $.getJSON('/api/permissions')
+            ).done(function (employeePermissions, permissions) {
+                const permissionsDiv = $('#permissionsDiv');
+                permissionsDiv.empty();
 
                 permissions[0].forEach(permission => {
                     const isChecked = employeePermissions[0].some(ep => ep.perNo === permission.perNo);
@@ -361,16 +365,10 @@
             });
         });
 
-        $('#editEmployeeModal').modal('show');
-      }).fail(function () {
-        alert('권한 데이터를 불러오는 데 실패했습니다.');
-      });
-    });
-
-    // 개별 권한 체크박스 생성 함수
-    function createPermissionCheckbox(permission, isChecked) {
-      console.log(permission); // permission 객체 출력
-      return `
+        // 개별 권한 체크박스 생성 함수
+        function createPermissionCheckbox(permission, isChecked) {
+            console.log(permission); // permission 객체 출력
+            return `
       <div class="form-check">
           <input class="form-check-input" type="checkbox" value="${permission.perNo}" id="permission${permission.perNo}" ${isChecked ? 'checked' : ''}>
           <label class="form-check-label" for="permission${permission.perNo}">
@@ -378,28 +376,6 @@
           </label>
       </div>
     `;
-    }
-
-    // 권한 수정 저장 버튼 클릭 시
-    $('#savePermissionBtn').on('click', function () {
-      const empNo = $('#editEmpId').val();
-      const selectedPermissions = [];
-
-      $('#permissionsDiv .form-check-input:checked').each(function () {
-        selectedPermissions.push($(this).val());
-      });
-
-      $.ajax({
-        url: `/api/permissions/employees/${empNo}/permissions`,  // 컨트롤러 경로에 맞춤
-        method: 'PUT',
-        contentType: 'application/json',
-        data: JSON.stringify(selectedPermissions),
-        success: function () {
-          alert('권한이 성공적으로 수정되었습니다.');
-          $('#editEmployeeModal').modal('hide');
-        },
-        error: function () {
-          alert('권한 수정에 실패했습니다.');
         }
 
         // 권한 수정 저장 버튼 클릭 시
@@ -412,7 +388,7 @@
             });
 
             $.ajax({
-                url: `/api/employees/${empNo}/permissions`,
+                url: `/api/permissions/employees/${empNo}/permissions`,  // 컨트롤러 경로에 맞춤
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(selectedPermissions),
@@ -444,9 +420,16 @@
                 });
         }
 
-    // 부서별 아코디언 항목을 생성하는 함수
-    function createDepartmentAccordionItem(departmentId, departmentName) {
-      return `
+        // 부서별 아코디언이 열릴 때 사원 목록을 불러오는 이벤트 핸들러 추가
+        $(document).on('show.bs.collapse', '.accordion-collapse', function () {
+            const departmentId = $(this).attr('data-department-id');
+            const tableBodyElement = $(this).find('tbody');
+            loadEmployeesByDepartment(departmentId, tableBodyElement);
+        });
+
+        // 부서별 아코디언 항목을 생성하는 함수
+        function createDepartmentAccordionItem(departmentId, departmentName) {
+            return `
       <div class="accordion-item">
           <h2 class="accordion-header" id="flush-heading${departmentId}">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${departmentId}" aria-expanded="false" aria-controls="flush-collapse${departmentId}">
@@ -473,7 +456,7 @@
           </div>
       </div>
     `;
-    }
+        }
 
         // 모든 부서를 불러오고 아코디언을 초기화하는 함수
         function loadDepartments() {
@@ -496,19 +479,23 @@
             $('#deleteDepartmentModal').modal('show');
         });
 
-    // 부서 목록을 불러와 삭제 모달에 표시
-    function loadDepartmentsForDeletion() {
-      $.getJSON('/api/departments')
-              .done(function (departments) {
-                const departmentList = $('#deleteDepartmentList');
-                departmentList.empty();
-                departments.forEach(department => {
-                  departmentList.append(`
+        // 부서 목록을 불러와 삭제 모달에 표시
+        function loadDepartmentsForDeletion() {
+            $.getJSON('/api/departments')
+                .done(function (departments) {
+                    const departmentList = $('#deleteDepartmentList');
+                    departmentList.empty();
+                    departments.forEach(department => {
+                        departmentList.append(`
               <li class="list-group-item">
                   <input type="checkbox" class="form-check-input delete-department-checkbox" value="${department.dmpNo}">
                   ${department.dmpName}
               </li>
           `);
+                    });
+                })
+                .fail(function () {
+                    console.error("부서 목록을 불러오는 데 실패했습니다.");
                 });
         }
 
@@ -534,7 +521,7 @@
                 url: '/api/departments/bulk-delete',
                 method: 'DELETE',
                 contentType: 'application/json',
-                data: JSON.stringify({departmentIds: departmentIds}),
+                data: JSON.stringify({ departmentIds: departmentIds }),
                 success: function () {
                     alert('선택한 부서가 성공적으로 삭제되었습니다.');
                     $('#deleteDepartmentModal').modal('hide');
@@ -549,7 +536,7 @@
         // 부서 등록 버튼 클릭 이벤트 핸들러
         $('#saveDepartmentBtn').on('click', function () {
             const departmentName = $('#departmentNameInput').val();
-            const departmentData = {dmpName: departmentName};
+            const departmentData = { dmpName: departmentName };
 
             $.ajax({
                 url: '/api/departments',
@@ -571,6 +558,7 @@
         // 페이지 로드 시 부서 목록을 불러오는 함수 호출
         loadDepartments();
     });
+
 </script>
 </body>
 </html>

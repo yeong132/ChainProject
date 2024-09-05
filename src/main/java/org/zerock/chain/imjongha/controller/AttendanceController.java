@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.imjongha.dto.AttendanceRecordDTO;
 import org.zerock.chain.imjongha.dto.MonthlyAttendanceSummaryDTO;
+import org.zerock.chain.imjongha.exception.AttendanceRecordNotFoundException;
+import org.zerock.chain.imjongha.model.AttendanceStatus;
 import org.zerock.chain.imjongha.service.AttendanceRecordService;
 import org.zerock.chain.imjongha.service.MonthlyAttendanceSummaryService;
 
@@ -105,8 +107,45 @@ public class AttendanceController {
 
         return ResponseEntity.ok("출근 기록이 삭제되었습니다.");
     }
+    /**
+     * 현재 사용자의 출근 상태를 반환하는 API
+     */
+    @GetMapping("/check-status")
+    @ResponseBody
+    public ResponseEntity<String> checkAttendanceStatus() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String empNo = authentication.getName();
 
+        if (empNo == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
+        try {
+            AttendanceRecordDTO record = attendanceRecordService.getAttendanceRecordByDateAndEmpNo(LocalDate.now(), Long.parseLong(empNo));
+
+            if (record == null) {
+                log.info("해당 날짜에 대한 출근 기록이 없습니다. 사원번호: {}", empNo);
+                return ResponseEntity.ok("출근");
+            }
+
+            if (record.getEndTime() == null) {
+                return ResponseEntity.ok("출근 중");
+            }
+
+            return ResponseEntity.ok("퇴근");
+
+        } catch (AttendanceRecordNotFoundException e) {
+            log.error("출근 상태 확인 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.ok("출근");  // 출근 기록이 없다고 예외가 발생하면 기본값으로 출근 상태 반환
+        } catch (Exception e) {
+            log.error("출근 상태 확인 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 출근 처리
+     */
     @PostMapping("/check-in")
     public ResponseEntity<String> checkIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -116,18 +155,21 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사원번호를 찾을 수 없습니다.");
         }
 
-        log.info("사원번호 {}로 출근 기록 생성 시도", empNo);
-
         try {
             attendanceRecordService.recordCheckIn(Long.parseLong(empNo));
-            log.info("사원번호 {}로 출근 기록 생성 성공", empNo);
             return ResponseEntity.ok("출근 기록이 생성되었습니다.");
+        } catch (IllegalStateException e) {
+            log.error("사원번호 {} 출근 처리 중 오류 발생: {}", empNo, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            log.error("사원번호 {}로 출근 기록 생성 중 오류 발생: {}", empNo, e.getMessage(), e);
+            log.error("사원번호 {} 출근 처리 중 오류 발생: {}", empNo, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("출근 기록 생성에 실패했습니다.");
         }
     }
 
+    /**
+     * 퇴근 처리
+     */
     @PostMapping("/check-out")
     public ResponseEntity<String> checkOut() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -137,15 +179,18 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사원번호를 찾을 수 없습니다.");
         }
 
-        log.info("사원번호 {}로 퇴근 기록 생성 시도", empNo);
-
         try {
             attendanceRecordService.recordCheckOut(Long.parseLong(empNo));
-            log.info("사원번호 {}로 퇴근 기록 생성 성공", empNo);
             return ResponseEntity.ok("퇴근 기록이 생성되었습니다.");
+        } catch (IllegalStateException e) {
+            log.error("사원번호 {} 퇴근 처리 중 오류 발생: {}", empNo, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            log.error("사원번호 {}로 퇴근 기록 생성 중 오류 발생: {}", empNo, e.getMessage(), e);
+            log.error("사원번호 {} 퇴근 처리 중 오류 발생: {}", empNo, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("퇴근 기록 생성에 실패했습니다.");
         }
     }
+
+
+
 }

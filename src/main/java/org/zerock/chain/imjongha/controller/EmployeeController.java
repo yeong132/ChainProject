@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
 import org.zerock.chain.imjongha.dto.PermissionDTO;
+import org.zerock.chain.imjongha.model.Employee;
+import org.zerock.chain.imjongha.repository.EmployeeRepository;
 import org.zerock.chain.imjongha.service.EmployeeService;
 import org.zerock.chain.pse.model.CustomUserDetails;
 
@@ -20,11 +22,14 @@ import java.util.Map;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeRepository employeeRepository) {
         this.employeeService = employeeService;
+        this.employeeRepository = employeeRepository;
     }
 
+    // 인증된 사용자 정보 가져오기
     private CustomUserDetails getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
@@ -36,32 +41,38 @@ public class EmployeeController {
         return null;
     }
 
+    // 모든 직원 조회
     @GetMapping("/all")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        System.out.println("Employees fetched: " + employees); // 서버에서 응답 직전에 데이터 출력
         return ResponseEntity.ok(employees);
     }
 
+    // ID로 특정 직원 조회 (명시적으로 "id" 이름 지정)
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long id) {  // "id" 명시적으로 지정
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable("id") Long id) {
         EmployeeDTO employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
+    // 직원 생성
     @PostMapping
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
+    // ID로 특정 직원 정보 업데이트 (명시적으로 "id" 이름 지정)
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {  // "id" 명시적으로 지정
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
         EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, employeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 
+    // ID로 특정 직원 삭제 (명시적으로 "id" 이름 지정)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {  // "id" 명시적으로 지정
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }

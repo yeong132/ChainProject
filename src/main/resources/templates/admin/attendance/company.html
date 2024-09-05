@@ -294,7 +294,7 @@
                   <td th:text="${summary.rankName}"></td>
                   <td>
                     <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
-                       th:text="${summary.firstName + ' ' + summary.lastName}"></a>
+                       th:text="${summary.lastName + summary.firstName }"></a>
                   </td>
                   <td th:text="${summary.totalWorkingDays} + '일'"></td>
                   <td th:text="${summary.lateDays} + '일'"></td>
@@ -306,10 +306,11 @@
                 </tbody>
               </table>
             </div>
-
           </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
 </main><!-- End #main -->
 
