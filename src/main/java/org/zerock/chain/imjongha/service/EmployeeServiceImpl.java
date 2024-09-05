@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.chain.imjongha.dto.EmployeeDTO;
 import org.zerock.chain.imjongha.exception.EmployeeNotFoundException;
 import org.zerock.chain.imjongha.model.Department;
@@ -96,13 +97,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 
-    @Override
+    @Transactional
     public void deleteEmployee(Long empNo) {
         if (!employeeRepository.existsById(empNo)) {
             throw new EmployeeNotFoundException("사원을 찾을 수 없습니다. ID: " + empNo);
         }
         employeeRepository.deleteById(empNo);
     }
+
 
     @Override
     public List<EmployeeDTO> searchEmployees(String name, String departmentName, String rankName) {

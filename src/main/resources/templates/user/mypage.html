@@ -72,7 +72,6 @@
 
     <section class="section ">
         <div class="row">
-            <!------------------------------------------------------------------왼쪽 프로필 위젯 -------------------------------------------------------------------->
             <!-- 프로필 위젯 -->
             <div class="col-xl-4">
                 <div class="card">
@@ -97,6 +96,9 @@
 
                         <p th:if="${dailyAttendance != null and dailyAttendance.totalWorkingHours != null}"
                            th:text="'근무시간: ' + ${dailyAttendance.totalWorkingHours} + '시간'">근무시간</p>
+
+                        <!-- null 처리 시 추가적인 안내 메시지 -->
+                        <p th:if="${dailyAttendance == null}" class="text-danger">오늘의 출퇴근 기록이 없습니다.</p>
                     </div>
                 </div>
             </div>
@@ -111,11 +113,6 @@
                                     근태 관리
                                 </button>
                             </li>
-<!--                            <li class="nav-item">-->
-<!--                                <button class="nav-link" data-bs-target="#profile-settings" data-bs-toggle="tab">-->
-<!--                                    급여 명세서-->
-<!--                                </button>-->
-<!--                            </li>-->
                         </ul>
                         <div class="tab-content pt-2">
                             <!-- 탭 1: 근태 관리 -->
@@ -128,7 +125,6 @@
 
                                             <script th:inline="javascript">
                                                 document.addEventListener("DOMContentLoaded", () => {
-                                                    // Thymeleaf 변수를 JavaScript에서 사용할 수 있도록 전달
                                                     const summary = /*[[${monthlyAttendanceSummary}]]*/ {};
 
                                                     var options = {
@@ -207,27 +203,11 @@
                                     </div>
                                 </form>
                             </div>
-
-
-
-                            <!-- 탭 2: 급여 명세서 -->
-<!--                            <div class="tab-pane fade profile-settings" id="profile-settings">-->
-<!--                                <form>-->
-<!--                                    <div class="row mb-3">-->
-<!--                                        <div class="col-lg-8">-->
-<!--                                            <h5 class="card-title">급여명세표<span> | 월별</span></h5>-->
-<!--                                            <p>급여 명세서 내용</p>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </form>-->
-<!--                            </div>-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--------------------------------------------------row class 끝 ------------------------------------------------------------->
-
     </section>
 </main>
 <!-- End #main -->

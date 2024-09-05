@@ -66,46 +66,47 @@
                     <div class="card-body">
                         <h5 class="card-title"><b>월별 근태 요약</b></h5>
 
-                        <!-- 월별로 데이터를 구분 -->
-                        <div th:each="monthAttendance : ${summariesGroupedByMonth}">
-                            <h6 th:text="${monthAttendance.key} + '월'"></h6>
-                            <table class="table table-hover table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col">사원번호</th>
-                                    <th scope="col">부서</th>
-                                    <th scope="col">직급</th>
-                                    <th scope="col">이름</th>
-                                    <th scope="col">총 근무 일수</th>
-                                    <th scope="col">지각 일수</th>
-                                    <th scope="col">결근 일수</th>
-                                    <th scope="col">연장 근무 시간</th>
-                                    <th scope="col">휴가 일수</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="summary : ${monthAttendance.value}">
-                                    <td th:text="${summary.empNo}"></td>
-                                    <td th:text="${summary.departmentName}"></td>
-                                    <td th:text="${summary.rankName}"></td>
-                                    <td>
-                                        <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
-                                           th:text="${summary.firstName + ' ' + summary.lastName}"></a>
-                                    </td>
-                                    <td th:text="${summary.totalWorkingDays} + '일'"></td>
-                                    <td th:text="${summary.lateDays} + '일'"></td>
-                                    <td th:text="${summary.absentDays} + '일'"></td>
-                                    <td th:text="${summary.overtimeHours} + '시간'"></td>
-                                    <td th:text="${summary.leaveDays} + '일'"></td>
-                                </tr>
+            <!-- 월별로 데이터를 구분 -->
+            <div th:each="monthAttendance : ${summariesGroupedByMonth}">
+              <h6 th:text="${monthAttendance.key} + '월'"></h6>
+              <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                  <th scope="col">사원번호</th>
+                  <th scope="col">부서</th>
+                  <th scope="col">직급</th>
+                  <th scope="col">이름</th>
+                  <th scope="col">총 근무 일수</th>
+                  <th scope="col">지각 일수</th>
+                  <th scope="col">결근 일수</th>
+                  <th scope="col">연장 근무 시간</th>
+                  <th scope="col">휴가 일수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="summary : ${monthAttendance.value}">
+                  <td th:text="${summary.empNo}"></td>
+                  <td th:text="${summary.departmentName}"></td>
+                  <td th:text="${summary.rankName}"></td>
+                  <td>
+                    <a th:href="@{'/admin/attendance/employee/' + ${summary.empNo} + '/monthly-summary'}"
+                       th:text="${summary.lastName + summary.firstName }"></a>
+                  </td>
+                  <td th:text="${summary.totalWorkingDays} + '일'"></td>
+                  <td th:text="${summary.lateDays} + '일'"></td>
+                  <td th:text="${summary.absentDays} + '일'"></td>
+                  <td th:text="${summary.overtimeHours} + '시간'"></td>
+                  <td th:text="${summary.leaveDays} + '일'"></td>
+                </tr>
 
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-    </section>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main><!-- End #main -->
 

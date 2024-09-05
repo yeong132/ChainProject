@@ -1,14 +1,10 @@
 package org.zerock.chain.imjongha.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "department")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +15,7 @@ public class Department {
     @Column(name = "dmp_no")
     private Long dmpNo;
 
-    @Column(name = "dmp_name", nullable = false, length = 100)
+    @Column(name = "dmp_name", nullable = false)
     private String dmpName;
+
 }

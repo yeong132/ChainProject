@@ -32,14 +32,15 @@ public class DepartmentController {
     // 모든 부서 조회
     @GetMapping
     public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
-        List<DepartmentDTO> departmentDTOs = departmentRepository.findAll().stream()
-                .map(department -> {
-                    DepartmentDTO dto = new DepartmentDTO();
-                    dto.setDmpNo(department.getDmpNo());
-                    dto.setDmpName(department.getDmpName());
-                    return dto;
-                })
+        List<Department> departments = departmentRepository.findAll();
+        if (departments.isEmpty()) {
+            return ResponseEntity.noContent().build();  // 데이터가 없을 때 204 응답
+        }
+
+        List<DepartmentDTO> departmentDTOs = departments.stream()
+                .map(department -> new DepartmentDTO(department.getDmpNo(), department.getDmpName()))
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(departmentDTOs);
     }
 
@@ -55,15 +56,20 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDTOs);
     }
 
-    // 부서별 사원 목록 조회 추가
+    // DepartmentController.java
     @GetMapping("/{departmentId}/employees")
     public ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartment(@PathVariable("departmentId") Long departmentId) {
+        if (!departmentRepository.existsById(departmentId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 부서가 없을 경우 404 반환
+        }
+
         List<EmployeeDTO> employees = employeeService.getEmployeesByDepartmentId(departmentId);
         if (employees.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 사원이 없을 경우 204 반환
         }
         return ResponseEntity.ok(employees);
     }
+
 
     // 부서 추가/수정
     @PostMapping

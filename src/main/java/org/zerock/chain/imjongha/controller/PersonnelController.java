@@ -18,12 +18,6 @@ public class PersonnelController {
         return "admin/personnel/management";
     }
 
-    // 사원 태스트 페이지
-    @GetMapping("/managemant")
-    public String managemant() {
-        return "admin/personnel/managemeat";
-    }
-
 
     // 권한 관리 페이지
     @GetMapping("/powerSetting")
@@ -31,7 +25,4 @@ public class PersonnelController {
         return "admin/personnel/powerSetting";
     }
 
-
-    @GetMapping("/RanksRole")
-    public String ranksSetting() {return "admin/personnel/RanksRole";}
 }
