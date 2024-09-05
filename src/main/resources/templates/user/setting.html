@@ -77,18 +77,12 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <h5>My 프로필</h5>
-
-                        <div class="row mb-3">
-                            <div class="col-md-8 col-lg-9">
-                                <!--                                <img alt="Profile"  class="rounded-circle"  src="/assets/img/profile-img1.jpg">-->
-                                <i class="bi bi-person-circle" style="font-size: 100px"></i>
-                                <div class="pt-2">
-                                    <a class="btn btn-primary btn-sm" href="#" title="Upload new profile image"><i
-                                            class="bi bi-upload"></i></a>
-                                    <a class="btn btn-danger btn-sm" href="#" title="Remove my profile image"><i
-                                            class="bi bi-trash"></i></a>
-                                </div>
-                            </div>
+                        <i class="bi bi-person-circle" style="font-size: 100px"></i>
+                        <div class="pt-2">
+                            <a class="btn btn-primary btn-sm" href="#" title="Upload new profile image"><i
+                                    class="bi bi-upload"></i></a>
+                            <a class="btn btn-danger btn-sm" href="#" title="Remove my profile image"><i
+                                    class="bi bi-trash"></i></a>
                         </div>
                     </div>
                     <!------------------------------------------------------------- 프로필 사진 수정--------------------------------------------------------->
@@ -139,7 +133,7 @@
                                 <label class="col-md-4 col-lg-3 col-form-label" for="Phone">Phone</label>
                                 <div class="col-md-8 col-lg-9">
                                     <input class="form-control" id="Phone" name="phone" th:value="${employee.phoneNum}"
-                                           type="number">
+                                           type="text">
                                     <style>
                                         input::-webkit-outer-spin-button,
                                         input::-webkit-inner-spin-button {
@@ -176,19 +170,22 @@
                         <form style="padding: 0 20px;"> <!--style="display: flex; justify-content: center;"-->
                             <div>
                                 <div class="form-check">
-                                    <input checked class="form-check-input" id="light-theme" type="radio" name="theme" value="light">
+                                    <input checked class="form-check-input" id="light-theme" type="radio" name="theme"
+                                           value="light">
                                     <label class="form-check-label" for="light-theme">
                                         화이트 테마
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" disabled id="dark-theme" type="radio" name="theme" value="dark">
+                                    <input class="form-check-input" disabled id="dark-theme" type="radio" name="theme"
+                                           value="dark">
                                     <label class="form-check-label" for="dark-theme">
                                         다크 테마(준비중)
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" disabled id="3" type="radio" name="theme" value="upcoming">
+                                    <input class="form-check-input" disabled id="3" type="radio" name="theme"
+                                           value="upcoming">
                                     <label class="form-check-label" for="3">
                                         준비중
                                     </label>
