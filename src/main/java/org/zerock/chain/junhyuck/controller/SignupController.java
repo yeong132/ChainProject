@@ -16,17 +16,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.zerock.chain.pse.dto.ProjectDTO;
+import org.zerock.chain.pse.dto.TodoDTO;
 import org.zerock.chain.pse.model.CustomUserDetails;
 import org.zerock.chain.pse.service.ProjectService;
+
+import java.util.Comparator;
 import java.util.logging.Logger;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.zerock.chain.pse.service.TodoService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class SignupController {
@@ -42,7 +47,8 @@ public class SignupController {
 
     @Autowired
     private ProjectService projectService;
-
+    @Autowired
+    private TodoService todoService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -122,9 +128,14 @@ public class SignupController {
             model.addAttribute("lastName", userDetails.getLastName());
             model.addAttribute("rankName", userDetails.getRankName());
 
-            // 프로젝트 데이터 가져오기 (사용자의 프로젝트)
+            // 프로젝트 데이터 가져오기 (사용자의 프로젝트) 박성은 추가
             List<ProjectDTO> projects = projectService.getProjectsByUser(empNo); // 프로젝트 서비스에서 데이터 호출
             model.addAttribute("projects", projects);
+
+            // todo 데이터 가져오기 (사용자) 박성은 추가
+            List<TodoDTO> favoriteTodos = todoService.getFavoriteTodos(); // 즐겨찾기 목록
+            model.addAttribute("favoriteTodos", favoriteTodos);  // 즐겨찾기 목록을 모델에 추가
+
         }
         return "index"; // index.html 템플릿으로 이동
     }

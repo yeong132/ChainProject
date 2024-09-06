@@ -22,4 +22,6 @@ public interface ProjectService {
     List<ProjectDTO> getTemporaryProjects(); // 임시 보관 프로젝트 조회
     // 특정 사용자가 참여 중인 프로젝트 목록 조회
     List<ProjectDTO> getProjectsByUser(Long empNo);
+    // 진행 중인 프로젝트 목록 조회
+    List<ProjectDTO> getOngoingProjects();
 }

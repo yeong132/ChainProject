@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,7 +29,7 @@ public class Comment {
     private String commentAuthor;
 
     @Column(name = "comment_created_date")
-    private LocalDateTime commentCreatedDate = LocalDateTime.now();
+    private LocalDate commentCreatedDate = LocalDate.now();
 
     @Column(name = "comment_name")
     private String commentName;

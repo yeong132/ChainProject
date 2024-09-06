@@ -3,6 +3,7 @@ package org.zerock.chain.pse.dto;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,6 +20,6 @@ public class QnaDTO {
     private String qnaCategory;
     private boolean qnaStatus; //  답변여부
     private MultipartFile qnaFiles;
-    private LocalDateTime qnaUploadDate;
+    private LocalDate qnaUploadDate;
 
 }

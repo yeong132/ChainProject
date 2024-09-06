@@ -3,6 +3,7 @@ package org.zerock.chain.pse.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,11 @@ public class Qna {
     private String qnaFiles;    //첨부파일
 
     @Column(name = "todo_upload_date", updatable = false)
-    private LocalDateTime qnaUploadDate;    // 작성일
+    private LocalDate qnaUploadDate;    // 작성일
 
     @PrePersist // 자동 날짜 등록
     protected void onCreate() {
-        this.qnaUploadDate = LocalDateTime.now();
+        this.qnaUploadDate = LocalDate.now();
     }
 
     public void setQnaStatus(boolean qnaStatus) {
