@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-  <title>구내식당</title>
-  <meta content="" name="description"/>
-  <meta content="" name="keywords"/>
+    <title>구내식당</title>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
 
-  <!-- link 안에는 th:href 사용! -->
-  <!-- Favicons -->
-  <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
-  <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
+    <!-- link 안에는 th:href 사용! -->
+    <!-- Favicons -->
+    <link th:href="@{/assets/img/favicon.png}" rel="icon"/>
+    <link th:href="@{/assets/img/apple-touch-icon.png}" rel="apple-touch-icon"/>
 
-  <!-- 폰트 설정  -->
-  <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
-  <link
-          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet"
-  />
+    <!-- 폰트 설정  -->
+    <link th:href="@{https://fonts.gstatic.com}" rel="preconnect"/>
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+            rel="stylesheet"
+    />
 
-  <!-- Vendor CSS Files -->
-  <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
-  <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/quill/quill.bubble.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/remixicon/remixicon.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/vendor/simple-datatables/style.css}" rel="stylesheet"/>
+    <link th:href="@{/node_modules/froala-editor/css/froala_editor.pkgd.min.css}" rel="stylesheet" type="text/css"/>
 
-  <!-- Template Main CSS File -->
-  <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
-  <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
-  <script src="/assets/js/theme.js"></script>
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/css/wemaked.css}" rel="stylesheet"/>
+    <script src="/assets/js/theme.js"></script>
 
-  <!-- =======================================================
-* Template Name: NiceAdmin
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Updated: Apr 20 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+    ======================================================== -->
 </head>
 
 <body>
@@ -57,67 +57,169 @@
 <!-- Sidebar 전체 끝 -->
 
 <main id="main" class="main">
-  <div class="pagetitle">
-    <h1>구내식당</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active">구내식당</li>
-      </ol>
-    </nav>
-  </div>
-  <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
-  <div class="row gy-4 mb-3">
-    <div class="col-xl-6">
-      <button class="btn btn-primary"
-              th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
-              type="button">구내식당 업로드</button>
-      <button type="submit"
-              th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
-              class="btn btn-primary submitBtn">저장</button>
+    <div class="pagetitle">
+        <h1>구내식당</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">구내식당</li>
+            </ol>
+        </nav>
     </div>
-  </div>
-  <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
-
-  <section class="section ">
-    <div class="row">
-      <!-- 첨부 파일 사진을 보여줄 부분 -->
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
-          </div>
+    <!------------------------------------------------------------------페이지 별 타이틀 ------------------------------------------------------------------------>
+    <div class="row gy-4 mb-3">
+        <div class="col-xl-6">
+            <button class="btn btn-primary uploadOpenBtn"
+                    th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
+                    type="button">구내식당 업로드
+            </button>
+            <button type="submit"
+                    th:if="${#authorization.expression('hasAuthority(''구내식당 사진 업로드'')')}"
+                    class="btn btn-primary submitBtn">저장
+            </button>
         </div>
-      </div>
     </div>
-  </section>
+    <!------------------------------------------------------------------위젯 1---------------------------------------------------------------------->
 
-  <p>사원번호 : <span th:text="${session.empNo}"></span></p>
+    <section class="section ">
+        <div class="row">
+            <!-- 첨부 파일 사진을 보여줄 부분 -->
+            <div class="col-lg-12">
+
+                    <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap; padding: 12px">
+                    </div>
+
+            </div>
+        </div>
+    </section>
+
+    <p>사원번호 : <span th:text="${session.empNo}"></span></p>
 </main>
 
 <!-- --------------------------------------------첨부파일 추가를 위한 모달창 ---------------------------------------------->
 <div class="modal uploadModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">사진추가</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group mb-3">
-          <input type="file" name="files" class="form-control" multiple>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">사진추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="file" name="files" class="form-control" multiple>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary uploadBtn">업로드</button>
+                <button type="button" class="btn btn-outline-dark closeUploadBtn" data-bs-dismiss="modal">취소</button>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary uploadBtn">업로드</button>
-        <button type="button" class="btn btn-outline-dark closeUploadBtn" data-bs-dismiss="modal">취소</button>
-      </div>
     </div>
-  </div>
 </div>
 
 <!-- ======= Footer ======= -->
 <th:block th:include="fragments/footer :: footer"></th:block>
 <!-- Footer 끝 -->
+
+<!--이미지 업로드-->
+<script>
+    //업로드 모달
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"));
+        const uploadResult = document.querySelector('.uploadResult');
+
+        // localStorage에서 이미지를 불러오기
+        const savedImages = JSON.parse(localStorage.getItem('uploadedImages'));
+        if (savedImages) {
+            savedImages.forEach(function (imgData) {
+                const div = document.createElement('div');
+                div.classList.add('image-thumbnail');
+                div.innerHTML = `
+                <img src="${imgData.src}" alt="${imgData.alt}" class="img-thumbnail">
+                <button class="btn btn-danger btn-sm delete-btn">삭제</button>
+            `;
+                uploadResult.appendChild(div);
+
+                // 삭제 버튼 이벤트 리스너 추가
+                div.querySelector('.delete-btn').addEventListener('click', function () {
+                    uploadResult.removeChild(div);
+                    // localStorage에서 해당 이미지 삭제
+                    removeImageFromLocalStorage(imgData.src);
+                });
+            });
+        }
+
+        // "구내식당 업로드" 버튼 클릭 시 모달 열기
+        document.querySelector(".uploadOpenBtn").addEventListener("click", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            uploadModal.show();
+        }, false);
+
+        // 업로드 버튼 클릭 시 파일 업로드 처리 및 썸네일 표시
+        document.querySelector('.uploadBtn').addEventListener('click', function () {
+            const input = document.querySelector('input[name="files"]');
+            const files = input.files;
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageUrl = e.target.result;
+
+                    // 이미지 썸네일 생성
+                    const div = document.createElement('div');
+                    div.classList.add('image-thumbnail');
+                    div.innerHTML = `
+                    <img src="${imageUrl}" alt="${file.name}" class="img-thumbnail">
+                    <button class="btn btn-danger btn-sm delete-btn">삭제</button>
+                `;
+                    uploadResult.appendChild(div);
+
+                    // 삭제 버튼 이벤트 리스너 추가
+                    div.querySelector('.delete-btn').addEventListener('click', function () {
+                        uploadResult.removeChild(div);
+                        // localStorage에서 해당 이미지 삭제
+                        removeImageFromLocalStorage(imageUrl);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // 모달 닫기
+            uploadModal.hide();
+        });
+
+        // 저장 버튼 클릭 시 localStorage에 저장
+        document.querySelector('.submitBtn').addEventListener('click', function (e) {
+            e.preventDefault(); // 기본 폼 제출 동작 방지
+
+            const images = uploadResult.querySelectorAll('img');
+            let imageList = [];
+
+            // 각 이미지를 localStorage에 저장할 배열로 변환
+            images.forEach(function (img) {
+                imageList.push({
+                    src: img.src,
+                    alt: img.alt
+                });
+            });
+
+            // 이미지 리스트를 localStorage에 저장 (JSON으로 변환하여 저장)
+            localStorage.setItem('uploadedImages', JSON.stringify(imageList));
+
+            alert('이미지가 저장되었습니다!');
+        });
+
+        // localStorage에서 특정 이미지 삭제 함수
+        function removeImageFromLocalStorage(imageSrc) {
+            const savedImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            const updatedImages = savedImages.filter(function (imgData) {
+                return imgData.src !== imageSrc;
+            });
+            localStorage.setItem('uploadedImages', JSON.stringify(updatedImages));
+        }
+    });
+</script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -139,54 +241,5 @@
 <script src="/assets/js/wemaked.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!--이미지 업로드-->
-<script>
-  //업로드 모달
-  /* 모달 초기화 및 열기 */
-  const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"));
-  /* 버튼 클릭 이벤트 리스너 추가 -- 버튼 클릭하면 모달 창 열리도록 */
-  document.querySelector(".uploadFileBtn").addEventListener("click", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-    uploadModal.show();
-  }, false);
-
-  // 업로드 버튼 클릭 시 파일 업로드 처리 및 업로드 결과 표시
-  document.querySelector('.uploadBtn').addEventListener('click', function() {
-    const input = document.querySelector('input[name="files"]');
-    const files = input.files;
-    const uploadResult = document.querySelector('.uploadResult');
-
-    for (const file of files) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const imageUrl = e.target.result;
-
-        // 이미지 썸네일 생성
-        const div = document.createElement('div');
-        div.classList.add('image-thumbnail');
-        div.innerHTML = `
-          <img src="${imageUrl}" alt="${file.name}" class="img-thumbnail">
-          <button class="btn btn-danger btn-sm delete-btn">삭제</button>
-        `;
-        uploadResult.appendChild(div);
-
-        // 삭제 버튼 이벤트 리스너 추가
-        div.querySelector('.delete-btn').addEventListener('click', function() {
-          uploadResult.removeChild(div);
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // 모달 닫기
-    uploadModal.hide();
-  });
-
-  // 취소 버튼 클릭 시 모달 닫기
-  document.querySelector('.closeUploadBtn').addEventListener('click', function() {
-    uploadModal.hide();
-  });
-</script>
 </body>
 </html>
