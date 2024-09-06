@@ -103,8 +103,11 @@
                                 <label class="col-sm-2 col-form-label" for="projectFiles">첨부 파일</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" id="projectFiles" readonly
-                                           th:value="${project.projectFiles}" type="text">
-                                    <a target="_blank" th:href="@{${project.projectFiles}}">파일 열기</a>
+                                           th:value="${#strings.arraySplit(project.projectFile, '|')[0]}" type="text">
+                                    <a id="downloadLink" target="_blank">파일 다운로드</a>
+
+                                    <!-- 숨겨진 경로 설정 (Thymeleaf로 경로 설정) -->
+                                    <input type="hidden" id="filePath" th:value="${project.projectFile}">
                                 </div>
                             </div>
 
@@ -319,6 +322,19 @@
         } else {
             console.error('Progress labels field not found.');
         }
+
+        // 첨부파일 경로 백슬래시->슬래시로 변환 후 URL 인코딩(영민 추가)
+        let originalPath = document.getElementById('filePath').value;  // 숨겨진 input에서 경로 값 가져오기
+        originalPath = originalPath.replace(/\\/g, '/');  // 백슬래시를 슬래시로 변경
+
+        // URL 인코딩
+        let encodedPath = encodeURIComponent(originalPath);
+
+        // 다운로드 URL 생성
+        const downloadUrl = `/download?filePath=${encodedPath}`;
+
+        // 링크 설정
+        document.getElementById('downloadLink').setAttribute('href', downloadUrl);
     });
 </script>
 </body>
