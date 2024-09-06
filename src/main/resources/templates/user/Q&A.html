@@ -120,6 +120,7 @@
                                                         data-bs-toggle="modal"
                                                         th:attr="data-faq-no=${faq.faqNo}, data-faq-name=${faq.getFaqName()}, data-faq-content=${faq.getFaqContent()}"
                                                         data-bs-target="#editModal"
+                                                        th:if="${#authorization.expression('hasAuthority(''관리자'')')}"
                                                         type="button">
                                                     수정
                                                 </button>
@@ -129,6 +130,7 @@
                                                         data-bs-toggle="modal"
                                                         th:attr="data-faq-no=${faq.faqNo}"
                                                         th:data-bs-target="'#deleteModal'"
+                                                        th:if="${#authorization.expression('hasAuthority(''관리자'')')}"
                                                         type="button">삭제
                                                 </button>
                                             </div>
