@@ -39,8 +39,9 @@ public class ProjectController {
     // 프로젝트 목록 조회
     @GetMapping("/list")
     public String listGET(Model model) {
-        // 전체 프로젝트를 조회한 후 업로드 날짜(uploadDate) 기준으로 내림차순 정렬
-        List<ProjectDTO> projects = projectService.getAllProjects()
+
+        // 진행중인 프로젝트만 출력 , 업로드 날짜(uploadDate) 기준으로 내림차순 정렬
+        List<ProjectDTO> ongoingProjects = projectService.getOngoingProjects()
                 .stream()
                 .sorted(Comparator.comparing(ProjectDTO::getUploadDate).reversed())
                 .collect(Collectors.toList());
@@ -51,7 +52,7 @@ public class ProjectController {
                 .sorted(Comparator.comparing(ProjectDTO::getUploadDate).reversed())
                 .collect(Collectors.toList());
 
-        model.addAttribute("projects", projects);  // 정렬된 프로젝트를 모델에 추가
+        model.addAttribute("projects", ongoingProjects); // 정렬된 프로젝트를 모델에 추가
         model.addAttribute("temporaryProjects", temporaryProjects);  // 정렬된 임시 보관 프로젝트를 모델에 추가
         return "project/list";  // 프로젝트 목록 페이지로 이동
     }

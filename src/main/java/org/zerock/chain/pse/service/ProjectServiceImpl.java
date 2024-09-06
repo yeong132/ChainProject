@@ -33,6 +33,19 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         return projectRepository.findByEmpNo(empNo);
     }
 
+
+    // 진행중인 프로젝트 목록
+    @Override
+    public List<ProjectDTO> getOngoingProjects() {
+        // 프로젝트 진행도가 100 미만인 프로젝트들만 반환
+        return projectRepository.findAll()
+                .stream()
+                .filter(project -> project.getProjectProgress() < 100)
+                .map(project -> modelMapper.map(project, ProjectDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
     @Override // 프로젝트 생성
     public Long register(ProjectDTO projectDTO) {
         // 세션에서 사원번호(empNo) 가져오기
@@ -57,8 +70,6 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         Long projectNo = projectRepository.save(project).getProjectNo();
         return projectNo;
     }
-
-
 
     @Override// 프로젝트 수정
     public void updateProject(Long projectNo, ProjectRequestDTO projectRequestDTO) {
@@ -90,8 +101,6 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
         // 업데이트된 프로젝트 저장
         projectRepository.save(existingProject);
     }
-
-
 
 
     @Override
