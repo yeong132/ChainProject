@@ -36,6 +36,13 @@ public class ProjectController {
         return "project/history";  // 프로젝트 히스토리 페이지로 이동
     }
 
+    // 진행 중인 프로젝트 목록을 JSON 형식으로 반환하는 API
+    @GetMapping("/api/ongoing-projects")
+    @ResponseBody
+    public List<ProjectDTO> getOngoingProjects() {
+        return projectService.getOngoingProjects();  // 진행 중인 프로젝트 목록을 반환
+    }
+
     // 프로젝트 목록 조회
     @GetMapping("/list")
     public String listGET(Model model) {
