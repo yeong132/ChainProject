@@ -122,11 +122,94 @@
 <!-- Footer 끝 -->
 
 <!--이미지 업로드-->
+<!--<script>-->
+<!--    //업로드 모달-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"));-->
+<!--        const uploadResult = document.querySelector('.uploadResult');-->
+
+<!--        // Spring Security에서 권한을 전달받음 (Thymeleaf를 사용해 권한 여부를 전달)-->
+<!--        const hasDeletePermission = /*[[${#authorization.expression('hasAuthority(''구내식당 삭제'')')}]]*/ false;-->
+
+<!--        // localStorage에서 이미지를 불러오기-->
+<!--        const savedImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];-->
+<!--        displayImages(savedImages);-->
+
+<!--        // "구내식당 업로드" 버튼 클릭 시 모달 열기-->
+<!--        document.querySelector(".uploadOpenBtn").addEventListener("click", function (e) {-->
+<!--            e.stopPropagation();-->
+<!--            e.preventDefault();-->
+<!--            uploadModal.show();-->
+<!--        }, false);-->
+
+<!--        // 업로드 버튼 클릭 시 파일 업로드 처리 및 썸네일 표시-->
+<!--        document.querySelector('.uploadBtn').addEventListener('click', function () {-->
+<!--            const input = document.querySelector('input[name="files"]');-->
+<!--            const files = input.files;-->
+
+<!--            for (const file of files) {-->
+<!--                const reader = new FileReader();-->
+<!--                reader.onload = function (e) {-->
+<!--                    const imageUrl = e.target.result;-->
+
+<!--                    // 로컬 스토리지에 이미지 저장-->
+<!--                    savedImages.push({ src: imageUrl, alt: file.name });-->
+<!--                    localStorage.setItem('uploadedImages', JSON.stringify(savedImages));-->
+
+<!--                    // 이미지 표시-->
+<!--                    displayImages(savedImages);-->
+<!--                };-->
+<!--                reader.readAsDataURL(file);-->
+<!--            }-->
+
+<!--            // 모달 닫기-->
+<!--            uploadModal.hide();-->
+<!--        });-->
+
+<!--        // 이미지를 화면에 표시하는 함수-->
+<!--        function displayImages(images) {-->
+<!--            uploadResult.innerHTML = '';  // 기존 이미지 초기화-->
+<!--            images.forEach(function (imgData) {-->
+<!--                const div = document.createElement('div');-->
+<!--                div.classList.add('image-thumbnail');-->
+<!--                div.innerHTML = `-->
+<!--                    <img src="${imgData.src}" alt="${imgData.alt}" class="img-thumbnail">-->
+<!--                    ${hasDeletePermission ? '<button class="btn btn-danger btn-sm delete-btn">삭제</button>' : ''}-->
+<!--                `;-->
+<!--                uploadResult.appendChild(div);-->
+
+<!--                // 삭제 버튼 이벤트 리스너 추가 (권한이 있을 때만)-->
+<!--                const deleteButton = div.querySelector('.delete-btn');-->
+<!--                if (deleteButton) {-->
+<!--                    deleteButton.addEventListener('click', function () {-->
+<!--                        if (confirm('정말로 삭제하시겠습니까?')) {-->
+<!--                            uploadResult.removeChild(div);-->
+<!--                            // 로컬 스토리지에서 이미지 삭제-->
+<!--                            removeImageFromLocalStorage(imgData.src);-->
+<!--                        }-->
+<!--                    });-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+
+<!--        // 로컬 스토리지에서 특정 이미지 삭제 함수-->
+<!--        function removeImageFromLocalStorage(imageSrc) {-->
+<!--            const updatedImages = savedImages.filter(function (imgData) {-->
+<!--                return imgData.src !== imageSrc;-->
+<!--            });-->
+<!--            localStorage.setItem('uploadedImages', JSON.stringify(updatedImages));-->
+<!--            displayImages(updatedImages);  // 삭제 후 이미지 다시 표시-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+
 <script>
     //업로드 모달
     document.addEventListener('DOMContentLoaded', function () {
         const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"));
         const uploadResult = document.querySelector('.uploadResult');
+
 
         // localStorage에서 이미지를 불러오기
         const savedImages = JSON.parse(localStorage.getItem('uploadedImages'));

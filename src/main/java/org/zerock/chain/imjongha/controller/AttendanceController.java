@@ -157,7 +157,7 @@ public class AttendanceController {
 
         try {
             attendanceRecordService.recordCheckIn(Long.parseLong(empNo));
-            return ResponseEntity.ok("출근 기록이 생성되었습니다.");
+            return ResponseEntity.ok("출근입니다!.");
         } catch (IllegalStateException e) {
             log.error("사원번호 {} 출근 처리 중 오류 발생: {}", empNo, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -181,7 +181,7 @@ public class AttendanceController {
 
         try {
             attendanceRecordService.recordCheckOut(Long.parseLong(empNo));
-            return ResponseEntity.ok("퇴근 기록이 생성되었습니다.");
+            return ResponseEntity.ok("퇴근입니다!");
         } catch (IllegalStateException e) {
             log.error("사원번호 {} 퇴근 처리 중 오류 발생: {}", empNo, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -190,7 +190,4 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("퇴근 기록 생성에 실패했습니다.");
         }
     }
-
-
-
 }

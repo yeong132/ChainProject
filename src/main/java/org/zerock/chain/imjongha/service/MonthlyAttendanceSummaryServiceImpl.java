@@ -53,6 +53,7 @@ public class MonthlyAttendanceSummaryServiceImpl implements MonthlyAttendanceSum
                 .map(this::convertToDto)
                 .filter(dto -> dto.getAttendances() != null && !dto.getAttendances().isEmpty())
                 .collect(Collectors.toList());
+
     }
 
 
