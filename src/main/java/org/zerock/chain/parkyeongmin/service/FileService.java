@@ -1,8 +1,5 @@
 package org.zerock.chain.parkyeongmin.service;
 
-import freemarker.core.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
