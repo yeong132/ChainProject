@@ -292,11 +292,11 @@
 
                                 .custom-table .meeting,
                                 .custom-table .deadline {
-                                    white-space: nowrap;       /* 텍스트를 한 줄로 유지 */
-                                    overflow: hidden;          /* 넘치는 텍스트를 숨김 */
-                                    text-overflow: ellipsis;   /* 넘치는 텍스트의 끝을 "..."으로 표시 */
-                                    max-width: 100%;           /* 필요한 경우 max-width를 지정하여 텍스트 길이 제한 */
-                                    display: block;            /* 블록 요소로 설정하여 너비 제한 적용 */
+                                    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+                                    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+                                    text-overflow: ellipsis; /* 넘치는 텍스트의 끝을 "..."으로 표시 */
+                                    max-width: 100%; /* 필요한 경우 max-width를 지정하여 텍스트 길이 제한 */
+                                    display: block; /* 블록 요소로 설정하여 너비 제한 적용 */
                                     padding: 3px;
                                     color: white;
                                     border-radius: 4px;
@@ -317,7 +317,7 @@
                             <table class="table table-hover datatable" id="dataTable">
                                 <thead>
                                 <tr id="title-name">
-                                    <th>  </th>
+                                    <th></th>
                                     <th>프로젝트</th>
                                     <th>진행도</th>
                                     <th>시작일</th>
@@ -325,13 +325,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="project : ${projects}" th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
+                                <tr th:each="project : ${projects}"
+                                    th:onclick="'showProjectDetails(' + ${project.projectNo} + ')'">
                                     <td>
                                         <i th:class="${project.projectFavorite} ? 'bi-star-fill star-icon' : 'bi-star star-icon'"></i>
                                     </td>
                                     <td>
                                         <span th:text="${project.projectName}"></span>
-                                        <span th:if="${project.isTemporary == true}" class="temporary-text">(임시보관)</span>
+                                        <span th:if="${project.isTemporary == true}"
+                                              class="temporary-text">(임시보관)</span>
                                     </td>
                                     <td th:text="${project.projectProgress + '%'}"></td>
                                     <td th:text="${project.projectStartDate}"></td>
@@ -395,63 +397,42 @@
 
                 <!-- TODO LIST -->
                 <div class="list-group-item" data-id="todoList">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5></h5>
-                                <ul class="nav nav-tabs nav-tabs-bordered" id="starTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button aria-controls="home" aria-selected="true" class="nav-link active"
-                                                data-bs-target="#star-tab-home" data-bs-toggle="tab" id="star-ab" role="tab"
-                                                type="button"> 즐겨찾기
-                                        </button>
-                                    </li>
-                                </ul>
-
-                                <div class="tab-content pt-2 overflow-y-auto overflow-x-hidden" id="starTabContent"
-                                     style="height: 300px">
-                                    <div aria-labelledby="home-tab" class="tab-pane fade show active" id="star-tab-home"
-                                         role="tabpanel">
-                                        <div class="accordion accordion-flush" id="star-group-1">
-
-                                            <div class="row mb-5 mt-3">
-                                                <!-- 서버에서 불러온 즐겨찾기 항목을 여기에 출력 -->
-                                                <div class="activity-item d-flex" th:each="todo : ${favoriteTodos}">
-                                                    <div class="form-check mt-2">
-                                                        <form method="post" th:action="@{/todo/updateStatus}">
-                                                            <input type="hidden" name="todoNo" th:value="${todo.todoNo}">
-                                                            <input type="hidden" name="todoStatus"
-                                                                   th:value="${!todo.todoStatus}">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   th:checked="${todo.todoStatus}"
-                                                                   onclick="this.closest('form').submit()">
-                                                        </form>
-                                                        <div class="activity-content"
-                                                             th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
-                                                            <div>
-                                                                <!-- 즐겨찾기 아이콘 -->
-                                                                <i class="bi star-icon right-align-block"
-                                                                   th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
-                                                                   th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
-                                                                <span style="color: rgba(130,130,130,0.68);">[</span>
-                                                                <span style="color: rgba(130,130,130,0.68);"
-                                                                      th:text="${todo.todoCategory}"></span>
-                                                                <span style="color:rgba(130,130,130,0.68);">]</span>
-                                                                <span th:text="${todo.todoContent}"></span>
-                                                                <span style="color: rgba(130,130,130,0.68);">(</span>
-                                                                <span style="color: rgba(130,130,130,0.68);"
-                                                                      th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
-                                                                <span style="color:rgba(130,130,130,0.68);">)</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/todo/list">TODO LIST <span>| Today</span></a></h5>
+                            <!-- 서버에서 불러온 즐겨찾기 항목을 여기에 출력 -->
+                            <div class="activity-item d-flex" th:each="todo : ${favoriteTodos}">
+                                <div class="form-check mt-2">
+                                    <form method="post" th:action="@{/todo/updateStatus}">
+                                        <input type="hidden" name="todoNo" th:value="${todo.todoNo}">
+                                        <input type="hidden" name="todoStatus"
+                                               th:value="${!todo.todoStatus}">
+                                        <input class="form-check-input" type="checkbox"
+                                               th:checked="${todo.todoStatus}"
+                                               onclick="this.closest('form').submit()">
+                                    </form>
+                                    <div class="activity-content"
+                                         th:classappend="${todo.todoStatus} ? 'completed-todo' : ''">
+                                        <div>
+                                            <!-- 즐겨찾기 아이콘 -->
+                                            <i class="bi star-icon right-align-block"
+                                               th:classappend="${todo.todoFavorite} ? ' bi-star-fill' : ' bi-star'"
+                                               th:onclick="'toggleFavorite(' + ${todo.todoNo} + ', ' + (!${todo.todoFavorite}) + ')'"></i>
+                                            <span style="color: rgba(130,130,130,0.68);">[</span>
+                                            <span style="color: rgba(130,130,130,0.68);"
+                                                  th:text="${todo.todoCategory}"></span>
+                                            <span style="color:rgba(130,130,130,0.68);">]</span>
+                                            <span th:text="${todo.todoContent}"></span>
+                                            <span style="color: rgba(130,130,130,0.68);">(</span>
+                                            <span style="color: rgba(130,130,130,0.68);"
+                                                  th:text="${#temporals.format(todo.todoCreatedDate, 'yy/MM/dd')}"></span>
+                                            <span style="color:rgba(130,130,130,0.68);">)</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
                 <!-- TODO LIST 끝 -->
 
