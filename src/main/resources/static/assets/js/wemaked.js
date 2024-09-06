@@ -1,3 +1,4 @@
+
 let stompClient = null; // 소켓 클라이언트 객체 생성
 const empNo = sessionStorage.getItem('empNo');
 const chatAlarm = document.querySelector('#chatAlarm'); // 채팅 알람
@@ -11,7 +12,7 @@ let maxReconnectAttempts = 5; // 최대 재연결 시도 횟수
 let reconnectInterval = 5000; // 재연결 시도 간격(밀리초)
 
 // 소켓 연결
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const storedUnreadMessages = sessionStorage.getItem('unreadMessagesTemp');
     if (storedUnreadMessages) {
         unreadMessages = JSON.parse(storedUnreadMessages);
@@ -26,15 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 페이지 언로드 전에 읽지 않은 알람 수를 세션 스토리지에 저장
-window.addEventListener('beforeunload', function() {
+window.addEventListener('beforeunload', function () {
     if (chatWindow && !chatWindow.closed) {
-         chatWindow.close();
+        chatWindow.close();
     }
     sessionStorage.setItem('unreadMessagesTemp', JSON.stringify(unreadMessages));
 });
 
 // 페이지 로드 시, 로컬 스토리지에서 테마를 가져와 적용
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const savedTheme = localStorage.getItem('theme') || 'light';
     applyTheme(savedTheme);
 
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 라디오 버튼 클릭 시 테마 변경
 document.querySelectorAll('input[name="theme"]').forEach((elem) => {
-    elem.addEventListener('change', function(event) {
+    elem.addEventListener('change', function (event) {
         const selectedTheme = event.target.value;
         applyTheme(selectedTheme);
         localStorage.setItem('theme', selectedTheme);
@@ -157,7 +158,8 @@ async function onMessageReceived(payload) {
         chatWindow.postMessage({
             type: 'UPDATE_ALARM',
             unreadMessages: unreadMessages,
-            messageSenders: messageSenders }, '*');
+            messageSenders: messageSenders
+        }, '*');
     }
 }
 
@@ -178,7 +180,8 @@ async function displayUnreadMessages() {
             chatWindow.postMessage({
                 type: 'UPDATE_ALARM',
                 unreadMessages: unreadMessages,
-                messageSenders: messageSenders }, '*');
+                messageSenders: messageSenders
+            }, '*');
         }
     } catch (error) {
         console.error('Error fetching unread messages:', error);
@@ -228,7 +231,8 @@ function selectUser(empNo) {
         chatWindow.postMessage({
             type: 'UPDATE_ALARM',
             unreadMessages: unreadMessages,
-            messageSenders: messageSenders }, '*');
+            messageSenders: messageSenders
+        }, '*');
     }
 }
 
@@ -238,7 +242,7 @@ function resetSelectedEmpNo() {
 }
 
 // 자식 창으로부터 메시지를 받는 이벤트 리스너
-window.addEventListener('message', function(event) {
+window.addEventListener('message', function (event) {
     if (event.data.type === 'SELECT_USER') {
         selectUser(event.data.empNo);
     } else if (event.data.type === 'REQUEST_ALARM_STATUS') {
@@ -247,7 +251,8 @@ window.addEventListener('message', function(event) {
             chatWindow.postMessage({
                 type: 'UPDATE_ALARM',
                 unreadMessages: unreadMessages,
-                messageSenders: messageSenders }, '*');
+                messageSenders: messageSenders
+            }, '*');
         }
     } else if (event.data.type === 'RESET_SELECTED_USER') {
         resetSelectedEmpNo();
@@ -259,7 +264,8 @@ window.addEventListener('message', function(event) {
             chatWindow.postMessage({
                 type: 'UPDATE_ALARM',
                 unreadMessages: unreadMessages,
-                messageSenders: messageSenders }, '*');
+                messageSenders: messageSenders
+            }, '*');
         }
     }
 }, false);
@@ -288,12 +294,14 @@ function chatOpenPopup() {
                 chatWindow.postMessage({
                     type: 'INITIAL_ALARM',
                     unreadMessages: unreadMessages,
-                    messageSenders: messageSenders }, '*');
+                    messageSenders: messageSenders
+                }, '*');
                 clearInterval(interval); // 메시지 전달 후 interval 멈춤
             }
         }, 500);
     }
 }
+
 // 메신저 로그아웃
 function onLogout() {
     if (stompClient) {
@@ -302,7 +310,7 @@ function onLogout() {
     }
 
     if (chatWindow && !chatWindow.closed) {
-        chatWindow.postMessage({ type: 'LOGOUT' }, '*');
+        chatWindow.postMessage({type: 'LOGOUT'}, '*');
         setTimeout(() => {
             chatWindow.close(); // 0.5초 후 창을 닫음
         }, 500);
@@ -310,6 +318,7 @@ function onLogout() {
     // 실제 로그아웃 처리
     sessionStorage.clear();
 }
+
 // -- 메신저 end
 
 // Froala Editor 한국어 적용
