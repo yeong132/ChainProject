@@ -82,12 +82,12 @@
                                 <div class="col-sm-10">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" id="noticePinnedNo" name="noticePinned"
-                                               type="radio" value="false" th:checked="${!notice.noticePinned}">
+                                               type="radio" value="false" th:checked="${!notice.noticePinned}" onclick="return(false);">
                                         <label class="form-check-label" for="noticePinnedNo">고정 안함</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" id="noticePinnedYes" name="noticePinned"
-                                               type="radio" value="true" th:checked="${notice.noticePinned}">
+                                               type="radio" value="true" th:checked="${notice.noticePinned}" onclick="return(false);">
                                         <label class="form-check-label" for="noticePinnedYes">고정</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -128,9 +128,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-1 col-form-label">내용</label>
+                                <label class="col-sm-1 col-form-label" for="noticeText">내용</label>
                                 <div class="col-sm-11">
-                                    <textarea id="froala" class="form-control" readonly th:text="${notice.noticeContent}"></textarea>
+                                    <div class="form-control" readonly th:utext="${notice.noticeContent}" id="noticeText"></div>
                             </div>
 
 

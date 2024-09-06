@@ -110,7 +110,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">내용</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" id="froala" name="qnaContent" readonly th:text="${qna.qnaContent}"></textarea>
+                                    <div class="form-control" name="qnaContent" readonly th:utext="${qna.qnaContent}"></div>
                                 </div>
                             </div>
 
