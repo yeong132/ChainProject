@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.chain.pse.dto.ProjectDTO;
 import org.zerock.chain.pse.dto.ProjectRequestDTO;
 import org.zerock.chain.pse.service.ProjectService;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,11 +114,25 @@ public class ProjectController {
 
     // 새 프로젝트 등록 처리
     @PostMapping("/register")
-    public String registerAndProgress(@Valid @ModelAttribute ProjectDTO projectDTO, BindingResult bindingResult, Model model, @RequestParam("isTemporary") boolean isTemporary) {
+    public String registerAndProgress(@Valid @ModelAttribute ProjectDTO projectDTO,
+                                      BindingResult bindingResult, Model model,
+                                      @RequestParam("isTemporary") boolean isTemporary) {
         if (bindingResult.hasErrors()) {
             return "project/register";  // 입력값에 에러가 있을 경우 등록 페이지로 돌아감
         }
         projectDTO.setIsTemporary(isTemporary);  // 임시 보관 여부 설정
+
+        // 파일 업로드 처리
+        try {
+            String projectFile = projectService.uploadFile(projectDTO.getProjectFiles());
+            log.info("projectFile 나와라: {}", projectFile);
+            projectDTO.setProjectFile(projectFile);  // 파일 이름과 경로를 DTO에 저장
+            log.info("이게 진짜 오류 {}", projectDTO.getProjectFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "project/register";
+        }
+
         Long projectNo = projectService.register(projectDTO);  // 새로운 프로젝트 등록
         projectService.updateProjectProgress(projectNo, projectDTO.getProjectProgress());  // 프로젝트 진행 상황 업데이트
         model.addAttribute("projectNo", projectNo);  // 등록된 프로젝트 번호를 모델에 추가

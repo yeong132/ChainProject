@@ -2,6 +2,7 @@ package org.zerock.chain.pse.dto;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ public class ProjectDTO {
 
     private String participants;
     private String projectContent;
-    private String projectFiles;
+    private String projectFile;               // 영민이 수정
+    private MultipartFile projectFiles;       // 파일 자체 저장용 (영민 추가)
     private LocalDateTime uploadDate = LocalDateTime.now(); // 기본값 설정
 
     private boolean projectFavorite = false;
