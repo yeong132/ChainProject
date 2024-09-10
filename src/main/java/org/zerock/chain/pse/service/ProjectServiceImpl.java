@@ -15,9 +15,15 @@ import org.zerock.chain.pse.model.Project;
 import org.zerock.chain.pse.repository.ProjectRepository;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 @Service
 @Log4j2
@@ -27,6 +33,7 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
 
     private final ProjectRepository projectRepository;
     private final ModelMapper modelMapper;
+    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     @Override
     protected List<Project> getAllItemsByEmpNo(Long empNo) {
@@ -65,6 +72,19 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
                 projectDTO.getProgressLabel100()
         );
         project.setProgressLabels(labelsString);
+
+        // 파일 정보가 있을 경우, 파일 경로와 이름을 설정
+        try {
+            if (projectDTO.getProjectFiles() != null && !projectDTO.getProjectFiles().isEmpty()) {
+                // 파일 업로드 및 경로 생성
+                String projectFile = uploadFile(projectDTO.getProjectFiles());
+                project.setProjectFile(projectFile);  // 파일 경로와 이름을 엔티티에 저장
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 파일 업로드 실패 시 적절한 처리 (예: 에러 페이지로 리턴)
+            return null;
+        }
 
         // 저장 및 프로젝트 번호 반환
         Long projectNo = projectRepository.save(project).getProjectNo();
@@ -180,4 +200,19 @@ public class ProjectServiceImpl extends BaseService<Project> implements ProjectS
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String uploadFile(MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            String originalFileName = file.getOriginalFilename();
+            String savedFileName = UUID.randomUUID()+ "_" + originalFileName;
+            Path filePath = Paths.get(UPLOAD_DIR, savedFileName).normalize();
+
+            // 파일 저장
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 파일 이름과 경로 결합하여 반환
+            return originalFileName + "|" + filePath;
+        }
+        return null;
+    }
 }

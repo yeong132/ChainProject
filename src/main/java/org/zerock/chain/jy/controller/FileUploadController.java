@@ -35,7 +35,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("projectFiles") MultipartFile file) {
         try {
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String fileName = System.currentTimeMillis() + "_" + originalFileName;

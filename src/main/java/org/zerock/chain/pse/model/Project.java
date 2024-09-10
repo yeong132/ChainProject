@@ -45,7 +45,7 @@ public class Project {
     private String projectContent;
 
     @Column(name = "project_files")
-    private String projectFiles;
+    private String projectFile;
 
     @Column(name = "is_temporary")  // 임시 보관 여부
     private boolean isTemporary;
