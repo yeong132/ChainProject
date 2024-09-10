@@ -30,7 +30,7 @@ public class SystemNotification {
     @Column(name = "system_title")
     private String systemTitle;
 
-    @Column(name = "system_content")
+    @Column(name = "system_content", columnDefinition = "LONGTEXT")
     private String systemContent;
 
     @Column(name = "system_upload_date")

@@ -27,7 +27,7 @@ public class Notice {
     @Column(name = "notice_name")
     private String noticeName;
 
-    @Column(name = "notice_content")
+    @Column(name = "notice_content", columnDefinition = "LONGTEXT")
     private String noticeContent;
 
     @Column(name = "notice_pinned")

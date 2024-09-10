@@ -34,7 +34,7 @@ public class Comment {
     @Column(name = "comment_name")
     private String commentName;
 
-    @Column(name = "comment_content", columnDefinition = "TEXT")
+    @Column(name = "comment_content", columnDefinition = "LONGTEXT")
     private String commentContent;
 
     @Column(name = "comment_answered")

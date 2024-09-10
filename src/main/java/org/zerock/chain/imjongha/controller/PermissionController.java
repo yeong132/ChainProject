@@ -45,13 +45,21 @@ public class PermissionController {
             @PathVariable("id") Long id,
             @RequestBody List<Long> permissionIds) {
 
-        // 입력 데이터 검증: permissionIds가 null이거나 비어 있는지 확인
-        if (permissionIds == null || permissionIds.isEmpty()) {
-            logger.error("권한 ID 목록이 비어 있거나 유효하지 않습니다. 직원 ID: {}", id);
-            return ResponseEntity.badRequest().build();  // 400 Bad Request 반환
-        }
+//        // 입력 데이터 검증: permissionIds가 null이거나 비어 있는지 확인
+//        if (permissionIds == null || permissionIds.isEmpty()) {
+//            logger.error("권한 ID 목록이 비어 있거나 유효하지 않습니다. 직원 ID: {}", id);
+//            return ResponseEntity.badRequest().build();  // 400 Bad Request 반환
+//        }
 
         try {
+
+            // 권한 ID 목록이 null이거나 비어 있는 경우: 모든 권한 제거
+            if (permissionIds == null || permissionIds.isEmpty()) {
+                logger.info("권한 ID 목록이 비어 있습니다. 모든 권한을 제거합니다. 직원 ID: {}", id);
+                permissionService.updateEmployeePermissions(id, List.of());  // 빈 리스트로 권한 제거
+                return ResponseEntity.noContent().build();  // 204 No Content 반환
+            }
+
             // 권한 업데이트 시도
             permissionService.updateEmployeePermissions(id, permissionIds);
             return ResponseEntity.noContent().build();  // 204 No Content 반환

@@ -41,7 +41,7 @@ public class Project {
     @Column(name = "project_progress")
     private Integer projectProgress = 0;
 
-    @Column(name = "project_content")
+    @Column(name = "project_content", columnDefinition = "LONGTEXT")
     private String projectContent;
 
     @Column(name = "project_files")

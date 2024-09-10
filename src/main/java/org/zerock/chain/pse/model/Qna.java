@@ -35,7 +35,7 @@ public class Qna {
     @Column(name = "qna_author")
     private String qnaAuthor; // 작성자
 
-    @Column(name = "qna_content")
+    @Column(name = "qna_content", columnDefinition = "LONGTEXT")
     private String qnaContent; // 내용
 
     @Column(name = "qna_category")

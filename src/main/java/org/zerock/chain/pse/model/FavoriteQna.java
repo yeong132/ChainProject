@@ -22,7 +22,7 @@ public class FavoriteQna {
     @Column(name = "fa_qna_name", nullable = false)
     private String faqName;
 
-    @Column(name = "fa_qna_content", nullable = false)
+    @Column(name = "fa_qna_content", nullable = false, columnDefinition = "LONGTEXT")
     private String faqContent;
 
     @Column(name = "fa_qna_created_date", updatable = false)

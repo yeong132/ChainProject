@@ -63,6 +63,9 @@ public class Employee {
     @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, orphanRemoval = true)
     private EmployeeLeave employeeLeave;
 
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.REMOVE)
+    private List<MonthlyAttendanceSummary> monthlyAttendanceSummaries;
+
     // 편의 메서드
     public void addPermission(Permission permission) {
         EmployeePermission employeePermission = new EmployeePermission(this, permission);

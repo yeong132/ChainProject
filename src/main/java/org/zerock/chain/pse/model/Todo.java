@@ -21,7 +21,7 @@ public class Todo {
     @Column(name = "emp_no")
     private Long empNo;
 
-    @Column(name = "todo_content")
+    @Column(name = "todo_content", columnDefinition = "LONGTEXT")
     private String todoContent;
 
     @Column(name = "todo_category")

@@ -21,7 +21,7 @@ public class Chart {
     @Column(name = "chart_name")
     private String chartName; // 차트 이름
 
-    @Column(name = "chart_content")
+    @Column(name = "chart_content", columnDefinition = "LONGTEXT")
     private String chartContent; // 차트 내용
 
     @Column(name = "chart_start_date")

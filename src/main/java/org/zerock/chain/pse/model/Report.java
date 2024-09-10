@@ -25,7 +25,7 @@ public class Report {
     @Column(name = "report_category", length = 100)
     private String reportCategory;
 
-    @Column(name = "report_content")
+    @Column(name = "report_content", columnDefinition = "LONGTEXT")
     private String reportContent;
 
     @Column(name = "report_author")
