@@ -2,24 +2,20 @@
 
 # CHAIN
 
-Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 제작한 그룹웨어 프로젝트 CHAIN 입니다.
-</br>Click [here(링크 아직 안넣음)]()
+> Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 제작한 그룹웨어 프로젝트 CHAIN 입니다.<br>
+> 👉 Click [here(링크 준비 중)]()
 
-개발 동기 및 개요
+### ✔️ 개발 동기 및 개요
+- 다양한 업무에서 사용할 수 있도록 유동적인 업무 툴을 제작
+- 관리자와 사원 페이지로 나누어 체계적인 구현이 목표
+- 팀의 효율적인 협업과 생산성 향상을 위한 종합적인 툴 제공
+- 인사 관리를 효율적으로 감독하고, 시스템 관리 도구 제공
+- 정해진 기간 내에 높은 퀄리티의 웹사이트를 구현하기 위해 부트스트랩 사용
 
-- 유동적인 그룹웨어
-  - 다양한 업무에서 사용할 수 있도록 유동적인 업무 툴을 제작
-  - 관리자와 사원 페이지로 나누어 체계적인 구현이 목표
-- 사원 페이지
-  - 팀의 효율적인 협업과 생산성 향상을 위한 종합적인 툴 제공
-- 관리자 페이지
-
-  - 인사 관리를 효율적으로 감독하고, 시스템 관리 도구 제공
-
-- 기간
+### ✔️ 기간
   `2024.08 ~ 2024.09 (약 2개월)`
 
-- 부트스트랩 사용 : 정해진 기간 내에 높은 퀄리티의 웹사이트를 구현하기 위해 선정
+***
 
 # 개발 환경
 <table>
@@ -53,26 +49,23 @@ Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 �
   </tbody>
 </table>
 
+***
 # 페이지 구성
+### 🧑‍💼 사원 페이지
+![사원1](https://github.com/user-attachments/assets/2aa74abe-c571-48d8-94f7-85cfb44092cc)
+![사원2](https://github.com/user-attachments/assets/904bb910-056d-4f49-a68b-8617141ab909)
+![사원3](https://github.com/user-attachments/assets/1326bea3-9534-4a19-a7e5-8e5a002d3ee1)
 
-- 사용자
+### 🛠️ 관리자 페이지
+![관리자](https://github.com/user-attachments/assets/3eaa7e64-d6a3-4460-b702-b31c3a328d85)
 
-![사원1](https://github.com/user-attachments/assets/4941d6f0-9aa0-43fe-a309-6733c5e9a182)
-![사원2](https://github.com/user-attachments/assets/e470aedd-d892-4fd1-8574-87d6ce90892e)
-![사원3](https://github.com/user-attachments/assets/8914de28-dcee-403d-bcde-9017a9882386)
-
-
-- 관리자
-  
-![관리자](https://github.com/user-attachments/assets/66cd5606-e7ba-41fa-bc66-fe330e56129a)
-
+***
 # DataBase ERD
-
 ![chain_ERD](https://github.com/user-attachments/assets/7dda70c3-6811-4de7-9d62-275382e88a5b)
 
+***
 # 기능 소개
-
-## 사용자
+## 🧑‍💼 사원 페이지
 
 ### 회원가입
 
@@ -196,7 +189,7 @@ Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 �
   - 자주 묻는 질문(FAQ)을 등록, 수정, 삭제할 수 있습니다.
   - 문의글 답변 등록, 수정, 삭제할 수 있습니다.
 
-## 관리자
+## 🛠️ 관리자 페이지
 
 ### 사원 관리
 
@@ -218,5 +211,3 @@ Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 �
 
 - 사원별 연차 현황 조회 및 수정, 삭제가 가능합니다.
 - 전자 결재에서 승인된 연차 결재를 조회할 수 있습니다.
-
-gif 파일 및 설명 추가
