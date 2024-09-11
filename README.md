@@ -57,13 +57,18 @@ Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 �
 
 - 사용자
 
-- 관리자
+![사원1](https://github.com/user-attachments/assets/4941d6f0-9aa0-43fe-a309-6733c5e9a182)
+![사원2](https://github.com/user-attachments/assets/e470aedd-d892-4fd1-8574-87d6ce90892e)
+![사원3](https://github.com/user-attachments/assets/8914de28-dcee-403d-bcde-9017a9882386)
 
-사진 첨부
+
+- 관리자
+  
+![관리자](https://github.com/user-attachments/assets/66cd5606-e7ba-41fa-bc66-fe330e56129a)
 
 # DataBase ERD
 
-![alt text](<chain ERD.png>)
+![chain_ERD](https://github.com/user-attachments/assets/7dda70c3-6811-4de7-9d62-275382e88a5b)
 
 # 기능 소개
 
