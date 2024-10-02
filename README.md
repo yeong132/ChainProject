@@ -3,7 +3,7 @@
 # CHAIN
 
 > Spring Boot와 Spring MVC 패턴을 기반으로 Spring Security를 활용해 제작한 그룹웨어 프로젝트 CHAIN 입니다.<br>
-> 👉 Click [here(링크 준비 중)]()
+> 👉 Click [http://docs.yi.or.kr:8091/login]
 
 ### ✔️ 개발 동기 및 개요
 - 다양한 업무에서 사용할 수 있도록 유동적인 업무 툴을 제작
