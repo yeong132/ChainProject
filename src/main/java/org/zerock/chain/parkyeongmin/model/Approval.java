@@ -23,15 +23,15 @@ public class Approval {
 
     @ManyToOne
     @JoinColumn(name = "doc_no", referencedColumnName = "doc_no")
-    private Documents documents;    // 문서 번호
+    private Documents documents;  // 문서 번호
 
     @ManyToOne
     @JoinColumn(name = "emp_no", referencedColumnName = "emp_no")
-    private Employee employee;      // 결재자 사원 번호
+    private Employee employee;  // 결재자 사원 번호
 
     @ManyToOne
     @JoinColumn(name = "ref_emp_no", referencedColumnName = "emp_no")
-    private Employee refEmployee;      // 참조자 사원 번호
+    private Employee refEmployee;  // 참조자 사원 번호
 
     @Column(name = "approval_date", nullable = true)
     private LocalDateTime approvalDate;  // 결재일 (최종 결재일)

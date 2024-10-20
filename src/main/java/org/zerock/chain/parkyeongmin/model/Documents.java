@@ -61,19 +61,19 @@ public class Documents {
     private String filePath;            // 파일 경로
 
     @Column(name = "approver_json", columnDefinition = "text")
-    private String approversJson;        // 결재자 정보(결재자 사원 번호, 결재 순번)
+    private String approversJson;       // 결재자 정보(결재자 사원 번호, 결재 순번)
 
     @Column(name = "reference_json", columnDefinition = "text")
-    private String referencesJson;        // 결재자 정보(결재자 사원 번호, 결재 순번)
+    private String referencesJson;      // 결재자 정보(결재자 사원 번호, 결재 순번)
 
     @Transient
     private int virtualNo;              // 사용자에게 표시할 가상의 번호
 
     @Transient
-    private String withdraw;  // 철회 여부를 위한 플래그 (엔티티에 저장되지 않음)
+    private String withdraw;            // 철회 여부를 위한 플래그 (엔티티에 저장되지 않음)
 
     @Override
-    public String toString() {
+    public String toString() {          // 객체의 필드 값들이 제대로 저장되어 있는지 확인하기 위해 만든 메서드
         return "DocumentsEntity{" +
                 "docNo=" + docNo +
                 "loggedInEmpNo=" + loggedInEmpNo +

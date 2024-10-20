@@ -23,6 +23,7 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
     @Query("SELECT COUNT(d) FROM Documents d WHERE d.docStatus = :docStatus AND d.loggedInEmpNo = :empNo")
     int countByDocStatusAndEmpNo(@Param("docStatus") String docStatus, @Param("empNo") Long empNo);
 
+    // 로그인한 사용자 및 상태별 결재 문서 조회
     @Query("SELECT d FROM Documents d WHERE d.loggedInEmpNo = :empNo AND d.docStatus = :docStatus ORDER BY d.docNo DESC")
     List<Documents> findDocumentsByStatusAndEmpNo(@Param("empNo") Long empNo, @Param("docStatus") String docStatus);
 

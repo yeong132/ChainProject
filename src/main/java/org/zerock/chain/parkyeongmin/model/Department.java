@@ -17,8 +17,8 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dmp_no")
-    private Long dmpNo;
+    private Long dmpNo;  // 부서 번호
 
     @Column(name = "dmp_name", nullable = false, length = 100)
-    private String dmpName;
+    private String dmpName;  // 부서 이름
 }

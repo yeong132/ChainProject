@@ -17,8 +17,8 @@ public class Rank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rank_no")
-    private Long rankNo;
+    private Long rankNo;      // 직급 번호
 
     @Column(name = "rank_name", nullable = false, length = 100)
-    private String rankName;
+    private String rankName;  // 직급 이름
 }

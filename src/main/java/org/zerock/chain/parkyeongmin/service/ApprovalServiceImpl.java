@@ -24,16 +24,17 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 public class ApprovalServiceImpl implements ApprovalService {
+    // 의존성 주입 - 결재, 문서, 고객 정보 관리와 알림 서비스
     private final ApprovalRepository approvalRepository;
     private final DocumentsRepository documentsRepository;
     private final EmployeesRepository employeesRepository;
-    private final NotificationService notificationService;  // 추가된 부분
+    private final NotificationService notificationService;
 
-    // approvals테이블에 사용자가 정한 정보가 저장되는 메서드
+    // approvals 테이블에 사용자가 정한 정보가 저장되는 메서드
     @Override
     public void requestApproval(DocumentsDTO documentsDTO) {
         // approverJson을 파싱하여 List<Map<String, Object>>로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();  // 여기서 ObjectMapper는 JSON<->자바 객체 변환할 때 사용
         List<Map<String, Object>> approvers;  // 결재자 번호와 결재 순서를 저장할 리스트
         List<Map<String, Object>> references;  // 참조자 번호를 저장할 리스트
 
