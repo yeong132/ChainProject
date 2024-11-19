@@ -35,7 +35,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     public void requestApproval(DocumentsDTO documentsDTO) {
         // approverJson을 파싱하여 List<Map<String, Object>>로 변환
         ObjectMapper objectMapper = new ObjectMapper();  // 여기서 ObjectMapper는 JSON<->자바 객체 변환할 때 사용
-        List<Map<String, Object>> approvers;  // 결재자 번호와 결재 순서를 저장할 리스트
+        List<Map<String, Object>> approvers;   // 결재자 번호와 결재 순서를 저장할 리스트
         List<Map<String, Object>> references;  // 참조자 번호를 저장할 리스트
 
         try {
@@ -92,10 +92,10 @@ public class ApprovalServiceImpl implements ApprovalService {
                 Employee refEmployee = employeesRepository.findById(refEmpNo)
                         .orElseThrow(() -> new RuntimeException("Referenced employee not found"));
                 Approval refApproval = new Approval();
-                refApproval.setDocuments(document);    // 문서 번호 설정
+                refApproval.setDocuments(document);       // 문서 번호 설정
                 refApproval.setRefEmployee(refEmployee);  // 참조자 설정
-                refApproval.setApprovalOrder(null);  // 참조자는 결재 순서가 없으므로 null로 설정
-                refApproval.setApprovalStatus("참조");  // 참조자 상태 설정
+                refApproval.setApprovalOrder(null);       // 참조자는 결재 순서가 없으므로 null로 설정
+                refApproval.setApprovalStatus("참조");     // 참조자 상태 설정
                 approvalRepository.save(refApproval);
                 log.info("Saved reference approval: {}", refApproval);
             }
@@ -167,7 +167,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         }
     }
 
-    @Override       // 다음 결재자가 있다면 해야될 기능 처리
+    @Override  // 다음 결재자가 있다면 해야될 기능 처리
     public void moveToNextApprover(int docNo, int nextOrder) {
         Approval nextApproval = approvalRepository.findByDocumentsDocNoAndApprovalOrder(docNo, nextOrder);
 

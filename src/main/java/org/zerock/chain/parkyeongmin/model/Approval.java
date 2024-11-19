@@ -22,7 +22,7 @@ public class Approval {
     private Long approvalNo;  // 결재번호
 
     @ManyToOne
-    @JoinColumn(name = "doc_no", referencedColumnName = "doc_no")
+    @JoinColumn(name = "doc_no", referencedColumnName = "doc_no") // referencedColumnName 굳이 쓸 필요없지만 명시적으로 확인하기 위함
     private Documents documents;  // 문서 번호
 
     @ManyToOne

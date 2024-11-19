@@ -13,7 +13,7 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 
     // 보낸 문서함 목록 조회
     @Query("SELECT d FROM Documents d WHERE d.loggedInEmpNo = :loggedInEmpNo AND d.docStatus != '임시저장' ORDER BY d.docNo DESC")
-    List<Documents> findSentDocuments(@Param("loggedInEmpNo") Long loggedInEmpNo);
+    List<Documents> findSentDocuments(@Param("loggedInEmpNo") Long loggedInEmpNo); // Long보다 int만 써도 됬을 것
 
     // 임시문서함 목록 조회
     @Query("SELECT d FROM Documents d WHERE d.docStatus = '임시저장' AND d.loggedInEmpNo = :loggedInEmpNo ORDER BY d.docNo DESC")
@@ -48,8 +48,8 @@ public interface DocumentsRepository extends JpaRepository<Documents, Integer> {
 
     // 반려된 문서 필터링
     @Query("SELECT DISTINCT d FROM Documents d " +
-            "JOIN Approval a1 ON d.docNo = a1.documents.docNo " +
-            "WHERE a1.employee.empNo = :empNo " +
+            "JOIN Approval a ON d.docNo = a.documents.docNo " +
+            "WHERE a.employee.empNo = :empNo " +
             "AND EXISTS (" +
             "    SELECT 1 FROM Approval a2 " +
             "    WHERE a2.documents = d AND a2.approvalStatus = '반려'" +
